@@ -52,13 +52,13 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "number")
+    @Column(name = "number", nullable = false)
     private Integer number;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
     @CreatedDate
@@ -66,17 +66,17 @@ public class TaskBoard extends BaseEntity {
     private LocalDateTime regAt;
 
     @LastModifiedDate
-    @Column(name = "edit_at", nullable = false)
+    @Column(name = "edit_at")
     private LocalDateTime editAt;
 
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "board_category", nullable = false)
+    @Column(name = "board_category", nullable = false, length = 100)
     private BoardCategory boardCategory;
 
-    @Column(name = "board_status", nullable = false)
+    @Column(name = "board_status", nullable = false, length = 100)
     private BoardStatus boardStatus;
 
     @Column(name = "deleted_yn", nullable = false)
