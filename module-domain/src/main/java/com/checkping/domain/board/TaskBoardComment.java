@@ -41,7 +41,7 @@ public class TaskBoardComment extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, length = 500)
     private String content;
 
     @CreatedDate
