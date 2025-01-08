@@ -39,13 +39,13 @@ public class TaskBoardPartialHistory extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "update_name", nullable = false)
+    @Column(name = "update_name", nullable = false, length = 100)
     private String updateName;
 
-    @Column(name = "current_value", nullable = false)
+    @Column(name = "current_value", nullable = false, length = 5000)
     private String currentValue;
 
-    @Column(name = "previous_value", nullable = false)
+    @Column(name = "previous_value", nullable = false, length = 5000)
     private String previousValue;
 
     @LastModifiedDate
