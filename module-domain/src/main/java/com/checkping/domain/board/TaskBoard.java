@@ -5,11 +5,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +44,8 @@ public class TaskBoard extends BaseEntity {
     boardCategory : 게시글 유형
     boardStatus : 게시글 상태
     deletedYn : 삭제 여부
+    parent : 부모 게시글
+    replyList : 답글 리스트
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +81,13 @@ public class TaskBoard extends BaseEntity {
 
     @Column(name = "deleted_yn", nullable = false)
     private Character deletedYn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private TaskBoard parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private List<TaskBoard> replyList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
