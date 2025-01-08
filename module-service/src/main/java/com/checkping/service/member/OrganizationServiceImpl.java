@@ -15,7 +15,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     @Override
-    public boolean createOrganization(OrganizationRequest.OrganizationSignUpRequest request) {
+    public void createOrganization(OrganizationRequest.OrganizationSignUpRequest request) {
 
         if (request == null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
@@ -28,7 +28,5 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization organization = OrganizationRequest.OrganizationSignUpRequest.toEntity(request);
 
         organizationRepository.save(organization);
-
-        return true;
     }
 }
