@@ -15,7 +15,7 @@ public class OrganizationContoller {
     private final OrganizationService organizationService;
 
     @PostMapping("/admins/organizations")
-    public BaseResponse<Boolean> getMember(@RequestBody OrganizationRequest.OrganizationSignUpRequest request) {
+    public BaseResponse<Boolean> getMember(@RequestBody OrganizationRequest.OrganizationCreateRequest request) {
 
         organizationService.createOrganization(request);
 
