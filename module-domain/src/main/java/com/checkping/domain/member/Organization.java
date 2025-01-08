@@ -1,4 +1,4 @@
-package com.checkping.domain;
+package com.checkping.domain.member;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -77,5 +77,4 @@ public class Organization {
     public enum Status {
         ACTIVE, INACTIVE
     }
-
 }

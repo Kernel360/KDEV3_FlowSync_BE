@@ -1,6 +1,6 @@
-package com.checkping.infra.repository;
+package com.checkping.infra.repository.member;
 
-import com.checkping.domain.Organization;
+import com.checkping.domain.member.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
