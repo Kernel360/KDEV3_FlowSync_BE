@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 public class OrganizationRequest {
 
     @Getter
@@ -43,7 +41,6 @@ public class OrganizationRequest {
                     .streetAddress(request.streetAddress)
                     .detailAddress(request.detailAddress)
                     .phoneNumber(request.phoneNumber)
-                    .regAt(LocalDateTime.now())
                     .status(Organization.Status.ACTIVE)
                     .build();
         }
