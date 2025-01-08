@@ -29,6 +29,15 @@ public class BaseResponse<T> {
                 .build();
     }
 
+    // 성공 응답 (메시지만 포함)
+    public static <T> BaseResponse<T> success(String message) {
+        return BaseResponse.<T>builder()
+                .code(SuccessCode.OK.getStatusCode())
+                .result(Result.SUCCESS)
+                .message(message)
+                .build();
+    }
+
     // 성공 응답 (데이터만 포함)
     public static <T> BaseResponse<T> success(T data) {
         return success(data, null);
