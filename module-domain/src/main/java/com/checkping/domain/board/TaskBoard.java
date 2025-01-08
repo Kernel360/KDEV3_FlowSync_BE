@@ -76,6 +76,7 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "board_category", nullable = false, length = 100)
     private BoardCategory boardCategory;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "board_status", nullable = false, length = 100)
     private BoardStatus boardStatus;
 
