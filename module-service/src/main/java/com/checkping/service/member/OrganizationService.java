@@ -4,6 +4,6 @@ import com.checkping.dto.OrganizationRequest;
 
 public interface OrganizationService {
 
-    boolean createOrganization(OrganizationRequest.OrganizationSignUpRequest request);
+    void createOrganization(OrganizationRequest.OrganizationSignUpRequest request);
 
 }

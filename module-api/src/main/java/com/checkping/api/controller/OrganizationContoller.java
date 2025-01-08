@@ -17,9 +17,9 @@ public class OrganizationContoller {
     @PostMapping("/admins/organizations")
     public BaseResponse<Boolean> getMember(@RequestBody OrganizationRequest.OrganizationSignUpRequest request) {
 
-        boolean result = organizationService.createOrganization(request);
+        organizationService.createOrganization(request);
 
-        return BaseResponse.success(result, "업체 생성 성공");
+        return BaseResponse.success("업체 생성 성공");
     }
 
 
