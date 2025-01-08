@@ -21,8 +21,11 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
 
-        Organization organization = OrganizationRequest.OrganizationSignUpRequest.toEntity(request);
+        if (organizationRepository.findByNameAndType(request.getName(), request.getTypeEnum()).isPresent()) {
+            throw new CustomException(ErrorCode.BAD_REQUEST);
+        }
 
+        Organization organization = OrganizationRequest.OrganizationSignUpRequest.toEntity(request);
 
         organizationRepository.save(organization);
 

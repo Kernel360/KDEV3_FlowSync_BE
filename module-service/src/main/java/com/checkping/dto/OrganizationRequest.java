@@ -1,5 +1,7 @@
 package com.checkping.dto;
 
+import com.checkping.common.enums.ErrorCode;
+import com.checkping.common.exception.CustomException;
 import com.checkping.domain.member.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +34,14 @@ public class OrganizationRequest {
         private String detailAddress;
         private String phoneNumber;
 
+        public Organization.Type getTypeEnum() {
+            try {
+                return Organization.Type.valueOf(this.type.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new CustomException(ErrorCode.BAD_REQUEST);
+            }
+        }
+
         public static Organization toEntity(OrganizationSignUpRequest request) {
             return Organization.builder()
                     .type(Organization.Type.valueOf(request.type))
@@ -44,7 +54,6 @@ public class OrganizationRequest {
                     .status(Organization.Status.ACTIVE)
                     .build();
         }
-
     }
 
 }
