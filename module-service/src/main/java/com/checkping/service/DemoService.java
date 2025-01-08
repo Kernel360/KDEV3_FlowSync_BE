@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DemoService {
 
-    @Value("${profile-name}")
+//    @Value("${profile-name}")
     private String name;
 
     private final MemberRepository memberRepository;
