@@ -1,4 +1,4 @@
-package com.checkping.infra.repository;
+package com.checkping.infra.repository.member;
 
 import com.checkping.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
