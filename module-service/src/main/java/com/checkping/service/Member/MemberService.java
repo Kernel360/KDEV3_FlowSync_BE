@@ -2,8 +2,7 @@ package com.checkping.service.Member;
 
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
-import com.checkping.infra.repository.MemberRepository;
-import com.checkping.infra.repository.OrganizationRepository;
+import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.service.Member.dto.request.ChangePasswordDto;
 import com.checkping.service.Member.dto.request.MemberRegisterDto;
 import com.checkping.service.Member.dto.request.MemberUpdateDto;
