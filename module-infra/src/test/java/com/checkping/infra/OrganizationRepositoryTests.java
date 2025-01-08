@@ -1,6 +1,7 @@
-package com.checkping.infra.repository;
+package com.checkping.infra;
 
-import com.checkping.domain.Organization;
+import com.checkping.domain.member.Organization;
+import com.checkping.infra.repository.member.OrganizationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
