@@ -35,10 +35,10 @@ public class TaskBoardLink extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "url", nullable = false)
+    @Column(name = "url", nullable = false, length = 2000)
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
