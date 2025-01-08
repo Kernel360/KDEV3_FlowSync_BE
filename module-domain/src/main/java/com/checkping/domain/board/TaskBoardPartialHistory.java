@@ -3,9 +3,12 @@ package com.checkping.domain.board;
 import com.checkping.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -29,6 +32,7 @@ public class TaskBoardPartialHistory extends BaseEntity {
     currentValue : 현재 값
     previousValue : 변경 이전 값
     updatedAt : 수정 일시
+    taskBoard : 업무 관리 게시글 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +51,8 @@ public class TaskBoardPartialHistory extends BaseEntity {
     @LastModifiedDate
     @Column (name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_board_id", nullable = false)
+    private TaskBoard taskBoard;
 }
