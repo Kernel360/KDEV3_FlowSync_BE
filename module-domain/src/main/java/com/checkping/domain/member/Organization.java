@@ -1,5 +1,6 @@
 package com.checkping.domain.member;
 
+import com.checkping.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "organization")
 @Entity
-public class Organization {
+public class Organization extends BaseEntity {
     /*
       id : 업체아이디
       type : 업체유형
