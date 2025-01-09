@@ -88,6 +88,12 @@ public class FileUtilsS3 implements FileUtils {
                 .build();
     }
 
+    /**
+     * 멀티파트 파일 -> 파일로 변환
+     *
+     * @param file - 파일 객체
+     * @return 변환된 파일 객체를 반환
+     */
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convertedFile = new File(file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
