@@ -4,5 +4,5 @@ import com.checkping.dto.ProjectRequest;
 import com.checkping.dto.ProjectResponse;
 
 public interface ProjectService {
-    ProjectResponse.ProjectDto registerProject(ProjectRequest.ProjecResisterDto request);
+    ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request);
 }

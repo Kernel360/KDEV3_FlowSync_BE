@@ -20,11 +20,11 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository projectRepository;
 
     @Override
-    public ProjectResponse.ProjectDto registerProject(ProjectRequest.ProjecResisterDto request) {
+    public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
         if(request == null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        Project project = projectRepository.save(ProjectRequest.ProjecResisterDto.toEntity(request));
+        Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request));
         return ProjectResponse.ProjectDto.toDto(project);
     }
 }

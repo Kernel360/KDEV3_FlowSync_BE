@@ -13,7 +13,7 @@ public class ProjectRequest {
     @Getter
     @ToString
     @Builder
-    public static class ProjecResisterDto {
+    public static class ResisterDto {
 
         /*
         id : 프로젝트 아이디
@@ -33,7 +33,7 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         private Long resisterId;
 
-        public static Project toEntity(ProjecResisterDto resisterDto){
+        public static Project toEntity(ResisterDto resisterDto){
             return Project.builder()
                     .name(resisterDto.getName())
                     .description(resisterDto.getDescription())
