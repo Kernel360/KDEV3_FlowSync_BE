@@ -76,16 +76,20 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "board_category", nullable = false, length = 100)
     private BoardCategory boardCategory;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "board_status", nullable = false, length = 100)
     private BoardStatus boardStatus;
 
-    @Column(name = "deleted_yn", nullable = false)
-    private Character deletedYn;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "deleted_yn", nullable = false, length = 1)
+    private DeleteStatus deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TaskBoard parent;
 
+
+    @Builder.Default
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<TaskBoard> replyList = new ArrayList<>();
 
@@ -101,5 +105,22 @@ public class TaskBoard extends BaseEntity {
     public enum BoardStatus {
         PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
         private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum DeleteStatus {
+        Y("비활성화"), N("활성화");
+        private final String description;
+    }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deletedYn = DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deletedYn = DeleteStatus.N;
     }
 }
