@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
+@Slf4j
 class OrganizationServiceTests {
 
     @Autowired
@@ -65,7 +66,6 @@ class OrganizationServiceTests {
 
         OrganizationResponse.OrganizationReadResponse organizationResponse =
                 organizationService.getOrganization(organization.getId());
-
     }
 
     @Test
@@ -75,14 +75,12 @@ class OrganizationServiceTests {
 
         List<OrganizationResponse.OrganizationReadResponse> organizationDevList =
                 organizationService.getByTypeOrganizations("DEVELOPER");
-
     }
 
     @Test
     void testGetAllOrganizations() {
         List<OrganizationResponse.OrganizationReadResponse> organizations =
                 organizationService.getAllOrganizations();
-
     }
 
 
@@ -112,4 +110,5 @@ class OrganizationServiceTests {
                 request
         );
     }
+
 }

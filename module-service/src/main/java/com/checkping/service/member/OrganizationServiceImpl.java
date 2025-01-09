@@ -83,4 +83,5 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return OrganizationResponse.OrganizationUpdateResponse.toDto(updateOrganization);
     }
+
 }
