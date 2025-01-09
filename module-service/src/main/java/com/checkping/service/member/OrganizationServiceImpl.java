@@ -7,7 +7,6 @@ import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;

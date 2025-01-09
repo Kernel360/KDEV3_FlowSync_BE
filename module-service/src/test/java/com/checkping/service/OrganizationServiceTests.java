@@ -5,7 +5,7 @@ import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.OrganizationService;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-@Log4j2
+@Slf4j
 class OrganizationServiceTests {
 
     @Autowired
@@ -66,8 +66,6 @@ class OrganizationServiceTests {
 
         OrganizationResponse.OrganizationReadResponse organizationResponse =
                 organizationService.getOrganization(organization.getId());
-
-        log.info(organizationResponse);
     }
 
     @Test
@@ -77,17 +75,12 @@ class OrganizationServiceTests {
 
         List<OrganizationResponse.OrganizationReadResponse> organizationDevList =
                 organizationService.getByTypeOrganizations("DEVELOPER");
-
-        log.info(organizationCsList);
-        log.info(organizationDevList);
     }
 
     @Test
     void testGetAllOrganizations() {
         List<OrganizationResponse.OrganizationReadResponse> organizations =
                 organizationService.getAllOrganizations();
-
-        log.info(organizations);
     }
 
 }

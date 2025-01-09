@@ -5,7 +5,6 @@ import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.service.member.OrganizationService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@Log4j2
 public class OrganizationController {
 
     private final OrganizationService organizationService;
@@ -43,10 +41,9 @@ public class OrganizationController {
         if (type != null) {
             list = organizationService.getByTypeOrganizations(type);
             return BaseResponse.success(list, "타입별 업체 조회 성공");
-        } else {
-            list = organizationService.getAllOrganizations();
-            return BaseResponse.success(list, "업체 전체 조회 성공");
         }
+        list = organizationService.getAllOrganizations();
+        return BaseResponse.success(list, "업체 전체 조회 성공");
     }
 
 }
