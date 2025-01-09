@@ -8,12 +8,13 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-    void createOrganization(OrganizationRequest.OrganizationCreateRequest request);
+    void createOrganization(OrganizationRequest.CreateRequest request);
 
-    OrganizationResponse.OrganizationReadResponse getOrganization(UUID id);
+    OrganizationResponse.ReadResponse getOrganization(UUID id);
 
-    List<OrganizationResponse.OrganizationReadResponse> getByTypeOrganizations(String type);
+    List<OrganizationResponse.ReadResponse> getByTypeOrganizations(String type);
 
-    List<OrganizationResponse.OrganizationReadResponse> getAllOrganizations();
+    List<OrganizationResponse.ReadResponse> getAllOrganizations();
 
+    OrganizationResponse.UpdateResponse modifyOrganization(UUID id, OrganizationRequest.UpdateRequest request);
 }

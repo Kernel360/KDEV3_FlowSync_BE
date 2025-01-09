@@ -12,7 +12,7 @@ public class OrganizationRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class OrganizationCreateRequest {
+    public static class CreateRequest {
         /*
         type : 업체유형
         brNumber : 사업자등록번호
@@ -38,7 +38,7 @@ public class OrganizationRequest {
             }
         }
 
-        public static Organization toEntity(OrganizationCreateRequest request) {
+        public static Organization toEntity(CreateRequest request) {
             return Organization.builder()
                     .type(Organization.Type.valueOf(request.type))
                     .brNumber(request.brNumber)
@@ -48,6 +48,36 @@ public class OrganizationRequest {
                     .detailAddress(request.detailAddress)
                     .phoneNumber(request.phoneNumber)
                     .status(Organization.Status.ACTIVE)
+                    .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateRequest {
+        /*
+        brNumber : 사업자등록번호
+        brCertificateUrl : 사업자등록증 이미지 링크
+        streetAddress : 도로명주소
+        detailAddress : 상세주소
+        phoneNumber : 전화번호
+         */
+        private String brNumber;
+        private String brCertificateUrl;
+        private String streetAddress;
+        private String detailAddress;
+        private String phoneNumber;
+
+        public static Organization toEntity(UpdateRequest request) {
+            return Organization.builder()
+                    .brNumber(request.brNumber)
+                    .brCertificateUrl(request.brCertificateUrl)
+                    .streetAddress(request.streetAddress)
+                    .detailAddress(request.detailAddress)
+                    .phoneNumber(request.phoneNumber)
                     .build();
         }
     }

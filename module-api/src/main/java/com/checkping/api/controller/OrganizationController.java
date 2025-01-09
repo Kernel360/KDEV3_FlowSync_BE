@@ -17,7 +17,7 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @PostMapping("/admins/organizations")
-    public BaseResponse<Boolean> createOrganization(@RequestBody OrganizationRequest.OrganizationCreateRequest request) {
+    public BaseResponse<Boolean> createOrganization(@RequestBody OrganizationRequest.CreateRequest request) {
 
         organizationService.createOrganization(request);
 
@@ -25,18 +25,19 @@ public class OrganizationController {
     }
 
     @GetMapping({"/admins/organizations/{organization_id}", "/organization/{organization_id}"})
-    public BaseResponse<OrganizationResponse.OrganizationReadResponse> getOrganization(@PathVariable UUID organization_id) {
+    public BaseResponse<OrganizationResponse.ReadResponse> getOrganization(@PathVariable UUID organization_id) {
 
-        OrganizationResponse.OrganizationReadResponse response = organizationService.getOrganization(organization_id);
+        OrganizationResponse.ReadResponse response = organizationService.getOrganization(organization_id);
 
         return BaseResponse.success(response, "업체 조회 성공");
     }
 
     @GetMapping("/admins/organizations")
-    public BaseResponse<List<OrganizationResponse.OrganizationReadResponse>> getByTypeOrganization(
+    public BaseResponse<List<OrganizationResponse.ReadResponse>> getByTypeOrAllOrganization(
+
             @RequestParam(required = false) String type) {
 
-        List<OrganizationResponse.OrganizationReadResponse> list;
+        List<OrganizationResponse.ReadResponse> list;
 
         if (type != null) {
             list = organizationService.getByTypeOrganizations(type);
@@ -44,6 +45,18 @@ public class OrganizationController {
         }
         list = organizationService.getAllOrganizations();
         return BaseResponse.success(list, "업체 전체 조회 성공");
+    }
+
+    @PutMapping("/admins/organizations/{organization_id}")
+    public BaseResponse<OrganizationResponse.UpdateResponse> modifyOrganization(
+            @PathVariable UUID organization_id,
+            @RequestBody OrganizationRequest.UpdateRequest request) {
+
+      OrganizationResponse.UpdateResponse response = organizationService.modifyOrganization(
+              organization_id,
+              request);
+
+        return BaseResponse.success(response, "업체 수정 성공");
     }
 
 }
