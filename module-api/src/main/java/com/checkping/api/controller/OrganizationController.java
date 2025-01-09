@@ -35,7 +35,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/admins/organizations")
-    public BaseResponse<List<OrganizationResponse.OrganizationReadResponse>> getByTypeOrganization(
+    public BaseResponse<List<OrganizationResponse.OrganizationReadResponse>> getByTypeOrAllOrganization(
             @RequestParam(required = false) String type) {
 
         List<OrganizationResponse.OrganizationReadResponse> list;
