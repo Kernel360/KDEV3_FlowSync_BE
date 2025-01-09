@@ -17,7 +17,7 @@ public class OrganizationResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class OrganizationReadResponse {
+    public static class ReadResponse {
 
         private String id;
         private String type;
@@ -28,8 +28,8 @@ public class OrganizationResponse {
         private String detailAddress;
         private String phoneNumber;
 
-        public static OrganizationReadResponse toDto(Organization organization) {
-            return OrganizationReadResponse.builder()
+        public static ReadResponse toDto(Organization organization) {
+            return ReadResponse.builder()
                     .id(organization.getId().toString())
                     .type(organization.getType().toString())
                     .brNumber(organization.getBrNumber())
@@ -56,7 +56,7 @@ public class OrganizationResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class OrganizationUpdateResponse {
+    public static class UpdateResponse {
 
         private String type;
         private String brNumber;
@@ -66,8 +66,8 @@ public class OrganizationResponse {
         private String detailAddress;
         private String phoneNumber;
 
-        public static OrganizationUpdateResponse toDto(Organization organization) {
-            return OrganizationUpdateResponse.builder()
+        public static UpdateResponse toDto(Organization organization) {
+            return UpdateResponse.builder()
                     .type(organization.getType().toString())
                     .brNumber(organization.getBrNumber())
                     .name(organization.getName())

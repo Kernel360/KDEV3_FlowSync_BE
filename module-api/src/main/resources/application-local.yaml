@@ -27,7 +27,3 @@ spring:
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Seoul
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
