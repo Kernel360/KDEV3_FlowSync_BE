@@ -18,7 +18,7 @@ public class ProjectController {
     private ProjectServiceImpl projectService;
 
     @PostMapping("/projects")
-    public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@RequestBody ProjectRequest.ProjecResisterDto request) {
+    public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@RequestBody ProjectRequest.ResisterDto request) {
         ProjectResponse.ProjectDto projectDto = projectService.registerProject(request);
         log.info("FlowSync - resisterProjects name : {}, register_at : {}, resister_id : {}", projectDto.getName(), projectDto.getRegAt(), projectDto.getResisterId());
         return BaseResponse.success(projectDto);
