@@ -88,6 +88,7 @@ public class TaskBoard extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private TaskBoard parent;
 
+
     @Builder.Default
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<TaskBoard> replyList = new ArrayList<>();

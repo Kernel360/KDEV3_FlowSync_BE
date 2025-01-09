@@ -32,7 +32,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         Organization organization = OrganizationRequest.CreateRequest.toEntity(request);
-
         organizationRepository.save(organization);
     }
 
