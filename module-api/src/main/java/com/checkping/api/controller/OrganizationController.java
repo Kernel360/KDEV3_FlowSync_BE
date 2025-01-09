@@ -49,7 +49,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/admins/organizations/{organization_id}")
-    public BaseResponse<OrganizationResponse.OrganizationUpdateResponse> getByTypeOrAllOrganization(
+    public BaseResponse<OrganizationResponse.OrganizationUpdateResponse> modifyOrganization(
             @PathVariable UUID organization_id,
             @RequestBody OrganizationRequest.OrganizationUpdateRequest request) {
 
