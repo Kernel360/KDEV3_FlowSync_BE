@@ -52,4 +52,34 @@ public class OrganizationRequest {
         }
     }
 
+    @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OrganizationUpdateRequest {
+        /*
+        brNumber : 사업자등록번호
+        brCertificateUrl : 사업자등록증 이미지 링크
+        streetAddress : 도로명주소
+        detailAddress : 상세주소
+        phoneNumber : 전화번호
+         */
+        private String brNumber;
+        private String brCertificateUrl;
+        private String streetAddress;
+        private String detailAddress;
+        private String phoneNumber;
+
+        public static Organization toEntity(OrganizationUpdateRequest request) {
+            return Organization.builder()
+                    .brNumber(request.brNumber)
+                    .brCertificateUrl(request.brCertificateUrl)
+                    .streetAddress(request.streetAddress)
+                    .detailAddress(request.detailAddress)
+                    .phoneNumber(request.phoneNumber)
+                    .build();
+        }
+    }
+
 }

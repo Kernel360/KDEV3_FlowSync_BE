@@ -5,7 +5,6 @@ import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.OrganizationService;
-import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-@Log4j2
 class OrganizationServiceTests {
 
     @Autowired
@@ -32,10 +30,11 @@ class OrganizationServiceTests {
                     .name("커널" + i)
                     .brCertificateUrl("cert-url-")
                     .streetAddress("강남대로")
-                    .detailAddress("")
-                    .phoneNumber("")
+                    .detailAddress("테스트입니다")
+                    .phoneNumber("010-1111-1111")
                     .build());
         }
+
     }
 
     @Test
@@ -67,7 +66,6 @@ class OrganizationServiceTests {
         OrganizationResponse.OrganizationReadResponse organizationResponse =
                 organizationService.getOrganization(organization.getId());
 
-        log.info(organizationResponse);
     }
 
     @Test
@@ -78,8 +76,6 @@ class OrganizationServiceTests {
         List<OrganizationResponse.OrganizationReadResponse> organizationDevList =
                 organizationService.getByTypeOrganizations("DEVELOPER");
 
-        log.info(organizationCsList);
-        log.info(organizationDevList);
     }
 
     @Test
@@ -87,7 +83,33 @@ class OrganizationServiceTests {
         List<OrganizationResponse.OrganizationReadResponse> organizations =
                 organizationService.getAllOrganizations();
 
-        log.info(organizations);
     }
 
+
+    @Test
+    void testModifyOrganization() {
+        Organization organization =
+                organizationRepository.save(OrganizationRequest.OrganizationCreateRequest.toEntity(OrganizationRequest.OrganizationCreateRequest.builder()
+                        .type("CUSTOMER")
+                        .brNumber("1234567890")
+                        .name("커널커널")
+                        .brCertificateUrl("awge76876w-asdg7djh")
+                        .streetAddress("강남대로 364")
+                        .detailAddress("")
+                        .phoneNumber("")
+                        .build()));
+
+        OrganizationRequest.OrganizationUpdateRequest request = OrganizationRequest.OrganizationUpdateRequest.builder()
+                .brNumber("123456789")
+                .brCertificateUrl("cert-url-asdfasdf")
+                .streetAddress("안녕하세요")
+                .detailAddress("안녕하십니까")
+                .phoneNumber("010-1111-1112")
+                .build();
+
+        OrganizationResponse.OrganizationUpdateResponse response = organizationService.modifyOrganization(
+                organization.getId(),
+                request
+        );
+    }
 }

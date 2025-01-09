@@ -7,7 +7,6 @@ import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
@@ -63,4 +61,26 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public OrganizationResponse.OrganizationUpdateResponse modifyOrganization(
+            UUID id,
+            OrganizationRequest.OrganizationUpdateRequest request
+    ) {
+        Optional<Organization> result = organizationRepository.findById(id);
+        Organization organization = result.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        organization.updateOrganization(
+                request.getBrNumber(),
+                request.getBrCertificateUrl(),
+                request.getStreetAddress(),
+                request.getDetailAddress(),
+                request.getPhoneNumber()
+        );
+
+        Organization updateOrganization = organizationRepository.save(organization);
+
+        OrganizationResponse.OrganizationUpdateResponse.toDto(updateOrganization);
+
+        return OrganizationResponse.OrganizationUpdateResponse.toDto(updateOrganization);
+    }
 }

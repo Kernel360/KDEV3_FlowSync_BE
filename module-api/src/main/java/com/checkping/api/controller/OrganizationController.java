@@ -43,10 +43,21 @@ public class OrganizationController {
         if (type != null) {
             list = organizationService.getByTypeOrganizations(type);
             return BaseResponse.success(list, "타입별 업체 조회 성공");
-        } else {
-            list = organizationService.getAllOrganizations();
-            return BaseResponse.success(list, "업체 전체 조회 성공");
         }
+        list = organizationService.getAllOrganizations();
+        return BaseResponse.success(list, "업체 전체 조회 성공");
+    }
+
+    @PutMapping("/admins/organizations/{organization_id}")
+    public BaseResponse<OrganizationResponse.OrganizationUpdateResponse> getByTypeOrAllOrganization(
+            @PathVariable UUID organization_id,
+            @RequestBody OrganizationRequest.OrganizationUpdateRequest request) {
+
+      OrganizationResponse.OrganizationUpdateResponse response = organizationService.modifyOrganization(
+              organization_id,
+              request);
+
+        return BaseResponse.success(response, "업체 수정 성공");
     }
 
 }

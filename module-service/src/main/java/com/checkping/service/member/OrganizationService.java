@@ -16,4 +16,5 @@ public interface OrganizationService {
 
     List<OrganizationResponse.OrganizationReadResponse> getAllOrganizations();
 
+    OrganizationResponse.OrganizationUpdateResponse modifyOrganization(UUID id, OrganizationRequest.OrganizationUpdateRequest request);
 }
