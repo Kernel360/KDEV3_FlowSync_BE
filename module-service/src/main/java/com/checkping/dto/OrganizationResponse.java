@@ -19,6 +19,7 @@ public class OrganizationResponse {
     @AllArgsConstructor
     public static class OrganizationReadResponse {
 
+        private String id;
         private String type;
         private String brNumber;
         private String name;
@@ -29,6 +30,7 @@ public class OrganizationResponse {
 
         public static OrganizationReadResponse toDto(Organization organization) {
             return OrganizationReadResponse.builder()
+                    .id(organization.getId().toString())
                     .type(organization.getType().toString())
                     .brNumber(organization.getBrNumber())
                     .name(organization.getName())
