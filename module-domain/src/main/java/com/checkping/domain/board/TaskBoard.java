@@ -52,6 +52,8 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // TODO : #64 - 업무 관리 게시글 번호 채번 기능
+    @Builder.Default
     @Column(name = "number", nullable = false)
     private Integer number = 1;
 
