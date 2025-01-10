@@ -22,11 +22,14 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     @Override
     public TaskBoardResponse.TaskBoardDto register(TaskBoardRequest.RegisterDto request) {
 
+        // dto -> entity
         TaskBoard initTaskBoard = TaskBoardRequest.RegisterDto.toEntity(request);
         initTaskBoard.activate();
 
+        // save entity
         TaskBoard taskBoard = taskBoardStore.store(initTaskBoard);
 
+        // entity -> dto
         return TaskBoardResponse.TaskBoardDto.toDto(taskBoard);
     }
 }
