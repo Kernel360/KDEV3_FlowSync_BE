@@ -51,8 +51,9 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Builder.Default
     @Column(name = "number", nullable = false)
-    private Integer number;
+    private Integer number = 1;
 
     @Column(name = "title", nullable = false, length = 100)
     private String title;
