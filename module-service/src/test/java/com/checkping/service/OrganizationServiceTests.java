@@ -81,4 +81,31 @@ class OrganizationServiceTests {
                 organizationService.getAllOrganizations("ACTIVE");
     }
 
+    @Test
+    void testModifyOrganization() {
+        Organization organization =
+                organizationRepository.save(OrganizationRequest.CreateRequest.toEntity(OrganizationRequest.CreateRequest.builder()
+                        .type("CUSTOMER")
+                        .brNumber("1234567890")
+                        .name("커널커널")
+                        .brCertificateUrl("awge76876w-asdg7djh")
+                        .streetAddress("강남대로 364")
+                        .detailAddress("")
+                        .phoneNumber("")
+                        .build()));
+
+        OrganizationRequest.UpdateRequest request = OrganizationRequest.UpdateRequest.builder()
+                .brNumber("123456789")
+                .brCertificateUrl("cert-url-asdfasdf")
+                .streetAddress("안녕하세요")
+                .detailAddress("안녕하십니까")
+                .phoneNumber("010-1111-1112")
+                .build();
+
+        OrganizationResponse.UpdateResponse response = organizationService.modifyOrganization(
+                organization.getId(),
+                request
+        );
+    }
+
 }
