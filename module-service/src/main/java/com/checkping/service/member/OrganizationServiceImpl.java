@@ -73,4 +73,27 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .map(OrganizationResponse.ReadResponse::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrganizationResponse.UpdateResponse modifyOrganization(
+            UUID id,
+            OrganizationRequest.UpdateRequest request
+    ) {
+        Optional<Organization> result = organizationRepository.findById(id);
+        Organization organization = result.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        organization.updateOrganization(
+                request.getBrNumber(),
+                request.getBrCertificateUrl(),
+                request.getStreetAddress(),
+                request.getDetailAddress(),
+                request.getPhoneNumber()
+        );
+
+        Organization updateOrganization = organizationRepository.save(organization);
+
+        OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+
+        return OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+    }
 }
