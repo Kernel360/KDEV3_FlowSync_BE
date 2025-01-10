@@ -2,8 +2,8 @@ package com.checkping.service;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.CustomException;
-import com.checkping.infra.repository.MemberRepository;
-import com.checkping.domain.Member;
+import com.checkping.domain.member.Member;
+import com.checkping.infra.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
