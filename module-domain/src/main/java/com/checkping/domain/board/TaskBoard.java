@@ -76,11 +76,13 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "board_category", nullable = false, length = 100)
     private BoardCategory boardCategory;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "board_status", nullable = false, length = 100)
     private BoardStatus boardStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
-    private Character deletedYn;
+    private DeleteStatus deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -97,6 +99,13 @@ public class TaskBoard extends BaseEntity {
     @RequiredArgsConstructor
     public enum BoardStatus {
         PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
+        private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum DeleteStatus {
+        Y("비활성화"), N("활성화");
         private final String description;
     }
 }
