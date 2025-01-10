@@ -73,6 +73,24 @@ public class FileUtilsLocal implements FileUtils {
     }
 
     /**
+     * 로컬에 저장된 파일 삭제
+     *
+     * @param saveName - 파일명
+     */
+    @Override
+    public void deleteFile(String saveName) {
+        // 파일의 전체 경로를 생성
+        String filePath = Paths.get(uploadPath, saveName).toString();
+
+        // 파일 객체 생성
+        File file = new File(filePath);
+
+        // 파일이 존재하면 삭제
+        if (file.exists())
+            file.delete();
+    }
+
+    /**
      * 저장 파일명 생성
      * @param filename 원본 파일명
      * @return 디스크에 저장할 파일명
