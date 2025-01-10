@@ -96,4 +96,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return OrganizationResponse.UpdateResponse.toDto(updateOrganization);
     }
+
+    @Override
+    public OrganizationResponse.ReadResponse removeOrganization(UUID id) {
+
+        Optional<Organization> result = organizationRepository.findById(id);
+
+        Organization organization = result.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        organization.changeStatus();
+
+        Organization removeOrganization = organizationRepository.save(organization);
+
+        return OrganizationResponse.ReadResponse.toDto(removeOrganization);
+    }
+
 }

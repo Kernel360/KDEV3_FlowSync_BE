@@ -92,4 +92,12 @@ public class Organization extends BaseEntity {
         this.detailAddress = detailAddress;
         this.phoneNumber = phoneNumber;
     }
+
+    public void changeStatus(){
+        if (this.status == Status.ACTIVE) {
+            this.status = Status.INACTIVE;
+        } else {
+            this.status = Status.ACTIVE;
+        }
+    }
 }

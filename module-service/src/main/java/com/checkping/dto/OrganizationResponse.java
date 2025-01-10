@@ -11,6 +11,7 @@ public class OrganizationResponse {
     streetAddress : 도로명주소
     detailAddress : 상세주소
     phoneNumber : 전화번호
+    status : 업체 상태
     */
     @Getter
     @ToString
@@ -27,6 +28,7 @@ public class OrganizationResponse {
         private String streetAddress;
         private String detailAddress;
         private String phoneNumber;
+        private String status;
 
         public static ReadResponse toDto(Organization organization) {
             return ReadResponse.builder()
@@ -38,6 +40,7 @@ public class OrganizationResponse {
                     .streetAddress(organization.getStreetAddress())
                     .detailAddress(organization.getDetailAddress())
                     .phoneNumber(organization.getPhoneNumber())
+                    .status(organization.getStatus().toString())
                     .build();
         }
     }
