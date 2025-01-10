@@ -78,4 +78,26 @@ public class Organization extends BaseEntity {
     public enum Status {
         ACTIVE, INACTIVE
     }
+
+    public void updateOrganization(
+            String brNumber,
+            String brCertificateUrl,
+            String streetAddress,
+            String detailAddress,
+            String phoneNumber
+    ) {
+        this.brNumber = brNumber;
+        this.brCertificateUrl = brCertificateUrl;
+        this.streetAddress = streetAddress;
+        this.detailAddress = detailAddress;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeStatus(){
+        if (this.status == Status.ACTIVE) {
+            this.status = Status.INACTIVE;
+        } else {
+            this.status = Status.ACTIVE;
+        }
+    }
 }

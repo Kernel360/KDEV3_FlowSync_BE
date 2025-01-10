@@ -50,4 +50,24 @@ public class OrganizationController {
         return BaseResponse.success(list, "업체 전체 조회 성공");
     }
 
+    @PutMapping("/admins/organizations/{organization_id}")
+    public BaseResponse<OrganizationResponse.UpdateResponse> modifyOrganization(
+            @PathVariable UUID organization_id,
+            @RequestBody OrganizationRequest.UpdateRequest request) {
+
+        OrganizationResponse.UpdateResponse response = organizationService.modifyOrganization(
+                organization_id,
+                request);
+
+        return BaseResponse.success(response, "업체 수정 성공");
+    }
+
+    @PutMapping("/admins/organizations/{organization_id}/remove")
+    public BaseResponse<OrganizationResponse.ReadResponse> removeOrganization(@PathVariable UUID organization_id) {
+
+        OrganizationResponse.ReadResponse response = organizationService.removeOrganization(organization_id);
+
+        return BaseResponse.success(response, "업체 삭제 완료");
+    }
+
 }
