@@ -1,5 +1,6 @@
 package com.checkping.domain.board;
 
+import com.checkping.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
