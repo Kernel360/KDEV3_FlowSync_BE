@@ -1,4 +1,4 @@
-package com.checkping.infra.repository.project;
+package com.checkping.infra.repository.project.taskboardcomment;
 
 import com.checkping.domain.board.TaskBoardComment;
 import org.springframework.data.jpa.repository.JpaRepository;
