@@ -6,7 +6,9 @@ import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaskBoardRequest {
@@ -32,6 +34,32 @@ public class TaskBoardRequest {
                 .boardCategory(TaskBoardRequest.convertBoardCategory(registerDto.getBoardCategory()))
                 .boardStatus(TaskBoardRequest.convertBoardStatus(registerDto.getBoardStatus()))
                 .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    public static class SearchCondition {
+        /*
+        boardCategory : 게시글 카테고리 (enum, String)
+        boardStatus : 게시글 상태 (enum, String)
+         */
+        private final TaskBoard.BoardCategory boardCategory;
+        private final TaskBoard.BoardStatus boardStatus;
+
+        /**
+         * String 으로 들어온 값을 Enum 으로 변경한다.
+         *
+         * @param boardCategory RequestParam 으로 받아온 TaskBoard.BoardCategory 로 변경할 문자열
+         * @param boardStatus RequestParam 으로 받아온 TaskBoard.BoardStatus 로 변경할 문자열
+         */
+        public SearchCondition(String boardCategory, String boardStatus) {
+
+            // String -> Enum
+            this.boardCategory = StringUtils.hasText(boardCategory) ? TaskBoardRequest.convertBoardCategory(boardCategory) : null;
+
+            // String -> Enum
+            this.boardStatus = StringUtils.hasText(boardStatus) ? TaskBoardRequest.convertBoardStatus(boardStatus) : null;
         }
     }
 
