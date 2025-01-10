@@ -45,7 +45,6 @@ public class TaskBoard extends BaseEntity {
     boardStatus : 게시글 상태
     deletedYn : 삭제 여부
     parent : 부모 게시글
-    replyList : 답글 리스트
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
