@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -100,5 +101,18 @@ public class FileUtilsS3 implements FileUtils {
             fos.write(file.getBytes());
         }
         return convertedFile;
+    }
+
+    /**
+     * S3에 저장된 파일 삭제
+     *
+     * @param saveName - 파일명
+     */
+    @Override
+    public void deleteFile(String saveName) {
+        s3Client.deleteObject(DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(saveName)
+                .build());
     }
 }
