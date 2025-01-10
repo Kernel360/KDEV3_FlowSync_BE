@@ -1,4 +1,4 @@
-package com.checkping.infra.repository.project;
+package com.checkping.infra.repository.project.taskboard;
 
 import com.checkping.domain.board.TaskBoard;
 import java.util.List;
