@@ -108,4 +108,14 @@ public class TaskBoard extends BaseEntity {
         Y("비활성화"), N("활성화");
         private final String description;
     }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deletedYn = DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deletedYn = DeleteStatus.N;
+    }
 }
