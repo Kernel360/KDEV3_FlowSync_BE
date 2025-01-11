@@ -60,7 +60,7 @@ public class TaskBoardController {
         return BaseResponse.success(taskBoardItemDto);
     }
 
-    @PostMapping("/post/{postId}/comment")
+    @PostMapping("/posts/{postId}/comment")
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
         @PathVariable Long postId, @RequestBody TaskBoardCommentRequest.RegisterDto request) {
 
