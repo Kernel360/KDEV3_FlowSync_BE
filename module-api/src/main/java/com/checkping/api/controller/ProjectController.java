@@ -17,10 +17,18 @@ public class ProjectController {
     @Autowired
     private ProjectServiceImpl projectService;
 
-    @PostMapping("/projects")
+    @PostMapping("/admins/projects")
     public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@RequestBody ProjectRequest.ResisterDto request) {
         ProjectResponse.ProjectDto projectDto = projectService.registerProject(request);
         log.info("FlowSync - resisterProjects name : {}, register_at : {}, resister_id : {}", projectDto.getName(), projectDto.getRegAt(), projectDto.getResisterId());
         return BaseResponse.success(projectDto);
     }
+
+    @DeleteMapping("/admins/projects/{projectId}")
+    public BaseResponse<ProjectResponse.ProjectDto> deleteProjects(@PathVariable Long projectId) {
+        ProjectResponse.ProjectDto projectDto = projectService.deleteProject(projectId);
+        log.info("FlowSync - deleteProjects project_id : {}, ", projectId);
+        return BaseResponse.success(projectDto);
+    }
+
 }
