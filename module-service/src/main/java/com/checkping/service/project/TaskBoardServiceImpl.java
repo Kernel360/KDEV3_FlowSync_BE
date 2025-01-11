@@ -3,8 +3,9 @@ package com.checkping.service.project;
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardResponse;
-import com.checkping.dto.TaskBoardResponse.TaskBoardDto;
+import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
+import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.exception.project.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
 import com.checkping.infra.repository.project.taskboard.TaskBoardStore;
 import java.util.List;
@@ -25,7 +26,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 생성한 TaskBoard 의 Dto
      */
     @Override
-    public TaskBoardResponse.TaskBoardDto register(TaskBoardRequest.RegisterDto request) {
+    public TaskBoardItemDto register(TaskBoardRequest.RegisterDto request) {
 
         // dto -> entity
         TaskBoard initTaskBoard = TaskBoardRequest.RegisterDto.toEntity(request);
@@ -35,24 +36,41 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         TaskBoard taskBoard = taskBoardStore.store(initTaskBoard);
 
         // entity -> dto
-        return TaskBoardResponse.TaskBoardDto.toDto(taskBoard);
+        return TaskBoardItemDto.toDto(taskBoard);
     }
 
     /**
      * TaskBoard 조회 하기 (게시글 유형, 게시글 상태 별 필터링)
      *
      * @param searchCondition RequestParam 에서 받아오는 String 을 관리하는 타입
-     * @return 조회한 TaskBoardDto 의 리스트
+     * @return 조회한 TaskBoardListDto 의 리스트
      */
     @Override
-    public List<TaskBoardDto> getTaskBoardList(SearchCondition searchCondition) {
+    public List<TaskBoardListDto> getTaskBoardList(SearchCondition searchCondition) {
 
         // 조회
         List<TaskBoard> taskBoardList = taskBoardReader.getTaskBoard(
             searchCondition.getBoardCategory(),
             searchCondition.getBoardStatus());
 
-        // TaskBoard -> TaskBoardDto
-        return taskBoardList.stream().map(TaskBoardDto::toDto).toList();
+        // TaskBoard -> TaskBoardListDto
+        return taskBoardList.stream().map(TaskBoardListDto::toDto).toList();
+    }
+
+    /**
+     * 업무 관리 게시글 서비스 - 상세 조회
+     *
+     * @param taskBoardId 업무 관리 게시글 ID
+     * @return TaskBoardListDto
+     */
+    @Override
+    public TaskBoardItemDto getTaskBoardById(Long taskBoardId) {
+
+        // find TaskBoard Entity
+        TaskBoard taskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+            TaskBoardNotFoundEntityException::new);
+
+        // Entity -> Dto
+        return TaskBoardItemDto.toDto(taskBoard);
     }
 }
