@@ -6,6 +6,8 @@ import com.checkping.domain.project.Project;
 import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
+
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
-        if(request == null) {
+        if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
+
         Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request));
         return ProjectResponse.ProjectDto.toDto(project);
     }
