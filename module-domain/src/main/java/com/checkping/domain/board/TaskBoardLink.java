@@ -21,7 +21,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board_comment")
+@Table(name = "task_board_link")
 @Entity
 public class TaskBoardLink extends BaseEntity {
     /*
