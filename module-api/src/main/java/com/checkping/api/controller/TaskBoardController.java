@@ -5,8 +5,8 @@ import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardResponse;
-import com.checkping.dto.TaskBoardResponse.TaskBoardDto;
+import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
+import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.service.project.TaskBoardCommentService;
 import com.checkping.service.project.TaskBoardService;
 import java.util.List;
@@ -28,16 +28,16 @@ public class TaskBoardController {
     private final TaskBoardCommentService taskBoardCommentService;
 
     @PostMapping("/posts")
-    public BaseResponse<TaskBoardResponse.TaskBoardDto> register(
+    public BaseResponse<TaskBoardItemDto> register(
         @RequestBody TaskBoardRequest.RegisterDto request) {
 
-        TaskBoardResponse.TaskBoardDto taskBoardDto = taskBoardService.register(request);
+        TaskBoardItemDto taskBoardDto = taskBoardService.register(request);
 
         return BaseResponse.success(taskBoardDto);
     }
 
     @GetMapping("/posts")
-    public BaseResponse<List<TaskBoardDto>> getTaskBoardList(
+    public BaseResponse<List<TaskBoardListDto>> getTaskBoardList(
         @RequestParam(required = false) String boardCategory,
         @RequestParam(required = false) String boardStatus) {
 
@@ -46,9 +46,18 @@ public class TaskBoardController {
             boardStatus);
 
         // getTaskBoardList
-        List<TaskBoardDto> taskBoardDtoList = taskBoardService.getTaskBoardList(searchCondition);
+        List<TaskBoardListDto> taskBoardListDtoList = taskBoardService.getTaskBoardList(
+            searchCondition);
 
-        return BaseResponse.success(taskBoardDtoList);
+        return BaseResponse.success(taskBoardListDtoList);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public BaseResponse<TaskBoardItemDto> getTaskBoard(@PathVariable Long postId) {
+
+        TaskBoardItemDto taskBoardItemDto = taskBoardService.getTaskBoardById(postId);
+
+        return BaseResponse.success(taskBoardItemDto);
     }
 
     @PostMapping("/post/{postId}/comment")
