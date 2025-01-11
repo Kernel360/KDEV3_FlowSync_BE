@@ -20,4 +20,9 @@ public class TaskBoardCommentStoreImpl implements TaskBoardCommentStore {
     public TaskBoardComment store(TaskBoardComment taskBoardComment) {
         return taskBoardCommentRepository.save(taskBoardComment);
     }
+
+    @Override
+    public void deleteHard(TaskBoardComment taskBoardComment) {
+        taskBoardCommentRepository.delete(taskBoardComment);
+    }
 }
