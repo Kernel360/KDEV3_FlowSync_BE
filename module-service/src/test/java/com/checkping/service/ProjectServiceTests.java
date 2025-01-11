@@ -2,6 +2,7 @@ package com.checkping.service;
 
 import com.checkping.domain.project.Project;
 import com.checkping.dto.ProjectRequest;
+import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.service.project.ProjectServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ public class ProjectServiceTests {
     private ProjectRepository projectRepository;
 
     @Test
-    public void init(){
+    public void resisterProject() {
 
         projectService.registerProject(
                 ProjectRequest.ResisterDto.builder()
@@ -39,4 +40,24 @@ public class ProjectServiceTests {
         projects.forEach(project -> System.out.println(project));
         System.out.println(projects.size());
     }
+
+    @Test
+    public void deleteProject() {
+        projectService.registerProject(
+                ProjectRequest.ResisterDto.builder()
+                        .name("이름")
+                        .description("설명")
+                        .detail("상세설명")
+                        .status(String.valueOf(Project.Status.IN_PROGRESS))
+                        .closeAt(LocalDate.parse("2025-12-30").atStartOfDay())
+                        .resisterId(49283L)
+                        .build());
+
+        Project project = projectRepository.findById(1L).get();
+        System.out.println("resisterProject : " + project);
+
+        ProjectResponse.ProjectDto projectDto = projectService.deleteProject(1L);
+        System.out.println("deleteProject : " + projectDto);
+    }
+
 }
