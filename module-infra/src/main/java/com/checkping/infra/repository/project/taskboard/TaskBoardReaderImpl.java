@@ -4,6 +4,7 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoard.BoardCategory;
 import com.checkping.domain.board.TaskBoard.BoardStatus;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -40,5 +41,16 @@ public class TaskBoardReaderImpl implements TaskBoardReader {
 
         // 조회
         return taskBoardRepository.findAll();
+    }
+
+    /**
+     * TaskBoard 조회 기능
+     *
+     * @param id taskBoard 아이디
+     * @return TaskBoard 조회 결과
+     */
+    @Override
+    public Optional<TaskBoard> getTaskBoardById(Long id) {
+        return taskBoardRepository.findById(id);
     }
 }
