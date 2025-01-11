@@ -26,7 +26,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString
+@ToString(exclude = "commentList")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -87,6 +87,9 @@ public class TaskBoard extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TaskBoard parent;
+
+    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    private List<TaskBoardComment> commentList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
