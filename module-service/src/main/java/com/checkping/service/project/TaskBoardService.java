@@ -9,4 +9,6 @@ public interface TaskBoardService {
     TaskBoardItemDto register(TaskBoardRequest.RegisterDto request);
     List<TaskBoardListDto> getTaskBoardList(TaskBoardRequest.SearchCondition searchCondition);
     TaskBoardItemDto getTaskBoardById(Long taskBoardId);
+    TaskBoardListDto deleteSoft (Long taskBoardId);
+    TaskBoardListDto deleteHard(Long taskBoardId);
 }
