@@ -47,4 +47,30 @@ public class ProjectRequest {
                     .build();
         }
     }
+
+    @Getter
+    @ToString
+    @Builder
+    public static class UpdateDto {
+
+        private String name;
+        private String description;
+        private String detail;
+        private String status;
+        private LocalDateTime closeAt;
+        private Long updaterId;
+
+        public static Project toEntity(UpdateDto updateDto, Project existingProject){
+            return existingProject.toBuilder()
+                    .id(existingProject.getId())
+                    .name(updateDto.getName())
+                    .description(updateDto.getDescription())
+                    .detail(updateDto.getDetail())
+                    .status(Project.Status.valueOf(updateDto.getStatus()))
+                    .closeAt(updateDto.getCloseAt())
+                    .updateAt(LocalDateTime.now())
+                    .updaterId(updateDto.getUpdaterId())
+                    .build();
+        }
+    }
 }
