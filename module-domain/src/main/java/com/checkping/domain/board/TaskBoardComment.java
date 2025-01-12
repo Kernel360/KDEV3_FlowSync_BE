@@ -82,4 +82,9 @@ public class TaskBoardComment extends BaseEntity {
     public void activate() {
         this.deletedYn = DeleteStatus.N;
     }
+
+    // update
+    public void update(String content) {
+        this.content = content;
+    }
 }
