@@ -16,7 +16,7 @@ public class MemberUpdateDto {
     private String introduction;
     private String remark;
 
-    public static void toEntity(Member member, MemberUpdateDto dto) {
+    public static Member toEntity(Member member, MemberUpdateDto dto) {
         member.updateMemberInfo(
                 dto.getName(),
                 dto.getPhoneNum(),
@@ -25,5 +25,6 @@ public class MemberUpdateDto {
                 dto.getIntroduction(),
                 dto.getRemark()
         );
+        return member;
     }
 }
