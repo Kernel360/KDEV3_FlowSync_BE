@@ -4,6 +4,7 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
+import com.checkping.dto.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
@@ -133,5 +134,31 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         taskBoardStore.deleteHard(initTaskBoard);
 
         return TaskBoardResponse.TaskBoardListDto.toDto(initTaskBoard);
+    }
+
+    /**
+     * 업무 관리 게시글 서비스 - 수정 기능
+     *
+     * @param taskBoardId 업무 관리 게시글 ID
+     * @param request 업무 관리 게시글 수정 요청 Dto
+     * @return 수정을 완료한 업무 관리 게시글 Dto
+     */
+    @Override
+    public TaskBoardItemDto update(Long taskBoardId, UpdateDto request) {
+
+        // find TaskBoard Entity
+        TaskBoard initTaskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+            TaskBoardNotFoundEntityException::new);
+
+        // update
+        String title = request.getTitle();
+        String content = request.getContent();
+        initTaskBoard.update(title, content);
+
+        // save
+        TaskBoard updatedTaskBoard = taskBoardStore.store(initTaskBoard);
+
+        // Entity -> Dto
+        return TaskBoardResponse.TaskBoardItemDto.toDto(updatedTaskBoard);
     }
 }
