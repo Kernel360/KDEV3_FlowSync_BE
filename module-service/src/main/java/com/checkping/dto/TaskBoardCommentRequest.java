@@ -33,4 +33,13 @@ public class TaskBoardCommentRequest {
                 .build();
         }
     }
+
+    @Getter
+    @ToString
+    public static class UpdateDto {
+        /*
+        content : 댓글 내용
+         */
+        private String content;
+    }
 }
