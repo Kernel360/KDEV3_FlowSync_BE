@@ -13,4 +13,14 @@ public class TaskBoardStoreImpl implements TaskBoardStore {
     public TaskBoard store(TaskBoard taskBoard) {
         return taskBoardRepository.save(taskBoard);
     }
+
+    /**
+     * HARD DELETE - TaskBoard
+     *
+     * @param taskBoard 삭제할 TaskBoard 엔티티
+     */
+    @Override
+    public void deleteHard(TaskBoard taskBoard) {
+        taskBoardRepository.delete(taskBoard);
+    }
 }
