@@ -71,7 +71,6 @@ class MemberControllerTest {
         BDDMockito.given(memberService.registerMember(any(MemberRegisterDto.class)))
                 .willReturn(mockResponse);
 
-        // request DTO
         MemberRegisterDto requestDto = new MemberRegisterDto();
         requestDto.setOrganizationId(UUID.randomUUID());
         requestDto.setEmail("mock@test.com");
@@ -84,8 +83,8 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("mock@test.com"))
-                .andExpect(jsonPath("$.name").value("MockUser"));
+                .andExpect(jsonPath("$.data.email").value("mock@test.com"))
+                .andExpect(jsonPath("$.data.name").value("MockUser"));
     }
 
     @Test
@@ -98,16 +97,15 @@ class MemberControllerTest {
                 .name("조회테스터")
                 .build();
 
-        // email 파라미터가 "emailLookup@test.com"일 때 mockResponse 반환
         BDDMockito.given(memberService.getMemberByEmail("emailLookup@test.com"))
                 .willReturn(mockResponse);
 
         mockMvc.perform(get("/admins/members/{member_id}", memberId)
                         .param("email", "emailLookup@test.com"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(memberId.toString()))
-                .andExpect(jsonPath("$.email").value("emailLookup@test.com"))
-                .andExpect(jsonPath("$.name").value("조회테스터"));
+                .andExpect(jsonPath("$.data.id").value(memberId.toString()))
+                .andExpect(jsonPath("$.data.email").value("emailLookup@test.com"))
+                .andExpect(jsonPath("$.data.name").value("조회테스터"));
     }
 
     @Test
@@ -131,8 +129,8 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(memberId.toString()))
-                .andExpect(jsonPath("$.name").value("수정된 이름"));
+                .andExpect(jsonPath("$.data.id").value(memberId.toString()))
+                .andExpect(jsonPath("$.data.name").value("수정된 이름"));
     }
 
 
@@ -147,34 +145,29 @@ class MemberControllerTest {
 
         mockMvc.perform(get("/admins/members"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.members").isArray());
+                .andExpect(jsonPath("$.data.members").isArray());
     }
 
 
     @Test
     @DisplayName("비밀번호 변경 - 성공 케이스")
     void changePasswordSuccess() throws Exception {
-        // given
         UUID memberId = UUID.randomUUID();
 
-        // 비밀번호 변경 요청 DTO
         ChangePasswordDto changeDto = new ChangePasswordDto();
         changeDto.setCurrentPassword("oldPw");
         changeDto.setNewPassword("newPw123");
         changeDto.setConfirmNewPassword("newPw123");
 
-        // Service 동작: 성공 시 아무 예외도 없으므로 willDoNothing()
         BDDMockito.willDoNothing()
                 .given(memberService)
                 .changePassword(eq(memberId), any(ChangePasswordDto.class));
 
-        // when & then
         mockMvc.perform(patch("/admins/members/{member_id}/password", memberId)
-                        .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(changeDto)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Your password has been changed."));
+                .andExpect(jsonPath("$.message").value("Your password has been changed."));
     }
 
     //TODO : 비밀번호 변경 실패 케이스 테스트 코드 작성
