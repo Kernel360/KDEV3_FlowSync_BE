@@ -1,5 +1,6 @@
 package com.checkping.service.project;
 
+import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
 import com.checkping.dto.TaskBoardCommentResponse;
 
@@ -13,4 +14,7 @@ public interface TaskBoardCommentService {
 
     TaskBoardCommentResponse.TaskBoardCommentDto deleteHard(Long taskBoardId,
         Long taskBoardCommentId);
+
+    TaskBoardCommentResponse.TaskBoardCommentDto update(Long taskBoardId, Long taskBoardCommentId,
+        TaskBoardCommentRequest.UpdateDto request);
 }

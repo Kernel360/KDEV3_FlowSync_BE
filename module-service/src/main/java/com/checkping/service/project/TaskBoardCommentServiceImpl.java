@@ -4,6 +4,7 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
+import com.checkping.dto.TaskBoardCommentRequest.UpdateDto;
 import com.checkping.dto.TaskBoardCommentResponse;
 import com.checkping.dto.TaskBoardCommentResponse.TaskBoardCommentDto;
 import com.checkping.exception.project.TaskBoardCommentMisMatchEntityException;
@@ -53,7 +54,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     /**
      * 업무 관리 게시글 댓글 서비스 - 댓글 소프트 삭제
      *
-     * @param taskBoardId 업무 관리 게시글 ID
+     * @param taskBoardId        업무 관리 게시글 ID
      * @param taskBoardCommentId 업무 관리 게시글 댓글 ID
      * @return 삭제 상태인 TaskBoardComment
      */
@@ -61,7 +62,8 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     public TaskBoardCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId, taskBoardCommentId);
+        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+            taskBoardCommentId);
         if (!isContaining) {
             throw new TaskBoardCommentMisMatchEntityException();
         }
@@ -84,7 +86,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     /**
      * 업무 관리 게시글 댓글 서비스 - 댓글 하드 삭제
      *
-     * @param taskBoardId 업무 관리 게시글 ID
+     * @param taskBoardId        업무 관리 게시글 ID
      * @param taskBoardCommentId 업무 관리 게시글 댓글 ID
      * @return 삭제된 TaskBoardComment
      */
@@ -92,7 +94,8 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     public TaskBoardCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId, taskBoardCommentId);
+        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+            taskBoardCommentId);
         if (!isContaining) {
             throw new TaskBoardCommentMisMatchEntityException();
         }
@@ -107,5 +110,38 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(initComment);
+    }
+
+    /**
+     * 업무 관리 게시판 댓글 서비스 - 수정 기능
+     *
+     * @param taskBoardId 업무 관리 게시판 ID
+     * @param taskBoardCommentId 업무 관리 게시판 댓글 Id
+     * @param request TaskBoardCommentRequest.UpdateDto
+     * @return 수정된 TaskBoardComment
+     */
+    @Override
+    public TaskBoardCommentDto update(Long taskBoardId, Long taskBoardCommentId,
+        UpdateDto request) {
+
+        // 업무 관리 게시글에 속한 댓글인지 확인
+        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+            taskBoardCommentId);
+        if (!isContaining) {
+            throw new TaskBoardCommentMisMatchEntityException();
+        }
+
+        // find TaskBoardComment Entity
+        TaskBoardComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+            taskBoardCommentId).orElseThrow(TaskBoardCommentNotFoundEntityException::new);
+
+        // update
+        initComment.update(request.getContent());
+
+        // save
+        TaskBoardComment updatedComment = taskBoardCommentStore.store(initComment);
+
+        // Entity -> Dto
+        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(updatedComment);
     }
 }
