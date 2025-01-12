@@ -63,6 +63,21 @@ public class TaskBoardRequest {
         }
     }
 
+    @Getter
+    @ToString
+    public static class UpdateDto {
+        /*
+        title : 게시글 제목
+        content : 게시글 본문
+        boardCategory : 게시글 유형
+        boardStatus : 게시글 상태
+         */
+        private String title;
+        private String content;
+        private String boardCategory;
+        private String boardStatus;
+    }
+
     /**
      * Enum : BoardCategory 변환 함수
      *
