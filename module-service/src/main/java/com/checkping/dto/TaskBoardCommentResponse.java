@@ -21,7 +21,7 @@ public class TaskBoardCommentResponse {
         private String content;
         private LocalDateTime regAt;
         private LocalDateTime editAt;
-        private DeleteStatus deleteStatus;
+        private DeleteStatus deletedYn;
 
 
         /**
@@ -36,6 +36,7 @@ public class TaskBoardCommentResponse {
             dto.content = taskBoardComment.getContent();
             dto.regAt = taskBoardComment.getRegAt();
             dto.editAt = taskBoardComment.getEditAt();
+            dto.deletedYn = taskBoardComment.getDeletedYn();
             return dto;
         }
 
