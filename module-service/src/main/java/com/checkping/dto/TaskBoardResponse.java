@@ -51,6 +51,7 @@ public class TaskBoardResponse {
             boardDto.setApproverAt(taskBoard.getApproverAt());
             boardDto.setBoardCategory(taskBoard.getBoardCategory());
             boardDto.setBoardStatus(taskBoard.getBoardStatus());
+            boardDto.setDeletedYn(taskBoard.getDeletedYn());
             return boardDto;
         }
     }
@@ -96,6 +97,7 @@ public class TaskBoardResponse {
             boardDto.setApproverAt(taskBoard.getApproverAt());
             boardDto.setBoardCategory(taskBoard.getBoardCategory());
             boardDto.setBoardStatus(taskBoard.getBoardStatus());
+            boardDto.setDeletedYn(taskBoard.getDeletedYn());
 
             // Entity -> Dto
             List<TaskBoardCommentResponse.TaskBoardCommentDto> comments =
