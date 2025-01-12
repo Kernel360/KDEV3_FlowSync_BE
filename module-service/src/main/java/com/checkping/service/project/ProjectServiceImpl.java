@@ -48,4 +48,18 @@ public class ProjectServiceImpl implements ProjectService {
 
         return ProjectResponse.ProjectDto.toDto(projectRepository.save(updatedProject));
     }
+
+    @Override
+    public ProjectResponse.ProjectDto updateProject(Long projectId, ProjectRequest.UpdateDto request) {
+        if (StringUtils.isBlank(request.getName())) {
+            throw new BaseException(ErrorCode.BAD_REQUEST);
+        }
+
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project));
+
+        return ProjectResponse.ProjectDto.toDto(project);
+    }
+
 }

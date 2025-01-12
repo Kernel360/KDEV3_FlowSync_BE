@@ -31,4 +31,13 @@ public class ProjectController {
         return BaseResponse.success(projectDto);
     }
 
+    @PatchMapping("/admins/projects/{projectId}")
+    public BaseResponse<ProjectResponse.ProjectDto> updateProjects(
+            @PathVariable Long projectId,
+            @RequestBody ProjectRequest.UpdateDto request)
+    {
+        ProjectResponse.ProjectDto projectDto = projectService.updateProject(projectId, request);
+        log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}, updater_id : {}", projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt(), projectDto.getUpdaterId());
+        return BaseResponse.success(projectDto);
+    }
 }
