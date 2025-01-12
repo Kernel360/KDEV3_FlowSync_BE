@@ -63,6 +63,16 @@ public class TaskBoardController {
         return BaseResponse.success(taskBoardItemDto);
     }
 
+    @PutMapping("/posts/{postId}")
+    public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
+        @RequestBody TaskBoardRequest.UpdateDto request) {
+
+        TaskBoardResponse.TaskBoardItemDto updatedBoardDto = taskBoardService.update(postId,
+            request);
+
+        return BaseResponse.success(updatedBoardDto);
+    }
+
     @DeleteMapping("/posts/{postId}")
     public BaseResponse<TaskBoardResponse.TaskBoardListDto> deleteSoftTaskBoard(
         @PathVariable Long postId) {
