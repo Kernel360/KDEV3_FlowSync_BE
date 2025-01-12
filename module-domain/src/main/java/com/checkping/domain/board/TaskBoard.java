@@ -26,7 +26,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString
+@ToString(exclude = "commentList")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,15 +45,15 @@ public class TaskBoard extends BaseEntity {
     boardStatus : 게시글 상태
     deletedYn : 삭제 여부
     parent : 부모 게시글
-    replyList : 답글 리스트
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Builder.Default
     @Column(name = "number", nullable = false)
-    private Integer number;
+    private Integer number = 1;
 
     @Column(name = "title", nullable = false, length = 100)
     private String title;
@@ -76,18 +76,20 @@ public class TaskBoard extends BaseEntity {
     @Column(name = "board_category", nullable = false, length = 100)
     private BoardCategory boardCategory;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "board_status", nullable = false, length = 100)
     private BoardStatus boardStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
-    private Character deletedYn;
+    private DeleteStatus deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TaskBoard parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<TaskBoard> replyList = new ArrayList<>();
+    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    private List<TaskBoardComment> commentList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
@@ -101,5 +103,22 @@ public class TaskBoard extends BaseEntity {
     public enum BoardStatus {
         PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
         private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum DeleteStatus {
+        Y("비활성화"), N("활성화");
+        private final String description;
+    }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deletedYn = DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deletedYn = DeleteStatus.N;
     }
 }

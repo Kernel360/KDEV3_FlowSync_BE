@@ -3,6 +3,8 @@ package com.checkping.domain.board;
 import com.checkping.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,12 +17,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString
+@ToString(exclude = "taskBoard")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,13 +55,31 @@ public class TaskBoardComment extends BaseEntity {
     @Column(name = "edit_at", nullable = false)
     private LocalDateTime editAt;
 
-    @Column(name = "parent_id", nullable = false)
+    @Column(name = "parent_id")
     private Long parentId;
 
     @Column(name = "deleted_yn", nullable = false)
-    private Character deletedYn;
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_board_id", nullable = false)
     private TaskBoard taskBoard;
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum DeleteStatus {
+        Y("비활성화"), N("활성화");
+        private final String description;
+    }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deletedYn = DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deletedYn = DeleteStatus.N;
+    }
 }

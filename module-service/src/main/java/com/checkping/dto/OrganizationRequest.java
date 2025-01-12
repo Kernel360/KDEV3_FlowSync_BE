@@ -3,30 +3,28 @@ package com.checkping.dto;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.CustomException;
 import com.checkping.domain.member.Organization;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 public class OrganizationRequest {
 
     @Getter
+    @ToString
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class OrganizationSignUpRequest {
-
+    public static class CreateRequest {
         /*
-          type : 업체유형
-          brNumber : 사업자등록번호
-          name : 업체명
-          brCertificateUrl : 사업자등록증 이미지 링크
-          streetAddress : 도로명주소
-          detailAddress : 상세주소
-          phoneNumber : 전화번호
+        type : 업체유형
+        status : 업체상태
+        brNumber : 사업자등록번호
+        name : 업체명
+        brCertificateUrl : 사업자등록증 이미지 링크
+        streetAddress : 도로명주소
+        detailAddress : 상세주소
+        phoneNumber : 전화번호
          */
-
         private String type;
+        private String status;
         private String brNumber;
         private String name;
         private String brCertificateUrl;
@@ -42,7 +40,7 @@ public class OrganizationRequest {
             }
         }
 
-        public static Organization toEntity(OrganizationSignUpRequest request) {
+        public static Organization toEntity(CreateRequest request) {
             return Organization.builder()
                     .type(Organization.Type.valueOf(request.type))
                     .brNumber(request.brNumber)

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-@Builder
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name="project")
@@ -20,7 +20,7 @@ public class Project extends BaseEntity {
     name : 프로젝트 이름
     description : 프로젝트 설명
     detail : 프로젝트 세부 설명
-    status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료), DELETED(삭제)
+    status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
     reg_at : 프로젝트 등록 일시
     update_at : 프로젝트 수정 일시
     close_at : 프로젝트 종료 일시
@@ -69,8 +69,7 @@ public class Project extends BaseEntity {
     public enum Status {
         IN_PROGRESS("진행중"),
         PAUSED("일시 중단"),
-        COMPLETED("완료"),
-        DELETED("삭제");
+        COMPLETED("완료");
 
         private final String description;
     }
