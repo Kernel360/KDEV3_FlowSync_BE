@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -60,4 +61,41 @@ public class ProjectServiceTests {
         System.out.println("deleteProject : " + projectDto);
     }
 
+    @Test
+    public void updateProject() {
+
+        LocalDateTime defaultCloseAt = LocalDate.parse("2025-12-30").atStartOfDay();
+        Long resisterId = 49283L;
+
+        for(int i=0; i<5; i++){
+            ProjectResponse.ProjectDto resisterDto = projectService.registerProject(
+                    ProjectRequest.ResisterDto.builder()
+                            .name("이름" + i)
+                            .description("설명")
+                            .detail("상세설명")
+                            .status(String.valueOf(Project.Status.IN_PROGRESS))
+                            .closeAt(defaultCloseAt)
+                            .resisterId(resisterId)
+                            .build());
+
+            System.out.println("resisterProject : " + resisterDto);
+        }
+
+        projectService.updateProject(2L,
+                ProjectRequest.UpdateDto.builder()
+                        .name("프로젝트이름")
+                        .description("설명123")
+                        .detail("상세설명")
+                        .status(String.valueOf(Project.Status.PAUSED))
+                        .closeAt(LocalDate.parse("2025-06-30").atStartOfDay())
+                        .updaterId(resisterId)
+                        .build());
+
+        List<Project> list = projectRepository.findAll();
+
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println("updateProject : " + list.get(i));
+        }
+
+    }
 }
