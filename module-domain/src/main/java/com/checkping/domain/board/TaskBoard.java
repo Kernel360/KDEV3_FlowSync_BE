@@ -33,6 +33,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Table(name = "task_board")
 @Entity
 public class TaskBoard extends BaseEntity {
+
     /*
     id : id
     number : 게시글 번호
@@ -120,5 +121,17 @@ public class TaskBoard extends BaseEntity {
     // soft delete 해제 = 게시글 활성화
     public void activate() {
         this.deletedYn = DeleteStatus.N;
+    }
+
+    // update
+    public void update(String title, String content) {
+
+        if (!this.title.equals(title)) {
+            this.title = title;
+        }
+
+        if (!this.content.equals(content)) {
+            this.content = content;
+        }
     }
 }
