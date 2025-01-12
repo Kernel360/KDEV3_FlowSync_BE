@@ -5,6 +5,7 @@ import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
+import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.service.project.TaskBoardCommentService;
@@ -60,6 +61,15 @@ public class TaskBoardController {
         TaskBoardItemDto taskBoardItemDto = taskBoardService.getTaskBoardById(postId);
 
         return BaseResponse.success(taskBoardItemDto);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public BaseResponse<TaskBoardResponse.TaskBoardListDto> deleteSoftTaskBoard(
+        @PathVariable Long postId) {
+
+        TaskBoardResponse.TaskBoardListDto deletedBoardDto = taskBoardService.deleteSoft(postId);
+
+        return BaseResponse.success(deletedBoardDto);
     }
 
     @PostMapping("/posts/{postId}/comments")
