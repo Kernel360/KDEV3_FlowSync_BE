@@ -12,6 +12,7 @@ import com.checkping.service.project.TaskBoardService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +61,7 @@ public class TaskBoardController {
         return BaseResponse.success(taskBoardItemDto);
     }
 
-    @PostMapping("/posts/{postId}/comment")
+    @PostMapping("/posts/{postId}/comments")
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
         @PathVariable Long postId, @RequestBody TaskBoardCommentRequest.RegisterDto request) {
 
@@ -68,5 +69,15 @@ public class TaskBoardController {
             postId, request);
 
         return BaseResponse.success(taskBoardCommentDto);
+    }
+
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> deleteSoft(
+        @PathVariable Long postId, @PathVariable Long commentId) {
+
+        TaskBoardCommentResponse.TaskBoardCommentDto deletedCommentDto = taskBoardCommentService.deleteSoft(
+            postId, commentId);
+
+        return BaseResponse.success(deletedCommentDto);
     }
 }
