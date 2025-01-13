@@ -20,9 +20,10 @@ public class ProjectRequest {
         name : 프로젝트 이름
         description : 프로젝트 설명
         detail : 프로젝트 세부 설명
-        status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료), DELETED(삭제)
+        status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
         closeAt : 프로젝트 종료 일시
         resisterId : 등록자 아이디
+        deletedYn : 삭제여부
         */
 
         private String name;
@@ -42,6 +43,7 @@ public class ProjectRequest {
                     .regAt(LocalDateTime.now())
                     .closeAt(resisterDto.getCloseAt())
                     .resisterId(resisterDto.getResisterId())
+                    .deletedYn("N")
                     .build();
         }
     }

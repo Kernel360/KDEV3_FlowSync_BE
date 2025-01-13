@@ -24,6 +24,7 @@ public class ProjectResponse {
         private LocalDateTime closeAt;
         private Long resisterId;
         private Long updaterId;
+        private String deletedYn;
 
         public static ProjectDto toDto(Project project) {
             ProjectDto projectDto = new ProjectDto();
@@ -37,6 +38,7 @@ public class ProjectResponse {
             projectDto.setCloseAt(project.getCloseAt());
             projectDto.setResisterId(project.getResisterId());
             projectDto.setUpdaterId(project.getUpdaterId());
+            projectDto.setDeletedYn(project.getDeletedYn());
             return projectDto;
         }
     }
