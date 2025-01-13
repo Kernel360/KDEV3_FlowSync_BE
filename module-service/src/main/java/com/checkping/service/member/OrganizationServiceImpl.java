@@ -1,7 +1,7 @@
 package com.checkping.service.member;
 
 import com.checkping.common.enums.ErrorCode;
-import com.checkping.common.exception.CustomException;
+import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
@@ -24,11 +24,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationResponse.ReadResponse createOrganization(OrganizationRequest.CreateRequest request) {
 
         if (request == null) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
         if (organizationRepository.findByNameAndType(request.getName(), request.getTypeEnum()).isPresent()) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
         Organization organization = OrganizationRequest.CreateRequest.toEntity(request);
@@ -43,7 +43,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
-        Organization organization = result.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         return OrganizationResponse.ReadResponse.toDto(organization);
     }
@@ -73,4 +73,42 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .map(OrganizationResponse.ReadResponse::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrganizationResponse.UpdateResponse modifyOrganization(
+            UUID id,
+            OrganizationRequest.UpdateRequest request
+    ) {
+        Optional<Organization> result = organizationRepository.findById(id);
+        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        organization.updateOrganization(
+                request.getBrNumber(),
+                request.getBrCertificateUrl(),
+                request.getStreetAddress(),
+                request.getDetailAddress(),
+                request.getPhoneNumber()
+        );
+
+        Organization updateOrganization = organizationRepository.save(organization);
+
+        OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+
+        return OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+    }
+
+    @Override
+    public OrganizationResponse.ReadResponse removeOrganization(UUID id) {
+
+        Optional<Organization> result = organizationRepository.findById(id);
+
+        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        organization.changeStatus();
+
+        Organization removeOrganization = organizationRepository.save(organization);
+
+        return OrganizationResponse.ReadResponse.toDto(removeOrganization);
+    }
+
 }
