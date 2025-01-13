@@ -53,7 +53,8 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         for (TaskBoardLinkRequest.RegisterDto linkDto : linkDtoList) {
 
             // TaskBoardLink Dto -> Entity
-            TaskBoardLink initTaskBoardLink = TaskBoardLinkRequest.RegisterDto.toEntity(taskBoard, linkDto);
+            TaskBoardLink initTaskBoardLink = TaskBoardLinkRequest.RegisterDto.toEntity(taskBoard,
+                linkDto);
 
             // save TaskBoardLink
             TaskBoardLink taskBoardLink = taskBoardLinkStore.store(initTaskBoardLink);
@@ -160,7 +161,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * 업무 관리 게시글 서비스 - 수정 기능
      *
      * @param taskBoardId 업무 관리 게시글 ID
-     * @param request 업무 관리 게시글 수정 요청 Dto
+     * @param request     업무 관리 게시글 수정 요청 Dto
      * @return 수정을 완료한 업무 관리 게시글 Dto
      */
     @Override
