@@ -44,4 +44,8 @@ tasks.withType(Test) {
     onlyIf { project.hasProperty('runtests') }
 }
 
+tasks.named('bootJar') {
+    mainClass = 'com.checkping.api.ApiApplication'
+}
+
 tasks.register("prepareKotlinBuildScripModel") {}
