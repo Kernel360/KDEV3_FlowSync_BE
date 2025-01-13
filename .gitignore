@@ -1,5 +1,6 @@
 ### yaml
 application-s3.yaml
+application-jwt.yaml
 
 HELP.md
 .gradle
