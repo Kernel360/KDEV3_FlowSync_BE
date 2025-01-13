@@ -2,6 +2,8 @@ package com.checkping.service.project;
 
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
+import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardRequest.UpdateDto;
@@ -13,6 +15,7 @@ import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
 import com.checkping.infra.repository.project.taskboard.TaskBoardStore;
 import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentReader;
 import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentStore;
+import com.checkping.infra.repository.project.taskboardlink.TaskBoardLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     private final TaskBoardReader taskBoardReader;
     private final TaskBoardCommentReader taskBoardCommentReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
+    private final TaskBoardLinkStore taskBoardLinkStore;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -39,10 +43,26 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         TaskBoard initTaskBoard = TaskBoardRequest.RegisterDto.toEntity(request);
         initTaskBoard.activate();
 
-        // save entity
+        // save TaskBoard entity
         TaskBoard taskBoard = taskBoardStore.store(initTaskBoard);
 
-        // entity -> dto
+        // get register info
+        List<TaskBoardLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
+
+        // loop for add
+        for (TaskBoardLinkRequest.RegisterDto linkDto : linkDtoList) {
+
+            // TaskBoardLink Dto -> Entity
+            TaskBoardLink initTaskBoardLink = TaskBoardLinkRequest.RegisterDto.toEntity(taskBoard, linkDto);
+
+            // save TaskBoardLink
+            TaskBoardLink taskBoardLink = taskBoardLinkStore.store(initTaskBoardLink);
+
+            // ADD TaskBoardLink (in TaskBoard)
+            taskBoard.addLink(taskBoardLink);
+        }
+
+        // Entity -> Dto
         return TaskBoardItemDto.toDto(taskBoard);
     }
 
