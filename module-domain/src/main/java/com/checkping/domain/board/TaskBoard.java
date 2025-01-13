@@ -92,6 +92,9 @@ public class TaskBoard extends BaseEntity {
     @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
     private List<TaskBoardComment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    private List<TaskBoardLink> taskBoardLinkList = new ArrayList<>();
+
     @Getter
     @RequiredArgsConstructor
     public enum BoardCategory {
