@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,4 +45,17 @@ public class TaskBoardLink extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_board_id", nullable = false)
     private TaskBoard taskBoard;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TaskBoardLink that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id) && Objects.equals(url, that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url);
+    }
 }
