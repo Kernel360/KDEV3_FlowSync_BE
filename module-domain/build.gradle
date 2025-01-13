@@ -38,5 +38,9 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.withType(Test) {
+    onlyIf { project.hasProperty('runtests') }
+}
+
 tasks.bootJar { enabled = false }
 tasks.jar { enabled = true }
