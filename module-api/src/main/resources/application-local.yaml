@@ -24,4 +24,4 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
   config:
-    import: classpath:/application-s3.yaml
+    import: classpath:/application-s3.yaml, classpath:/application-jwt.yaml
