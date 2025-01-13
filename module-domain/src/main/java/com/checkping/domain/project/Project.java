@@ -1,9 +1,12 @@
 package com.checkping.domain.project;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Organization;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -63,6 +66,13 @@ public class Project extends BaseEntity {
 
     @Column(name = "deleted_yn")
     private String deletedYn;
+
+    @OneToMany
+    @Builder.Default
+    @JoinTable(name = "organization_by_project",
+    joinColumns = @JoinColumn(name="project_id"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", columnDefinition = "UUID"))
+    private List<Organization> organizations = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
