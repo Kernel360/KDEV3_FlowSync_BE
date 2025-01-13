@@ -2,12 +2,17 @@ package com.checkping.api.controller;
 
 import com.checkping.api.security.util.CustomJWTException;
 import com.checkping.api.security.util.JWTUtil;
+import com.checkping.common.response.BaseResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -17,9 +22,15 @@ import java.util.Map;
 public class APIRefreshController {
 
     @RequestMapping("/admins/members/refresh")
-    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken) throws CustomJWTException {
+    public BaseResponse<String> refresh(
+            @RequestHeader("Authorization") String authHeader,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws CustomJWTException {
 
         log.info("---------------------------RefreshToken Start--------------------------------");
+
+        String refreshToken = getRefreshTokenFromCookie(request);
 
         if(refreshToken == null) {
             throw new CustomJWTException("NULL_REFRESH");
@@ -34,7 +45,15 @@ public class APIRefreshController {
         //Access 토큰이 만료되지 않았다면
         if(checkExpiredToken(accessToken) == false) {
             log.info("---------------------------RefreshToken End (access 만료 x)--------------------------------");
-            return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+            log.info("---------------------------RefreshToken End--------------------------------");
+
+            // 헤더에 기존 accessToken 추가
+            response.setHeader("Authorization", "Bearer " + accessToken);
+
+            // 쿠키에 기존 refreshToken 추가
+            addRefreshTokenToCookie(response, refreshToken);
+
+            return BaseResponse.success("발급 성공");
         }
 
         //Refresh 토큰 검증
@@ -49,7 +68,33 @@ public class APIRefreshController {
         log.info("---------------------------RefreshToken End (access 만료)--------------------------------");
         log.info("---------------------------RefreshToken End--------------------------------");
 
-        return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
+        // 헤더에 새 accessToken 추가
+        response.setHeader("Authorization", "Bearer " + newAccessToken);
+
+        // 쿠키에 새 refreshToken 추가
+        addRefreshTokenToCookie(response, newRefreshToken);
+
+        return BaseResponse.success("발급 성공");
+    }
+
+    private String getRefreshTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            return Arrays.stream(request.getCookies())
+                    .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    // 쿠키에 refreshToken 추가
+    private void addRefreshTokenToCookie(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 30); // 30일 동안 유효
+        response.addCookie(cookie);
     }
 
     // 시간이 1시간 미만으로 남았다면

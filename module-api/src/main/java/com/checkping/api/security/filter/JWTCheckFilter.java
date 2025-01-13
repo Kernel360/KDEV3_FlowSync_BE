@@ -45,6 +45,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/h2-console")) {
+            return true;
+        }
+
+
         return false;
     }
 
