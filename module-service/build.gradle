@@ -49,6 +49,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.withType(Test) {
+    onlyIf { project.hasProperty('runtests') }
+}
+
 tasks.register("prepareKotlinBuildScripModel") {}
 
 tasks.bootJar { enabled = false }
