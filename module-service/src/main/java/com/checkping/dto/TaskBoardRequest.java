@@ -1,12 +1,13 @@
 package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoard;
+import com.checkping.domain.board.TaskBoardLink;
 import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.util.StringUtils;
 
@@ -19,14 +20,22 @@ public class TaskBoardRequest {
         /*
         title : 게시글 제목
         content : 게시글 본문 내용
-        boardCategory : 게시글 카테고리 (enum, String)
+        boardCategory : 게시글 카테고리 (enum, String
         boardStatus : 게시글 상태 (enum, String)
+        taskBoardLinkList : 첨부 링크 리스트 (List<TaskBoardLinkRequest.RegisterDto>)
          */
         private String title;
         private String content;
         private String boardCategory;
         private String boardStatus;
+        private List<TaskBoardLinkRequest.RegisterDto> taskBoardLinkList;
 
+        /**
+         * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
+         *
+         * @param registerDto 엄무 관리 게시글 등록 요청 정보
+         * @return TaskBoard Entity
+         */
         public static TaskBoard toEntity(RegisterDto registerDto) {
             return TaskBoard.builder()
                 .title(registerDto.getTitle())
