@@ -7,7 +7,6 @@ import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.service.member.MemberService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,18 +23,18 @@ public class MemberController {
 
     //특정 고객 조회 (이메일로 조회 가능, 엔드포인트는 ID 형태 유지)
     //GET /admins/members/{member_id}?email=xxx@example.com
-    @GetMapping("/admins/members/{member_id}")
+    @GetMapping("/admins/members/{member_id}") // TODO 언더바 잘 안씀
     public BaseResponse<MemberResponseDto> getMemberById(
-            @PathVariable("member_id") UUID memberId,
+            @PathVariable("member_id") UUID memberId, // TODO URL 설계 다시하기
             @RequestParam String email
     ) {
         // 현재 구현에서는 email을 이용해 조회 (memberId는 URI 형태상 포함)
-        MemberResponseDto response = memberService.getMemberByEmail(email);
+        MemberResponseDto response = memberService.getMemberByEmail(email);  // TODO Dto라는 파일 이름 뒤에 잘 안붙임, 굳이 더 안쓸 변수 response 말고 바로 반환하기
         return BaseResponse.success(response);
     }
 
     //특정 고객 정보 수정
-    //PUT /admins/members/{member_id}
+    //PUT /admins/members/{member_id} //TODO PATCH로 변경, 부분 정보 수정이기 떄문에
     @PutMapping("/admins/members/{member_id}")
     public BaseResponse<MemberResponseDto> updateMember(
             @PathVariable("member_id") UUID memberId,

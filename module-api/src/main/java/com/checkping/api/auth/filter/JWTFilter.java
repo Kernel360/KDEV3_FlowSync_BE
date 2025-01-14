@@ -28,7 +28,16 @@ public class JWTFilter extends OncePerRequestFilter {
     // TODO 필터 거치지 않을 경로 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return super.shouldNotFilter(request);
+        //h2-console 경로는 필터 제외
+        if (request.getRequestURI().startsWith("/h2-console")) {
+            return true;
+        }
+        if (request.getRequestURI().startsWith("/login")) {
+            return true;
+        }
+        //return super.shouldNotFilter(request);
+        return false;
+
     }
 
 
@@ -42,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
 
-        // 토큰이 없다면 다음 필터로 넘김
+        //토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
 
             filterChain.doFilter(request, response); //

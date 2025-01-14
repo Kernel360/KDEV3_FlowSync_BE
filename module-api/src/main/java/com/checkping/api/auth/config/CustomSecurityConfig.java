@@ -2,6 +2,7 @@ package com.checkping.api.auth.config;
 
 
 import com.checkping.api.auth.filter.CustomLogoutFilter;
+import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +11,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +47,9 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        //CORS 설정
+        http
+                .cors((cors) -> cors.configurationSource(corsConfiguration()));
         //csrf disable
         http
                 .csrf((auth) -> auth.disable());
@@ -52,13 +62,19 @@ public class CustomSecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
+        http
+                .headers(headers->headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/reissue").permitAll()
                         //anyRequest().authenticated());
                         .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
+
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http
@@ -74,4 +90,17 @@ public class CustomSecurityConfig {
 
         return http.build();
     }
-}
+
+    //CORS 설정
+    public CorsConfigurationSource corsConfiguration(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Collections.singletonList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+        }
+    }
