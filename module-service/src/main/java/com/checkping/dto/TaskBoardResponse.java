@@ -17,6 +17,7 @@ public class TaskBoardResponse {
     @Setter
     @ToString
     public static class TaskBoardListDto {
+
         /*
         id : 게시글 고유 ID
         number : 게시글 번호
@@ -85,6 +86,7 @@ public class TaskBoardResponse {
         private TaskBoard.BoardStatus boardStatus;
         private TaskBoard.DeleteStatus deletedYn;
         private List<TaskBoardCommentResponse.TaskBoardCommentDto> commentList;
+        private List<TaskBoardLinkResponse.TaskBoardLinkDto> taskBoardLinkList;
 
         public static TaskBoardResponse.TaskBoardItemDto toDto(TaskBoard taskBoard) {
             TaskBoardResponse.TaskBoardItemDto boardDto = new TaskBoardResponse.TaskBoardItemDto();
@@ -99,10 +101,15 @@ public class TaskBoardResponse {
             boardDto.setBoardStatus(taskBoard.getBoardStatus());
             boardDto.setDeletedYn(taskBoard.getDeletedYn());
 
-            // Entity -> Dto
+            // Entity -> Dto (TaskBoardComment)
             List<TaskBoardCommentResponse.TaskBoardCommentDto> comments =
                 TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(taskBoard.getCommentList());
             boardDto.setCommentList(comments);
+
+            // Entity -> Dto (TaskBoardLink)
+            List<TaskBoardLinkResponse.TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
+                taskBoard.getTaskBoardLinkList());
+            boardDto.setTaskBoardLinkList(links);
 
             return boardDto;
         }
