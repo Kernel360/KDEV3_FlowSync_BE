@@ -1,5 +1,6 @@
 package com.checkping.api.auth.filter;
 
+import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -70,10 +71,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
+        String name = ((CustomUserDetails) authentication.getPrincipal()).getName();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
+        String access = jwtUtil.createJwt("access", name, email, role, 15);
+        String refresh = jwtUtil.createJwt("refresh", name, email, role,1440);
 
         //응답 설정
         response.setHeader("Authorization", "Bearer " + access);

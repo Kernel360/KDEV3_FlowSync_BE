@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (member != null) {
 
             //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
-            return new CustomUserDetails(member.getEmail(), member.getRole().toString(), member.getPassword());
+            return new CustomUserDetails(member.getName(), member.getEmail(), member.getRole().toString(), member.getPassword());
         }
 
         return null;

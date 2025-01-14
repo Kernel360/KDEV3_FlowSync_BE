@@ -27,12 +27,13 @@ public class ReissueController {
             reissueService.checkTokenValidity(refresh);
 
             // Extract email and role
+            String name = reissueService.getNameFromToken(refresh);
             String email = reissueService.getEmailFromToken(refresh);
             String role = reissueService.getRoleFromToken(refresh);
 
             // Generate new tokens
-            String newAccess = reissueService.generateAccessToken(email, role);
-            String newRefresh = reissueService.generateRefreshToken(email, role);
+            String newAccess = reissueService.generateAccessToken(name, email, role);
+            String newRefresh = reissueService.generateRefreshToken(name, email, role);
 
             // Set response
             response.setHeader("Authorization", "Bearer " + newAccess);

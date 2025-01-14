@@ -14,6 +14,7 @@ public class MemberResponseDto {
     private UUID organizationId;
     private String email;
     private String name;
+    private Member.Role role;
     private String phoneNum;
     private String jobRole;
     private String jobTitle;
@@ -28,6 +29,7 @@ public class MemberResponseDto {
                 .email(member.getEmail())
                 .name(member.getName())
                 .phoneNum(member.getPhoneNum())
+                .role(member.getRole())
                 .jobRole(member.getJobRole())
                 .jobTitle(member.getJobTitle())
                 .status(member.getStatus())
