@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Component
@@ -35,19 +36,27 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
     }
 
+    public String getName(String token) {
+
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("name", String.class);
+    }
+
     public Boolean isExpired(String token) {
 
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String email, String role, Long expiredMs) {
+    public String createJwt(String category, String name, String email, String role, int expiredMin) {
 
         return Jwts.builder()
                 .claim("category", category)
+                .claim("name", name)
                 .claim("email", email)
                 .claim("role", role)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                //토큰 발급시간 설정- 현재시간
+                .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
+                //토큰 만료시간 설정- 현재시간 + expiredMin
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(expiredMin).toInstant()))
                 .signWith(key)
                 .compact();
     }

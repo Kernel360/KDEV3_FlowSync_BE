@@ -1,5 +1,6 @@
 package com.checkping.service.member.auth;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,14 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class CustomUserDetails implements UserDetails {
 
-
+    private String name;
     private String email;
     private String role;
     private String password;
 
-    public CustomUserDetails(String email, String role, String password) {
+    public CustomUserDetails(String name, String email, String role, String password) {
+        this.name = name;
         this.email = email;
         this.role = role;
         this.password = password;
@@ -49,6 +52,7 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Member 엔티티의 role 필드를 GrantedAuthority로 변환
         List<GrantedAuthority> authorities = new ArrayList<>();
+        // ROLE_USER, ROLE_ADMIN 형식
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role)); // ROLE_ADMIN, ROLE_MEMBER 형식
         return authorities;
     }
