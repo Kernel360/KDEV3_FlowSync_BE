@@ -2,6 +2,7 @@ package com.checkping.api.security.handler;
 
 import com.checkping.api.security.util.JWTUtil;
 import com.checkping.service.member.security.MemberDto;
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 @Slf4j
@@ -44,14 +46,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         response.addCookie(refreshTokenCookie);
 
-//        Gson gson = new Gson();
+        Map<String, Object> responseBody = Map.of("result", "success", "message", "로그인 성공");
+
+        Gson gson = new Gson();
+
+        String jsonStr = gson.toJson(responseBody);
 //
-//        String jsonStr = gson.toJson(claims);
-//
-//        response.setContentType("application/json; charset=UTF-8");
-//        PrintWriter printWriter = response.getWriter();
-//        printWriter.print(jsonStr);
-//        printWriter.close();
+        response.setContentType("application/json; charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter printWriter = response.getWriter();
+        printWriter.print(jsonStr);
+        printWriter.close();
+
         log.info("---------------------------LoginSuccessHandler End--------------------------------");
     }
 }
