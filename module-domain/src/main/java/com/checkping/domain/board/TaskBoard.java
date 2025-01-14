@@ -92,6 +92,10 @@ public class TaskBoard extends BaseEntity {
     @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
     private List<TaskBoardComment> commentList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    private List<TaskBoardLink> taskBoardLinkList = new ArrayList<>();
+
     @Getter
     @RequiredArgsConstructor
     public enum BoardCategory {
@@ -132,6 +136,14 @@ public class TaskBoard extends BaseEntity {
 
         if (!this.content.equals(content)) {
             this.content = content;
+        }
+    }
+
+    // ADD TaskBoardLink
+    public void addLink(TaskBoardLink link) {
+        // null check & contains check
+        if (link != null && !this.taskBoardLinkList.contains(link)) {
+            this.taskBoardLinkList.add(link);
         }
     }
 }
