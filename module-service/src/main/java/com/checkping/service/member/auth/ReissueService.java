@@ -40,6 +40,14 @@ public class ReissueService {
         }
     }
 
+    public String getCategoryFromToken(String token) {
+        return jwtUtil.getCategory(token);
+    }
+
+    public String getNameFromToken(String token) {
+        return jwtUtil.getName(token);
+    }
+
     public String getEmailFromToken(String token) {
         return jwtUtil.getEmail(token); // JwtUtil에서 호출
     }
@@ -48,11 +56,11 @@ public class ReissueService {
         return jwtUtil.getRole(token); // JwtUtil에서 호출
     }
 
-    public String generateAccessToken(String email, String role) {
-        return jwtUtil.createJwt("access", email, role, 600000L);
+    public String generateAccessToken(String name, String email, String role) {
+        return jwtUtil.createJwt("access", name, email, role, 15);
     }
 
-    public String generateRefreshToken(String email, String role) {
-        return jwtUtil.createJwt("refresh", email, role, 86400000L);
+    public String generateRefreshToken(String name, String email, String role) {
+        return jwtUtil.createJwt("refresh", name, email, role, 1440);
     }
 }
