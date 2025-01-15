@@ -1,5 +1,6 @@
 package com.checkping.service.member;
 
+import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-    OrganizationResponse.ReadResponse createOrganization(OrganizationRequest.CreateRequest request);
+    OrganizationResponse.ReadResponse createOrganization(OrganizationCreate.Request request);
 
     OrganizationResponse.ReadResponse getOrganization(UUID id);
 

@@ -1,6 +1,7 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.service.member.OrganizationService;
@@ -17,7 +18,7 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @PostMapping("/admins/organizations")
-    public BaseResponse<OrganizationResponse.ReadResponse> createOrganization(@RequestBody OrganizationRequest.CreateRequest request) {
+    public BaseResponse<OrganizationResponse.ReadResponse> createOrganization(@RequestBody OrganizationCreate.Request request) {
 
         OrganizationResponse.ReadResponse response = organizationService.createOrganization(request);
 

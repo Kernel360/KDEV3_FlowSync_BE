@@ -1,6 +1,7 @@
 package com.checkping.service;
 
 import com.checkping.domain.member.Organization;
+import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
@@ -24,7 +25,7 @@ class OrganizationServiceTests {
     @BeforeAll
     static void init(@Autowired OrganizationService organizationService) {
         for (int i = 0; i < 10; i++) {
-            organizationService.createOrganization(OrganizationRequest.CreateRequest.builder()
+            organizationService.createOrganization(OrganizationCreate.Request.builder()
                     .type(i < 5 ? "CUSTOMER" : "DEVELOPER")
                     .brNumber("123456" + i)
                     .name("커널" + i)
@@ -38,7 +39,7 @@ class OrganizationServiceTests {
 
     @Test
     void testCreateOrganization() {
-        organizationService.createOrganization(OrganizationRequest.CreateRequest.builder()
+        organizationService.createOrganization(OrganizationCreate.Request.builder()
                 .type("CUSTOMER")
                 .brNumber("123456mnb")
                 .name("새로운 커널고객사")

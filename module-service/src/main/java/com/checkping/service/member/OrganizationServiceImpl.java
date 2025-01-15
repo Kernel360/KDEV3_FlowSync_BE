@@ -3,6 +3,7 @@ package com.checkping.service.member;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Organization;
+import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
@@ -21,7 +22,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     @Override
-    public OrganizationResponse.ReadResponse createOrganization(OrganizationRequest.CreateRequest request) {
+    public OrganizationResponse.ReadResponse createOrganization(OrganizationCreate.Request request) {
 
         if (request == null) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
@@ -31,7 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        Organization organization = OrganizationRequest.CreateRequest.toEntity(request);
+        Organization organization = OrganizationCreate.Request.toEntity(request);
 
         Organization createOrganization = organizationRepository.save(organization);
 
