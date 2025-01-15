@@ -5,8 +5,8 @@ import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.domain.board.TaskBoardFile;
 import com.checkping.domain.board.TaskBoardLink;
 import com.checkping.dto.TaskBoardLinkRequest;
-import com.checkping.dto.TaskBoardRequest;
-import com.checkping.dto.TaskBoardRequest.RegisterDto;
+import com.checkping.dto.TaskBoardRegister;
+import com.checkping.dto.TaskBoardRegister.Request;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.TaskBoardResponse;
@@ -43,10 +43,10 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 생성한 TaskBoard 의 Dto
      */
     @Override
-    public TaskBoardItemDto register(RegisterDto request, List<MultipartFile> fileList) {
+    public TaskBoardItemDto register(Request request, List<MultipartFile> fileList) {
 
         // dto -> entity
-        TaskBoard initTaskBoard = TaskBoardRequest.RegisterDto.toEntity(request);
+        TaskBoard initTaskBoard = TaskBoardRegister.Request.toEntity(request);
         initTaskBoard.activate();
 
         // save TaskBoard entity

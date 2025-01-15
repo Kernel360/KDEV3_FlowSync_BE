@@ -3,6 +3,7 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
+import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
@@ -21,7 +22,7 @@ public interface TaskBoardApi {
 
     @Operation(summary = "업무 관리 게시글 등록", description = "업무 관리 게시글을 등록하는 기능입니다. 파일 첨부도 같이 받습니다.")
     BaseResponse<TaskBoardItemDto> register(
-        @Parameter(description = "등록 게시글 정보", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @RequestPart(value = "content") TaskBoardRequest.RegisterDto request,
+        @Parameter(description = "등록 게시글 정보", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @RequestPart(value = "content") TaskBoardRegister.Request request,
         @Parameter(description = "등록 첨부 파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList);
 
     @Operation(summary = "업무 관리 게시글 목록 조회", description = "업무 관리 게시글 목록을 조회하는 기능입니다.")

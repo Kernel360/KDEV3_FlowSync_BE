@@ -3,6 +3,7 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
+import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardResponse;
@@ -37,7 +38,7 @@ public class TaskBoardController implements TaskBoardApi {
         MediaType.MULTIPART_FORM_DATA_VALUE})
     @Override
     public BaseResponse<TaskBoardItemDto> register(
-        @RequestPart(value = "content") TaskBoardRequest.RegisterDto request,
+        @RequestPart(value = "content") TaskBoardRegister.Request request,
         @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
         TaskBoardItemDto taskBoardDto = taskBoardService.register(request, fileList);
