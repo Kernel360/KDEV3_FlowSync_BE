@@ -2,9 +2,9 @@ package com.checkping.service.project;
 
 import com.checkping.dto.TaskBoardRegister.Request;
 import com.checkping.dto.TaskBoardRequest;
-import com.checkping.dto.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.TaskBoardUpdate;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,5 +14,5 @@ public interface TaskBoardService {
     TaskBoardItemDto getTaskBoardById(Long taskBoardId);
     TaskBoardListDto deleteSoft (Long taskBoardId);
     TaskBoardListDto deleteHard(Long taskBoardId);
-    TaskBoardItemDto update(Long taskBoardId, UpdateDto request);
+    TaskBoardItemDto update(Long taskBoardId, TaskBoardUpdate.Request request);
 }

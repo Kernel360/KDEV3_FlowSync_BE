@@ -8,10 +8,10 @@ import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRegister.Request;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.TaskBoardUpdate;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
 import com.checkping.infra.repository.project.taskboard.TaskBoardStore;
@@ -178,7 +178,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 수정을 완료한 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardItemDto update(Long taskBoardId, UpdateDto request) {
+    public TaskBoardItemDto update(Long taskBoardId, TaskBoardUpdate.Request request) {
 
         // find TaskBoard Entity
         TaskBoard initTaskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
