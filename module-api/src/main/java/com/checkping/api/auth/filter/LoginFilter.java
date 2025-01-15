@@ -1,5 +1,6 @@
 package com.checkping.api.auth.filter;
 
+import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.util.JwtUtil;
@@ -74,7 +75,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
-        String name = ((CustomUserDetails) authentication.getPrincipal()).getName();
+        Object principal = authentication.getPrincipal();
+        String name;
+
+        if (principal instanceof CustomUserDetails) {
+            name = ((CustomUserDetails) principal).getName();
+        } else {
+            // CustomUserDetails가 아닌 경우 예외 발생
+            throw new IllegalStateException(ErrorCode.UNKNOWN_USER.getMessage());
+        }
 
         //토큰 생성
         String access = jwtUtil.createJwt("access", name, email, role, 15);
