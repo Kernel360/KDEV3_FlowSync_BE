@@ -4,9 +4,9 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
 import com.checkping.dto.TaskBoardRegister;
-import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.TaskBoardUpdate.Request;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +35,7 @@ public interface TaskBoardApi {
 
     @Operation(summary = "업무 관리 게시글 수정", description = "업무 관리 게시글을 수정하는 기능입니다.")
     BaseResponse<TaskBoardItemDto> updateTaskBoard(@Parameter(description = "게시글 ID") Long postId,
-        @Parameter(description = "게시글 수정 정보 Dto") TaskBoardRequest.UpdateDto request);
+        @Parameter(description = "게시글 수정 정보 Dto") Request request);
 
     @Operation(summary = "업무 관리 게시글 소프트 삭제", description = "업무 관리 게시글을 약한 삭제를 하는 기능입니다..")
     BaseResponse<TaskBoardListDto> deleteSoftTaskBoard(

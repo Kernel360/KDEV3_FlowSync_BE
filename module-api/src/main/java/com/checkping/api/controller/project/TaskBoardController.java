@@ -9,6 +9,7 @@ import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.TaskBoardUpdate.Request;
 import com.checkping.service.project.TaskBoardCommentService;
 import com.checkping.service.project.TaskBoardService;
 import java.util.List;
@@ -75,7 +76,7 @@ public class TaskBoardController implements TaskBoardApi {
     @PutMapping("/posts/{postId}")
     @Override
     public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
-        @RequestBody TaskBoardRequest.UpdateDto request) {
+        @RequestBody Request request) {
 
         TaskBoardResponse.TaskBoardItemDto updatedBoardDto = taskBoardService.update(postId,
             request);
