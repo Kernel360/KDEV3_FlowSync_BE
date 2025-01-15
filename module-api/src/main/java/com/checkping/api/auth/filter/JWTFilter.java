@@ -57,6 +57,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 헤더에서 access키에 담긴 토큰을 꺼내서 Bearer를 제거 후 accessToken에 담음
         String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+
+            filterChain.doFilter(request, response); //
+
+            return;
+        }
         String accessToken = authorizationHeader.substring(7);
 
 
