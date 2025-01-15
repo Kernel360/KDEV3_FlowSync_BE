@@ -161,4 +161,14 @@ public class TaskBoard extends BaseEntity {
             this.taskBoardFileList.add(file);
         }
     }
+
+    // ADD TaskBoardFile List
+    public void addFile(List<TaskBoardFile> fileList) {
+        // loop for Add
+        for(TaskBoardFile file : fileList) {
+
+            // Add TaskBoardFile
+            addFile(file);
+        }
+    }
 }

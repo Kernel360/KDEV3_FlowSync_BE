@@ -56,12 +56,8 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         List<TaskBoardFile> taskBoardFileList = taskBoardFileStore.saveFileList(taskBoard,
             fileList);
 
-        // loop for add taskBoardFile
-        for (TaskBoardFile taskBoardFile : taskBoardFileList) {
-
-            // Add TaskBoardFile To TaskBoard
-            taskBoard.addFile(taskBoardFile);
-        }
+        // Add TaskBoardFile List
+        taskBoard.addFile(taskBoardFileList);
 
         // get register info
         List<TaskBoardLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
