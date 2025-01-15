@@ -3,6 +3,9 @@ package com.checkping.dto;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -32,13 +35,24 @@ public class TaskBoardResponse {
         deletedYn : 게시글 삭제 여부 ('Y' 또는 'N')
          */
         private Long id;
+        @Schema(description = "게시글 번호")
         private Integer number;
+        @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
+        @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
+        @Schema(description = "등록 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
+        @Schema(description = "수정 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime editAt;
+        @Schema(description = "승인 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
+        @Schema(description = "게시글 유형")
         private TaskBoard.BoardCategory boardCategory;
+        @Schema(description = "게시글 상태")
         private TaskBoard.BoardStatus boardStatus;
         private TaskBoard.DeleteStatus deletedYn;
 
@@ -77,17 +91,31 @@ public class TaskBoardResponse {
         commentList : 게시글 댓글 리스트
          */
         private Long id;
+        @Schema(description = "게시글 번호")
         private Integer number;
+        @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
+        @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
+        @Schema(description = "등록 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
+        @Schema(description = "수정 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime editAt;
+        @Schema(description = "승인 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
+        @Schema(description = "게시글 유형")
         private TaskBoard.BoardCategory boardCategory;
+        @Schema(description = "게시글 상태")
         private TaskBoard.BoardStatus boardStatus;
         private TaskBoard.DeleteStatus deletedYn;
+        @Schema(description = "게시글 댓글 목록")
         private List<TaskBoardCommentResponse.TaskBoardCommentDto> commentList;
+        @Schema(description = "게시글 첨부 링크 목록")
         private List<TaskBoardLinkResponse.TaskBoardLinkDto> taskBoardLinkList;
+        @Schema(description = "게시글 첨부 파일 목록")
         private List<FileResponse> taskBoardFileList;
 
         public static TaskBoardResponse.TaskBoardItemDto toDto(TaskBoard taskBoard) {

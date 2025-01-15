@@ -2,6 +2,8 @@ package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.domain.board.TaskBoardComment.DeleteStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -17,9 +19,15 @@ public class TaskBoardCommentResponse {
     @ToString
     public static class TaskBoardCommentDto {
 
+        @Schema(description = "게시글 댓글 ID")
         private Long taskBoardCommentId;
+        @Schema(description = "게시글 댓글 내용")
         private String content;
+        @Schema(description = "게시글 댓글 등록 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
+        @Schema(description = "게시글 댓글 수정 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime editAt;
         private DeleteStatus deletedYn;
 
