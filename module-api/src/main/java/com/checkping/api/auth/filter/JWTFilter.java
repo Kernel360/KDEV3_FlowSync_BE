@@ -28,16 +28,28 @@ public class JWTFilter extends OncePerRequestFilter {
     // TODO 필터 거치지 않을 경로 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        //h2-console 경로는 필터 제외
+        // h2-console 경로는 필터 제외
         if (request.getRequestURI().startsWith("/h2-console")) {
             return true;
         }
+
+        // login 경로는 필터 제외
         if (request.getRequestURI().startsWith("/login")) {
             return true;
         }
-        //return super.shouldNotFilter(request);
-        return false;
 
+        // 리프레시 토큰 재발급 시 필터 제외
+        if (request.getRequestURI().startsWith(("/reissue"))) {
+            return true;
+        }
+
+//        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
+//        if (request.getRequestURI().startsWith("/reset-password")){
+//            return true;
+//        }
+
+        //return super.shouldNotFilter(request);
+            return false;
     }
 
 
@@ -47,13 +59,6 @@ public class JWTFilter extends OncePerRequestFilter {
      #2. 권한이 필요 없는 경우에도 만료된 토큰이 들어오면 접근 차단하는 문제 해결*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        // 권한이 필요 없는 요청은 필터를 통과시키기 위해 예외 처리
-//        String requestURI = request.getRequestURI();
-//        if (requestURI.equals("/login") || requestURI.equals("/reissue")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
 
         // 헤더에서 access키에 담긴 토큰을 꺼내서 Bearer를 제거 후 accessToken에 담음
         String authorizationHeader = request.getHeader("Authorization");
@@ -99,7 +104,7 @@ public class JWTFilter extends OncePerRequestFilter {
             writer.print("invalid access token");
 
             //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 애러 응답 때, 리프레시 토큰으로 재발급 받을 수 있도록 프론트와 결정ㅅ
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 애러 응답 때, 리프레시 토큰으로 재발급 받을 수 있도록 프론트와 결정
             return;
         }
 
