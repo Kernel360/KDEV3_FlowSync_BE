@@ -2,6 +2,7 @@ package com.checkping.domain.board;
 
 import com.checkping.domain.BaseEntity;
 import jakarta.persistence.*;
+import java.util.Objects;
 import lombok.*;
 
 @Getter
@@ -27,9 +28,6 @@ public class TaskBoardFile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "task_board_id")
-    private Long taskBoardId;
-
     @Column(name = "original_name")
     private String originalName;
 
@@ -41,4 +39,22 @@ public class TaskBoardFile extends BaseEntity {
 
     @Column(name = "size")
     private long size;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_board_id")
+    private TaskBoard taskBoard;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TaskBoardFile that)) {
+            return false;
+        }
+        return size == that.size && Objects.equals(id, that.id) && Objects.equals(
+            url, that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, size);
+    }
 }
