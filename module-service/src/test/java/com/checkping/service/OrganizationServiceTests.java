@@ -51,7 +51,7 @@ class OrganizationServiceTests {
     @Test
     void testGetOrganizationById() {
         Organization organization =
-                organizationRepository.save(OrganizationRequest.CreateRequest.toEntity(OrganizationRequest.CreateRequest.builder()
+                organizationRepository.save(OrganizationCreate.Request.toEntity(OrganizationCreate.Request.builder()
                         .type("CUSTOMER")
                         .brNumber("123456mnb")
                         .name("새로운 커널")
