@@ -2,7 +2,6 @@ package com.checkping.api.auth.config;
 
 
 import com.checkping.api.auth.filter.CustomLogoutFilter;
-import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -99,7 +99,7 @@ public class CustomSecurityConfig {
         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setExposedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
