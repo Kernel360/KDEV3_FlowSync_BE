@@ -2,9 +2,11 @@ package com.checkping.service.project;
 
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
+import com.checkping.domain.board.TaskBoardFile;
 import com.checkping.domain.board.TaskBoardLink;
 import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRequest;
+import com.checkping.dto.TaskBoardRequest.RegisterDto;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.TaskBoardResponse;
@@ -15,10 +17,12 @@ import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
 import com.checkping.infra.repository.project.taskboard.TaskBoardStore;
 import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentReader;
 import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentStore;
+import com.checkping.infra.repository.project.taskboardfile.TaskBoardFileStore;
 import com.checkping.infra.repository.project.taskboardlink.TaskBoardLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +33,17 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     private final TaskBoardCommentReader taskBoardCommentReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
     private final TaskBoardLinkStore taskBoardLinkStore;
+    private final TaskBoardFileStore taskBoardFileStore;
 
     /**
      * 업무 관리 게시글 등록하기
      *
-     * @param request 업무 관리 게시글에 필요한 request
+     * @param request  업무 관리 게시글에 필요한 request
+     * @param fileList 첨부 파일 리스트
      * @return 생성한 TaskBoard 의 Dto
      */
     @Override
-    public TaskBoardItemDto register(TaskBoardRequest.RegisterDto request) {
+    public TaskBoardItemDto register(RegisterDto request, List<MultipartFile> fileList) {
 
         // dto -> entity
         TaskBoard initTaskBoard = TaskBoardRequest.RegisterDto.toEntity(request);
@@ -46,10 +52,21 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         // save TaskBoard entity
         TaskBoard taskBoard = taskBoardStore.store(initTaskBoard);
 
+        // Save File in S3
+        List<TaskBoardFile> taskBoardFileList = taskBoardFileStore.saveFileList(taskBoard,
+            fileList);
+
+        // loop for add taskBoardFile
+        for (TaskBoardFile taskBoardFile : taskBoardFileList) {
+
+            // Add TaskBoardFile To TaskBoard
+            taskBoard.addFile(taskBoardFile);
+        }
+
         // get register info
         List<TaskBoardLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
 
-        // loop for add
+        // loop for add taskBoardLinkRequest
         for (TaskBoardLinkRequest.RegisterDto linkDto : linkDtoList) {
 
             // TaskBoardLink Dto -> Entity
