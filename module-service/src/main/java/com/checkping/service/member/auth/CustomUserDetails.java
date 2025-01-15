@@ -23,34 +23,10 @@ public class CustomUserDetails implements UserDetails {
         this.role = role;
         this.password = password;
     }
-//    private final Member member;
-//
-//    public CustomUserDetails(Member member) {
-//
-//        this.member = member;
-//    }
-
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//
-//        Collection<GrantedAuthority> collection = new ArrayList<>();
-//
-//        collection.add(new GrantedAuthority() {
-//
-//            @Override
-//            public String getAuthority() {
-//
-//                return member.getRole();
-//            }
-//        });
-//
-//        return collection;
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Member 엔티티의 role 필드를 GrantedAuthority로 변환
+        // 권한 목록
         List<GrantedAuthority> authorities = new ArrayList<>();
         // ROLE_USER, ROLE_ADMIN 형식
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role)); // ROLE_ADMIN, ROLE_MEMBER 형식
