@@ -1,5 +1,6 @@
-package com.checkping.common.utils;
+package com.checkping.infra.repository.file;
 
+import com.checkping.common.utils.FileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FileUtilsS3 implements FileUtils {
+public class S3FileRepositoryImpl implements FileRepository {
 
     private final S3Client s3Client;
 
