@@ -2,6 +2,8 @@ package com.checkping.dto;
 
 
 import com.checkping.domain.project.Project;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,12 +17,25 @@ public class ProjectResponse {
     @ToString
     public static class ProjectDto {
         private Long id;
+        @Schema(description = "프로젝트 이름")
         private String name;
+        @Schema(description = "프로젝트 짧은 설명")
         private String description;
+        @Schema(description = "프로젝트 긴 설명")
         private String detail;
+        @Schema(description = "프로젝트 상태")
         private Project.Status status;
+        @Schema(description = "프로젝트 등록 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
+        @Schema(description = "프로젝트 수정 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime updateAt;
+        @Schema(description = "프로젝트 시작 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime startAt;
+        @Schema(description = "프로젝트 마감 일시")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         private Long resisterId;
         private Long updaterId;
@@ -40,6 +55,7 @@ public class ProjectResponse {
             projectDto.setStatus(project.getStatus());
             projectDto.setRegAt(project.getRegAt());
             projectDto.setUpdateAt(project.getUpdateAt());
+            projectDto.setStartAt(project.getStartAt());
             projectDto.setCloseAt(project.getCloseAt());
             projectDto.setResisterId(project.getResisterId());
             projectDto.setUpdaterId(project.getUpdaterId());
