@@ -67,11 +67,13 @@ public class Project extends BaseEntity {
     @Column(name = "deleted_yn")
     private String deletedYn;
 
-    @OneToMany
-    @Builder.Default
-    @JoinTable(name = "organization_by_project",
-    joinColumns = @JoinColumn(name="project_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", columnDefinition = "UUID"))
+//    todo : 개발 서버 DB 설정을 위해 임의로 주석 처리했습니다. @KJU3
+//    @OneToMany
+//    @Builder.Default
+//    @JoinTable(name = "organization_by_project",
+//    joinColumns = @JoinColumn(name="project_id"),
+//            inverseJoinColumns = @JoinColumn(name = "org_id", columnDefinition = "UUID"))
+    @OneToMany(mappedBy = "project")
     private List<Organization> organizations = new ArrayList<>();
 
     @Getter
