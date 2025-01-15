@@ -1,13 +1,17 @@
 package com.checkping.api.auth.filter;
 
 
+import com.checkping.common.enums.ErrorCode;
+import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.util.JwtUtil;
 import com.checkping.service.member.auth.CustomUserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -70,6 +75,20 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 헤더에서 access키에 담긴 토큰을 꺼내서 Bearer를 제거 후 accessToken에 담음
         String authorizationHeader = request.getHeader("Authorization");
+
+        // 헤더에 토큰이 없거나 Bearer로 시작하지 않는 경우
+        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+
+            // 실패 응답 생성 (BaseResponse 활용)
+            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
+
+            // 응답 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+            return;
+        }
 
         String accessToken = authorizationHeader.substring(7);
 
