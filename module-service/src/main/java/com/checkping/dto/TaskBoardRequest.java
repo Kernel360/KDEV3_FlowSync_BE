@@ -4,6 +4,7 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardLink;
 import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,10 +25,15 @@ public class TaskBoardRequest {
         boardStatus : 게시글 상태 (enum, String)
         taskBoardLinkList : 첨부 링크 리스트 (List<TaskBoardLinkRequest.RegisterDto>)
          */
+        @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
+        @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
+        @Schema(description = "게시글 유형")
         private String boardCategory;
+        @Schema(description = "게시글 상태")
         private String boardStatus;
+        @Schema(description = "게시글 첨부 링크 목록")
         private List<TaskBoardLinkRequest.RegisterDto> taskBoardLinkList;
 
         /**
@@ -53,7 +59,9 @@ public class TaskBoardRequest {
         boardCategory : 게시글 카테고리 (enum, String)
         boardStatus : 게시글 상태 (enum, String)
          */
+        @Schema(description = "게시글 유형")
         private final TaskBoard.BoardCategory boardCategory;
+        @Schema(description = "게시글 상태")
         private final TaskBoard.BoardStatus boardStatus;
 
         /**
@@ -81,9 +89,13 @@ public class TaskBoardRequest {
         boardCategory : 게시글 유형
         boardStatus : 게시글 상태
          */
+        @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
+        @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
+        @Schema(description = "게시글 유형")
         private String boardCategory;
+        @Schema(description = "게시글 상태")
         private String boardStatus;
     }
 
@@ -106,6 +118,7 @@ public class TaskBoardRequest {
      *
      * @param value BoardStatus 로 변환할 문자열
      * @return TaskBoard.BoardStatus
+     *
      */
     public static TaskBoard.BoardStatus convertBoardStatus(String value) {
         try {
