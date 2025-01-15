@@ -54,9 +54,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
 //        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
-//        if (request.getRequestURI().startsWith("/reset-password")){
-//            return true;
-//        }
+
 
         //return super.shouldNotFilter(request);
             return false;
