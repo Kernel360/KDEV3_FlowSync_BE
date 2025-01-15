@@ -30,6 +30,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // MySQL 의존성 추가
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // .env 설정 의존성 추가
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
     // Spring Security 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -59,3 +65,6 @@ tasks.named('bootJar') {
 }
 
 tasks.register("prepareKotlinBuildScripModel") {}
+
+tasks.bootJar { enabled = true }
+tasks.jar { enabled = false }
