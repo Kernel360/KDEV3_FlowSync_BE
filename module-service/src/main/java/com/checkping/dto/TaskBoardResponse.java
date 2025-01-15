@@ -1,5 +1,6 @@
 package com.checkping.dto;
 
+import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
 import java.time.LocalDateTime;
@@ -87,6 +88,7 @@ public class TaskBoardResponse {
         private TaskBoard.DeleteStatus deletedYn;
         private List<TaskBoardCommentResponse.TaskBoardCommentDto> commentList;
         private List<TaskBoardLinkResponse.TaskBoardLinkDto> taskBoardLinkList;
+        private List<FileResponse> taskBoardFileList;
 
         public static TaskBoardResponse.TaskBoardItemDto toDto(TaskBoard taskBoard) {
             TaskBoardResponse.TaskBoardItemDto boardDto = new TaskBoardResponse.TaskBoardItemDto();
@@ -110,6 +112,10 @@ public class TaskBoardResponse {
             List<TaskBoardLinkResponse.TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
                 taskBoard.getTaskBoardLinkList());
             boardDto.setTaskBoardLinkList(links);
+
+            // Entity -> Dto (TaskBoardFile)
+            List<FileResponse> fileList = FileResponse.toDtoList(taskBoard.getTaskBoardFileList());
+            boardDto.setTaskBoardFileList(fileList);
 
             return boardDto;
         }
