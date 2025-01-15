@@ -4,6 +4,7 @@ import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationRequest;
 import com.checkping.dto.OrganizationResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
@@ -22,7 +23,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     @Override
-    public OrganizationResponse.ReadResponse createOrganization(OrganizationCreate.Request request) {
+    public OrganizationCreate.Response createOrganization(OrganizationCreate.Request request) {
 
         if (request == null) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
@@ -36,42 +37,42 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization createOrganization = organizationRepository.save(organization);
 
-        return OrganizationResponse.ReadResponse.toDto(createOrganization);
+        return OrganizationCreate.Response.toDto(createOrganization);
     }
 
     @Override
-    public OrganizationResponse.ReadResponse getOrganization(UUID id) {
+    public OrganizationGet.Response getOrganization(UUID id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
         Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        return OrganizationResponse.ReadResponse.toDto(organization);
+        return OrganizationGet.Response.toDto(organization);
     }
 
     @Override
-    public List<OrganizationResponse.ReadResponse> getByTypeAndStatusOrganizations(String type, String status) {
+    public List<OrganizationGet.Response> getByTypeAndStatusOrganizations(String type, String status) {
         if (status == null) {
             return organizationRepository.findByType(Organization.Type.valueOf(type.toUpperCase())).stream()
-                    .map(OrganizationResponse.ReadResponse::toDto)
+                    .map(OrganizationGet.Response::toDto)
                     .collect(Collectors.toList());
         }
         return organizationRepository.findByTypeAndStatus(
                         Organization.Type.valueOf(type.toUpperCase()),
                         Organization.Status.valueOf(status.toUpperCase())).stream()
-                .map(OrganizationResponse.ReadResponse::toDto)
+                .map(OrganizationGet.Response::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrganizationResponse.ReadResponse> getAllOrganizations(String status) {
+    public List<OrganizationGet.Response> getAllOrganizations(String status) {
         if (status == null) {
             return organizationRepository.findAll().stream()
-                    .map(OrganizationResponse.ReadResponse::toDto)
+                    .map(OrganizationGet.Response::toDto)
                     .collect(Collectors.toList());
         }
         return organizationRepository.findByStatus(Organization.Status.valueOf(status.toUpperCase())).stream()
-                .map(OrganizationResponse.ReadResponse::toDto)
+                .map(OrganizationGet.Response::toDto)
                 .collect(Collectors.toList());
     }
 
