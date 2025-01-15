@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -60,6 +63,28 @@ public class ProjectServiceImpl implements ProjectService {
         project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project));
 
         return ProjectResponse.ProjectDto.toDto(project);
+    }
+
+
+    @Override
+    public List<ProjectResponse.ProjectDto> findAllProjects(String keyword, String status) {
+        List<Project> results = projectRepository.findProjectsWithOrganizationInfoByKeywordAndStatus(keyword, status);
+
+        return results.stream().map(result -> {
+            Project project = result;
+
+            ProjectResponse.ProjectDto projectDto = ProjectResponse.ProjectDto.toDto(project);
+
+            // 추가된 정보인 개발사 및 고객사 정보를 설정
+            projectDto.setOrganizationInfo(
+                    project.getOrganizations().get(0).getType().toString(), // developerType
+                    project.getOrganizations().get(0).getName(),            // developerName
+                    project.getOrganizations().get(1).getType().toString(), // customerType
+                    project.getOrganizations().get(1).getName()             // customerName
+            );
+
+            return projectDto;
+        }).collect(Collectors.toList());
     }
 
 }

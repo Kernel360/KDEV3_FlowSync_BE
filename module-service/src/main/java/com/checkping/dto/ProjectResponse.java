@@ -26,6 +26,11 @@ public class ProjectResponse {
         private Long updaterId;
         private String deletedYn;
 
+        private String developerType;
+        private String developerName;
+        private String customerType;
+        private String customerName;
+
         public static ProjectDto toDto(Project project) {
             ProjectDto projectDto = new ProjectDto();
             projectDto.setId(project.getId());
@@ -40,6 +45,13 @@ public class ProjectResponse {
             projectDto.setUpdaterId(project.getUpdaterId());
             projectDto.setDeletedYn(project.getDeletedYn());
             return projectDto;
+        }
+
+        public void setOrganizationInfo(String developerType, String developerName, String customerType, String customerName) {
+            this.developerType = developerType;
+            this.developerName = developerName;
+            this.customerType = customerType;
+            this.customerName = customerName;
         }
     }
 

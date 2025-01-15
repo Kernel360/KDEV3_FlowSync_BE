@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -39,5 +41,13 @@ public class ProjectController {
         ProjectResponse.ProjectDto projectDto = projectService.updateProject(projectId, request);
         log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}, updater_id : {}", projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt(), projectDto.getUpdaterId());
         return BaseResponse.success(projectDto);
+    }
+
+    @GetMapping(value = {"/admins/projects", "/projects"})
+    public BaseResponse<List<ProjectResponse.ProjectDto>> listProjects(@RequestParam(required = false) String keyword, @RequestParam(required = false) String status) {
+
+        List<ProjectResponse.ProjectDto> projects = projectService.findAllProjects(keyword, status);
+        //log.info("FlowSync - getProjectlist : ");
+        return BaseResponse.success(projects);
     }
 }
