@@ -42,6 +42,16 @@ public class JWTFilter extends OncePerRequestFilter {
         if (request.getRequestURI().startsWith(("/reissue"))) {
             return true;
         }
+        
+        // 회원 생성 시 필터 제외
+        if (request.getRequestURI().equals("/admins/members")){
+            return true;
+        }
+        
+        // 업체 생성시 필터 제외
+        if (request.getRequestURI().equals("/admins/organizations")){
+            return true;
+        }
 
 //        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
 //        if (request.getRequestURI().startsWith("/reset-password")){
