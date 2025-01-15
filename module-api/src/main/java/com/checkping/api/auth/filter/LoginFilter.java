@@ -1,5 +1,6 @@
 package com.checkping.api.auth.filter;
 
+import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,11 +62,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
+    //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급)
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException{
 
-        String email = authentication.getName();
+        String email = authentication.getName(); //UsernamePasswordAuthenticationToken(email, password, null); 에서 email을 name으로 받음 , getName()은 email을 반환
+
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -77,18 +79,35 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", name, email, role, 15);
         String refresh = jwtUtil.createJwt("refresh", name, email, role,1440);
 
+        BaseResponse<Map<String, String>> successResponse = BaseResponse.success("로그인에 성공하였습니다.");
+
         //응답 설정
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.setHeader("Authorization", "Bearer " + access);
         response.addCookie(createCookie("refresh", refresh));
-        response.setStatus(HttpStatus.OK.value());
-
+        response.getWriter().write(new ObjectMapper().writeValueAsString(successResponse));
     }
 
     //로그인 실패시 실행하는 메소드
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
 
-        response.setStatus(401);
+        // 응답 메시지 생성
+        Map<String, String> errorResponse = Map.of(
+
+                "message", "로그인에 실패했습니다. 아이디와 비밀번호를 다시 확인해주세요.",
+                "error", "Fail",
+                "code", "401"
+        );
+
+        // 응답 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+
     }
 
     private Cookie createCookie(String key, String value) {
