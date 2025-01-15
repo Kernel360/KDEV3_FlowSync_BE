@@ -3,10 +3,7 @@ package com.checkping.service.member;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationGet;
-import com.checkping.dto.OrganizationRequest;
-import com.checkping.dto.OrganizationResponse;
+import com.checkping.dto.*;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,9 +74,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationResponse.UpdateResponse modifyOrganization(
+    public OrganizationUpdate.Response modifyOrganization(
             UUID id,
-            OrganizationRequest.UpdateRequest request
+            OrganizationUpdate.Request request
     ) {
         Optional<Organization> result = organizationRepository.findById(id);
         Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -96,7 +93,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         OrganizationResponse.UpdateResponse.toDto(updateOrganization);
 
-        return OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+        return OrganizationUpdate.Response.toDto(updateOrganization);
     }
 
     @Override
