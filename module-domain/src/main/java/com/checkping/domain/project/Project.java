@@ -14,7 +14,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name="project")
+@Table(name = "project")
 @Entity
 public class Project extends BaseEntity {
 
@@ -26,7 +26,8 @@ public class Project extends BaseEntity {
     status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
     reg_at : 프로젝트 등록 일시
     update_at : 프로젝트 수정 일시
-    close_at : 프로젝트 종료 일시
+    start_at : 프로젝트 시작 일시
+    close_at : 프로젝트 종료(마감) 일시
     resister_id : 등록자 아이디
     updater_id : 수정자 아이디
     deleted_yn : 삭제여부
@@ -55,6 +56,9 @@ public class Project extends BaseEntity {
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
+    @Column(name = "start_at")
+    private LocalDateTime startAt;
+
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
@@ -71,7 +75,7 @@ public class Project extends BaseEntity {
 //    @OneToMany
 //    @Builder.Default
 //    @JoinTable(name = "organization_by_project",
-//    joinColumns = @JoinColumn(name="project_id"),
+//    joinColumns = @JoinColumn(name = "project_id"),
 //            inverseJoinColumns = @JoinColumn(name = "org_id", columnDefinition = "UUID"))
     @OneToMany(mappedBy = "project")
     private List<Organization> organizations = new ArrayList<>();

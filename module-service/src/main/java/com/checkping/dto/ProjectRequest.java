@@ -1,6 +1,8 @@
 package com.checkping.dto;
 
 import com.checkping.domain.project.Project;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ public class ProjectRequest {
     @Getter
     @ToString
     @Builder
+    @Schema(description = "프로젝트 등록 DTO")
     public static class ResisterDto {
 
         /*
@@ -21,30 +24,37 @@ public class ProjectRequest {
         description : 프로젝트 설명
         detail : 프로젝트 세부 설명
         status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
+        startAt : 프로젝트 시작 일시
         closeAt : 프로젝트 종료 일시
         resisterId : 등록자 아이디
         deletedYn : 삭제여부
         */
 
         private String name;
+        @Schema(description = "프로젝트 짧은 설명")
         private String description;
+        @Schema(description = "프로젝트 긴 설명")
         private String detail;
         private String status;
-        private LocalDateTime regAt;
+        @Schema(description = "프로젝트 시작 일시", example = "yyyy-MM-dd HH:mm:ss" )
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime startAt;
+        @Schema(description = "프로젝트 마감 일시", examples = {"2025-01-15 10:17:15", "2025-12-28 11:17:15"} )
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         private Long resisterId;
 
-        public static Project toEntity(ResisterDto resisterDto){
+        public static Project toEntity(ResisterDto resisterDto) {
             return Project.builder()
-                    .name(resisterDto.getName())
-                    .description(resisterDto.getDescription())
-                    .detail(resisterDto.getDetail())
-                    .status(Project.Status.IN_PROGRESS)
-                    .regAt(LocalDateTime.now())
-                    .closeAt(resisterDto.getCloseAt())
-                    .resisterId(resisterDto.getResisterId())
-                    .deletedYn("N")
-                    .build();
+                .name(resisterDto.getName())
+                .description(resisterDto.getDescription())
+                .detail(resisterDto.getDetail())
+                .status(Project.Status.IN_PROGRESS)
+                .startAt(resisterDto.getStartAt())
+                .closeAt(resisterDto.getCloseAt())
+                .resisterId(resisterDto.getResisterId())
+                .deletedYn("N")
+                .build();
         }
     }
 
@@ -53,24 +63,37 @@ public class ProjectRequest {
     @Builder
     public static class UpdateDto {
 
+        /*
+        name : 프로젝트 이름
+        description : 프로젝트 설명
+        detail : 프로젝트 세부 설명
+        status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
+        startAt : 프로젝트 시작 일시
+        closeAt : 프로젝트 종료 일시
+        updaterid : 수정자 ID
+         */
         private String name;
         private String description;
         private String detail;
         private String status;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime startAt;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         private Long updaterId;
 
-        public static Project toEntity(UpdateDto updateDto, Project existingProject){
+        public static Project toEntity(UpdateDto updateDto, Project existingProject) {
             return existingProject.toBuilder()
-                    .id(existingProject.getId())
-                    .name(updateDto.getName())
-                    .description(updateDto.getDescription())
-                    .detail(updateDto.getDetail())
-                    .status(Project.Status.valueOf(updateDto.getStatus()))
-                    .closeAt(updateDto.getCloseAt())
-                    .updateAt(LocalDateTime.now())
-                    .updaterId(updateDto.getUpdaterId())
-                    .build();
+                .id(existingProject.getId())
+                .name(updateDto.getName())
+                .description(updateDto.getDescription())
+                .detail(updateDto.getDetail())
+                .status(Project.Status.valueOf(updateDto.getStatus()))
+                .startAt(updateDto.getStartAt())
+                .closeAt(updateDto.getCloseAt())
+                .updateAt(LocalDateTime.now())
+                .updaterId(updateDto.getUpdaterId())
+                .build();
         }
     }
 }

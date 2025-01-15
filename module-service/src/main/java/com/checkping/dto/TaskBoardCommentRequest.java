@@ -2,6 +2,7 @@ package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class TaskBoardCommentRequest {
         content : 댓글 내용
         taskBoardId : taskBoard 의 id(pk)
          */
+        @Schema(description = "게시글 댓글 내용")
         private String content;
 
         /**
@@ -40,6 +42,7 @@ public class TaskBoardCommentRequest {
         /*
         content : 댓글 내용
          */
+        @Schema(description = "게시글 댓글 내용")
         private String content;
     }
 }

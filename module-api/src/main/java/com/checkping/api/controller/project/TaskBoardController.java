@@ -1,4 +1,4 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
@@ -28,15 +28,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class TaskBoardController {
+public class TaskBoardController implements TaskBoardApi {
 
     private final TaskBoardService taskBoardService;
     private final TaskBoardCommentService taskBoardCommentService;
 
-    @PostMapping(value = "/posts", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/posts", consumes = {MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Override
     public BaseResponse<TaskBoardItemDto> register(
         @RequestPart(value = "content") TaskBoardRequest.RegisterDto request,
-        @RequestPart(required = false, value="fileList") List<MultipartFile> fileList) {
+        @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
         TaskBoardItemDto taskBoardDto = taskBoardService.register(request, fileList);
 
@@ -44,6 +46,7 @@ public class TaskBoardController {
     }
 
     @GetMapping("/posts")
+    @Override
     public BaseResponse<List<TaskBoardListDto>> getTaskBoardList(
         @RequestParam(required = false) String boardCategory,
         @RequestParam(required = false) String boardStatus) {
@@ -60,6 +63,7 @@ public class TaskBoardController {
     }
 
     @GetMapping("/posts/{postId}")
+    @Override
     public BaseResponse<TaskBoardItemDto> getTaskBoard(@PathVariable Long postId) {
 
         TaskBoardItemDto taskBoardItemDto = taskBoardService.getTaskBoardById(postId);
@@ -68,6 +72,7 @@ public class TaskBoardController {
     }
 
     @PutMapping("/posts/{postId}")
+    @Override
     public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
         @RequestBody TaskBoardRequest.UpdateDto request) {
 
@@ -78,6 +83,7 @@ public class TaskBoardController {
     }
 
     @DeleteMapping("/posts/{postId}")
+    @Override
     public BaseResponse<TaskBoardResponse.TaskBoardListDto> deleteSoftTaskBoard(
         @PathVariable Long postId) {
 
@@ -87,6 +93,7 @@ public class TaskBoardController {
     }
 
     @PostMapping("/posts/{postId}/comments")
+    @Override
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
         @PathVariable Long postId, @RequestBody TaskBoardCommentRequest.RegisterDto request) {
 
@@ -97,6 +104,7 @@ public class TaskBoardController {
     }
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    @Override
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> deleteSoft(
         @PathVariable Long postId, @PathVariable Long commentId) {
 
@@ -107,6 +115,7 @@ public class TaskBoardController {
     }
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
+    @Override
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> updateComment(
         @PathVariable Long postId, @PathVariable Long commentId,
         @RequestBody TaskBoardCommentRequest.UpdateDto request) {

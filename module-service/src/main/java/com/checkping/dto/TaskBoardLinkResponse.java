@@ -1,6 +1,7 @@
 package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoardLink;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +16,11 @@ public class TaskBoardLinkResponse {
     @Getter
     @ToString
     public static class TaskBoardLinkDto {
+        @Schema(description = "게시글 링크 ID")
         private Long id;
+        @Schema(description = "게시글 링크 이름")
         private String name;
+        @Schema(description = "게시글 링크 URL")
         private String url;
 
         /**

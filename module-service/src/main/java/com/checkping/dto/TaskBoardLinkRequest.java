@@ -2,6 +2,7 @@ package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardLink;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,9 @@ public class TaskBoardLinkRequest {
     @ToString
     public static class RegisterDto {
 
+        @Schema(description = "게시글 링크 이름")
         private String name;
+        @Schema(description = "게시글 링크 url")
         private String url;
 
         /**
