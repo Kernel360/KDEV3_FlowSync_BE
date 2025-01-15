@@ -1,9 +1,6 @@
 package com.checkping.service.member;
 
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationGet;
-import com.checkping.dto.OrganizationRequest;
-import com.checkping.dto.OrganizationResponse;
+import com.checkping.dto.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +15,7 @@ public interface OrganizationService {
 
     List<OrganizationGet.Response> getAllOrganizations(String status);
 
-    OrganizationResponse.UpdateResponse modifyOrganization(UUID id, OrganizationRequest.UpdateRequest request);
+    OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request);
 
     OrganizationResponse.ReadResponse removeOrganization(UUID id);
 }

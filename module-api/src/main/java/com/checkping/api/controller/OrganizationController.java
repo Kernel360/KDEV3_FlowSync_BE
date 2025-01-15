@@ -1,10 +1,7 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationGet;
-import com.checkping.dto.OrganizationRequest;
-import com.checkping.dto.OrganizationResponse;
+import com.checkping.dto.*;
 import com.checkping.service.member.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +50,11 @@ public class OrganizationController {
     }
 
     @PutMapping("/admins/organizations/{organization_id}")
-    public BaseResponse<OrganizationResponse.UpdateResponse> modifyOrganization(
+    public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
             @PathVariable UUID organization_id,
-            @RequestBody OrganizationRequest.UpdateRequest request) {
+            @RequestBody OrganizationUpdate.Request request) {
 
-        OrganizationResponse.UpdateResponse response = organizationService.modifyOrganization(
+        OrganizationUpdate.Response response = organizationService.modifyOrganization(
                 organization_id,
                 request);
 

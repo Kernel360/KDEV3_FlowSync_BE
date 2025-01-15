@@ -1,10 +1,7 @@
 package com.checkping.service;
 
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationGet;
-import com.checkping.dto.OrganizationRequest;
-import com.checkping.dto.OrganizationResponse;
+import com.checkping.dto.*;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.OrganizationService;
 import org.junit.jupiter.api.BeforeAll;
@@ -86,7 +83,7 @@ class OrganizationServiceTests {
     @Test
     void testModifyOrganization() {
         Organization organization =
-                organizationRepository.save(OrganizationRequest.CreateRequest.toEntity(OrganizationRequest.CreateRequest.builder()
+                organizationRepository.save(OrganizationCreate.Request.toEntity(OrganizationCreate.Request.builder()
                         .type("CUSTOMER")
                         .brNumber("1234567890")
                         .name("커널커널")
@@ -96,7 +93,7 @@ class OrganizationServiceTests {
                         .phoneNumber("")
                         .build()));
 
-        OrganizationRequest.UpdateRequest request = OrganizationRequest.UpdateRequest.builder()
+        OrganizationUpdate.Request request = OrganizationUpdate.Request.builder()
                 .brNumber("123456789")
                 .brCertificateUrl("cert-url-asdfasdf")
                 .streetAddress("안녕하세요")
@@ -104,7 +101,7 @@ class OrganizationServiceTests {
                 .phoneNumber("010-1111-1112")
                 .build();
 
-        OrganizationResponse.UpdateResponse response = organizationService.modifyOrganization(
+        OrganizationUpdate.Response response = organizationService.modifyOrganization(
                 organization.getId(),
                 request
         );
