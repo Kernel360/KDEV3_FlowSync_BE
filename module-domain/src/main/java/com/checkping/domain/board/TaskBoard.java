@@ -96,6 +96,10 @@ public class TaskBoard extends BaseEntity {
     @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
     private List<TaskBoardLink> taskBoardLinkList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    private List<TaskBoardFile> taskBoardFileList = new ArrayList<>();
+
     @Getter
     @RequiredArgsConstructor
     public enum BoardCategory {
@@ -144,6 +148,27 @@ public class TaskBoard extends BaseEntity {
         // null check & contains check
         if (link != null && !this.taskBoardLinkList.contains(link)) {
             this.taskBoardLinkList.add(link);
+        }
+    }
+
+    // ADD TaskBoardFile
+    public void addFile(TaskBoardFile file) {
+
+        // null check & contains check
+        if (file != null && !this.taskBoardFileList.contains(file)) {
+
+            // Add
+            this.taskBoardFileList.add(file);
+        }
+    }
+
+    // ADD TaskBoardFile List
+    public void addFile(List<TaskBoardFile> fileList) {
+        // loop for Add
+        for(TaskBoardFile file : fileList) {
+
+            // Add TaskBoardFile
+            addFile(file);
         }
     }
 }

@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -37,7 +38,11 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.h2database:h2'
 
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1")
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1")
+
     implementation project(':module-domain')
+    implementation project(':module-common')
 }
 
 tasks.named('test') {

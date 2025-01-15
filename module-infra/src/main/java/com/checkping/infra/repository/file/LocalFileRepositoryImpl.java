@@ -1,5 +1,6 @@
-package com.checkping.common.utils;
+package com.checkping.infra.repository.file;
 
+import com.checkping.common.utils.FileRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FileUtilsLocal implements FileUtils {
+public class LocalFileRepositoryImpl implements FileRepository {
 
     private final String uploadPath = Paths.get("C:", "dev", "upload-files").toString();
 
