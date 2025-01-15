@@ -62,9 +62,9 @@ public class OrganizationController {
     }
 
     @PutMapping("/admins/organizations/{organization_id}/remove")
-    public BaseResponse<OrganizationResponse.ReadResponse> removeOrganization(@PathVariable UUID organization_id) {
+    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable UUID organization_id) {
 
-        OrganizationResponse.ReadResponse response = organizationService.removeOrganization(organization_id);
+        OrganizationGet.Response response = organizationService.removeOrganization(organization_id);
 
         return BaseResponse.success(response, "업체 삭제 완료");
     }

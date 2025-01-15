@@ -91,13 +91,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization updateOrganization = organizationRepository.save(organization);
 
-        OrganizationResponse.UpdateResponse.toDto(updateOrganization);
+        OrganizationUpdate.Response.toDto(updateOrganization);
 
         return OrganizationUpdate.Response.toDto(updateOrganization);
     }
 
     @Override
-    public OrganizationResponse.ReadResponse removeOrganization(UUID id) {
+    public OrganizationGet.Response removeOrganization(UUID id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
@@ -107,7 +107,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization removeOrganization = organizationRepository.save(organization);
 
-        return OrganizationResponse.ReadResponse.toDto(removeOrganization);
+        return OrganizationGet.Response.toDto(removeOrganization);
     }
 
 }

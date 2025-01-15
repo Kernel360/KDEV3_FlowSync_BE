@@ -17,5 +17,5 @@ public interface OrganizationService {
 
     OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request);
 
-    OrganizationResponse.ReadResponse removeOrganization(UUID id);
+    OrganizationGet.Response removeOrganization(UUID id);
 }
