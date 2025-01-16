@@ -4,14 +4,13 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.domain.board.TaskBoardFile;
 import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.dto.TaskBoardGetItem;
 import com.checkping.dto.TaskBoardGetList;
 import com.checkping.dto.TaskBoardGetList.Response;
 import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRegister.Request;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardResponse;
-import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardUpdate;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
@@ -44,7 +43,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 생성한 TaskBoard 의 Dto
      */
     @Override
-    public TaskBoardItemDto register(Request request, List<MultipartFile> fileList) {
+    public TaskBoardGetItem.Response register(Request request, List<MultipartFile> fileList) {
 
         // dto -> entity
         TaskBoard initTaskBoard = TaskBoardRegister.Request.toEntity(request);
@@ -78,7 +77,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         }
 
         // Entity -> Dto
-        return TaskBoardItemDto.toDto(taskBoard);
+        return TaskBoardGetItem.Response.toDto(taskBoard);
     }
 
     /**
@@ -107,14 +106,14 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return TaskBoardListDto
      */
     @Override
-    public TaskBoardItemDto getTaskBoardById(Long taskBoardId) {
+    public TaskBoardGetItem.Response getTaskBoardById(Long taskBoardId) {
 
         // find TaskBoard Entity
         TaskBoard taskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // Entity -> Dto
-        return TaskBoardItemDto.toDto(taskBoard);
+        return TaskBoardGetItem.Response.toDto(taskBoard);
     }
 
     /**
@@ -181,7 +180,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 수정을 완료한 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardItemDto update(Long taskBoardId, TaskBoardUpdate.Request request) {
+    public TaskBoardGetItem.Response update(Long taskBoardId, TaskBoardUpdate.Request request) {
 
         // find TaskBoard Entity
         TaskBoard initTaskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -196,6 +195,6 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         TaskBoard updatedTaskBoard = taskBoardStore.store(initTaskBoard);
 
         // Entity -> Dto
-        return TaskBoardResponse.TaskBoardItemDto.toDto(updatedTaskBoard);
+        return TaskBoardGetItem.Response.toDto(updatedTaskBoard);
     }
 }
