@@ -42,11 +42,4 @@ public class ReissueController {
 
         return BaseResponse.success("Reissue success");
     }
-
-//    private Cookie createCookie(String key, String value) {
-//        Cookie cookie = new Cookie(key, value);
-//        cookie.setMaxAge(24 * 60 * 60);
-//        cookie.setHttpOnly(true);
-//        return cookie;
-//    }
 }
