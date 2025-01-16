@@ -1,12 +1,14 @@
 package com.checkping.dto;
 
+import com.checkping.domain.member.Member;
+import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -44,7 +46,12 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         private Long resisterId;
 
-        public static Project toEntity(ResisterDto resisterDto) {
+        private String developerOrgId;
+        private String customerOrgId;
+
+        private List<String> members;
+
+        public static Project toEntity(ResisterDto resisterDto, List<Organization> organizations, List<Member> members) {
             return Project.builder()
                 .name(resisterDto.getName())
                 .description(resisterDto.getDescription())
@@ -53,6 +60,8 @@ public class ProjectRequest {
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .resisterId(resisterDto.getResisterId())
+                .organizations(organizations)
+                .members(members)
                 .deletedYn("N")
                 .build();
         }

@@ -2,8 +2,12 @@ package com.checkping.service.project;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.domain.member.Member;
+import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.ProjectResponse;
+import com.checkping.infra.repository.member.MemberRepository;
+import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
@@ -13,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
@@ -26,13 +32,33 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Override
     public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request));
+        Organization devOrganization = organizationRepository.findById(UUID.fromString(request.getDeveloperOrgId()))
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        Organization custOrganization = organizationRepository.findById(UUID.fromString(request.getCustomerOrgId()))
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        List<Organization> organizations = new ArrayList<>();
+        organizations.add(devOrganization);
+        organizations.add(custOrganization);
+
+        List<Member> members = request.getMembers().stream()
+                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
         return ProjectResponse.ProjectDto.toDto(project);
     }
 
@@ -82,11 +108,7 @@ public class ProjectServiceImpl implements ProjectService {
             // 추가된 정보인 개발사 및 고객사 정보를 설정
             projectDto.setOrganizationInfo(
                 !project.getOrganizations().isEmpty() ? project.getOrganizations().get(0)
-                    .getType().toString() : null, // developerType
-                !project.getOrganizations().isEmpty() ? project.getOrganizations().get(0)
                     .getName() : null,            // developerName
-                !project.getOrganizations().isEmpty() ? project.getOrganizations().get(1)
-                    .getType().toString() : null, // customerType
                 !project.getOrganizations().isEmpty() ? project.getOrganizations().get(1)
                     .getName() : null             // customerName
             );
