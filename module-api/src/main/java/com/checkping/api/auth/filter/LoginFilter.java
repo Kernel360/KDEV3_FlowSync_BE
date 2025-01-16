@@ -97,9 +97,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 응답 메시지 생성
         Map<String, String> errorResponse = Map.of(
 
-                "message", "로그인에 실패했습니다. 아이디와 비밀번호를 다시 확인해주세요.",
+                "code", "401",
                 "error", "Fail",
-                "code", "401"
+                "message", "로그인에 실패했습니다. 아이디와 비밀번호를 다시 확인해주세요."
         );
 
         // 응답 설정
