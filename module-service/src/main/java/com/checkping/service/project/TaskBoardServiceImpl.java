@@ -4,13 +4,14 @@ import com.checkping.domain.board.TaskBoard;
 import com.checkping.domain.board.TaskBoardComment;
 import com.checkping.domain.board.TaskBoardFile;
 import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.dto.TaskBoardGetList;
+import com.checkping.dto.TaskBoardGetList.Response;
 import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRegister.Request;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.dto.TaskBoardUpdate;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
@@ -87,15 +88,16 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 조회한 TaskBoardListDto 의 리스트
      */
     @Override
-    public List<TaskBoardListDto> getTaskBoardList(SearchCondition searchCondition) {
+    public List<Response> getTaskBoardList(SearchCondition searchCondition) {
 
         // 조회
         List<TaskBoard> taskBoardList = taskBoardReader.getTaskBoard(
             searchCondition.getBoardCategory(),
             searchCondition.getBoardStatus());
 
-        // TaskBoard -> TaskBoardListDto
-        return taskBoardList.stream().map(TaskBoardListDto::toDto).toList();
+        // Entity -> Dto
+        return TaskBoardGetList.Response.toDtoList(taskBoardList);
+
     }
 
     /**
@@ -122,7 +124,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return 상태 변경이 된 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardListDto deleteSoft(Long taskBoardId) {
+    public Response deleteSoft(Long taskBoardId) {
 
         // find TaskBoard Entity
         TaskBoard initTaskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -142,7 +144,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         TaskBoard deletedTaskBoard = taskBoardStore.store(initTaskBoard);
 
         // Entity -> Dto
-        return TaskBoardResponse.TaskBoardListDto.toDto(deletedTaskBoard);
+        return TaskBoardGetList.Response.toDto(deletedTaskBoard);
     }
 
     /**
@@ -152,7 +154,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
      * @return HARD DELETE 를 요청한 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardListDto deleteHard(Long taskBoardId) {
+    public Response deleteHard(Long taskBoardId) {
 
         // find TaskBoard Entity
         TaskBoard initTaskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -167,7 +169,8 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         // TaskBoard - HARD DELETE
         taskBoardStore.deleteHard(initTaskBoard);
 
-        return TaskBoardResponse.TaskBoardListDto.toDto(initTaskBoard);
+        // Entity -> Dto
+        return TaskBoardGetList.Response.toDto(initTaskBoard);
     }
 
     /**
