@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -26,6 +27,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
 
@@ -45,7 +47,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             }
 
             // JSON 파싱 (Jackson ObjectMapper 사용)
-            ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> credentials = objectMapper.readValue(jsonBuilder.toString(), Map.class);
 
             String email = credentials.get("email");
@@ -58,7 +59,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             return authenticationManager.authenticate(authToken);
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read the request body", e);
+            throw new BadCredentialsException("Failed to read the request body", e);
         }
     }
 
