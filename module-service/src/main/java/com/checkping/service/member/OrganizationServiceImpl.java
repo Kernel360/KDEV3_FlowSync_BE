@@ -48,29 +48,34 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<OrganizationGet.Response> getByTypeAndStatusOrganizations(String type, String status) {
-        if (status == null) {
-            return organizationRepository.findByType(Organization.Type.valueOf(type.toUpperCase())).stream()
-                    .map(OrganizationGet.Response::toDto)
-                    .collect(Collectors.toList());
-        }
-        return organizationRepository.findByTypeAndStatus(
-                        Organization.Type.valueOf(type.toUpperCase()),
-                        Organization.Status.valueOf(status.toUpperCase())).stream()
-                .map(OrganizationGet.Response::toDto)
-                .collect(Collectors.toList());
-    }
+    public List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status) {
 
-    @Override
-    public List<OrganizationGet.Response> getAllOrganizations(String status) {
-        if (status == null) {
+        // 전체 조회
+        if (type == null && status == null) {
             return organizationRepository.findAll().stream()
                     .map(OrganizationGet.Response::toDto)
                     .collect(Collectors.toList());
         }
-        return organizationRepository.findByStatus(Organization.Status.valueOf(status.toUpperCase())).stream()
-                .map(OrganizationGet.Response::toDto)
-                .collect(Collectors.toList());
+        // 전체 조회 (상태별)
+        else if (type == null) {
+            return organizationRepository.findByStatus(Organization.Status.valueOf(status.toUpperCase())).stream()
+                    .map(OrganizationGet.Response::toDto)
+                    .collect(Collectors.toList());
+        }
+        // 타입별 전체 조회
+        else if (status == null) {
+            return organizationRepository.findByType(Organization.Type.valueOf(type.toUpperCase())).stream()
+                    .map(OrganizationGet.Response::toDto)
+                    .collect(Collectors.toList());
+        }
+        // 타입별 전체 조회 (상태별)
+        else {
+            return organizationRepository.findByTypeAndStatus(
+                    Organization.Type.valueOf(type.toUpperCase()),
+                    Organization.Status.valueOf(status.toUpperCase())).stream()
+                    .map(OrganizationGet.Response::toDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
