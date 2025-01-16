@@ -39,10 +39,10 @@ public class MemberController {
     }
 
     //특정 고객 정보 수정
-    //PUT /admins/members/{member_id}
-    @PatchMapping("/admins/members/{member_id}")
+    //PUT /admins/members/{memberId}
+    @PatchMapping("/admins/members/{membeId}")
     public BaseResponse<MemberResponseDto> updateMember(
-            @PathVariable("member_id") UUID memberId,
+            @PathVariable("memberId") UUID memberId,
             @RequestBody MemberUpdateDto dto
     ) {
         MemberResponseDto response = memberService.updateMember(memberId, dto);
@@ -50,10 +50,10 @@ public class MemberController {
     }
 
      // 특정 고객 비밀번호 변경
-     // PATCH /admins/members/{member_id}/password
-    @PatchMapping("/admins/members/{member_id}/password")
+     // PATCH /admins/members/{memberId}/password
+    @PatchMapping("/admins/members/{memberId}/password")
     public BaseResponse<String> changePassword(
-            @PathVariable("member_id") UUID memberId,
+            @PathVariable("memberId") UUID memberId,
             @RequestBody ChangePasswordDto dto
     ) {
         memberService.changePassword(memberId, dto);
