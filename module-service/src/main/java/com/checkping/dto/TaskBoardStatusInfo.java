@@ -1,7 +1,6 @@
 package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoard;
-import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -45,5 +44,18 @@ public class TaskBoardStatusInfo {
          */
         private String code;
         private String name;
+
+        /**
+         * 업무 관리 게시글 상태 Enum 타입을 Dto 로 변경
+         *
+         * @param boardStatus   업무 관리 게시글 상태
+         * @return 업무 관리 게시글 상태 Dto
+         */
+        public static TaskBoardStatusInfo.Response toDto(TaskBoard.BoardStatus boardStatus) {
+            TaskBoardStatusInfo.Response dto = new TaskBoardStatusInfo.Response();
+            dto.code = boardStatus.name();
+            dto.name = boardStatus.getDescription();
+            return dto;
+        }
     }
 }
