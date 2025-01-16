@@ -1,5 +1,6 @@
 package com.checkping.service.member.auth;
 
+import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.RefreshTokenCategoryException;
 import com.checkping.exception.auth.RefreshTokenExpiredException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
@@ -38,26 +39,30 @@ public class ReissueService {
     public void checkTokenValidity(String refreshToken) {
 
         try {
+            // 토큰이 만료되었는지 확인
             jwtUtil.isExpired(refreshToken);
+
+            // 토큰의 카테고리가 "refresh"인지 확인
+            String category = jwtUtil.getCategory(refreshToken);
+            if (!"refresh".equals(category)) {
+                throw new RefreshTokenCategoryException();
+            }
+
+            // 토큰에서 이메일을 추출하고, 해당 사용자가 존재하는지 확인
+            final String email = jwtUtil.getEmail(refreshToken);
+            if (!memberRepository.existsByEmail(email)) {
+                throw new RefreshTokenNotFoundException();
+            }
+
         } catch (ExpiredJwtException e) {
             throw new RefreshTokenExpiredException();
+        } catch (RefreshTokenCategoryException | RefreshTokenNotFoundException e) {
+            // 이미 위에 처리된 예외는 그대로 던짐
+            throw e;
+        } catch (Exception e) {
+            // 그 외에 예상하지 못한 예외를 InvalidTokenException으로 처리
+            throw new InvalidTokenException();
         }
-
-        String category = jwtUtil.getCategory(refreshToken);
-        if (!"refresh".equals(category)) {
-            throw new RefreshTokenCategoryException();
-        }
-
-        final String email = jwtUtil.getEmail(refreshToken);
-        if(memberRepository.existsByEmail(email) == false) {
-            throw new RefreshTokenNotFoundException();
-        }
-
-        //TODO JWT 형식에 맞지 않은 경우 체크
-        //TODO 그 외 한 번에 예외처리
-
-
-
     }
 
     public String getCategoryFromToken(String token) {
