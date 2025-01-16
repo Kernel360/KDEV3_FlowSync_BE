@@ -24,7 +24,7 @@ public interface OrganizationApi {
     BaseResponse<OrganizationGet.Response> getOrganization(@Parameter(description = "업체 ID")UUID organizationId);
 
     @Operation(summary = "업체 전체 조회", description = "업체 조회 기능입니다.")
-    BaseResponse<List<OrganizationGet.Response>> getByTypeOrganization(
+    BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
             @Parameter(description = "업체 타입") @RequestParam(required = false) String type,
             @Parameter(description = "업체 상태") @RequestParam(required = false) String status
     );

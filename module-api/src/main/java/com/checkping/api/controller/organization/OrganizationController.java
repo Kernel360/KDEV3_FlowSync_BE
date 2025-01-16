@@ -35,7 +35,7 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping("/admins/organizations")
     @Override
-    public BaseResponse<List<OrganizationGet.Response>> getByTypeOrganization(
+    public BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String status
     ) {
