@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+// TODO BaseException 을 상속하는 커스텀 Exception 작성하기
+
 @Service
 public class MemberService {
 
@@ -109,6 +111,7 @@ public class MemberService {
     }
 
     // 회원 삭제
+    // TODO 회원 삭제 되면 로그인 안되도록 코드 수정하기
     public void deleteMember(UUID memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
