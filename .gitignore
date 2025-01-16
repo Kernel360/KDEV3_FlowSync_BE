@@ -7,6 +7,7 @@
 ### yaml
 application-s3.yaml
 application-jwt.yaml
+application-dev.yaml
 
 HELP.md
 .gradle
