@@ -66,18 +66,18 @@ class OrganizationServiceTests {
     }
 
     @Test
-    void testGetByTypeOrganization() {
+    void testGetAllByTypeOrganization() {
+        List<OrganizationGet.Response> organizationList =
+                organizationService.getAllByTypeAndStatusOrganizations(null, null);
+
+        List<OrganizationGet.Response> organizationActiveList =
+                organizationService.getAllByTypeAndStatusOrganizations(null, "ACTIVE");
+
         List<OrganizationGet.Response> organizationCsList =
-                organizationService.getByTypeAndStatusOrganizations("CUSTOMER", null);
+                organizationService.getAllByTypeAndStatusOrganizations("CUSTOMER", null);
 
-        List<OrganizationGet.Response> organizationDevList =
-                organizationService.getByTypeAndStatusOrganizations("DEVELOPER", "ACTIVE");
-    }
-
-    @Test
-    void testGetAllOrganizations() {
-        List<OrganizationGet.Response> organizations =
-                organizationService.getAllOrganizations("ACTIVE");
+        List<OrganizationGet.Response> organizationDevActivceList =
+                organizationService.getAllByTypeAndStatusOrganizations("DEVELOPER", "ACTIVE");
     }
 
     @Test

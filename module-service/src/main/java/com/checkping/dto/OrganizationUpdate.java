@@ -1,6 +1,7 @@
 package com.checkping.dto;
 
 import com.checkping.domain.member.Organization;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 public class OrganizationUpdate {
@@ -18,10 +19,15 @@ public class OrganizationUpdate {
         detailAddress : 상세주소
         phoneNumber : 전화번호
          */
+        @Schema(description = "사업자 등록번호", example = "123-45-67890")
         private String brNumber;
+        @Schema(description = "사업자 등록증 이미지 링크", example = "http://www.naver.com")
         private String brCertificateUrl;
+        @Schema(description = "도로명 주소", example = "서울시 강남구")
         private String streetAddress;
+        @Schema(description = "상세 주소", example = "역삼동")
         private String detailAddress;
+        @Schema(description = "전화번호", example = "010-1234-5678")
         private String phoneNumber;
 
         public static Organization toEntity(OrganizationUpdate.Request request) {
@@ -51,12 +57,19 @@ public class OrganizationUpdate {
     @AllArgsConstructor
     public static class Response {
 
+        @Schema(description = "업체 유형", example = "CUSTOMER")
         private String type;
+        @Schema(description = "사업자 등록번호", example = "123-45-67890")
         private String brNumber;
+        @Schema(description = "업체명", example = "커널360")
         private String name;
+        @Schema(description = "사업자 등록증 이미지 링크", example = "http://www.naver.com")
         private String brCertificateUrl;
+        @Schema(description = "도로명 주소", example = "서울시 강남구")
         private String streetAddress;
+        @Schema(description = "상세 주소", example = "역삼동")
         private String detailAddress;
+        @Schema(description = "전화번호", example = "010-1234-5678")
         private String phoneNumber;
 
         public static OrganizationUpdate.Response toDto(Organization organization) {

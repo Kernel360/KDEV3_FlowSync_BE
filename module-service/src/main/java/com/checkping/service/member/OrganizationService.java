@@ -11,9 +11,7 @@ public interface OrganizationService {
 
     OrganizationGet.Response getOrganization(UUID id);
 
-    List<OrganizationGet.Response> getByTypeAndStatusOrganizations(String type, String status);
-
-    List<OrganizationGet.Response> getAllOrganizations(String status);
+    List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status);
 
     OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request);
 
