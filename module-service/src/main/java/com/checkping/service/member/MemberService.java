@@ -1,5 +1,7 @@
 package com.checkping.service.member;
 
+import com.checkping.common.enums.ErrorCode;
+import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.member.request.ChangePasswordDto;
@@ -29,9 +31,9 @@ public class MemberService {
     }
 
     // 이메일로 회원 조회
-    public MemberResponseDto getMemberByEmail(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다: " + email));
+    public MemberResponseDto getMemberById(UUID memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         return MemberResponseDto.fromEntity(member);
     }
 
@@ -45,12 +47,12 @@ public class MemberService {
     public MemberResponseDto registerMember(MemberRegisterDto dto) {
         // 이메일 중복 체크
         if (memberRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.: " + dto.getEmail());
+            throw new BaseException("이미 사용중인 이메일입니다.", ErrorCode.DUPLICATE_EMAIL);
         }
 
         // 조직(Organization) 존재 여부 확인
         Organization organization = organizationRepository.findById(dto.getOrganizationId())
-                .orElseThrow(() -> new IllegalArgumentException("업체 id가 존재하지 않습니다.: " + dto.getOrganizationId()));
+                .orElseThrow(() -> new BaseException("조직이 존재하지 않습니다: " + dto.getOrganizationId(), ErrorCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
@@ -69,7 +71,7 @@ public class MemberService {
     public MemberResponseDto updateMember(UUID memberId, MemberUpdateDto dto) {
         // 기존 회원 찾기
         Member existingMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다: " + memberId));
+                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
         // DTO -> 엔티티 업데이트
         MemberUpdateDto.toEntity(existingMember, dto);
@@ -81,19 +83,19 @@ public class MemberService {
         return MemberResponseDto.fromEntity(updatedMember);
     }
 
-    // 비밀번호 변경, TODO: 한글이 꺠져서 예외 메시지 영어로 변경함, 한글 깨지는 문제 해결
+    // 비밀번호 변경
     public void changePassword(UUID memberId, ChangePasswordDto dto) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다: " + memberId));
+                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
         // 현재 비밀번호 확인
         if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+            throw new BaseException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
         }
 
         // 새 비밀번호와 확인 비밀번호 일치 여부 확인
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new IllegalArgumentException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            throw new BaseException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
         }
 
         // 비밀번호 암호화 적용

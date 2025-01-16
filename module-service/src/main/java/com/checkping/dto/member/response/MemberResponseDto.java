@@ -19,6 +19,7 @@ public class MemberResponseDto {
     private String jobRole;
     private String jobTitle;
     private Member.Status status;
+    private String remark;
     private int loginFailCount;
     private char isLoginLockedYn;
 
@@ -33,6 +34,7 @@ public class MemberResponseDto {
                 .jobRole(member.getJobRole())
                 .jobTitle(member.getJobTitle())
                 .status(member.getStatus())
+                .remark(member.getRemark())
                 .loginFailCount(member.getLoginFailCount())
                 .isLoginLockedYn(member.getIsLoginLockedYn())
                 .build();
