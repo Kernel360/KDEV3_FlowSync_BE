@@ -1,5 +1,9 @@
 package com.checkping.service.member.auth;
 
+import com.checkping.exception.auth.RefreshTokenCategoryException;
+import com.checkping.exception.auth.RefreshTokenExpiredException;
+import com.checkping.exception.auth.RefreshTokenNotFoundException;
+import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.service.member.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -9,35 +13,51 @@ import org.springframework.stereotype.Service;
 public class ReissueService {
 
     private final JwtUtil jwtUtil;
+    private final MemberRepository memberRepository;
 
-    public ReissueService(JwtUtil jwtUtil) {
+    public ReissueService(JwtUtil jwtUtil, MemberRepository memberRepository) {
         this.jwtUtil = jwtUtil;
+        this.memberRepository = memberRepository;
     }
 
     public String validateAndExtractRefreshToken(Cookie[] cookies) {
+
+        if (cookies == null || cookies.length == 0) {
+            throw new RefreshTokenNotFoundException();
+        }
+
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh")) {
                 return cookie.getValue();
             }
         }
-        return null;
+
+        throw new RefreshTokenNotFoundException();
     }
 
     public void checkTokenValidity(String refreshToken) {
-        if (refreshToken == null) {
-            throw new IllegalArgumentException("Refresh token is null");
-        }
 
         try {
             jwtUtil.isExpired(refreshToken);
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Refresh token expired");
+            throw new RefreshTokenExpiredException();
         }
 
         String category = jwtUtil.getCategory(refreshToken);
         if (!"refresh".equals(category)) {
-            throw new IllegalArgumentException("Invalid refresh token");
+            throw new RefreshTokenCategoryException();
         }
+
+        final String email = jwtUtil.getEmail(refreshToken);
+        if(memberRepository.existsByEmail(email) == false) {
+            throw new RefreshTokenNotFoundException();
+        }
+
+        //TODO JWT 형식에 맞지 않은 경우 체크
+        //TODO 그 외 한 번에 예외처리
+
+
+
     }
 
     public String getCategoryFromToken(String token) {
