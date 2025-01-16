@@ -3,12 +3,13 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
+import com.checkping.dto.TaskBoardGetList;
+import com.checkping.dto.TaskBoardGetList.Response;
 import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.TaskBoardResponse;
 import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.dto.TaskBoardUpdate.Request;
 import com.checkping.service.project.TaskBoardCommentService;
 import com.checkping.service.project.TaskBoardService;
@@ -49,7 +50,7 @@ public class TaskBoardController implements TaskBoardApi {
 
     @GetMapping("/posts")
     @Override
-    public BaseResponse<List<TaskBoardListDto>> getTaskBoardList(
+    public BaseResponse<List<Response>> getTaskBoardList(
         @RequestParam(required = false) String boardCategory,
         @RequestParam(required = false) String boardStatus) {
 
@@ -58,7 +59,7 @@ public class TaskBoardController implements TaskBoardApi {
             boardStatus);
 
         // getTaskBoardList
-        List<TaskBoardListDto> taskBoardListDtoList = taskBoardService.getTaskBoardList(
+        List<TaskBoardGetList.Response> taskBoardListDtoList = taskBoardService.getTaskBoardList(
             searchCondition);
 
         return BaseResponse.success(taskBoardListDtoList);
@@ -86,10 +87,10 @@ public class TaskBoardController implements TaskBoardApi {
 
     @DeleteMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardResponse.TaskBoardListDto> deleteSoftTaskBoard(
+    public BaseResponse<Response> deleteSoftTaskBoard(
         @PathVariable Long postId) {
 
-        TaskBoardResponse.TaskBoardListDto deletedBoardDto = taskBoardService.deleteSoft(postId);
+        TaskBoardGetList.Response deletedBoardDto = taskBoardService.deleteSoft(postId);
 
         return BaseResponse.success(deletedBoardDto);
     }
