@@ -3,13 +3,12 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentResponse;
+import com.checkping.dto.TaskBoardGetItem;
 import com.checkping.dto.TaskBoardGetList;
 import com.checkping.dto.TaskBoardGetList.Response;
 import com.checkping.dto.TaskBoardRegister;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardResponse;
-import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.TaskBoardUpdate.Request;
 import com.checkping.service.project.TaskBoardCommentService;
 import com.checkping.service.project.TaskBoardService;
@@ -39,11 +38,11 @@ public class TaskBoardController implements TaskBoardApi {
     @PostMapping(value = "/posts", consumes = {MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE})
     @Override
-    public BaseResponse<TaskBoardItemDto> register(
+    public BaseResponse<TaskBoardGetItem.Response> register(
         @RequestPart(value = "content") TaskBoardRegister.Request request,
         @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
-        TaskBoardItemDto taskBoardDto = taskBoardService.register(request, fileList);
+        TaskBoardGetItem.Response taskBoardDto = taskBoardService.register(request, fileList);
 
         return BaseResponse.success(taskBoardDto);
     }
@@ -67,19 +66,19 @@ public class TaskBoardController implements TaskBoardApi {
 
     @GetMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardItemDto> getTaskBoard(@PathVariable Long postId) {
+    public BaseResponse<TaskBoardGetItem.Response> getTaskBoard(@PathVariable Long postId) {
 
-        TaskBoardItemDto taskBoardItemDto = taskBoardService.getTaskBoardById(postId);
+        TaskBoardGetItem.Response taskBoardItemDto = taskBoardService.getTaskBoardById(postId);
 
         return BaseResponse.success(taskBoardItemDto);
     }
 
     @PutMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
+    public BaseResponse<TaskBoardGetItem.Response> updateTaskBoard(@PathVariable Long postId,
         @RequestBody Request request) {
 
-        TaskBoardResponse.TaskBoardItemDto updatedBoardDto = taskBoardService.update(postId,
+        TaskBoardGetItem.Response updatedBoardDto = taskBoardService.update(postId,
             request);
 
         return BaseResponse.success(updatedBoardDto);
