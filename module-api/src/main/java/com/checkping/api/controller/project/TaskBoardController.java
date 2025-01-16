@@ -49,11 +49,12 @@ public class TaskBoardController implements TaskBoardApi {
     @Override
     public BaseResponse<List<TaskBoardListDto>> getTaskBoardList(
         @RequestParam(required = false) String boardCategory,
-        @RequestParam(required = false) String boardStatus) {
+        @RequestParam(required = false) String boardStatus,
+        @RequestParam(required = false) String keyword) {
 
         // RequestParam -> SearchCondition
         TaskBoardRequest.SearchCondition searchCondition = new SearchCondition(boardCategory,
-            boardStatus);
+            boardStatus, keyword);
 
         // getTaskBoardList
         List<TaskBoardListDto> taskBoardListDtoList = taskBoardService.getTaskBoardList(

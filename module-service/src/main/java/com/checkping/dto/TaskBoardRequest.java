@@ -58,25 +58,32 @@ public class TaskBoardRequest {
         /*
         boardCategory : 게시글 카테고리 (enum, String)
         boardStatus : 게시글 상태 (enum, String)
+        keyword : 게시글 검색어 (String)
          */
         @Schema(description = "게시글 유형")
         private final TaskBoard.BoardCategory boardCategory;
         @Schema(description = "게시글 상태")
         private final TaskBoard.BoardStatus boardStatus;
+        @Schema(description = "게시글 검색어")
+        private final String keyword;
 
         /**
          * String 으로 들어온 값을 Enum 으로 변경한다.
          *
          * @param boardCategory RequestParam 으로 받아온 TaskBoard.BoardCategory 로 변경할 문자열
-         * @param boardStatus RequestParam 으로 받아온 TaskBoard.BoardStatus 로 변경할 문자열
+         * @param boardStatus   RequestParam 으로 받아온 TaskBoard.BoardStatus 로 변경할 문자열
+         * @param keyword       검색어
          */
-        public SearchCondition(String boardCategory, String boardStatus) {
+        public SearchCondition(String boardCategory, String boardStatus, String keyword) {
 
             // String -> Enum
             this.boardCategory = StringUtils.hasText(boardCategory) ? TaskBoardRequest.convertBoardCategory(boardCategory) : null;
 
             // String -> Enum
             this.boardStatus = StringUtils.hasText(boardStatus) ? TaskBoardRequest.convertBoardStatus(boardStatus) : null;
+
+            // 검색어
+            this.keyword = StringUtils.hasText(keyword) ? keyword : null;
         }
     }
 

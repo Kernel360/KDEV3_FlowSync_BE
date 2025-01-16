@@ -15,8 +15,18 @@ public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long> {
 
     List<TaskBoard> findByBoardStatus(BoardStatus boardStatus);
 
+    List<TaskBoard> findByTitleContaining(String taskBoardTitle);
+
     List<TaskBoard> findByBoardCategoryAndBoardStatus(BoardCategory boardCategory,
         BoardStatus boardStatus);
+
+    List<TaskBoard> findTaskBoardByBoardCategoryAndTitleContaining(BoardCategory boardCategory,
+        String title);
+
+    List<TaskBoard> findTaskBoardByBoardStatusAndTitleContaining(BoardStatus boardStatus, String title);
+
+    List<TaskBoard> findByBoardCategoryAndBoardStatusAndTitleContaining(BoardCategory boardCategory,
+        BoardStatus boardStatus, String title);
 
     Optional<TaskBoard> findById(Long id);
 }
