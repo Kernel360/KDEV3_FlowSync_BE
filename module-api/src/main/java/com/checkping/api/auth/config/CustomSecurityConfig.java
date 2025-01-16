@@ -4,6 +4,7 @@ package com.checkping.api.auth.config;
 import com.checkping.api.auth.filter.CustomLogoutFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -96,7 +97,8 @@ public class CustomSecurityConfig {
     public CorsConfigurationSource corsConfiguration(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+//        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+        configuration.setAllowedOrigins(List.of("https://www.flowssync.com", "http://localhost:3000"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
