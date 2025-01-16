@@ -110,7 +110,7 @@ public class TaskBoard extends BaseEntity {
     @Getter
     @RequiredArgsConstructor
     public enum BoardStatus {
-        PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
+        IN_PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
         private final String description;
     }
 
