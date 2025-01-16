@@ -1,6 +1,7 @@
 package com.checkping.domain.project;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import jakarta.persistence.*;
 import lombok.*;
@@ -71,14 +72,23 @@ public class Project extends BaseEntity {
     @Column(name = "deleted_yn")
     private String deletedYn;
 
-//    todo : 개발 서버 DB 설정을 위해 임의로 주석 처리했습니다. @KJU3
-//    @OneToMany
-//    @Builder.Default
-//    @JoinTable(name = "organization_by_project",
-//    joinColumns = @JoinColumn(name = "project_id"),
-//            inverseJoinColumns = @JoinColumn(name = "org_id", columnDefinition = "UUID"))
-    @OneToMany(mappedBy = "project")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Builder.Default
+    @JoinTable(name = "organization_by_project",
+            joinColumns = @JoinColumn(name="project_id"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            uniqueConstraints =
+            @UniqueConstraint(columnNames = {"project_id","org_id"}))
     private List<Organization> organizations = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Builder.Default
+    @JoinTable(name = "member_by_project",
+            joinColumns = @JoinColumn(name="project_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            uniqueConstraints =
+            @UniqueConstraint(columnNames = {"project_id","member_id"}))
+    private List<Member> members = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor

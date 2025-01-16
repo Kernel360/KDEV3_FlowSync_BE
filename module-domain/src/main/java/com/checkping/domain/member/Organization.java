@@ -1,7 +1,6 @@
 package com.checkping.domain.member;
 
 import com.checkping.domain.BaseEntity;
-import com.checkping.domain.project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -71,10 +70,6 @@ public class Organization extends BaseEntity {
 
     @Column(length = 100)
     private String remark;
-
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
 
     public enum Type {
         DEVELOPER, CUSTOMER
