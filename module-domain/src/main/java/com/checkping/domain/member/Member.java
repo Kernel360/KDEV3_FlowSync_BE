@@ -146,19 +146,12 @@ public class Member extends BaseEntity {
     }
 
     /** 회원 정보를 DTO 기반으로 업데이트*/
-    public void updateMemberInfo(
-            String name,
-            String phoneNum,
-            String jobRole,
-            String jobTitle,
-            String introduction,
-            String remark)
-    {
-        this.name = name;
-        this.phoneNum = phoneNum;
-        this.jobRole = jobRole;
-        this.jobTitle = jobTitle;
-        this.introduction = introduction;
-        this.remark = remark;
+    public void updateMemberInfo(String name, String phoneNum, String jobRole, String jobTitle, String introduction, String remark) {
+        if (name != null) this.name = name;
+        if (phoneNum != null) this.phoneNum = phoneNum;
+        if (jobRole != null) this.jobRole = jobRole;
+        if (jobTitle != null) this.jobTitle = jobTitle;
+        if (introduction != null) this.introduction = introduction;
+        if (remark != null) this.remark = remark;
     }
 }

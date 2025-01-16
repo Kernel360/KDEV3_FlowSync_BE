@@ -21,41 +21,6 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    //특정 고객 조회 (이메일로 조회 가능, 엔드포인트는 ID 형태 유지)
-    //GET /admins/members/{member_id}?email=xxx@example.com
-    @GetMapping("/admins/members/{member_id}") // TODO 언더바 잘 안씀
-    public BaseResponse<MemberResponseDto> getMemberById(
-            @PathVariable("member_id") UUID memberId, // TODO URL 설계 다시하기
-            @RequestParam String email
-    ) {
-        // 현재 구현에서는 email을 이용해 조회 (memberId는 URI 형태상 포함)
-        MemberResponseDto response = memberService.getMemberByEmail(email);  // TODO Dto라는 파일 이름 뒤에 잘 안붙임, 굳이 더 안쓸 변수 response 말고 바로 반환하기
-        return BaseResponse.success(response);
-    }
-
-    //특정 고객 정보 수정
-    //PUT /admins/members/{member_id} //TODO PATCH로 변경, 부분 정보 수정이기 떄문에
-    @PutMapping("/admins/members/{member_id}")
-    public BaseResponse<MemberResponseDto> updateMember(
-            @PathVariable("member_id") UUID memberId,
-            @RequestBody MemberUpdateDto dto
-    ) {
-        MemberResponseDto response = memberService.updateMember(memberId, dto);
-        return BaseResponse.success(response);
-    }
-
-     // 특정 고객 비밀번호 변경
-     // PATCH /admins/members/{member_id}/password
-    // TODO: 한글이 꺠져서 예외 메시지 영어로 변경함, 한글 깨지는 문제 해결
-    @PatchMapping("/admins/members/{member_id}/password")
-    public BaseResponse<String> changePassword(
-            @PathVariable("member_id") UUID memberId,
-            @RequestBody ChangePasswordDto dto
-    ) {
-        memberService.changePassword(memberId, dto);
-        return BaseResponse.success("Your password has been changed.");
-    }
-
     //전체 회원 조회
     //GET /admins/members
     @GetMapping("/admins/members")
@@ -64,12 +29,52 @@ public class MemberController {
         return BaseResponse.success(response);
     }
 
+    //특정 고객 조회
+    @GetMapping("/admins/members/{memberId}")
+    public BaseResponse<MemberResponseDto> getMemberById(
+            @PathVariable("memberId") UUID memberId
+    ) {
+        MemberResponseDto response = memberService.getMemberById(memberId);
+        return BaseResponse.success(response);
+    }
+
+    //특정 고객 정보 수정
+    //PUT /admins/members/{memberId}
+    @PatchMapping("/admins/members/{membeId}")
+    public BaseResponse<MemberResponseDto> updateMember(
+            @PathVariable("memberId") UUID memberId,
+            @RequestBody MemberUpdateDto dto
+    ) {
+        MemberResponseDto response = memberService.updateMember(memberId, dto);
+        return BaseResponse.success(response);
+    }
+
+     // 특정 고객 비밀번호 변경
+     // PATCH /admins/members/{memberId}/password
+    @PatchMapping("/admins/members/{memberId}/password")
+    public BaseResponse<String> changePassword(
+            @PathVariable("memberId") UUID memberId,
+            @RequestBody ChangePasswordDto dto
+    ) {
+        memberService.changePassword(memberId, dto);
+        return BaseResponse.success("비밀 번호가 성공적으로 변경되었습니다!");
+    }
 
     //회원 등록
     // POST /admins/members
     @PostMapping("/admins/members")
-    public BaseResponse<MemberResponseDto> registerMember(@RequestBody MemberRegisterDto dto) {
+    public BaseResponse<MemberResponseDto> registerMember(
+            @RequestBody MemberRegisterDto dto) {
         MemberResponseDto response = memberService.registerMember(dto);
         return BaseResponse.success(response);
+    }
+
+    @PostMapping("/admins/members/{memberId}/delete")
+    public BaseResponse<String> deleteMember(
+            @PathVariable("memberId") UUID memberId,
+            @RequestBody String reason //탈퇴 사유
+    ) {
+        memberService.deleteMember(memberId, reason);
+        return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");
     }
 }
