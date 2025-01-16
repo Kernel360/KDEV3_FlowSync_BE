@@ -26,6 +26,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
 
@@ -45,7 +46,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             }
 
             // JSON 파싱 (Jackson ObjectMapper 사용)
-            ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> credentials = objectMapper.readValue(jsonBuilder.toString(), Map.class);
 
             String email = credentials.get("email");
