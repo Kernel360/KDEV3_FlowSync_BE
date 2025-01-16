@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
     /*
       id : 회원아이디
       org_id : 소속 업체 아이디
-      type : 회원 유형 * ADMIN/MEMBER
+      role : 회원 유형 * ADMIN/MEMBER
       status : 회원 상태 * ACTIVE/ INACTIVE
       email : 이메일
       pw : 비밀번호
