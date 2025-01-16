@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ResponseUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static Cookie createCookie(String key, String value) {
+    public static Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
