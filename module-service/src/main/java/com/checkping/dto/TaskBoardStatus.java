@@ -31,6 +31,7 @@ public class TaskBoardStatus {
          */
         public static TaskBoard.BoardStatus toEntity(Request request) {
             try {
+                // label(String) -> Enum
                 return TaskBoard.BoardStatus.valueOf(request.getValue().toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new TaskBoardInvalidBoardCategoryException(request.toString());
