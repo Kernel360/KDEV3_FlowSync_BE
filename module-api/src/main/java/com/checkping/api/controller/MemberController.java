@@ -1,6 +1,5 @@
 package com.checkping.api.controller;
 
-import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.member.request.ChangePasswordDto;
 import com.checkping.dto.member.request.MemberRegisterDto;
@@ -64,8 +63,18 @@ public class MemberController {
     //회원 등록
     // POST /admins/members
     @PostMapping("/admins/members")
-    public BaseResponse<MemberResponseDto> registerMember(@RequestBody MemberRegisterDto dto) {
+    public BaseResponse<MemberResponseDto> registerMember(
+            @RequestBody MemberRegisterDto dto) {
         MemberResponseDto response = memberService.registerMember(dto);
         return BaseResponse.success(response);
+    }
+
+    @PostMapping("/admins/members/{memberId}/delete")
+    public BaseResponse<String> deleteMember(
+            @PathVariable("memberId") UUID memberId,
+            @RequestBody String reason //탈퇴 사유
+    ) {
+        memberService.deleteMember(memberId, reason);
+        return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");
     }
 }

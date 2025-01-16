@@ -107,4 +107,16 @@ public class MemberService {
         // 수정된 엔티티 저장
         memberRepository.save(member);
     }
+
+    // 회원 삭제
+    public void deleteMember(UUID memberId, String reasonForDelete) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+        if (!member.isActive()) {
+            throw new BaseException("이미 삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+        }
+        // 회원 삭제 처리
+        member.deleteAccount(reasonForDelete);
+        memberRepository.save(member);
+    }
 }
