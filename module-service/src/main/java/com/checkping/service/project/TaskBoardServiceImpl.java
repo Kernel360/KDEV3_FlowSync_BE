@@ -92,7 +92,8 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         // 조회
         List<TaskBoard> taskBoardList = taskBoardReader.getTaskBoard(
             searchCondition.getBoardCategory(),
-            searchCondition.getBoardStatus());
+            searchCondition.getBoardStatus(),
+            searchCondition.getKeyword());
 
         // TaskBoard -> TaskBoardListDto
         return taskBoardList.stream().map(TaskBoardListDto::toDto).toList();
