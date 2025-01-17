@@ -13,8 +13,10 @@ public class MemberResponseDto {
 
     @Schema(description = "회원 ID", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID id;
-    @Schema(description = "조직 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+    @Schema(description = "소속 업체 ID", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID organizationId;
+    @Schema(description = "소속 업체 이름", example = "CheckPing")
+    private String organizationName;
     @Schema(description = "역할", example = "ADMIN") // ADMIN, USER
     private Member.Role role;
     @Schema(description = "회원 탈퇴 여부", example = "ACTIVE") // ACTIVE, INACTIVE
@@ -40,6 +42,7 @@ public class MemberResponseDto {
         return MemberResponseDto.builder()
                 .id(member.getId())
                 .organizationId(member.getOrganization().getId())
+                .organizationName(member.getOrganization().getName())
                 .role(member.getRole())
                 .status(member.getStatus())
                 .email(member.getEmail())
@@ -54,3 +57,4 @@ public class MemberResponseDto {
                 .build();
     }
 }
+
