@@ -1,7 +1,6 @@
 package com.checkping.dto;
 
 import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardLink;
 import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -109,9 +108,14 @@ public class TaskBoardRequest {
     /**
      * Enum : BoardCategory 변환 함수
      *
+     * @deprecated 해당 메서드는 Enum 을 위한 Dto 를 생성하는 것에 따라 폐기할 예정입니다.
+     * TaskBoardStatus.Request.toEntity())
+     *
      * @param value BoardCategory 로 변환할 문자열
      * @return TaskBoard.BoardCategory
+     *
      */
+    @Deprecated
     public static TaskBoard.BoardCategory convertBoardCategory(String value) {
         try {
             return TaskBoard.BoardCategory.valueOf(value.toUpperCase());
