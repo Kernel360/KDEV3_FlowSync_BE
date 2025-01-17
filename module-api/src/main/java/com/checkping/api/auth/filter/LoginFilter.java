@@ -1,5 +1,6 @@
 package com.checkping.api.auth.filter;
 
+import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.util.JwtUtil;
@@ -26,6 +27,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
 
@@ -45,7 +47,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             }
 
             // JSON 파싱 (Jackson ObjectMapper 사용)
-            ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> credentials = objectMapper.readValue(jsonBuilder.toString(), Map.class);
 
             String email = credentials.get("email");
@@ -81,14 +82,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         BaseResponse<Map<String, String>> successResponse = BaseResponse.success("로그인에 성공하였습니다.");
 
-        //응답 설정
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Authorization", "Bearer " + access);
-        response.addCookie(createCookie("refresh", refresh));
-        response.getWriter().write(new ObjectMapper().writeValueAsString(successResponse));
+        // JWT와 쿠키 포함된 성공 응답
+        ResponseUtil.sendSuccessWithJwtAndCookie(response, HttpStatus.OK, successResponse, access, refresh);
     }
+
 
     //로그인 실패시 실행하는 메소드
     @Override
@@ -101,24 +98,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 "error", "Fail",
                 "message", "로그인에 실패했습니다. 아이디와 비밀번호를 다시 확인해주세요."
         );
-
-        // 응답 설정
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
-
-    }
-
-    private Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
+        ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
     }
 }
 
