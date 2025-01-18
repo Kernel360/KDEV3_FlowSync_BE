@@ -62,11 +62,6 @@ public class ProjectResponse {
             projectDto.setCustomerName(project.getOrganizations().get(1).getName());
             return projectDto;
         }
-
-        public void setOrganizationInfo(String developerName, String customerName) {
-            this.developerName = developerName;
-            this.customerName = customerName;
-        }
     }
 
 }
