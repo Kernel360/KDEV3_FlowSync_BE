@@ -12,14 +12,13 @@ import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
@@ -115,6 +114,21 @@ public class ProjectServiceImpl implements ProjectService {
 
             return projectDto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Long> countProjectsByManagementStep() {
+        List<Tuple> list = projectRepository.countProjectsByManagementStep();
+
+        if (list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return list.stream()
+                .collect(Collectors.toMap(
+                        tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
+                        tuple -> (Long) tuple.get("projectCount")
+                ));
     }
 
 }
