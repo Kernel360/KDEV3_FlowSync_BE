@@ -25,6 +25,7 @@ public class Project extends BaseEntity {
     description : 프로젝트 설명
     detail : 프로젝트 세부 설명
     status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
+    management_step : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(유지보수)
     reg_at : 프로젝트 등록 일시
     update_at : 프로젝트 수정 일시
     start_at : 프로젝트 시작 일시
@@ -50,6 +51,10 @@ public class Project extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 100)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "management_step", length = 100)
+    private ManagementStep management_step;
 
     @Column(name = "reg_at")
     private LocalDateTime regAt;
@@ -96,6 +101,17 @@ public class Project extends BaseEntity {
         IN_PROGRESS("진행중"),
         PAUSED("일시 중단"),
         COMPLETED("완료");
+
+        private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum ManagementStep {
+        CONTRACT("계약"),
+        IN_PROGRESS("진행중"),
+        COMPLETED("납품완료"),
+        MAINTENANCE("유지보수");
 
         private final String description;
     }
