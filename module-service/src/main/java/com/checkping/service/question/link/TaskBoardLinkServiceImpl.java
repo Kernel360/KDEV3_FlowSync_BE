@@ -5,7 +5,7 @@ import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
-import com.checkping.infra.repository.question.TaskBoardReader;
+import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.link.TaskBoardLinkStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
 
     private final TaskBoardLinkStore taskBoardLinkStore;
-    private final TaskBoardReader taskBoardReader;
+    private final QuestionReader questionReader;
 
     /**
      * 업무 관리 게시글 첨부 링크 서비스 - 등록
@@ -29,7 +29,7 @@ public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
         TaskBoardLinkRequest.RegisterDto request) {
 
         // find Question Entity
-        Question question = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // Dto -> Entity

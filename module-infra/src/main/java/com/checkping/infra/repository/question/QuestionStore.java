@@ -2,7 +2,7 @@ package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
 
-public interface TaskBoardStore {
+public interface QuestionStore {
 
     Question store(Question question);
 

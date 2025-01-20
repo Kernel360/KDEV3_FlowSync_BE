@@ -13,8 +13,8 @@ import com.checkping.dto.question.TaskBoardResponse;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
-import com.checkping.infra.repository.question.TaskBoardReader;
-import com.checkping.infra.repository.question.TaskBoardStore;
+import com.checkping.infra.repository.question.QuestionReader;
+import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
 import com.checkping.infra.repository.question.file.TaskBoardFileStore;
@@ -28,8 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class TaskBoardServiceImpl implements TaskBoardService {
 
-    private final TaskBoardStore taskBoardStore;
-    private final TaskBoardReader taskBoardReader;
+    private final QuestionStore questionStore;
+    private final QuestionReader questionReader;
     private final TaskBoardCommentReader taskBoardCommentReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
     private final TaskBoardLinkStore taskBoardLinkStore;
@@ -50,7 +50,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         initQuestion.activate();
 
         // save Question entity
-        Question question = taskBoardStore.store(initQuestion);
+        Question question = questionStore.store(initQuestion);
 
         // Save File in S3
         List<QuestionFile> questionFileList = taskBoardFileStore.saveFileList(question,
@@ -90,7 +90,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     public List<TaskBoardListDto> getTaskBoardList(SearchCondition searchCondition) {
 
         // 조회
-        List<Question> questionList = taskBoardReader.getTaskBoard(
+        List<Question> questionList = questionReader.getTaskBoard(
             searchCondition.getBoardCategory(),
             searchCondition.getBoardStatus(),
             searchCondition.getKeyword());
@@ -109,7 +109,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     public TaskBoardItemDto getTaskBoardById(Long taskBoardId) {
 
         // find Question Entity
-        Question question = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // Entity -> Dto
@@ -126,7 +126,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     public TaskBoardListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
@@ -140,7 +140,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         initQuestion.deactivate();
 
         // save
-        Question deletedQuestion = taskBoardStore.store(initQuestion);
+        Question deletedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
         return TaskBoardResponse.TaskBoardListDto.toDto(deletedQuestion);
@@ -156,7 +156,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     public TaskBoardListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
@@ -166,7 +166,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         }
 
         // Question - HARD DELETE
-        taskBoardStore.deleteHard(initQuestion);
+        questionStore.deleteHard(initQuestion);
 
         return TaskBoardResponse.TaskBoardListDto.toDto(initQuestion);
     }
@@ -182,7 +182,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     public TaskBoardItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // update
@@ -191,7 +191,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         initQuestion.update(title, content);
 
         // save
-        Question updatedQuestion = taskBoardStore.store(initQuestion);
+        Question updatedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
         return TaskBoardResponse.TaskBoardItemDto.toDto(updatedQuestion);

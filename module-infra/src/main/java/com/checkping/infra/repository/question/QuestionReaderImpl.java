@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TaskBoardReaderImpl implements TaskBoardReader {
+public class QuestionReaderImpl implements QuestionReader {
 
-    private final TaskBoardRepository taskBoardRepository;
+    private final QuestionRepository questionRepository;
 
     /**
      * Question 전체 조회 및 필터링 조회
@@ -30,43 +30,43 @@ public class TaskBoardReaderImpl implements TaskBoardReader {
 
         // keyword, boardCategory, boardStatus
         if (boardCategory != null && boardStatus != null && keyword != null) {
-            return taskBoardRepository.findByBoardCategoryAndBoardStatusAndTitleContaining(boardCategory,
+            return questionRepository.findByBoardCategoryAndBoardStatusAndTitleContaining(boardCategory,
                 boardStatus, keyword);
         }
 
         // boardCategory AND boardStatus
         if (boardCategory != null && boardStatus != null) {
-            return taskBoardRepository.findByBoardCategoryAndBoardStatus(boardCategory,
+            return questionRepository.findByBoardCategoryAndBoardStatus(boardCategory,
                 boardStatus);
         }
 
         // boardCategory AND keyword
         if (boardCategory != null && keyword != null) {
-            return taskBoardRepository.findTaskBoardByBoardCategoryAndTitleContaining(boardCategory, keyword);
+            return questionRepository.findTaskBoardByBoardCategoryAndTitleContaining(boardCategory, keyword);
         }
 
         // boardStatus AND keyword
         if (boardStatus != null && keyword != null) {
-            return taskBoardRepository.findTaskBoardByBoardStatusAndTitleContaining(boardStatus, keyword);
+            return questionRepository.findTaskBoardByBoardStatusAndTitleContaining(boardStatus, keyword);
         }
 
         // boardCategory
         if (boardCategory != null) {
-            return taskBoardRepository.findByBoardCategory(boardCategory);
+            return questionRepository.findByBoardCategory(boardCategory);
         }
 
         // boardStatus
         if (boardStatus != null) {
-            return taskBoardRepository.findByBoardStatus(boardStatus);
+            return questionRepository.findByBoardStatus(boardStatus);
         }
 
         // keyword
         if (keyword != null) {
-            return taskBoardRepository.findByTitleContaining(keyword);
+            return questionRepository.findByTitleContaining(keyword);
         }
 
         // 조회
-        return taskBoardRepository.findAll();
+        return questionRepository.findAll();
 
     }
 
@@ -78,6 +78,6 @@ public class TaskBoardReaderImpl implements TaskBoardReader {
      */
     @Override
     public Optional<Question> getTaskBoardById(Long id) {
-        return taskBoardRepository.findById(id);
+        return questionRepository.findById(id);
     }
 }
