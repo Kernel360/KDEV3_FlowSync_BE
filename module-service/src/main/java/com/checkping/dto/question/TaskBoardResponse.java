@@ -1,7 +1,11 @@
-package com.checkping.dto;
+package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.TaskBoard;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.link.TaskBoardLinkResponse;
+import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -110,9 +114,9 @@ public class TaskBoardResponse {
         private TaskBoard.BoardStatus boardStatus;
         private TaskBoard.DeleteStatus deletedYn;
         @Schema(description = "게시글 댓글 목록")
-        private List<TaskBoardCommentResponse.TaskBoardCommentDto> commentList;
+        private List<TaskBoardCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<TaskBoardLinkResponse.TaskBoardLinkDto> taskBoardLinkList;
+        private List<TaskBoardLinkDto> taskBoardLinkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileResponse> taskBoardFileList;
 
@@ -130,12 +134,12 @@ public class TaskBoardResponse {
             boardDto.setDeletedYn(taskBoard.getDeletedYn());
 
             // Entity -> Dto (TaskBoardComment)
-            List<TaskBoardCommentResponse.TaskBoardCommentDto> comments =
+            List<TaskBoardCommentDto> comments =
                 TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(taskBoard.getCommentList());
             boardDto.setCommentList(comments);
 
             // Entity -> Dto (TaskBoardLink)
-            List<TaskBoardLinkResponse.TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
+            List<TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
                 taskBoard.getTaskBoardLinkList());
             boardDto.setTaskBoardLinkList(links);
 

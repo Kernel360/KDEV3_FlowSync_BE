@@ -1,4 +1,4 @@
-package com.checkping.dto;
+package com.checkping.dto.question.comment;
 
 import com.checkping.domain.question.TaskBoardComment;
 import com.checkping.domain.question.TaskBoardComment.DeleteStatus;

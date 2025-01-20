@@ -2,11 +2,11 @@ package com.checkping.service.question.comment;
 
 import com.checkping.domain.question.TaskBoard;
 import com.checkping.domain.question.TaskBoardComment;
-import com.checkping.dto.TaskBoardCommentRequest;
-import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
-import com.checkping.dto.TaskBoardCommentRequest.UpdateDto;
-import com.checkping.dto.TaskBoardCommentResponse;
-import com.checkping.dto.TaskBoardCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest.UpdateDto;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
 import com.checkping.exception.project.TaskBoardCommentMisMatchEntityException;
 import com.checkping.exception.project.TaskBoardCommentNotFoundEntityException;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
