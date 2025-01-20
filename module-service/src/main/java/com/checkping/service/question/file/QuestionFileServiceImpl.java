@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class TaskBoardFileServiceImpl implements TaskBoardFileService {
+public class QuestionFileServiceImpl implements QuestionFileService {
 
     private final QuestionReader questionReader;
     private final QuestionFileStore questionFileStore;
