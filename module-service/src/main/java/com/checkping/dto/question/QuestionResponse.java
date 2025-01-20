@@ -2,8 +2,7 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
-import com.checkping.dto.question.comment.QuestionCommentResponse;
-import com.checkping.dto.question.comment.QuestionCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.link.QuestionLinkResponse;
 import com.checkping.dto.question.link.QuestionLinkResponse.TaskBoardLinkDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -114,7 +113,7 @@ public class QuestionResponse {
         private Question.BoardStatus boardStatus;
         private Question.DeleteStatus deletedYn;
         @Schema(description = "게시글 댓글 목록")
-        private List<TaskBoardCommentDto> commentList;
+        private List<QuestionCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
         private List<TaskBoardLinkDto> taskBoardLinkList;
         @Schema(description = "게시글 첨부 파일 목록")
@@ -134,8 +133,8 @@ public class QuestionResponse {
             boardDto.setDeletedYn(question.getDeletedYn());
 
             // Entity -> Dto (QuestionComment)
-            List<TaskBoardCommentDto> comments =
-                QuestionCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
+            List<QuestionCommentDto> comments =
+                QuestionCommentDto.toDtoList(question.getCommentList());
             boardDto.setCommentList(comments);
 
             // Entity -> Dto (QuestionLink)

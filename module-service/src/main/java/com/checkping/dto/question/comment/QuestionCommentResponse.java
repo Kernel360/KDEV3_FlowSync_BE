@@ -17,7 +17,7 @@ public class QuestionCommentResponse {
 
     @Getter
     @ToString
-    public static class TaskBoardCommentDto {
+    public static class QuestionCommentDto {
 
         @Schema(description = "게시글 댓글 ID")
         private Long taskBoardCommentId;
@@ -36,10 +36,10 @@ public class QuestionCommentResponse {
          * Entity -> Dto
          *
          * @param questionComment QuestionComment Entity
-         * @return TaskBoardCommentDto
+         * @return QuestionCommentDto
          */
-        public static TaskBoardCommentDto toDto(QuestionComment questionComment) {
-            TaskBoardCommentDto dto = new TaskBoardCommentDto();
+        public static QuestionCommentDto toDto(QuestionComment questionComment) {
+            QuestionCommentDto dto = new QuestionCommentDto();
             dto.taskBoardCommentId = questionComment.getId();
             dto.content = questionComment.getContent();
             dto.regAt = questionComment.getRegAt();
@@ -49,12 +49,12 @@ public class QuestionCommentResponse {
         }
 
         /**
-         * QuestionComment 리스트를 TaskBoardCommentDto 리스트로 변환
+         * QuestionComment 리스트를 QuestionCommentDto 리스트로 변환
          *
          * @param questionCommentList QuestionComment 의 리스트
-         * @return TaskBoardCommentDto 리스트
+         * @return QuestionCommentDto 리스트
          */
-        public static List<TaskBoardCommentDto> toDtoList(
+        public static List<QuestionCommentDto> toDtoList(
             List<QuestionComment> questionCommentList) {
 
             // null check
@@ -62,7 +62,7 @@ public class QuestionCommentResponse {
                 return Collections.emptyList();
             }
 
-            return questionCommentList.stream().map(TaskBoardCommentDto::toDto).toList();
+            return questionCommentList.stream().map(QuestionCommentDto::toDto).toList();
         }
 
     }

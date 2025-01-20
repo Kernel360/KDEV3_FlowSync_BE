@@ -3,10 +3,10 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.service.question.comment.QuestionCommentService;
 import com.checkping.service.question.QuestionService;
 import java.util.List;
@@ -94,21 +94,21 @@ public class QuestionController implements QuestionApi {
 
     @PostMapping("/posts/{postId}/comments")
     @Override
-    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> registerComment(
+    public BaseResponse<QuestionCommentDto> registerComment(
         @PathVariable Long postId, @RequestBody QuestionCommentRequest.RegisterDto request) {
 
-        QuestionCommentResponse.TaskBoardCommentDto taskBoardCommentDto = questionCommentService.register(
+        QuestionCommentDto questionCommentDto = questionCommentService.register(
             postId, request);
 
-        return BaseResponse.success(taskBoardCommentDto);
+        return BaseResponse.success(questionCommentDto);
     }
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     @Override
-    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> deleteSoft(
+    public BaseResponse<QuestionCommentDto> deleteSoft(
         @PathVariable Long postId, @PathVariable Long commentId) {
 
-        QuestionCommentResponse.TaskBoardCommentDto deletedCommentDto = questionCommentService.deleteSoft(
+        QuestionCommentDto deletedCommentDto = questionCommentService.deleteSoft(
             postId, commentId);
 
         return BaseResponse.success(deletedCommentDto);
@@ -116,11 +116,11 @@ public class QuestionController implements QuestionApi {
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
     @Override
-    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> updateComment(
+    public BaseResponse<QuestionCommentDto> updateComment(
         @PathVariable Long postId, @PathVariable Long commentId,
         @RequestBody QuestionCommentRequest.UpdateDto request) {
 
-        QuestionCommentResponse.TaskBoardCommentDto updatedCommentDto = questionCommentService.update(
+        QuestionCommentDto updatedCommentDto = questionCommentService.update(
             postId, commentId, request);
 
         return BaseResponse.success(updatedCommentDto);
