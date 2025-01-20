@@ -12,7 +12,7 @@ import com.checkping.dto.question.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.question.TaskBoardResponse;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
-import com.checkping.exception.question.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
@@ -110,7 +110,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
         return TaskBoardItemDto.toDto(question);
@@ -127,7 +127,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -157,7 +157,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -183,7 +183,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // update
         String title = request.getTitle();

@@ -4,7 +4,7 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
-import com.checkping.exception.question.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
         QuestionLink initQuestionLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,

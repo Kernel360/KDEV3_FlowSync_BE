@@ -7,9 +7,9 @@ import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest.UpdateDto;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
-import com.checkping.exception.question.comment.TaskBoardCommentMisMatchEntityException;
-import com.checkping.exception.question.comment.TaskBoardCommentNotFoundEntityException;
-import com.checkping.exception.question.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
+import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
+import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
@@ -37,7 +37,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
         QuestionComment initComment = TaskBoardCommentRequest.RegisterDto.toEntity(request,
@@ -65,13 +65,13 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
-            throw new TaskBoardCommentMisMatchEntityException();
+            throw new QuestionCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
-            TaskBoardCommentNotFoundEntityException::new);
+            QuestionCommentNotFoundEntityException::new);
 
         // soft delete
         initComment.deactivate();
@@ -97,13 +97,13 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
-            throw new TaskBoardCommentMisMatchEntityException();
+            throw new QuestionCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
-            TaskBoardCommentNotFoundEntityException::new);
+            QuestionCommentNotFoundEntityException::new);
 
         // HARD DELETE
         questionCommentStore.deleteHard(initComment);
@@ -128,12 +128,12 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
-            throw new TaskBoardCommentMisMatchEntityException();
+            throw new QuestionCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
-            taskBoardCommentId).orElseThrow(TaskBoardCommentNotFoundEntityException::new);
+            taskBoardCommentId).orElseThrow(QuestionCommentNotFoundEntityException::new);
 
         // update
         initComment.update(request.getContent());
