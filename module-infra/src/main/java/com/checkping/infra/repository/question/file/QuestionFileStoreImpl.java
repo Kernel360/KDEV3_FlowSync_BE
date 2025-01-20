@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class TaskBoardFileStoreImpl implements TaskBoardFileStore {
+public class QuestionFileStoreImpl implements QuestionFileStore {
 
     private final TaskBoardFileRepository taskBoardFileRepository;
     private final FileRepository fileRepository;
 
-    public TaskBoardFileStoreImpl(TaskBoardFileRepository taskBoardFileRepository,
+    public QuestionFileStoreImpl(TaskBoardFileRepository taskBoardFileRepository,
         @Qualifier("s3FileRepositoryImpl") FileRepository fileRepository) {
         this.taskBoardFileRepository = taskBoardFileRepository;
         this.fileRepository = fileRepository;
     }
 
     /**
-     * TaskBoardFileStore 첨부 파일 저장
+     * QuestionFileStore 첨부 파일 저장
      *
      * @param question 업무 관리 게시글 ID
      * @param fileList  게시글 첨부 파일 리스트

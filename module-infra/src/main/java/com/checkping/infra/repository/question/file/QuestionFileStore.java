@@ -5,7 +5,7 @@ import com.checkping.domain.question.QuestionFile;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface TaskBoardFileStore {
+public interface QuestionFileStore {
 
     List<QuestionFile> saveFileList(Question question, List<MultipartFile> fileList);
 }
