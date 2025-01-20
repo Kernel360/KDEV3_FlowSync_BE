@@ -1,6 +1,6 @@
 package com.checkping.common.utils;
 
-import com.checkping.domain.question.TaskBoardFile;
+import com.checkping.domain.question.QuestionFile;
 import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
@@ -18,22 +18,22 @@ public record FileResponse(String originalName, String saveName, String url, lon
     }
 
     /**
-     * TaskBoardFile Entity -> FileResponse Dto
+     * QuestionFile Entity -> FileResponse Dto
      *
-     * @param taskBoardFile TaskBoardFile Entity
+     * @param questionFile QuestionFile Entity
      * @return FileResponse
      */
-    public static FileResponse toDto(TaskBoardFile taskBoardFile) {
-        return FileResponse.builder().originalName(taskBoardFile.getOriginalName())
-            .saveName(taskBoardFile.getSaveName()).url(taskBoardFile.getUrl())
-            .size(taskBoardFile.getSize()).build();
+    public static FileResponse toDto(QuestionFile questionFile) {
+        return FileResponse.builder().originalName(questionFile.getOriginalName())
+            .saveName(questionFile.getSaveName()).url(questionFile.getUrl())
+            .size(questionFile.getSize()).build();
     }
 
-    public static List<FileResponse> toDtoList(List<TaskBoardFile> taskBoardFiles) {
-        if (taskBoardFiles == null || taskBoardFiles.isEmpty()) {
+    public static List<FileResponse> toDtoList(List<QuestionFile> questionFiles) {
+        if (questionFiles == null || questionFiles.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return taskBoardFiles.stream().map(FileResponse::toDto).toList();
+        return questionFiles.stream().map(FileResponse::toDto).toList();
     }
 }
