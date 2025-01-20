@@ -15,7 +15,7 @@ public class QuestionLinkResponse {
 
     @Getter
     @ToString
-    public static class TaskBoardLinkDto {
+    public static class QuestionLinkDto {
         @Schema(description = "게시글 링크 ID")
         private Long id;
         @Schema(description = "게시글 링크 이름")
@@ -29,23 +29,23 @@ public class QuestionLinkResponse {
          * @param questionLink QuestionLink Entity
          * @return QuestionLinkResponse.toDto
          */
-        public static TaskBoardLinkDto toDto(QuestionLink questionLink) {
-            TaskBoardLinkDto taskBoardLinkDto = new TaskBoardLinkDto();
-            taskBoardLinkDto.id = questionLink.getId();
-            taskBoardLinkDto.name = questionLink.getName();
-            taskBoardLinkDto.url = questionLink.getUrl();
-            return taskBoardLinkDto;
+        public static QuestionLinkDto toDto(QuestionLink questionLink) {
+            QuestionLinkDto questionLinkDto = new QuestionLinkDto();
+            questionLinkDto.id = questionLink.getId();
+            questionLinkDto.name = questionLink.getName();
+            questionLinkDto.url = questionLink.getUrl();
+            return questionLinkDto;
         }
 
         /**
          * Entity List -> Dto List
          *
          * @param questionLinkList QuestionLink 엔티티 리스트
-         * @return QuestionLinkResponse.TaskBoardLinkDto 리스트
+         * @return QuestionLinkResponse.QuestionLinkDto 리스트
          */
-        public static List<TaskBoardLinkDto> toDtoList(List<QuestionLink> questionLinkList) {
+        public static List<QuestionLinkDto> toDtoList(List<QuestionLink> questionLinkList) {
 
-            List<TaskBoardLinkDto> taskBoardLinkDtoList = new ArrayList<>();
+            List<QuestionLinkDto> questionLinkDtoList = new ArrayList<>();
 
             // null check
             if (questionLinkList == null) {
@@ -54,12 +54,12 @@ public class QuestionLinkResponse {
 
             // loop for add
             for (QuestionLink questionLink : questionLinkList) {
-                TaskBoardLinkDto taskBoardLinkDto = toDto(questionLink);
-                taskBoardLinkDtoList.add(taskBoardLinkDto);
+                QuestionLinkDto questionLinkDto = toDto(questionLink);
+                questionLinkDtoList.add(questionLinkDto);
             }
 
             // return Dto list
-            return taskBoardLinkDtoList;
+            return questionLinkDtoList;
         }
     }
 }
