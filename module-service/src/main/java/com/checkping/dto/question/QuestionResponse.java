@@ -17,7 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskBoardResponse {
+public class QuestionResponse {
 
     @Getter
     @Setter
@@ -120,8 +120,8 @@ public class TaskBoardResponse {
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileResponse> taskBoardFileList;
 
-        public static TaskBoardResponse.TaskBoardItemDto toDto(Question question) {
-            TaskBoardResponse.TaskBoardItemDto boardDto = new TaskBoardResponse.TaskBoardItemDto();
+        public static QuestionResponse.TaskBoardItemDto toDto(Question question) {
+            QuestionResponse.TaskBoardItemDto boardDto = new QuestionResponse.TaskBoardItemDto();
             boardDto.setId(question.getId());
             boardDto.setNumber(question.getNumber());
             boardDto.setTitle(question.getTitle());

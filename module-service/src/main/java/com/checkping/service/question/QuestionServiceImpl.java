@@ -5,13 +5,13 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
-import com.checkping.dto.question.TaskBoardRequest;
-import com.checkping.dto.question.TaskBoardRequest.RegisterDto;
-import com.checkping.dto.question.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.question.TaskBoardRequest.UpdateDto;
-import com.checkping.dto.question.TaskBoardResponse;
-import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.question.QuestionRequest;
+import com.checkping.dto.question.QuestionRequest.RegisterDto;
+import com.checkping.dto.question.QuestionRequest.SearchCondition;
+import com.checkping.dto.question.QuestionRequest.UpdateDto;
+import com.checkping.dto.question.QuestionResponse;
+import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.TaskBoardListDto;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -46,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
     public TaskBoardItemDto register(RegisterDto request, List<MultipartFile> fileList) {
 
         // dto -> entity
-        Question initQuestion = TaskBoardRequest.RegisterDto.toEntity(request);
+        Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
         initQuestion.activate();
 
         // save Question entity
@@ -143,7 +143,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question deletedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
-        return TaskBoardResponse.TaskBoardListDto.toDto(deletedQuestion);
+        return QuestionResponse.TaskBoardListDto.toDto(deletedQuestion);
     }
 
     /**
@@ -168,7 +168,7 @@ public class QuestionServiceImpl implements QuestionService {
         // Question - HARD DELETE
         questionStore.deleteHard(initQuestion);
 
-        return TaskBoardResponse.TaskBoardListDto.toDto(initQuestion);
+        return QuestionResponse.TaskBoardListDto.toDto(initQuestion);
     }
 
     /**
@@ -194,6 +194,6 @@ public class QuestionServiceImpl implements QuestionService {
         Question updatedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
-        return TaskBoardResponse.TaskBoardItemDto.toDto(updatedQuestion);
+        return QuestionResponse.TaskBoardItemDto.toDto(updatedQuestion);
     }
 }

@@ -13,7 +13,7 @@ import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskBoardRequest {
+public class QuestionRequest {
 
     @Getter
     @ToString
@@ -46,8 +46,8 @@ public class TaskBoardRequest {
             return Question.builder()
                 .title(registerDto.getTitle())
                 .content(registerDto.getContent())
-                .boardCategory(TaskBoardRequest.convertBoardCategory(registerDto.getBoardCategory()))
-                .boardStatus(TaskBoardRequest.convertBoardStatus(registerDto.getBoardStatus()))
+                .boardCategory(QuestionRequest.convertBoardCategory(registerDto.getBoardCategory()))
+                .boardStatus(QuestionRequest.convertBoardStatus(registerDto.getBoardStatus()))
                 .build();
         }
     }
@@ -77,10 +77,10 @@ public class TaskBoardRequest {
         public SearchCondition(String boardCategory, String boardStatus, String keyword) {
 
             // String -> Enum
-            this.boardCategory = StringUtils.hasText(boardCategory) ? TaskBoardRequest.convertBoardCategory(boardCategory) : null;
+            this.boardCategory = StringUtils.hasText(boardCategory) ? QuestionRequest.convertBoardCategory(boardCategory) : null;
 
             // String -> Enum
-            this.boardStatus = StringUtils.hasText(boardStatus) ? TaskBoardRequest.convertBoardStatus(boardStatus) : null;
+            this.boardStatus = StringUtils.hasText(boardStatus) ? QuestionRequest.convertBoardStatus(boardStatus) : null;
 
             // 검색어
             this.keyword = StringUtils.hasText(keyword) ? keyword : null;
