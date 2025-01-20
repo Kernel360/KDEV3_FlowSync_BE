@@ -10,7 +10,7 @@ import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardComm
 import com.checkping.exception.question.comment.TaskBoardCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.TaskBoardCommentNotFoundEntityException;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
-import com.checkping.infra.repository.question.TaskBoardReader;
+import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
 
-    private final TaskBoardReader taskBoardReader;
+    private final QuestionReader questionReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
     private final TaskBoardCommentReader taskBoardCommentReader;
 
@@ -36,7 +36,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         Long taskBoardId, RegisterDto request) {
 
         // find Question Entity
-        Question question = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // Dto -> Entity

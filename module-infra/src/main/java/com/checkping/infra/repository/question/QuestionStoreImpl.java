@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TaskBoardStoreImpl implements TaskBoardStore {
-    private final TaskBoardRepository taskBoardRepository;
+public class QuestionStoreImpl implements QuestionStore {
+    private final QuestionRepository questionRepository;
 
     @Override
     public Question store(Question question) {
-        return taskBoardRepository.save(question);
+        return questionRepository.save(question);
     }
 
     /**
@@ -21,6 +21,6 @@ public class TaskBoardStoreImpl implements TaskBoardStore {
      */
     @Override
     public void deleteHard(Question question) {
-        taskBoardRepository.delete(question);
+        questionRepository.delete(question);
     }
 }

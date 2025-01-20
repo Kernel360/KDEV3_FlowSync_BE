@@ -6,7 +6,7 @@ import com.checkping.domain.question.Question.BoardStatus;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskBoardReader {
+public interface QuestionReader {
 
     List<Question> getTaskBoard(BoardCategory boardCategory, BoardStatus boardStatus,
         String keyword);
