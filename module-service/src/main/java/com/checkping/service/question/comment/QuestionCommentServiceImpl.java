@@ -5,8 +5,7 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentRequest.UpdateDto;
-import com.checkping.dto.question.comment.QuestionCommentResponse;
-import com.checkping.dto.question.comment.QuestionCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
@@ -29,10 +28,10 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      *
      * @param taskBoardId 업무 관리 게시글 ID
      * @param request     QuestionCommentRequest.RegisterDto 업무 관리 게시글 등록 Dto
-     * @return QuestionCommentResponse.TaskBoardCommentDto 업무 관리 게시글 등록 결과 Dto
+     * @return QuestionCommentResponse.QuestionCommentDto 업무 관리 게시글 등록 결과 Dto
      */
     @Override
-    public QuestionCommentResponse.TaskBoardCommentDto register(
+    public QuestionCommentDto register(
         Long taskBoardId, RegisterDto request) {
 
         // find Question Entity
@@ -48,7 +47,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment questionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return QuestionCommentResponse.TaskBoardCommentDto.toDto(questionComment);
+        return QuestionCommentDto.toDto(questionComment);
     }
 
     /**
@@ -59,7 +58,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @return 삭제 상태인 QuestionComment
      */
     @Override
-    public TaskBoardCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
+    public QuestionCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
         boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
@@ -80,7 +79,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment deletedQuestionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return QuestionCommentResponse.TaskBoardCommentDto.toDto(deletedQuestionComment);
+        return QuestionCommentDto.toDto(deletedQuestionComment);
     }
 
     /**
@@ -91,7 +90,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @return 삭제된 QuestionComment
      */
     @Override
-    public TaskBoardCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
+    public QuestionCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
         boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
@@ -109,7 +108,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         questionCommentStore.deleteHard(initComment);
 
         // Entity -> Dto
-        return QuestionCommentResponse.TaskBoardCommentDto.toDto(initComment);
+        return QuestionCommentDto.toDto(initComment);
     }
 
     /**
@@ -121,7 +120,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @return 수정된 QuestionComment
      */
     @Override
-    public TaskBoardCommentDto update(Long taskBoardId, Long taskBoardCommentId,
+    public QuestionCommentDto update(Long taskBoardId, Long taskBoardCommentId,
         UpdateDto request) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
@@ -142,6 +141,6 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment updatedComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return QuestionCommentResponse.TaskBoardCommentDto.toDto(updatedComment);
+        return QuestionCommentDto.toDto(updatedComment);
     }
 }

@@ -3,9 +3,9 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,17 +42,17 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long postId);
 
     @Operation(summary = "업무 관리 게시글 댓글 등록", description = "업무 관리 게시글의 댓글을 등록하는 기능입니다.")
-    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> registerComment(
+    BaseResponse<QuestionCommentDto> registerComment(
         @Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRequest.RegisterDto request);
 
     @Operation(summary = "업무 관리 게시글 댓글 소프트 삭제", description = "업무 관리 게시글의 댓글을 소프트 삭제하는 기능입니다.")
-    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> deleteSoft(
+    BaseResponse<QuestionCommentDto> deleteSoft(
         @Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 댓글 ID") Long commentId);
 
     @Operation(summary = "업무 관리 게시글 댓글 수정", description = "업무 관리 게시글의 댓글을 수정하는 기능입니다.")
-    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> updateComment(
+    BaseResponse<QuestionCommentDto> updateComment(
         @Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
         @Parameter(description = "게시글 댓글 수정 Dto") QuestionCommentRequest.UpdateDto request);
