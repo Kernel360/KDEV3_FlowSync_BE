@@ -1,8 +1,8 @@
 package com.checkping.service.member.auth;
 
 import com.checkping.common.enums.ErrorCode;
-import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Member;
+import com.checkping.exception.auth.InactiveMemberException;
 import com.checkping.infra.repository.member.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,8 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Member member = result.orElseThrow(() -> new UsernameNotFoundException(email));
 
-        if(member.getStatus() == Member.Status.INACTIVE) {
-            throw new BaseException("삭제된 회원입니다", ErrorCode.USER_NOT_FOUND);
+        if (member.getStatus() == Member.Status.INACTIVE) {
+            throw new InactiveMemberException("삭제된 회원입니다", ErrorCode.USER_NOT_FOUND);
         }
 
         if (member != null) {
