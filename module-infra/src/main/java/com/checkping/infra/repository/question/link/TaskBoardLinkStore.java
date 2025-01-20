@@ -1,7 +1,7 @@
 package com.checkping.infra.repository.question.link;
 
-import com.checkping.domain.question.TaskBoardLink;
+import com.checkping.domain.question.QuestionLink;
 
 public interface TaskBoardLinkStore {
-    TaskBoardLink store(TaskBoardLink taskBoardLink);
+    QuestionLink store(QuestionLink questionLink);
 }

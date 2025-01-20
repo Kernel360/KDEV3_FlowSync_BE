@@ -1,6 +1,6 @@
 package com.checkping.dto.question.link;
 
-import com.checkping.domain.question.TaskBoardLink;
+import com.checkping.domain.question.QuestionLink;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,35 +26,35 @@ public class TaskBoardLinkResponse {
         /**
          * Entity -> Dto
          *
-         * @param taskBoardLink TaskBoardLink Entity
+         * @param questionLink QuestionLink Entity
          * @return TaskBoardLinkResponse.toDto
          */
-        public static TaskBoardLinkDto toDto(TaskBoardLink taskBoardLink) {
+        public static TaskBoardLinkDto toDto(QuestionLink questionLink) {
             TaskBoardLinkDto taskBoardLinkDto = new TaskBoardLinkDto();
-            taskBoardLinkDto.id = taskBoardLink.getId();
-            taskBoardLinkDto.name = taskBoardLink.getName();
-            taskBoardLinkDto.url = taskBoardLink.getUrl();
+            taskBoardLinkDto.id = questionLink.getId();
+            taskBoardLinkDto.name = questionLink.getName();
+            taskBoardLinkDto.url = questionLink.getUrl();
             return taskBoardLinkDto;
         }
 
         /**
          * Entity List -> Dto List
          *
-         * @param taskBoardLinkList TaskBoardLink 엔티티 리스트
+         * @param questionLinkList QuestionLink 엔티티 리스트
          * @return TaskBoardLinkResponse.TaskBoardLinkDto 리스트
          */
-        public static List<TaskBoardLinkDto> toDtoList(List<TaskBoardLink> taskBoardLinkList) {
+        public static List<TaskBoardLinkDto> toDtoList(List<QuestionLink> questionLinkList) {
 
             List<TaskBoardLinkDto> taskBoardLinkDtoList = new ArrayList<>();
 
             // null check
-            if (taskBoardLinkList == null) {
+            if (questionLinkList == null) {
                 return Collections.emptyList();
             }
 
             // loop for add
-            for (TaskBoardLink taskBoardLink : taskBoardLinkList) {
-                TaskBoardLinkDto taskBoardLinkDto = toDto(taskBoardLink);
+            for (QuestionLink questionLink : questionLinkList) {
+                TaskBoardLinkDto taskBoardLinkDto = toDto(questionLink);
                 taskBoardLinkDtoList.add(taskBoardLinkDto);
             }
 

@@ -1,7 +1,7 @@
 package com.checkping.service.question.link;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.TaskBoardLink;
+import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
@@ -33,13 +33,13 @@ public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
             TaskBoardNotFoundEntityException::new);
 
         // Dto -> Entity
-        TaskBoardLink initTaskBoardLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
+        QuestionLink initQuestionLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
             request);
 
         // save
-        TaskBoardLink taskBoardLink = taskBoardLinkStore.store(initTaskBoardLink);
+        QuestionLink questionLink = taskBoardLinkStore.store(initQuestionLink);
 
         // Entity -> Dto
-        return TaskBoardLinkDto.toDto(taskBoardLink);
+        return TaskBoardLinkDto.toDto(questionLink);
     }
 }

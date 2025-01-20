@@ -138,9 +138,9 @@ public class TaskBoardResponse {
                 TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
             boardDto.setCommentList(comments);
 
-            // Entity -> Dto (TaskBoardLink)
+            // Entity -> Dto (QuestionLink)
             List<TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
-                question.getTaskBoardLinkList());
+                question.getQuestionLinkList());
             boardDto.setTaskBoardLinkList(links);
 
             // Entity -> Dto (QuestionFile)

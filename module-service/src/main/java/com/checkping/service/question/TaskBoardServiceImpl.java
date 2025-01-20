@@ -3,7 +3,7 @@ package com.checkping.service.question;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
-import com.checkping.domain.question.TaskBoardLink;
+import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.TaskBoardRequest;
 import com.checkping.dto.question.TaskBoardRequest.RegisterDto;
@@ -65,15 +65,15 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         // loop for add taskBoardLinkRequest
         for (TaskBoardLinkRequest.RegisterDto linkDto : linkDtoList) {
 
-            // TaskBoardLink Dto -> Entity
-            TaskBoardLink initTaskBoardLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
+            // QuestionLink Dto -> Entity
+            QuestionLink initQuestionLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
                 linkDto);
 
-            // save TaskBoardLink
-            TaskBoardLink taskBoardLink = taskBoardLinkStore.store(initTaskBoardLink);
+            // save QuestionLink
+            QuestionLink questionLink = taskBoardLinkStore.store(initQuestionLink);
 
-            // ADD TaskBoardLink (in Question)
-            question.addLink(taskBoardLink);
+            // ADD QuestionLink (in Question)
+            question.addLink(questionLink);
         }
 
         // Entity -> Dto
