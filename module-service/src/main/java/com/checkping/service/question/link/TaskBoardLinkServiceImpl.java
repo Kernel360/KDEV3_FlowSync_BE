@@ -6,7 +6,7 @@ import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
-import com.checkping.infra.repository.question.link.TaskBoardLinkStore;
+import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
 
-    private final TaskBoardLinkStore taskBoardLinkStore;
+    private final QuestionLinkStore questionLinkStore;
     private final QuestionReader questionReader;
 
     /**
@@ -37,7 +37,7 @@ public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
             request);
 
         // save
-        QuestionLink questionLink = taskBoardLinkStore.store(initQuestionLink);
+        QuestionLink questionLink = questionLinkStore.store(initQuestionLink);
 
         // Entity -> Dto
         return TaskBoardLinkDto.toDto(questionLink);

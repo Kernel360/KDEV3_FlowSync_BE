@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TaskBoardLinkRepository extends JpaRepository<QuestionLink, Long> {
+public interface QuestionLinkRepository extends JpaRepository<QuestionLink, Long> {
 
 }

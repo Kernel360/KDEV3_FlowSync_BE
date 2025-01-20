@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TaskBoardLinkStoreImpl implements TaskBoardLinkStore {
+public class QuestionLinkStoreImpl implements QuestionLinkStore {
 
-    private final TaskBoardLinkRepository taskBoardLinkRepository;
+    private final QuestionLinkRepository questionLinkRepository;
 
     @Override
     public QuestionLink store(QuestionLink questionLink) {
-        return taskBoardLinkRepository.save(questionLink);
+        return questionLinkRepository.save(questionLink);
     }
 }
