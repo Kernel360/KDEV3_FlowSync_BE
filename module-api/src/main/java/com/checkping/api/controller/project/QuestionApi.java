@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@Tag(name = "업무 관리 게시판 API(TaskBoardController)", description = "업무 관리 게시판 API 입니다.")
-public interface TaskBoardApi {
+@Tag(name = "업무 관리 게시판 API(QuestionController)", description = "업무 관리 게시판 API 입니다.")
+public interface QuestionApi {
 
     @Operation(summary = "업무 관리 게시글 등록", description = "업무 관리 게시글을 등록하는 기능입니다. 파일 첨부도 같이 받습니다.")
     BaseResponse<TaskBoardItemDto> register(
