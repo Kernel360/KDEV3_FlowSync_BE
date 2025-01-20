@@ -23,9 +23,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board_partial_history")
+@Table(name = "question_partial_history")
 @Entity
-public class TaskBoardPartialHistory extends BaseEntity {
+public class QuestionPartialHistory extends BaseEntity {
     /*
     id : 업무 관리 게시글 부분이력 ID
     updateName : 변경 항목 이름
