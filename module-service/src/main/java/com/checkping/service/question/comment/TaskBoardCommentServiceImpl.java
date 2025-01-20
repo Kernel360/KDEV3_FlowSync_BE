@@ -1,7 +1,7 @@
 package com.checkping.service.question.comment;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest.UpdateDto;
@@ -40,15 +40,15 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
             TaskBoardNotFoundEntityException::new);
 
         // Dto -> Entity
-        TaskBoardComment initComment = TaskBoardCommentRequest.RegisterDto.toEntity(request,
+        QuestionComment initComment = TaskBoardCommentRequest.RegisterDto.toEntity(request,
             question);
         initComment.activate();
 
         // save
-        TaskBoardComment taskBoardComment = taskBoardCommentStore.store(initComment);
+        QuestionComment questionComment = taskBoardCommentStore.store(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(taskBoardComment);
+        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(questionComment);
     }
 
     /**
@@ -56,7 +56,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
      *
      * @param taskBoardId        업무 관리 게시글 ID
      * @param taskBoardCommentId 업무 관리 게시글 댓글 ID
-     * @return 삭제 상태인 TaskBoardComment
+     * @return 삭제 상태인 QuestionComment
      */
     @Override
     public TaskBoardCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
@@ -68,8 +68,8 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
-        // find TaskBoardComment Entity
-        TaskBoardComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        // find QuestionComment Entity
+        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
             TaskBoardCommentNotFoundEntityException::new);
 
@@ -77,10 +77,10 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         initComment.deactivate();
 
         // save
-        TaskBoardComment deletedTaskBoardComment = taskBoardCommentStore.store(initComment);
+        QuestionComment deletedQuestionComment = taskBoardCommentStore.store(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(deletedTaskBoardComment);
+        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(deletedQuestionComment);
     }
 
     /**
@@ -88,7 +88,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
      *
      * @param taskBoardId        업무 관리 게시글 ID
      * @param taskBoardCommentId 업무 관리 게시글 댓글 ID
-     * @return 삭제된 TaskBoardComment
+     * @return 삭제된 QuestionComment
      */
     @Override
     public TaskBoardCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
@@ -100,8 +100,8 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
-        // find TaskBoardComment Entity
-        TaskBoardComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        // find QuestionComment Entity
+        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
             TaskBoardCommentNotFoundEntityException::new);
 
@@ -118,7 +118,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
      * @param taskBoardId 업무 관리 게시판 ID
      * @param taskBoardCommentId 업무 관리 게시판 댓글 Id
      * @param request TaskBoardCommentRequest.UpdateDto
-     * @return 수정된 TaskBoardComment
+     * @return 수정된 QuestionComment
      */
     @Override
     public TaskBoardCommentDto update(Long taskBoardId, Long taskBoardCommentId,
@@ -131,15 +131,15 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
-        // find TaskBoardComment Entity
-        TaskBoardComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        // find QuestionComment Entity
+        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(TaskBoardCommentNotFoundEntityException::new);
 
         // update
         initComment.update(request.getContent());
 
         // save
-        TaskBoardComment updatedComment = taskBoardCommentStore.store(initComment);
+        QuestionComment updatedComment = taskBoardCommentStore.store(initComment);
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(updatedComment);

@@ -133,7 +133,7 @@ public class TaskBoardResponse {
             boardDto.setBoardStatus(question.getBoardStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
 
-            // Entity -> Dto (TaskBoardComment)
+            // Entity -> Dto (QuestionComment)
             List<TaskBoardCommentDto> comments =
                 TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
             boardDto.setCommentList(comments);

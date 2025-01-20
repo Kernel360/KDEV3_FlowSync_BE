@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.question.comment;
 
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class TaskBoardCommentReaderImpl implements TaskBoardCommentReader {
     private final TaskBoardCommentRepository taskBoardCommentRepository;
 
     @Override
-    public Optional<TaskBoardComment> getByTaskBoardCommentId(Long taskBoardCommentId) {
+    public Optional<QuestionComment> getByTaskBoardCommentId(Long taskBoardCommentId) {
         return taskBoardCommentRepository.findById(taskBoardCommentId);
     }
 

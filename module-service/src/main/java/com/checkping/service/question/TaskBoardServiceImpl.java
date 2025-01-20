@@ -1,7 +1,7 @@
 package com.checkping.service.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.TaskBoardFile;
 import com.checkping.domain.question.TaskBoardLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
@@ -129,9 +129,9 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         Question initQuestion = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
-        // TaskBoardComment - SOFT DELETE
-        List<TaskBoardComment> commentList = initQuestion.getCommentList();
-        for (TaskBoardComment comment : commentList) {
+        // QuestionComment - SOFT DELETE
+        List<QuestionComment> commentList = initQuestion.getCommentList();
+        for (QuestionComment comment : commentList) {
             comment.deactivate();
             taskBoardCommentStore.store(comment);
         }
@@ -159,9 +159,9 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         Question initQuestion = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
-        // TaskBoardComment - HARD DELETE
-        List<TaskBoardComment> commentList = initQuestion.getCommentList();
-        for (TaskBoardComment comment : commentList) {
+        // QuestionComment - HARD DELETE
+        List<QuestionComment> commentList = initQuestion.getCommentList();
+        for (QuestionComment comment : commentList) {
             taskBoardCommentStore.deleteHard(comment);
         }
 

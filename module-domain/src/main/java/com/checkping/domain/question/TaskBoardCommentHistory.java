@@ -29,7 +29,7 @@ public class TaskBoardCommentHistory {
     id : 업무 관리 게시글 댓글 이력 아이디
     content : 댓글 내용
     updateAt : 수정 일시
-    taskBoardComment : 업무 관리 게시글 댓글
+    questionComment : 업무 관리 게시글 댓글
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +45,5 @@ public class TaskBoardCommentHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_board_comment_id", nullable = false)
-    private TaskBoardComment taskBoardComment;
+    private QuestionComment questionComment;
 }

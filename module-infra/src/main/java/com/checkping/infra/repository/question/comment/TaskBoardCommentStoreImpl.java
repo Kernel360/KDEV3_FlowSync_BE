@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.question.comment;
 
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,18 +11,18 @@ public class TaskBoardCommentStoreImpl implements TaskBoardCommentStore {
     private final TaskBoardCommentRepository taskBoardCommentRepository;
 
     /**
-     * TaskBoardComment 저장
+     * QuestionComment 저장
      *
-     * @param taskBoardComment TaskBoardComment entity
-     * @return taskBoardComment 저장 결과
+     * @param questionComment QuestionComment entity
+     * @return questionComment 저장 결과
      */
     @Override
-    public TaskBoardComment store(TaskBoardComment taskBoardComment) {
-        return taskBoardCommentRepository.save(taskBoardComment);
+    public QuestionComment store(QuestionComment questionComment) {
+        return taskBoardCommentRepository.save(questionComment);
     }
 
     @Override
-    public void deleteHard(TaskBoardComment taskBoardComment) {
-        taskBoardCommentRepository.delete(taskBoardComment);
+    public void deleteHard(QuestionComment questionComment) {
+        taskBoardCommentRepository.delete(questionComment);
     }
 }
