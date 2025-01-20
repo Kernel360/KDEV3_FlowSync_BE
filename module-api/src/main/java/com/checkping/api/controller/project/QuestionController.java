@@ -1,13 +1,13 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse;
 import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
-import com.checkping.dto.question.QuestionResponse.TaskBoardListDto;
 import com.checkping.service.question.comment.QuestionCommentService;
 import com.checkping.service.question.QuestionService;
 import java.util.List;
@@ -47,7 +47,7 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/posts")
     @Override
-    public BaseResponse<List<TaskBoardListDto>> getTaskBoardList(
+    public BaseResponse<List<QuestionListDto>> getTaskBoardList(
         @RequestParam(required = false) String boardCategory,
         @RequestParam(required = false) String boardStatus,
         @RequestParam(required = false) String keyword) {
@@ -57,10 +57,10 @@ public class QuestionController implements QuestionApi {
             boardStatus, keyword);
 
         // getTaskBoardList
-        List<TaskBoardListDto> taskBoardListDtoList = questionService.getTaskBoardList(
+        List<QuestionListDto> questionListDtoList = questionService.getTaskBoardList(
             searchCondition);
 
-        return BaseResponse.success(taskBoardListDtoList);
+        return BaseResponse.success(questionListDtoList);
     }
 
     @GetMapping("/posts/{postId}")
@@ -85,10 +85,10 @@ public class QuestionController implements QuestionApi {
 
     @DeleteMapping("/posts/{postId}")
     @Override
-    public BaseResponse<QuestionResponse.TaskBoardListDto> deleteSoftTaskBoard(
+    public BaseResponse<QuestionListDto> deleteSoftTaskBoard(
         @PathVariable Long postId) {
 
-        QuestionResponse.TaskBoardListDto deletedBoardDto = questionService.deleteSoft(postId);
+        QuestionListDto deletedBoardDto = questionService.deleteSoft(postId);
 
         return BaseResponse.success(deletedBoardDto);
     }

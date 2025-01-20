@@ -22,7 +22,7 @@ public class QuestionResponse {
     @Getter
     @Setter
     @ToString
-    public static class TaskBoardListDto {
+    public static class QuestionListDto {
 
         /*
         id : 게시글 고유 ID
@@ -58,8 +58,8 @@ public class QuestionResponse {
         private Question.BoardStatus boardStatus;
         private Question.DeleteStatus deletedYn;
 
-        public static TaskBoardListDto toDto(Question question) {
-            TaskBoardListDto boardDto = new TaskBoardListDto();
+        public static QuestionListDto toDto(Question question) {
+            QuestionListDto boardDto = new QuestionListDto();
             boardDto.setId(question.getId());
             boardDto.setNumber(question.getNumber());
             boardDto.setTitle(question.getTitle());
