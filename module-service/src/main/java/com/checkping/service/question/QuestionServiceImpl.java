@@ -4,6 +4,7 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
+import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.RegisterDto;
@@ -11,7 +12,6 @@ import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse;
 import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
-import com.checkping.dto.question.QuestionResponse.TaskBoardListDto;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -84,10 +84,10 @@ public class QuestionServiceImpl implements QuestionService {
      * Question 조회 하기 (게시글 유형, 게시글 상태 별 필터링)
      *
      * @param searchCondition RequestParam 에서 받아오는 String 을 관리하는 타입
-     * @return 조회한 TaskBoardListDto 의 리스트
+     * @return 조회한 QuestionListDto 의 리스트
      */
     @Override
-    public List<TaskBoardListDto> getTaskBoardList(SearchCondition searchCondition) {
+    public List<QuestionListDto> getTaskBoardList(SearchCondition searchCondition) {
 
         // 조회
         List<Question> questionList = questionReader.getTaskBoard(
@@ -95,15 +95,15 @@ public class QuestionServiceImpl implements QuestionService {
             searchCondition.getBoardStatus(),
             searchCondition.getKeyword());
 
-        // Question -> TaskBoardListDto
-        return questionList.stream().map(TaskBoardListDto::toDto).toList();
+        // Question -> QuestionListDto
+        return questionList.stream().map(QuestionListDto::toDto).toList();
     }
 
     /**
      * 업무 관리 게시글 서비스 - 상세 조회
      *
      * @param taskBoardId 업무 관리 게시글 ID
-     * @return TaskBoardListDto
+     * @return QuestionListDto
      */
     @Override
     public TaskBoardItemDto getTaskBoardById(Long taskBoardId) {
@@ -123,7 +123,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 상태 변경이 된 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardListDto deleteSoft(Long taskBoardId) {
+    public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -143,7 +143,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question deletedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
-        return QuestionResponse.TaskBoardListDto.toDto(deletedQuestion);
+        return QuestionListDto.toDto(deletedQuestion);
     }
 
     /**
@@ -153,7 +153,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return HARD DELETE 를 요청한 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardListDto deleteHard(Long taskBoardId) {
+    public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -168,7 +168,7 @@ public class QuestionServiceImpl implements QuestionService {
         // Question - HARD DELETE
         questionStore.deleteHard(initQuestion);
 
-        return QuestionResponse.TaskBoardListDto.toDto(initQuestion);
+        return QuestionListDto.toDto(initQuestion);
     }
 
     /**
