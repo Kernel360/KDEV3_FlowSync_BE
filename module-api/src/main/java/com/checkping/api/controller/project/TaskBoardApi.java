@@ -1,8 +1,8 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.question.comment.TaskBoardCommentRequest;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.comment.QuestionCommentRequest;
+import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
 import com.checkping.dto.question.QuestionResponse.TaskBoardListDto;
@@ -42,18 +42,18 @@ public interface TaskBoardApi {
         @Parameter(description = "게시글 ID") Long postId);
 
     @Operation(summary = "업무 관리 게시글 댓글 등록", description = "업무 관리 게시글의 댓글을 등록하는 기능입니다.")
-    BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
+    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> registerComment(
         @Parameter(description = "게시글 ID") Long postId,
-        @Parameter(description = "게시글 댓글 등록 Dto") TaskBoardCommentRequest.RegisterDto request);
+        @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRequest.RegisterDto request);
 
     @Operation(summary = "업무 관리 게시글 댓글 소프트 삭제", description = "업무 관리 게시글의 댓글을 소프트 삭제하는 기능입니다.")
-    BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> deleteSoft(
+    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> deleteSoft(
         @Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 댓글 ID") Long commentId);
 
     @Operation(summary = "업무 관리 게시글 댓글 수정", description = "업무 관리 게시글의 댓글을 수정하는 기능입니다.")
-    BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> updateComment(
+    BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> updateComment(
         @Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
-        @Parameter(description = "게시글 댓글 수정 Dto") TaskBoardCommentRequest.UpdateDto request);
+        @Parameter(description = "게시글 댓글 수정 Dto") QuestionCommentRequest.UpdateDto request);
 }

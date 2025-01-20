@@ -2,8 +2,8 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse;
+import com.checkping.dto.question.comment.QuestionCommentResponse.TaskBoardCommentDto;
 import com.checkping.dto.question.link.QuestionLinkResponse;
 import com.checkping.dto.question.link.QuestionLinkResponse.TaskBoardLinkDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -135,7 +135,7 @@ public class QuestionResponse {
 
             // Entity -> Dto (QuestionComment)
             List<TaskBoardCommentDto> comments =
-                TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
+                QuestionCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
             boardDto.setCommentList(comments);
 
             // Entity -> Dto (QuestionLink)

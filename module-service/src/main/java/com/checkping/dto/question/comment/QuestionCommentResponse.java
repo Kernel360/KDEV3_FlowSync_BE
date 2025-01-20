@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskBoardCommentResponse {
+public class QuestionCommentResponse {
 
     @Getter
     @ToString

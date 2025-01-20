@@ -2,11 +2,11 @@ package com.checkping.service.question.comment;
 
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
-import com.checkping.dto.question.comment.TaskBoardCommentRequest;
-import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
-import com.checkping.dto.question.comment.TaskBoardCommentRequest.UpdateDto;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
+import com.checkping.dto.question.comment.QuestionCommentRequest;
+import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
+import com.checkping.dto.question.comment.QuestionCommentRequest.UpdateDto;
+import com.checkping.dto.question.comment.QuestionCommentResponse;
+import com.checkping.dto.question.comment.QuestionCommentResponse.TaskBoardCommentDto;
 import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
@@ -28,11 +28,11 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * 업무 관리 게시글 서비스 - 등록 기능
      *
      * @param taskBoardId 업무 관리 게시글 ID
-     * @param request     TaskBoardCommentRequest.RegisterDto 업무 관리 게시글 등록 Dto
-     * @return TaskBoardCommentResponse.TaskBoardCommentDto 업무 관리 게시글 등록 결과 Dto
+     * @param request     QuestionCommentRequest.RegisterDto 업무 관리 게시글 등록 Dto
+     * @return QuestionCommentResponse.TaskBoardCommentDto 업무 관리 게시글 등록 결과 Dto
      */
     @Override
-    public TaskBoardCommentResponse.TaskBoardCommentDto register(
+    public QuestionCommentResponse.TaskBoardCommentDto register(
         Long taskBoardId, RegisterDto request) {
 
         // find Question Entity
@@ -40,7 +40,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
-        QuestionComment initComment = TaskBoardCommentRequest.RegisterDto.toEntity(request,
+        QuestionComment initComment = QuestionCommentRequest.RegisterDto.toEntity(request,
             question);
         initComment.activate();
 
@@ -48,7 +48,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment questionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(questionComment);
+        return QuestionCommentResponse.TaskBoardCommentDto.toDto(questionComment);
     }
 
     /**
@@ -80,7 +80,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment deletedQuestionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(deletedQuestionComment);
+        return QuestionCommentResponse.TaskBoardCommentDto.toDto(deletedQuestionComment);
     }
 
     /**
@@ -109,7 +109,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         questionCommentStore.deleteHard(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(initComment);
+        return QuestionCommentResponse.TaskBoardCommentDto.toDto(initComment);
     }
 
     /**
@@ -117,7 +117,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      *
      * @param taskBoardId 업무 관리 게시판 ID
      * @param taskBoardCommentId 업무 관리 게시판 댓글 Id
-     * @param request TaskBoardCommentRequest.UpdateDto
+     * @param request QuestionCommentRequest.UpdateDto
      * @return 수정된 QuestionComment
      */
     @Override
@@ -142,6 +142,6 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment updatedComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(updatedComment);
+        return QuestionCommentResponse.TaskBoardCommentDto.toDto(updatedComment);
     }
 }
