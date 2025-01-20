@@ -10,8 +10,7 @@ import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
-import com.checkping.dto.question.QuestionResponse;
-import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -43,7 +42,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public TaskBoardItemDto register(RegisterDto request, List<MultipartFile> fileList) {
+    public QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList) {
 
         // dto -> entity
         Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
@@ -77,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         // Entity -> Dto
-        return TaskBoardItemDto.toDto(question);
+        return QuestionItemDto.toDto(question);
     }
 
     /**
@@ -106,14 +105,14 @@ public class QuestionServiceImpl implements QuestionService {
      * @return QuestionListDto
      */
     @Override
-    public TaskBoardItemDto getTaskBoardById(Long taskBoardId) {
+    public QuestionItemDto getTaskBoardById(Long taskBoardId) {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
-        return TaskBoardItemDto.toDto(question);
+        return QuestionItemDto.toDto(question);
     }
 
     /**
@@ -179,7 +178,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 수정을 완료한 업무 관리 게시글 Dto
      */
     @Override
-    public TaskBoardItemDto update(Long taskBoardId, UpdateDto request) {
+    public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
         Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
@@ -194,6 +193,6 @@ public class QuestionServiceImpl implements QuestionService {
         Question updatedQuestion = questionStore.store(initQuestion);
 
         // Entity -> Dto
-        return QuestionResponse.TaskBoardItemDto.toDto(updatedQuestion);
+        return QuestionItemDto.toDto(updatedQuestion);
     }
 }

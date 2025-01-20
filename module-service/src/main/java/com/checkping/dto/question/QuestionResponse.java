@@ -77,7 +77,7 @@ public class QuestionResponse {
     @Getter
     @Setter
     @ToString
-    public static class TaskBoardItemDto {
+    public static class QuestionItemDto {
 
         /*
         id : 게시글 고유 ID
@@ -120,8 +120,8 @@ public class QuestionResponse {
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileResponse> taskBoardFileList;
 
-        public static QuestionResponse.TaskBoardItemDto toDto(Question question) {
-            QuestionResponse.TaskBoardItemDto boardDto = new QuestionResponse.TaskBoardItemDto();
+        public static QuestionItemDto toDto(Question question) {
+            QuestionItemDto boardDto = new QuestionItemDto();
             boardDto.setId(question.getId());
             boardDto.setNumber(question.getNumber());
             boardDto.setTitle(question.getTitle());
