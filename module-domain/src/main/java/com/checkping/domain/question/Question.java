@@ -30,9 +30,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board")
+@Table(name = "question")
 @Entity
-public class TaskBoard extends BaseEntity {
+public class Question extends BaseEntity {
 
     /*
     id : id
@@ -87,17 +87,17 @@ public class TaskBoard extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private TaskBoard parent;
+    private Question parent;
 
-    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<TaskBoardComment> commentList = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<TaskBoardLink> taskBoardLinkList = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "taskBoard", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<TaskBoardFile> taskBoardFileList = new ArrayList<>();
 
     @Getter

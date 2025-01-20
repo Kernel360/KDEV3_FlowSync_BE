@@ -1,6 +1,6 @@
 package com.checkping.dto.question.comment;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.domain.question.TaskBoardComment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -16,7 +16,7 @@ public class TaskBoardCommentRequest {
     public static class RegisterDto {
         /*
         content : 댓글 내용
-        taskBoardId : taskBoard 의 id(pk)
+        taskBoardId : question 의 id(pk)
          */
         @Schema(description = "게시글 댓글 내용")
         private String content;
@@ -25,13 +25,13 @@ public class TaskBoardCommentRequest {
          * RegisterDto -> Entity
          *
          * @param registerDto 등록 정보
-         * @param taskBoard taskBoard (조회한 Entity)
+         * @param question question (조회한 Entity)
          * @return TaskBoardComment 엔티티
          */
-        public static TaskBoardComment toEntity (RegisterDto registerDto, TaskBoard taskBoard) {
+        public static TaskBoardComment toEntity (RegisterDto registerDto, Question question) {
             return TaskBoardComment.builder()
                 .content(registerDto.getContent())
-                .taskBoard(taskBoard)
+                .question(question)
                 .build();
         }
     }

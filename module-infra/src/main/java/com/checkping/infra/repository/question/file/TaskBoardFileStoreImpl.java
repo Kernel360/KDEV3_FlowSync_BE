@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.question.file;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.domain.question.TaskBoardFile;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.infra.repository.file.FileRepository;
@@ -25,32 +25,32 @@ public class TaskBoardFileStoreImpl implements TaskBoardFileStore {
     /**
      * TaskBoardFileStore 첨부 파일 저장
      *
-     * @param taskBoard 업무 관리 게시글 ID
+     * @param question 업무 관리 게시글 ID
      * @param fileList  게시글 첨부 파일 리스트
      * @return List<TaskBoardFile>
      */
     @Override
-    public List<TaskBoardFile> saveFileList(TaskBoard taskBoard, List<MultipartFile> fileList) {
+    public List<TaskBoardFile> saveFileList(Question question, List<MultipartFile> fileList) {
 
         // S3 Upload
         List<FileRequest> uploadedFiles = fileRepository.uploadFiles(fileList);
 
         // File Dto -> Entity
         List<TaskBoardFile> files = uploadedFiles.stream()
-            .map(request -> createTaskBoardFile(taskBoard, request))
+            .map(request -> createTaskBoardFile(question, request))
             .toList();
 
         // Save Entity
         return taskBoardFileRepository.saveAll(files);
     }
 
-    private TaskBoardFile createTaskBoardFile(TaskBoard taskBoard, FileRequest request) {
+    private TaskBoardFile createTaskBoardFile(Question question, FileRequest request) {
         return TaskBoardFile.builder()
             .originalName(request.originalName())
             .saveName(request.saveName())
             .url(request.url())
             .size(request.size())
-            .taskBoard(taskBoard)
+            .question(question)
             .build();
     }
 }

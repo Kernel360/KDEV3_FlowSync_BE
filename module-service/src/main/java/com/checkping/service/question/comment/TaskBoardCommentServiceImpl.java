@@ -1,6 +1,6 @@
 package com.checkping.service.question.comment;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.domain.question.TaskBoardComment;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
@@ -35,13 +35,13 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     public TaskBoardCommentResponse.TaskBoardCommentDto register(
         Long taskBoardId, RegisterDto request) {
 
-        // find TaskBoard Entity
-        TaskBoard taskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        // find Question Entity
+        Question question = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
         // Dto -> Entity
         TaskBoardComment initComment = TaskBoardCommentRequest.RegisterDto.toEntity(request,
-            taskBoard);
+            question);
         initComment.activate();
 
         // save

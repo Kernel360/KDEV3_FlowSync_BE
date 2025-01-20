@@ -1,10 +1,10 @@
 package com.checkping.infra.repository.question;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 
 public interface TaskBoardStore {
 
-    TaskBoard store(TaskBoard taskBoard);
+    Question store(Question question);
 
-    void deleteHard(TaskBoard taskBoard);
+    void deleteHard(Question question);
 }

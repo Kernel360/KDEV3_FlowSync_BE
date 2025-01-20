@@ -1,7 +1,7 @@
 package com.checkping.service.question.file;
 
 import com.checkping.common.utils.FileResponse;
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.domain.question.TaskBoardFile;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.TaskBoardReader;
@@ -21,10 +21,10 @@ public class TaskBoardFileServiceImpl implements TaskBoardFileService {
     @Override
     public List<FileResponse> saveFiles(Long taskBoardId, List<MultipartFile> fileRequests) {
 
-        TaskBoard taskBoard = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = taskBoardReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
-        List<TaskBoardFile> files = taskBoardFileStore.saveFileList(taskBoard, fileRequests);
+        List<TaskBoardFile> files = taskBoardFileStore.saveFileList(question, fileRequests);
 
         return FileResponse.toDtoList(files);
     }

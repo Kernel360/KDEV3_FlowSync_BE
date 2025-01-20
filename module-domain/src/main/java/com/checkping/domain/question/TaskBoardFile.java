@@ -54,8 +54,8 @@ public class TaskBoardFile extends BaseEntity {
     private long size;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_board_id")
-    private TaskBoard taskBoard;
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     @Override
     public boolean equals(Object o) {

@@ -1,8 +1,8 @@
 package com.checkping.infra.repository.question;
 
-import com.checkping.domain.question.TaskBoard;
-import com.checkping.domain.question.TaskBoard.BoardCategory;
-import com.checkping.domain.question.TaskBoard.BoardStatus;
+import com.checkping.domain.question.Question;
+import com.checkping.domain.question.Question.BoardCategory;
+import com.checkping.domain.question.Question.BoardStatus;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +17,15 @@ public class TaskBoardReaderImpl implements TaskBoardReader {
     private final TaskBoardRepository taskBoardRepository;
 
     /**
-     * TaskBoard 전체 조회 및 필터링 조회
+     * Question 전체 조회 및 필터링 조회
      *
-     * @param boardCategory TaskBoard.BoardCategory
-     * @param boardStatus   TaskBoard.BoardStatus
+     * @param boardCategory Question.BoardCategory
+     * @param boardStatus   Question.BoardStatus
      * @param keyword       검색어
-     * @return TaskBoard 전체 조회
+     * @return Question 전체 조회
      */
     @Override
-    public List<TaskBoard> getTaskBoard(BoardCategory boardCategory, BoardStatus boardStatus,
+    public List<Question> getTaskBoard(BoardCategory boardCategory, BoardStatus boardStatus,
         String keyword) {
 
         // keyword, boardCategory, boardStatus
@@ -71,13 +71,13 @@ public class TaskBoardReaderImpl implements TaskBoardReader {
     }
 
     /**
-     * TaskBoard 조회 기능
+     * Question 조회 기능
      *
-     * @param id taskBoard 아이디
-     * @return TaskBoard 조회 결과
+     * @param id question 아이디
+     * @return Question 조회 결과
      */
     @Override
-    public Optional<TaskBoard> getTaskBoardById(Long id) {
+    public Optional<Question> getTaskBoardById(Long id) {
         return taskBoardRepository.findById(id);
     }
 }
