@@ -1,4 +1,4 @@
-package com.checkping.service.project;
+package com.checkping.service.question.link;
 
 import com.checkping.domain.question.TaskBoard;
 import com.checkping.domain.question.TaskBoardLink;
