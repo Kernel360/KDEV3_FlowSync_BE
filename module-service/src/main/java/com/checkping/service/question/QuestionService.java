@@ -4,15 +4,15 @@ import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
-import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface QuestionService {
-    TaskBoardItemDto register(RegisterDto request, List<MultipartFile> fileList);
+    QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList);
     List<QuestionListDto> getTaskBoardList(QuestionRequest.SearchCondition searchCondition);
-    TaskBoardItemDto getTaskBoardById(Long taskBoardId);
+    QuestionItemDto getTaskBoardById(Long taskBoardId);
     QuestionListDto deleteSoft (Long taskBoardId);
     QuestionListDto deleteHard(Long taskBoardId);
-    TaskBoardItemDto update(Long taskBoardId, UpdateDto request);
+    QuestionItemDto update(Long taskBoardId, UpdateDto request);
 }

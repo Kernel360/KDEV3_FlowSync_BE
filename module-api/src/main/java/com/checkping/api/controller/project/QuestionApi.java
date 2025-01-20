@@ -5,7 +5,7 @@ import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface QuestionApi {
 
     @Operation(summary = "업무 관리 게시글 등록", description = "업무 관리 게시글을 등록하는 기능입니다. 파일 첨부도 같이 받습니다.")
-    BaseResponse<TaskBoardItemDto> register(
+    BaseResponse<QuestionItemDto> register(
         @Parameter(description = "등록 게시글 정보", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @RequestPart(value = "content") QuestionRequest.RegisterDto request,
         @Parameter(description = "등록 첨부 파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList);
 
@@ -31,10 +31,10 @@ public interface QuestionApi {
         @Parameter(description = "게시글 검색어")String keyword);
 
     @Operation(summary = "업무 관리 게시글 상세 조회", description = "업무 관리 게시글을 조회하는 기능입니다.")
-    BaseResponse<TaskBoardItemDto> getTaskBoard(@Parameter(description = "게시글 ID") Long postId);
+    BaseResponse<QuestionItemDto> getTaskBoard(@Parameter(description = "게시글 ID") Long postId);
 
     @Operation(summary = "업무 관리 게시글 수정", description = "업무 관리 게시글을 수정하는 기능입니다.")
-    BaseResponse<TaskBoardItemDto> updateTaskBoard(@Parameter(description = "게시글 ID") Long postId,
+    BaseResponse<QuestionItemDto> updateTaskBoard(@Parameter(description = "게시글 ID") Long postId,
         @Parameter(description = "게시글 수정 정보 Dto") QuestionRequest.UpdateDto request);
 
     @Operation(summary = "업무 관리 게시글 소프트 삭제", description = "업무 관리 게시글을 약한 삭제를 하는 기능입니다..")

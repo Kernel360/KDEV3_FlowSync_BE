@@ -6,8 +6,7 @@ import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
-import com.checkping.dto.question.QuestionResponse;
-import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.service.question.comment.QuestionCommentService;
 import com.checkping.service.question.QuestionService;
 import java.util.List;
@@ -36,11 +35,11 @@ public class QuestionController implements QuestionApi {
     @PostMapping(value = "/posts", consumes = {MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE})
     @Override
-    public BaseResponse<TaskBoardItemDto> register(
+    public BaseResponse<QuestionItemDto> register(
         @RequestPart(value = "content") QuestionRequest.RegisterDto request,
         @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
-        TaskBoardItemDto taskBoardDto = questionService.register(request, fileList);
+        QuestionItemDto taskBoardDto = questionService.register(request, fileList);
 
         return BaseResponse.success(taskBoardDto);
     }
@@ -65,19 +64,19 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardItemDto> getTaskBoard(@PathVariable Long postId) {
+    public BaseResponse<QuestionItemDto> getTaskBoard(@PathVariable Long postId) {
 
-        TaskBoardItemDto taskBoardItemDto = questionService.getTaskBoardById(postId);
+        QuestionItemDto questionItemDto = questionService.getTaskBoardById(postId);
 
-        return BaseResponse.success(taskBoardItemDto);
+        return BaseResponse.success(questionItemDto);
     }
 
     @PutMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
+    public BaseResponse<QuestionItemDto> updateTaskBoard(@PathVariable Long postId,
         @RequestBody QuestionRequest.UpdateDto request) {
 
-        QuestionResponse.TaskBoardItemDto updatedBoardDto = questionService.update(postId,
+        QuestionItemDto updatedBoardDto = questionService.update(postId,
             request);
 
         return BaseResponse.success(updatedBoardDto);
