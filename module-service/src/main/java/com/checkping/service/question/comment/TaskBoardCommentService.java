@@ -1,4 +1,4 @@
-package com.checkping.service.project;
+package com.checkping.service.question.comment;
 
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
