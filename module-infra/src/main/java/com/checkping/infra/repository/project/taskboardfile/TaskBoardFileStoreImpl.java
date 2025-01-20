@@ -1,7 +1,7 @@
 package com.checkping.infra.repository.project.taskboardfile;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardFile;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardFile;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.infra.repository.file.FileRepository;
 import com.checkping.infra.repository.project.TaskBoardFileRepository;

@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.project;
 
-import com.checkping.domain.board.TaskBoardFile;
+import com.checkping.domain.question.TaskBoardFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

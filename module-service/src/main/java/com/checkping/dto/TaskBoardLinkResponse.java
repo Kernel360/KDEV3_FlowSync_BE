@@ -1,6 +1,6 @@
 package com.checkping.dto;
 
-import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.domain.question.TaskBoardLink;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;

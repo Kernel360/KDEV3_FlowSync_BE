@@ -1,6 +1,6 @@
 package com.checkping.common.utils;
 
-import com.checkping.domain.board.TaskBoardFile;
+import com.checkping.domain.question.TaskBoardFile;
 import java.util.Collections;
 import java.util.List;
 import lombok.Builder;

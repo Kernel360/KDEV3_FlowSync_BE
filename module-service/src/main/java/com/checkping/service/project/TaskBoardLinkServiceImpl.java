@@ -1,7 +1,7 @@
 package com.checkping.service.project;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardLink;
 import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardLinkResponse.TaskBoardLinkDto;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;

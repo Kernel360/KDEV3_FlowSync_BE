@@ -1,8 +1,8 @@
 package com.checkping.service.project;
 
 import com.checkping.common.utils.FileResponse;
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardFile;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardFile;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
 import com.checkping.infra.repository.project.taskboardfile.TaskBoardFileStore;

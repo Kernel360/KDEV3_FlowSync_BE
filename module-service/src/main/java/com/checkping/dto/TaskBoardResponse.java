@@ -1,11 +1,9 @@
 package com.checkping.dto;
 
 import com.checkping.common.utils.FileResponse;
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.domain.question.TaskBoard;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
