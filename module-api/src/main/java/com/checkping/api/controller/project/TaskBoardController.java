@@ -1,8 +1,8 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.question.comment.TaskBoardCommentRequest;
-import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.comment.QuestionCommentRequest;
+import com.checkping.dto.question.comment.QuestionCommentResponse;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse;
@@ -95,10 +95,10 @@ public class TaskBoardController implements TaskBoardApi {
 
     @PostMapping("/posts/{postId}/comments")
     @Override
-    public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
-        @PathVariable Long postId, @RequestBody TaskBoardCommentRequest.RegisterDto request) {
+    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> registerComment(
+        @PathVariable Long postId, @RequestBody QuestionCommentRequest.RegisterDto request) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto taskBoardCommentDto = questionCommentService.register(
+        QuestionCommentResponse.TaskBoardCommentDto taskBoardCommentDto = questionCommentService.register(
             postId, request);
 
         return BaseResponse.success(taskBoardCommentDto);
@@ -106,10 +106,10 @@ public class TaskBoardController implements TaskBoardApi {
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     @Override
-    public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> deleteSoft(
+    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> deleteSoft(
         @PathVariable Long postId, @PathVariable Long commentId) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto deletedCommentDto = questionCommentService.deleteSoft(
+        QuestionCommentResponse.TaskBoardCommentDto deletedCommentDto = questionCommentService.deleteSoft(
             postId, commentId);
 
         return BaseResponse.success(deletedCommentDto);
@@ -117,11 +117,11 @@ public class TaskBoardController implements TaskBoardApi {
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
     @Override
-    public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> updateComment(
+    public BaseResponse<QuestionCommentResponse.TaskBoardCommentDto> updateComment(
         @PathVariable Long postId, @PathVariable Long commentId,
-        @RequestBody TaskBoardCommentRequest.UpdateDto request) {
+        @RequestBody QuestionCommentRequest.UpdateDto request) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto updatedCommentDto = questionCommentService.update(
+        QuestionCommentResponse.TaskBoardCommentDto updatedCommentDto = questionCommentService.update(
             postId, commentId, request);
 
         return BaseResponse.success(updatedCommentDto);
