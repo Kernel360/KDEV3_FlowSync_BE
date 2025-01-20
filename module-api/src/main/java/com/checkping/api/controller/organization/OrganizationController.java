@@ -56,7 +56,7 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 수정 성공");
     }
 
-    @PutMapping("/admins/organizations/{organizationId}/remove")
+    @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
     public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable UUID organizationId) {
 
