@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TaskBoardLinkServiceImpl implements TaskBoardLinkService {
+public class QuestionLinkServiceImpl implements QuestionLinkService {
 
     private final QuestionLinkStore questionLinkStore;
     private final QuestionReader questionReader;
