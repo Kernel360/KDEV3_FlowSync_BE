@@ -10,9 +10,9 @@ import com.checkping.dto.TaskBoardCommentResponse.TaskBoardCommentDto;
 import com.checkping.exception.project.TaskBoardCommentMisMatchEntityException;
 import com.checkping.exception.project.TaskBoardCommentNotFoundEntityException;
 import com.checkping.exception.project.TaskBoardNotFoundEntityException;
-import com.checkping.infra.repository.project.taskboard.TaskBoardReader;
-import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentReader;
-import com.checkping.infra.repository.project.taskboardcomment.TaskBoardCommentStore;
+import com.checkping.infra.repository.question.TaskBoardReader;
+import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
+import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.checkping.infra.repository.project.taskboardfile;
+package com.checkping.infra.repository.question.file;
 
 import com.checkping.domain.question.TaskBoard;
 import com.checkping.domain.question.TaskBoardFile;
