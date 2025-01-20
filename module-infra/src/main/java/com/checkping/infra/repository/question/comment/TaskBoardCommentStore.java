@@ -1,10 +1,10 @@
 package com.checkping.infra.repository.question.comment;
 
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 
 public interface TaskBoardCommentStore {
 
-    TaskBoardComment store(TaskBoardComment taskBoardComment);
+    QuestionComment store(QuestionComment questionComment);
 
-    void deleteHard(TaskBoardComment taskBoardComment);
+    void deleteHard(QuestionComment questionComment);
 }

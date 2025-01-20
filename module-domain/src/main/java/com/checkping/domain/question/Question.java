@@ -90,7 +90,7 @@ public class Question extends BaseEntity {
     private Question parent;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-    private List<TaskBoardComment> commentList = new ArrayList<>();
+    private List<QuestionComment> commentList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)

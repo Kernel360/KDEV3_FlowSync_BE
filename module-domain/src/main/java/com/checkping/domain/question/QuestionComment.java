@@ -27,9 +27,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board_comment")
+@Table(name = "question_comment")
 @Entity
-public class TaskBoardComment extends BaseEntity {
+public class QuestionComment extends BaseEntity {
     /*
     id : 업무 관리 게시글 댓글 아이디
     content : 댓글 내용

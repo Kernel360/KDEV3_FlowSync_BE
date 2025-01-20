@@ -1,7 +1,7 @@
 package com.checkping.dto.question.comment;
 
-import com.checkping.domain.question.TaskBoardComment;
-import com.checkping.domain.question.TaskBoardComment.DeleteStatus;
+import com.checkping.domain.question.QuestionComment;
+import com.checkping.domain.question.QuestionComment.DeleteStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -35,34 +35,34 @@ public class TaskBoardCommentResponse {
         /**
          * Entity -> Dto
          *
-         * @param taskBoardComment TaskBoardComment Entity
+         * @param questionComment QuestionComment Entity
          * @return TaskBoardCommentDto
          */
-        public static TaskBoardCommentDto toDto(TaskBoardComment taskBoardComment) {
+        public static TaskBoardCommentDto toDto(QuestionComment questionComment) {
             TaskBoardCommentDto dto = new TaskBoardCommentDto();
-            dto.taskBoardCommentId = taskBoardComment.getId();
-            dto.content = taskBoardComment.getContent();
-            dto.regAt = taskBoardComment.getRegAt();
-            dto.editAt = taskBoardComment.getEditAt();
-            dto.deletedYn = taskBoardComment.getDeletedYn();
+            dto.taskBoardCommentId = questionComment.getId();
+            dto.content = questionComment.getContent();
+            dto.regAt = questionComment.getRegAt();
+            dto.editAt = questionComment.getEditAt();
+            dto.deletedYn = questionComment.getDeletedYn();
             return dto;
         }
 
         /**
-         * TaskBoardComment 리스트를 TaskBoardCommentDto 리스트로 변환
+         * QuestionComment 리스트를 TaskBoardCommentDto 리스트로 변환
          *
-         * @param taskBoardCommentList TaskBoardComment 의 리스트
+         * @param questionCommentList QuestionComment 의 리스트
          * @return TaskBoardCommentDto 리스트
          */
         public static List<TaskBoardCommentDto> toDtoList(
-            List<TaskBoardComment> taskBoardCommentList) {
+            List<QuestionComment> questionCommentList) {
 
             // null check
-            if (taskBoardCommentList == null) {
+            if (questionCommentList == null) {
                 return Collections.emptyList();
             }
 
-            return taskBoardCommentList.stream().map(TaskBoardCommentDto::toDto).toList();
+            return questionCommentList.stream().map(TaskBoardCommentDto::toDto).toList();
         }
 
     }

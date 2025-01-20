@@ -1,7 +1,7 @@
 package com.checkping.dto.question.comment;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.QuestionComment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,10 +26,10 @@ public class TaskBoardCommentRequest {
          *
          * @param registerDto 등록 정보
          * @param question question (조회한 Entity)
-         * @return TaskBoardComment 엔티티
+         * @return QuestionComment 엔티티
          */
-        public static TaskBoardComment toEntity (RegisterDto registerDto, Question question) {
-            return TaskBoardComment.builder()
+        public static QuestionComment toEntity (RegisterDto registerDto, Question question) {
+            return QuestionComment.builder()
                 .content(registerDto.getContent())
                 .question(question)
                 .build();
