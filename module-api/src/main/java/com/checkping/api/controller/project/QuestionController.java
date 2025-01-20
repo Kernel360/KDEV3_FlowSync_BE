@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class TaskBoardController implements TaskBoardApi {
+public class QuestionController implements QuestionApi {
 
     private final QuestionService questionService;
     private final QuestionCommentService questionCommentService;
