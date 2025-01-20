@@ -1,4 +1,4 @@
-package com.checkping.dto;
+package com.checkping.dto.question.link;
 
 import com.checkping.domain.question.TaskBoardLink;
 import io.swagger.v3.oas.annotations.media.Schema;

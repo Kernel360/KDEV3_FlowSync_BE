@@ -1,13 +1,13 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.TaskBoardCommentRequest;
-import com.checkping.dto.TaskBoardCommentResponse;
-import com.checkping.dto.TaskBoardRequest;
-import com.checkping.dto.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.TaskBoardResponse;
-import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.TaskBoardRequest;
+import com.checkping.dto.question.TaskBoardRequest.SearchCondition;
+import com.checkping.dto.question.TaskBoardResponse;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.service.question.comment.TaskBoardCommentService;
 import com.checkping.service.question.TaskBoardService;
 import java.util.List;

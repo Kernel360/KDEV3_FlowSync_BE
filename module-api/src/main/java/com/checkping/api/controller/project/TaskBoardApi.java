@@ -1,11 +1,11 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.TaskBoardCommentRequest;
-import com.checkping.dto.TaskBoardCommentResponse;
-import com.checkping.dto.TaskBoardRequest;
-import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse;
+import com.checkping.dto.question.TaskBoardRequest;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

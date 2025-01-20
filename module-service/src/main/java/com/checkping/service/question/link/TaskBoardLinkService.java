@@ -1,7 +1,7 @@
 package com.checkping.service.question.link;
 
-import com.checkping.dto.TaskBoardLinkRequest;
-import com.checkping.dto.TaskBoardLinkResponse.TaskBoardLinkDto;
+import com.checkping.dto.question.link.TaskBoardLinkRequest;
+import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
 
 public interface TaskBoardLinkService {
 

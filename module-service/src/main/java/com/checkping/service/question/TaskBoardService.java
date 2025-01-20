@@ -1,10 +1,10 @@
 package com.checkping.service.question;
 
-import com.checkping.dto.TaskBoardRequest;
-import com.checkping.dto.TaskBoardRequest.RegisterDto;
-import com.checkping.dto.TaskBoardRequest.UpdateDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.question.TaskBoardRequest;
+import com.checkping.dto.question.TaskBoardRequest.RegisterDto;
+import com.checkping.dto.question.TaskBoardRequest.UpdateDto;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
+import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 

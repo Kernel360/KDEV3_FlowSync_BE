@@ -1,6 +1,7 @@
-package com.checkping.dto;
+package com.checkping.dto.question;
 
 import com.checkping.domain.question.TaskBoard;
+import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,8 +1,8 @@
 package com.checkping.service.question.comment;
 
-import com.checkping.dto.TaskBoardCommentRequest;
-import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
-import com.checkping.dto.TaskBoardCommentResponse;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest;
+import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
+import com.checkping.dto.question.comment.TaskBoardCommentResponse;
 
 public interface TaskBoardCommentService {
 
