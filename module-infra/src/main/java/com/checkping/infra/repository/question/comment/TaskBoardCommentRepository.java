@@ -1,4 +1,4 @@
-package com.checkping.infra.repository.project.taskboardcomment;
+package com.checkping.infra.repository.question.comment;
 
 import com.checkping.domain.question.TaskBoardComment;
 import java.util.Optional;
