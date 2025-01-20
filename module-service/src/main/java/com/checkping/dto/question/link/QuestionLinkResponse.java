@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskBoardLinkResponse {
+public class QuestionLinkResponse {
 
     @Getter
     @ToString
@@ -27,7 +27,7 @@ public class TaskBoardLinkResponse {
          * Entity -> Dto
          *
          * @param questionLink QuestionLink Entity
-         * @return TaskBoardLinkResponse.toDto
+         * @return QuestionLinkResponse.toDto
          */
         public static TaskBoardLinkDto toDto(QuestionLink questionLink) {
             TaskBoardLinkDto taskBoardLinkDto = new TaskBoardLinkDto();
@@ -41,7 +41,7 @@ public class TaskBoardLinkResponse {
          * Entity List -> Dto List
          *
          * @param questionLinkList QuestionLink 엔티티 리스트
-         * @return TaskBoardLinkResponse.TaskBoardLinkDto 리스트
+         * @return QuestionLinkResponse.TaskBoardLinkDto 리스트
          */
         public static List<TaskBoardLinkDto> toDtoList(List<QuestionLink> questionLinkList) {
 

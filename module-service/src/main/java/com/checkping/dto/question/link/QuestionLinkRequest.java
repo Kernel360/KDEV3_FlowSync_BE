@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskBoardLinkRequest {
+public class QuestionLinkRequest {
 
     @Getter
     @ToString
