@@ -1,6 +1,7 @@
-package com.checkping.exception.project;
+package com.checkping.exception.question.comment;
 
 import com.checkping.common.enums.ErrorCode;
+import com.checkping.exception.question.TaskBoardException;
 
 public class TaskBoardCommentNotFoundEntityException extends TaskBoardException {
 

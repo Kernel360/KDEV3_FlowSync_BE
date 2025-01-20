@@ -1,4 +1,4 @@
-package com.checkping.exception.project;
+package com.checkping.exception.question;
 
 import com.checkping.common.enums.ErrorCode;
 
