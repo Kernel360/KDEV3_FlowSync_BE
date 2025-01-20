@@ -8,7 +8,7 @@ import com.checkping.dto.question.TaskBoardRequest.SearchCondition;
 import com.checkping.dto.question.TaskBoardResponse;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
-import com.checkping.service.question.comment.TaskBoardCommentService;
+import com.checkping.service.question.comment.QuestionCommentService;
 import com.checkping.service.question.QuestionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class TaskBoardController implements TaskBoardApi {
 
     private final QuestionService questionService;
-    private final TaskBoardCommentService taskBoardCommentService;
+    private final QuestionCommentService questionCommentService;
 
     @PostMapping(value = "/posts", consumes = {MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -98,7 +98,7 @@ public class TaskBoardController implements TaskBoardApi {
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> registerComment(
         @PathVariable Long postId, @RequestBody TaskBoardCommentRequest.RegisterDto request) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto taskBoardCommentDto = taskBoardCommentService.register(
+        TaskBoardCommentResponse.TaskBoardCommentDto taskBoardCommentDto = questionCommentService.register(
             postId, request);
 
         return BaseResponse.success(taskBoardCommentDto);
@@ -109,7 +109,7 @@ public class TaskBoardController implements TaskBoardApi {
     public BaseResponse<TaskBoardCommentResponse.TaskBoardCommentDto> deleteSoft(
         @PathVariable Long postId, @PathVariable Long commentId) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto deletedCommentDto = taskBoardCommentService.deleteSoft(
+        TaskBoardCommentResponse.TaskBoardCommentDto deletedCommentDto = questionCommentService.deleteSoft(
             postId, commentId);
 
         return BaseResponse.success(deletedCommentDto);
@@ -121,7 +121,7 @@ public class TaskBoardController implements TaskBoardApi {
         @PathVariable Long postId, @PathVariable Long commentId,
         @RequestBody TaskBoardCommentRequest.UpdateDto request) {
 
-        TaskBoardCommentResponse.TaskBoardCommentDto updatedCommentDto = taskBoardCommentService.update(
+        TaskBoardCommentResponse.TaskBoardCommentDto updatedCommentDto = questionCommentService.update(
             postId, commentId, request);
 
         return BaseResponse.success(updatedCommentDto);
