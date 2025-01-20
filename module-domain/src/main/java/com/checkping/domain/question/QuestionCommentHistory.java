@@ -24,7 +24,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @Table(name = "task_board_comment_history")
 @Entity
-public class TaskBoardCommentHistory {
+public class QuestionCommentHistory {
     /*
     id : 업무 관리 게시글 댓글 이력 아이디
     content : 댓글 내용
