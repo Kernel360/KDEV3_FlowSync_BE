@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class TaskBoardServiceImpl implements TaskBoardService {
+public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionStore questionStore;
     private final QuestionReader questionReader;
