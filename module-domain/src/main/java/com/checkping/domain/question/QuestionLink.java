@@ -22,9 +22,9 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board_link")
+@Table(name = "question_link")
 @Entity
-public class TaskBoardLink extends BaseEntity {
+public class QuestionLink extends BaseEntity {
     /*
     id : 업무 관리 게시글 첨부 링크 아이디
     name : 업무 관리 게시글 첨부 링크 이름
@@ -48,7 +48,7 @@ public class TaskBoardLink extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof TaskBoardLink that)) {
+        if (!(o instanceof QuestionLink that)) {
             return false;
         }
         return Objects.equals(id, that.id) && Objects.equals(url, that.url);

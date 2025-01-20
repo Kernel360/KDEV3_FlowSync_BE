@@ -94,7 +94,7 @@ public class Question extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-    private List<TaskBoardLink> taskBoardLinkList = new ArrayList<>();
+    private List<QuestionLink> questionLinkList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
@@ -143,11 +143,11 @@ public class Question extends BaseEntity {
         }
     }
 
-    // ADD TaskBoardLink
-    public void addLink(TaskBoardLink link) {
+    // ADD QuestionLink
+    public void addLink(QuestionLink link) {
         // null check & contains check
-        if (link != null && !this.taskBoardLinkList.contains(link)) {
-            this.taskBoardLinkList.add(link);
+        if (link != null && !this.questionLinkList.contains(link)) {
+            this.questionLinkList.add(link);
         }
     }
 

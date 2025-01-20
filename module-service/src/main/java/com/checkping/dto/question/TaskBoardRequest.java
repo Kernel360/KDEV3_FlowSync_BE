@@ -23,7 +23,7 @@ public class TaskBoardRequest {
         content : 게시글 본문 내용
         boardCategory : 게시글 카테고리 (enum, String
         boardStatus : 게시글 상태 (enum, String)
-        taskBoardLinkList : 첨부 링크 리스트 (List<TaskBoardLinkRequest.RegisterDto>)
+        questionLinkList : 첨부 링크 리스트 (List<TaskBoardLinkRequest.RegisterDto>)
          */
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;

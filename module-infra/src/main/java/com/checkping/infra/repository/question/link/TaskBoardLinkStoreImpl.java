@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.question.link;
 
-import com.checkping.domain.question.TaskBoardLink;
+import com.checkping.domain.question.QuestionLink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class TaskBoardLinkStoreImpl implements TaskBoardLinkStore {
     private final TaskBoardLinkRepository taskBoardLinkRepository;
 
     @Override
-    public TaskBoardLink store(TaskBoardLink taskBoardLink) {
-        return taskBoardLinkRepository.save(taskBoardLink);
+    public QuestionLink store(QuestionLink questionLink) {
+        return taskBoardLinkRepository.save(questionLink);
     }
 }
