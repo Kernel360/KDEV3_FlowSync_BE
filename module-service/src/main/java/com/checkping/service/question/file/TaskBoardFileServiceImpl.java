@@ -5,7 +5,7 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
-import com.checkping.infra.repository.question.file.TaskBoardFileStore;
+import com.checkping.infra.repository.question.file.QuestionFileStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class TaskBoardFileServiceImpl implements TaskBoardFileService {
 
     private final QuestionReader questionReader;
-    private final TaskBoardFileStore taskBoardFileStore;
+    private final QuestionFileStore questionFileStore;
 
     @Override
     public List<FileResponse> saveFiles(Long taskBoardId, List<MultipartFile> fileRequests) {
@@ -24,7 +24,7 @@ public class TaskBoardFileServiceImpl implements TaskBoardFileService {
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             TaskBoardNotFoundEntityException::new);
 
-        List<QuestionFile> files = taskBoardFileStore.saveFileList(question, fileRequests);
+        List<QuestionFile> files = questionFileStore.saveFileList(question, fileRequests);
 
         return FileResponse.toDtoList(files);
     }

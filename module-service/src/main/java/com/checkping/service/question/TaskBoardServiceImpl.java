@@ -17,7 +17,7 @@ import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
-import com.checkping.infra.repository.question.file.TaskBoardFileStore;
+import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     private final TaskBoardCommentReader taskBoardCommentReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
     private final QuestionLinkStore questionLinkStore;
-    private final TaskBoardFileStore taskBoardFileStore;
+    private final QuestionFileStore questionFileStore;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -53,7 +53,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         Question question = questionStore.store(initQuestion);
 
         // Save File in S3
-        List<QuestionFile> questionFileList = taskBoardFileStore.saveFileList(question,
+        List<QuestionFile> questionFileList = questionFileStore.saveFileList(question,
             fileList);
 
         // Add QuestionFile List
