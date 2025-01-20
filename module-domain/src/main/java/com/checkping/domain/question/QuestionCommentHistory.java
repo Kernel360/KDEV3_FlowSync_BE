@@ -22,7 +22,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_board_comment_history")
+@Table(name = "question_comment_history")
 @Entity
 public class QuestionCommentHistory {
     /*
@@ -44,6 +44,6 @@ public class QuestionCommentHistory {
     private LocalDateTime updateAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_board_comment_id", nullable = false)
+    @JoinColumn(name = "question_comment_id", nullable = false)
     private QuestionComment questionComment;
 }
