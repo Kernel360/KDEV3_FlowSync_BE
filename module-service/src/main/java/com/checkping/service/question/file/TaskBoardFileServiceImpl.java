@@ -3,7 +3,7 @@ package com.checkping.service.question.file;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionFile;
-import com.checkping.exception.question.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import java.util.List;
@@ -22,7 +22,7 @@ public class TaskBoardFileServiceImpl implements TaskBoardFileService {
     public List<FileResponse> saveFiles(Long taskBoardId, List<MultipartFile> fileRequests) {
 
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
-            TaskBoardNotFoundEntityException::new);
+            QuestionNotFoundEntityException::new);
 
         List<QuestionFile> files = questionFileStore.saveFileList(question, fileRequests);
 

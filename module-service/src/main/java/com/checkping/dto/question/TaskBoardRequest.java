@@ -2,8 +2,8 @@ package com.checkping.dto.question;
 
 import com.checkping.domain.question.Question;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
-import com.checkping.exception.question.TaskBoardInvalidBoardCategoryException;
-import com.checkping.exception.question.TaskBoardInvalidBoardStatusException;
+import com.checkping.exception.question.QuestionCategoryException;
+import com.checkping.exception.question.QuestionStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -116,7 +116,7 @@ public class TaskBoardRequest {
         try {
             return Question.BoardCategory.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new TaskBoardInvalidBoardCategoryException(value);
+            throw new QuestionCategoryException(value);
         }
     }
 
@@ -131,7 +131,7 @@ public class TaskBoardRequest {
         try {
             return Question.BoardStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new TaskBoardInvalidBoardStatusException(value);
+            throw new QuestionStatusException(value);
         }
     }
 }

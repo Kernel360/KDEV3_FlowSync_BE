@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class TaskBoardException extends BaseException {
+public class QuestionException extends BaseException {
 
-    public TaskBoardException(ErrorCode errorCode) {
+    public QuestionException(ErrorCode errorCode) {
         super(errorCode);
     }
 
-    public TaskBoardException(String message, ErrorCode errorCode) {
+    public QuestionException(String message, ErrorCode errorCode) {
         super(message, errorCode);
     }
 }
