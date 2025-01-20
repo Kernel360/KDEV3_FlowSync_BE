@@ -3,11 +3,11 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse;
-import com.checkping.dto.question.TaskBoardRequest;
-import com.checkping.dto.question.TaskBoardRequest.SearchCondition;
-import com.checkping.dto.question.TaskBoardResponse;
-import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
-import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
+import com.checkping.dto.question.QuestionRequest;
+import com.checkping.dto.question.QuestionRequest.SearchCondition;
+import com.checkping.dto.question.QuestionResponse;
+import com.checkping.dto.question.QuestionResponse.TaskBoardItemDto;
+import com.checkping.dto.question.QuestionResponse.TaskBoardListDto;
 import com.checkping.service.question.comment.QuestionCommentService;
 import com.checkping.service.question.QuestionService;
 import java.util.List;
@@ -37,7 +37,7 @@ public class TaskBoardController implements TaskBoardApi {
         MediaType.MULTIPART_FORM_DATA_VALUE})
     @Override
     public BaseResponse<TaskBoardItemDto> register(
-        @RequestPart(value = "content") TaskBoardRequest.RegisterDto request,
+        @RequestPart(value = "content") QuestionRequest.RegisterDto request,
         @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
         TaskBoardItemDto taskBoardDto = questionService.register(request, fileList);
@@ -53,7 +53,7 @@ public class TaskBoardController implements TaskBoardApi {
         @RequestParam(required = false) String keyword) {
 
         // RequestParam -> SearchCondition
-        TaskBoardRequest.SearchCondition searchCondition = new SearchCondition(boardCategory,
+        QuestionRequest.SearchCondition searchCondition = new SearchCondition(boardCategory,
             boardStatus, keyword);
 
         // getTaskBoardList
@@ -75,9 +75,9 @@ public class TaskBoardController implements TaskBoardApi {
     @PutMapping("/posts/{postId}")
     @Override
     public BaseResponse<TaskBoardItemDto> updateTaskBoard(@PathVariable Long postId,
-        @RequestBody TaskBoardRequest.UpdateDto request) {
+        @RequestBody QuestionRequest.UpdateDto request) {
 
-        TaskBoardResponse.TaskBoardItemDto updatedBoardDto = questionService.update(postId,
+        QuestionResponse.TaskBoardItemDto updatedBoardDto = questionService.update(postId,
             request);
 
         return BaseResponse.success(updatedBoardDto);
@@ -85,10 +85,10 @@ public class TaskBoardController implements TaskBoardApi {
 
     @DeleteMapping("/posts/{postId}")
     @Override
-    public BaseResponse<TaskBoardResponse.TaskBoardListDto> deleteSoftTaskBoard(
+    public BaseResponse<QuestionResponse.TaskBoardListDto> deleteSoftTaskBoard(
         @PathVariable Long postId) {
 
-        TaskBoardResponse.TaskBoardListDto deletedBoardDto = questionService.deleteSoft(postId);
+        QuestionResponse.TaskBoardListDto deletedBoardDto = questionService.deleteSoft(postId);
 
         return BaseResponse.success(deletedBoardDto);
     }
