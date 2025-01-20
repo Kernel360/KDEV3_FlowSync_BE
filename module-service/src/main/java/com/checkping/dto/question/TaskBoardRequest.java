@@ -2,8 +2,8 @@ package com.checkping.dto.question;
 
 import com.checkping.domain.question.TaskBoard;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
-import com.checkping.exception.project.TaskBoardInvalidBoardCategoryException;
-import com.checkping.exception.project.TaskBoardInvalidBoardStatusException;
+import com.checkping.exception.question.TaskBoardInvalidBoardCategoryException;
+import com.checkping.exception.question.TaskBoardInvalidBoardStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;

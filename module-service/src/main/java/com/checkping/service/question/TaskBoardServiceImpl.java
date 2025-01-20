@@ -12,7 +12,7 @@ import com.checkping.dto.question.TaskBoardRequest.UpdateDto;
 import com.checkping.dto.question.TaskBoardResponse;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardItemDto;
 import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
-import com.checkping.exception.project.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.TaskBoardReader;
 import com.checkping.infra.repository.question.TaskBoardStore;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;

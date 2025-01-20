@@ -4,7 +4,7 @@ import com.checkping.domain.question.TaskBoard;
 import com.checkping.domain.question.TaskBoardLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
-import com.checkping.exception.project.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.TaskBoardReader;
 import com.checkping.infra.repository.question.link.TaskBoardLinkStore;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package com.checkping.service.question.file;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.TaskBoard;
 import com.checkping.domain.question.TaskBoardFile;
-import com.checkping.exception.project.TaskBoardNotFoundEntityException;
+import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.TaskBoardReader;
 import com.checkping.infra.repository.question.file.TaskBoardFileStore;
 import java.util.List;
