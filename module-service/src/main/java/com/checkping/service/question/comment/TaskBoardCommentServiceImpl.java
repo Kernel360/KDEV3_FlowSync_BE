@@ -11,8 +11,8 @@ import com.checkping.exception.question.comment.TaskBoardCommentMisMatchEntityEx
 import com.checkping.exception.question.comment.TaskBoardCommentNotFoundEntityException;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
-import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
-import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
+import com.checkping.infra.repository.question.comment.QuestionCommentReader;
+import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
 
     private final QuestionReader questionReader;
-    private final TaskBoardCommentStore taskBoardCommentStore;
-    private final TaskBoardCommentReader taskBoardCommentReader;
+    private final QuestionCommentStore questionCommentStore;
+    private final QuestionCommentReader questionCommentReader;
 
     /**
      * 업무 관리 게시글 서비스 - 등록 기능
@@ -45,7 +45,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         initComment.activate();
 
         // save
-        QuestionComment questionComment = taskBoardCommentStore.store(initComment);
+        QuestionComment questionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(questionComment);
@@ -62,14 +62,14 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     public TaskBoardCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
             TaskBoardCommentNotFoundEntityException::new);
 
@@ -77,7 +77,7 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         initComment.deactivate();
 
         // save
-        QuestionComment deletedQuestionComment = taskBoardCommentStore.store(initComment);
+        QuestionComment deletedQuestionComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(deletedQuestionComment);
@@ -94,19 +94,19 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
     public TaskBoardCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(
             TaskBoardCommentNotFoundEntityException::new);
 
         // HARD DELETE
-        taskBoardCommentStore.deleteHard(initComment);
+        questionCommentStore.deleteHard(initComment);
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(initComment);
@@ -125,21 +125,21 @@ public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
         UpdateDto request) {
 
         // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = taskBoardCommentReader.checkCommentContaining(taskBoardId,
+        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
             taskBoardCommentId);
         if (!isContaining) {
             throw new TaskBoardCommentMisMatchEntityException();
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = taskBoardCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
             taskBoardCommentId).orElseThrow(TaskBoardCommentNotFoundEntityException::new);
 
         // update
         initComment.update(request.getContent());
 
         // save
-        QuestionComment updatedComment = taskBoardCommentStore.store(initComment);
+        QuestionComment updatedComment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
         return TaskBoardCommentResponse.TaskBoardCommentDto.toDto(updatedComment);

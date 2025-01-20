@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TaskBoardCommentReaderImpl implements TaskBoardCommentReader {
+public class QuestionCommentReaderImpl implements QuestionCommentReader {
 
-    private final TaskBoardCommentRepository taskBoardCommentRepository;
+    private final QuestionCommentRepository questionCommentRepository;
 
     @Override
     public Optional<QuestionComment> getByTaskBoardCommentId(Long taskBoardCommentId) {
-        return taskBoardCommentRepository.findById(taskBoardCommentId);
+        return questionCommentRepository.findById(taskBoardCommentId);
     }
 
     /**
@@ -25,6 +25,6 @@ public class TaskBoardCommentReaderImpl implements TaskBoardCommentReader {
      */
     @Override
     public boolean checkCommentContaining(Long taskBoardId, Long taskBoardCommentId) {
-        return taskBoardCommentRepository.existsByIdAndQuestionId(taskBoardId, taskBoardCommentId);
+        return questionCommentRepository.existsByIdAndQuestionId(taskBoardId, taskBoardCommentId);
     }
 }
