@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TaskBoardCommentStoreImpl implements TaskBoardCommentStore {
+public class QuestionCommentStoreImpl implements QuestionCommentStore {
 
-    private final TaskBoardCommentRepository taskBoardCommentRepository;
+    private final QuestionCommentRepository questionCommentRepository;
 
     /**
      * QuestionComment 저장
@@ -18,11 +18,11 @@ public class TaskBoardCommentStoreImpl implements TaskBoardCommentStore {
      */
     @Override
     public QuestionComment store(QuestionComment questionComment) {
-        return taskBoardCommentRepository.save(questionComment);
+        return questionCommentRepository.save(questionComment);
     }
 
     @Override
     public void deleteHard(QuestionComment questionComment) {
-        taskBoardCommentRepository.delete(questionComment);
+        questionCommentRepository.delete(questionComment);
     }
 }

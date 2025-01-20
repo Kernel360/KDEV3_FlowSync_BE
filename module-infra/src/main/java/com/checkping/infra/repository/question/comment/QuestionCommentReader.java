@@ -3,7 +3,7 @@ package com.checkping.infra.repository.question.comment;
 import com.checkping.domain.question.QuestionComment;
 import java.util.Optional;
 
-public interface TaskBoardCommentReader {
+public interface QuestionCommentReader {
 
     Optional<QuestionComment> getByTaskBoardCommentId(Long taskBoardCommentId);
 

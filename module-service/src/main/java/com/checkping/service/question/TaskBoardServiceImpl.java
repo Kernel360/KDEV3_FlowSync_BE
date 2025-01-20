@@ -15,8 +15,8 @@ import com.checkping.dto.question.TaskBoardResponse.TaskBoardListDto;
 import com.checkping.exception.question.TaskBoardNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
-import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
-import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
+import com.checkping.infra.repository.question.comment.QuestionCommentReader;
+import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import java.util.List;
@@ -30,8 +30,8 @@ public class TaskBoardServiceImpl implements TaskBoardService {
 
     private final QuestionStore questionStore;
     private final QuestionReader questionReader;
-    private final TaskBoardCommentReader taskBoardCommentReader;
-    private final TaskBoardCommentStore taskBoardCommentStore;
+    private final QuestionCommentReader questionCommentReader;
+    private final QuestionCommentStore questionCommentStore;
     private final QuestionLinkStore questionLinkStore;
     private final QuestionFileStore questionFileStore;
 
@@ -133,7 +133,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         List<QuestionComment> commentList = initQuestion.getCommentList();
         for (QuestionComment comment : commentList) {
             comment.deactivate();
-            taskBoardCommentStore.store(comment);
+            questionCommentStore.store(comment);
         }
 
         // Question - SOFT DELETE
@@ -162,7 +162,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         // QuestionComment - HARD DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
         for (QuestionComment comment : commentList) {
-            taskBoardCommentStore.deleteHard(comment);
+            questionCommentStore.deleteHard(comment);
         }
 
         // Question - HARD DELETE
