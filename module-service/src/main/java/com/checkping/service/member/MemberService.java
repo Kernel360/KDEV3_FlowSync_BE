@@ -39,7 +39,7 @@ public class MemberService {
         return MemberResponseDto.fromEntity(member);
     }
 
-    //모든 회원 목록 조회
+    // 모든 회원 목록 조회
     public MemberListResponseDto getAllMemberListAsDto() {
         List<Member> members = memberRepository.findAll();
         return MemberListResponseDto.fromEntityList(members);
