@@ -3,7 +3,7 @@ package com.checkping.service.question.link;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.link.QuestionLinkRequest;
-import com.checkping.dto.question.link.QuestionLinkResponse.TaskBoardLinkDto;
+import com.checkping.dto.question.link.QuestionLinkResponse.QuestionLinkDto;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
@@ -25,7 +25,7 @@ public class QuestionLinkServiceImpl implements QuestionLinkService {
      * @return 업무 관리 게시글 - 첨부 링크 DTO
      */
     @Override
-    public TaskBoardLinkDto register(Long taskBoardId,
+    public QuestionLinkDto register(Long taskBoardId,
         QuestionLinkRequest.RegisterDto request) {
 
         // find Question Entity
@@ -40,6 +40,6 @@ public class QuestionLinkServiceImpl implements QuestionLinkService {
         QuestionLink questionLink = questionLinkStore.store(initQuestionLink);
 
         // Entity -> Dto
-        return TaskBoardLinkDto.toDto(questionLink);
+        return QuestionLinkDto.toDto(questionLink);
     }
 }
