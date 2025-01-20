@@ -11,6 +11,9 @@ import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +43,17 @@ public class MemberService {
     }
 
     //모든 회원 목록 조회
-    public MemberListResponseDto getAllMemberListAsDto() {
-        List<Member> members = memberRepository.findAll();
-        return MemberListResponseDto.fromEntityList(members);
+//    public MemberListResponseDto getAllMemberListAsDto() {
+//        List<Member> members = memberRepository.findAll();
+//        return MemberListResponseDto.fromEntityList(members);
+//    }
+    // 페이징된 전체 회원 목록 조회
+    public MemberListResponseDto getAllMembersWithPaging(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Member> memberPage = memberRepository.findAll(pageable);
+
+        // MemberListResponseDto로 변환
+        return MemberListResponseDto.fromEntityPage(memberPage);
     }
 
     // 회원 등록
