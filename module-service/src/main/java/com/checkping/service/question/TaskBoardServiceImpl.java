@@ -18,7 +18,7 @@ import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentReader;
 import com.checkping.infra.repository.question.comment.TaskBoardCommentStore;
 import com.checkping.infra.repository.question.file.TaskBoardFileStore;
-import com.checkping.infra.repository.question.link.TaskBoardLinkStore;
+import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
     private final QuestionReader questionReader;
     private final TaskBoardCommentReader taskBoardCommentReader;
     private final TaskBoardCommentStore taskBoardCommentStore;
-    private final TaskBoardLinkStore taskBoardLinkStore;
+    private final QuestionLinkStore questionLinkStore;
     private final TaskBoardFileStore taskBoardFileStore;
 
     /**
@@ -70,7 +70,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
                 linkDto);
 
             // save QuestionLink
-            QuestionLink questionLink = taskBoardLinkStore.store(initQuestionLink);
+            QuestionLink questionLink = questionLinkStore.store(initQuestionLink);
 
             // ADD QuestionLink (in Question)
             question.addLink(questionLink);
