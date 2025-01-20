@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TaskBoardCommentServiceImpl implements TaskBoardCommentService {
+public class QuestionCommentServiceImpl implements QuestionCommentService {
 
     private final QuestionReader questionReader;
     private final QuestionCommentStore questionCommentStore;

@@ -4,7 +4,7 @@ import com.checkping.dto.question.comment.TaskBoardCommentRequest;
 import com.checkping.dto.question.comment.TaskBoardCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse;
 
-public interface TaskBoardCommentService {
+public interface QuestionCommentService {
 
     TaskBoardCommentResponse.TaskBoardCommentDto register(
         Long taskBoardId, RegisterDto request);
