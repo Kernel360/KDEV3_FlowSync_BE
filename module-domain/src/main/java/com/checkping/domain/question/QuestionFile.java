@@ -24,12 +24,12 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "task_board_file")
+@Table(name = "question_file")
 @Entity
-public class TaskBoardFile extends BaseEntity {
+public class QuestionFile extends BaseEntity {
     /*
     id : id
-    taskBoardId : 게시글 번호
+    questionId : 게시글 번호
     replyList : 답글 리스트
     originalName : 원본 파일명
     saveName : 저장 파일명
@@ -59,7 +59,7 @@ public class TaskBoardFile extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof TaskBoardFile that)) {
+        if (!(o instanceof QuestionFile that)) {
             return false;
         }
         return size == that.size && Objects.equals(id, that.id) && Objects.equals(

@@ -98,7 +98,7 @@ public class Question extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-    private List<TaskBoardFile> taskBoardFileList = new ArrayList<>();
+    private List<QuestionFile> questionFileList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
@@ -151,23 +151,23 @@ public class Question extends BaseEntity {
         }
     }
 
-    // ADD TaskBoardFile
-    public void addFile(TaskBoardFile file) {
+    // ADD QuestionFile
+    public void addFile(QuestionFile file) {
 
         // null check & contains check
-        if (file != null && !this.taskBoardFileList.contains(file)) {
+        if (file != null && !this.questionFileList.contains(file)) {
 
             // Add
-            this.taskBoardFileList.add(file);
+            this.questionFileList.add(file);
         }
     }
 
-    // ADD TaskBoardFile List
-    public void addFile(List<TaskBoardFile> fileList) {
+    // ADD QuestionFile List
+    public void addFile(List<QuestionFile> fileList) {
         // loop for Add
-        for(TaskBoardFile file : fileList) {
+        for(QuestionFile file : fileList) {
 
-            // Add TaskBoardFile
+            // Add QuestionFile
             addFile(file);
         }
     }

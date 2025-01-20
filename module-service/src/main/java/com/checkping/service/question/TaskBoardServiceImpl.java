@@ -2,7 +2,7 @@ package com.checkping.service.question;
 
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
-import com.checkping.domain.question.TaskBoardFile;
+import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.TaskBoardLink;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.dto.question.TaskBoardRequest;
@@ -53,11 +53,11 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         Question question = taskBoardStore.store(initQuestion);
 
         // Save File in S3
-        List<TaskBoardFile> taskBoardFileList = taskBoardFileStore.saveFileList(question,
+        List<QuestionFile> questionFileList = taskBoardFileStore.saveFileList(question,
             fileList);
 
-        // Add TaskBoardFile List
-        question.addFile(taskBoardFileList);
+        // Add QuestionFile List
+        question.addFile(questionFileList);
 
         // get register info
         List<TaskBoardLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();

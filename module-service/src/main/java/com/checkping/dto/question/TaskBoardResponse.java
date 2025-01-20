@@ -143,8 +143,8 @@ public class TaskBoardResponse {
                 question.getTaskBoardLinkList());
             boardDto.setTaskBoardLinkList(links);
 
-            // Entity -> Dto (TaskBoardFile)
-            List<FileResponse> fileList = FileResponse.toDtoList(question.getTaskBoardFileList());
+            // Entity -> Dto (QuestionFile)
+            List<FileResponse> fileList = FileResponse.toDtoList(question.getQuestionFileList());
             boardDto.setTaskBoardFileList(fileList);
 
             return boardDto;
