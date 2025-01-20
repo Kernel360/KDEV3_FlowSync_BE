@@ -1,6 +1,6 @@
 package com.checkping.dto.question.link;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.domain.question.TaskBoardLink;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -23,15 +23,15 @@ public class TaskBoardLinkRequest {
         /**
          * TaskBoardLink 등록 요청 Dto -> TaskBoardLink Entity
          *
-         * @param taskBoard TaskBoard Entity
+         * @param question Question Entity
          * @param request Register Dto
          * @return TaskBoardLink 엔티티
          */
-        public static TaskBoardLink toEntity(TaskBoard taskBoard, RegisterDto request) {
+        public static TaskBoardLink toEntity(Question question, RegisterDto request) {
             return TaskBoardLink.builder()
                 .name(request.getName())
                 .url(request.getUrl())
-                .taskBoard(taskBoard)
+                .question(question)
                 .build();
         }
     }

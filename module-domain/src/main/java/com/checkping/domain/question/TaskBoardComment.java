@@ -23,7 +23,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString(exclude = "taskBoard")
+@ToString(exclude = "question")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +37,7 @@ public class TaskBoardComment extends BaseEntity {
     editAt : 수정 일시
     parentId : 부모 댓글 아이디
     deletedYn : 삭제 여부
-    taskBoard : 업무 관리 게시글 (join)
+    question : 업무 관리 게시글 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,8 +63,8 @@ public class TaskBoardComment extends BaseEntity {
     private DeleteStatus deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_board_id", nullable = false)
-    private TaskBoard taskBoard;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
     @Getter
     @RequiredArgsConstructor

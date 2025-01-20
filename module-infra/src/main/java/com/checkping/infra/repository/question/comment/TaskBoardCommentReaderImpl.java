@@ -25,6 +25,6 @@ public class TaskBoardCommentReaderImpl implements TaskBoardCommentReader {
      */
     @Override
     public boolean checkCommentContaining(Long taskBoardId, Long taskBoardCommentId) {
-        return taskBoardCommentRepository.existsByIdAndTaskBoardId(taskBoardId, taskBoardCommentId);
+        return taskBoardCommentRepository.existsByIdAndQuestionId(taskBoardId, taskBoardCommentId);
     }
 }

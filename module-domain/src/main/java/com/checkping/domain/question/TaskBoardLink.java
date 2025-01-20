@@ -29,7 +29,7 @@ public class TaskBoardLink extends BaseEntity {
     id : 업무 관리 게시글 첨부 링크 아이디
     name : 업무 관리 게시글 첨부 링크 이름
     url : 업무 관리 게시글 첨부 링크 URL
-    taskBoard : 업무 관리 게시글 (join)
+    question : 업무 관리 게시글 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +43,8 @@ public class TaskBoardLink extends BaseEntity {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_board_id", nullable = false)
-    private TaskBoard taskBoard;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
     @Override
     public boolean equals(Object o) {

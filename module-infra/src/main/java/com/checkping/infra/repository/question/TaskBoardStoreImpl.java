@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.question;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,17 +10,17 @@ public class TaskBoardStoreImpl implements TaskBoardStore {
     private final TaskBoardRepository taskBoardRepository;
 
     @Override
-    public TaskBoard store(TaskBoard taskBoard) {
-        return taskBoardRepository.save(taskBoard);
+    public Question store(Question question) {
+        return taskBoardRepository.save(question);
     }
 
     /**
-     * HARD DELETE - TaskBoard
+     * HARD DELETE - Question
      *
-     * @param taskBoard 삭제할 TaskBoard 엔티티
+     * @param question 삭제할 Question 엔티티
      */
     @Override
-    public void deleteHard(TaskBoard taskBoard) {
-        taskBoardRepository.delete(taskBoard);
+    public void deleteHard(Question question) {
+        taskBoardRepository.delete(question);
     }
 }

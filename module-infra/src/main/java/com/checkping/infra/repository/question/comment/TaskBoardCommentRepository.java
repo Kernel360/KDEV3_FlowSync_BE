@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskBoardCommentRepository extends JpaRepository<TaskBoardComment, Long> {
     Optional<TaskBoardComment> findById(Long id);
-    boolean existsByIdAndTaskBoardId(Long id, Long taskBoardId);
+    boolean existsByIdAndQuestionId(Long id, Long questionId);
 }

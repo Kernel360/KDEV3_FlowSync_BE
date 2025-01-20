@@ -32,7 +32,7 @@ public class TaskBoardPartialHistory extends BaseEntity {
     currentValue : 현재 값
     previousValue : 변경 이전 값
     updatedAt : 수정 일시
-    taskBoard : 업무 관리 게시글 (join)
+    question : 업무 관리 게시글 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +53,6 @@ public class TaskBoardPartialHistory extends BaseEntity {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_board_id", nullable = false)
-    private TaskBoard taskBoard;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 }

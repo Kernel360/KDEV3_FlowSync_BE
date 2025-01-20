@@ -1,7 +1,7 @@
 package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileResponse;
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
 import com.checkping.dto.question.link.TaskBoardLinkResponse;
@@ -53,23 +53,23 @@ public class TaskBoardResponse {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
         @Schema(description = "게시글 유형")
-        private TaskBoard.BoardCategory boardCategory;
+        private Question.BoardCategory boardCategory;
         @Schema(description = "게시글 상태")
-        private TaskBoard.BoardStatus boardStatus;
-        private TaskBoard.DeleteStatus deletedYn;
+        private Question.BoardStatus boardStatus;
+        private Question.DeleteStatus deletedYn;
 
-        public static TaskBoardListDto toDto(TaskBoard taskBoard) {
+        public static TaskBoardListDto toDto(Question question) {
             TaskBoardListDto boardDto = new TaskBoardListDto();
-            boardDto.setId(taskBoard.getId());
-            boardDto.setNumber(taskBoard.getNumber());
-            boardDto.setTitle(taskBoard.getTitle());
-            boardDto.setContent(taskBoard.getContent());
-            boardDto.setRegAt(taskBoard.getRegAt());
-            boardDto.setEditAt(taskBoard.getEditAt());
-            boardDto.setApproverAt(taskBoard.getApproverAt());
-            boardDto.setBoardCategory(taskBoard.getBoardCategory());
-            boardDto.setBoardStatus(taskBoard.getBoardStatus());
-            boardDto.setDeletedYn(taskBoard.getDeletedYn());
+            boardDto.setId(question.getId());
+            boardDto.setNumber(question.getNumber());
+            boardDto.setTitle(question.getTitle());
+            boardDto.setContent(question.getContent());
+            boardDto.setRegAt(question.getRegAt());
+            boardDto.setEditAt(question.getEditAt());
+            boardDto.setApproverAt(question.getApproverAt());
+            boardDto.setBoardCategory(question.getBoardCategory());
+            boardDto.setBoardStatus(question.getBoardStatus());
+            boardDto.setDeletedYn(question.getDeletedYn());
             return boardDto;
         }
     }
@@ -109,10 +109,10 @@ public class TaskBoardResponse {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
         @Schema(description = "게시글 유형")
-        private TaskBoard.BoardCategory boardCategory;
+        private Question.BoardCategory boardCategory;
         @Schema(description = "게시글 상태")
-        private TaskBoard.BoardStatus boardStatus;
-        private TaskBoard.DeleteStatus deletedYn;
+        private Question.BoardStatus boardStatus;
+        private Question.DeleteStatus deletedYn;
         @Schema(description = "게시글 댓글 목록")
         private List<TaskBoardCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
@@ -120,31 +120,31 @@ public class TaskBoardResponse {
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileResponse> taskBoardFileList;
 
-        public static TaskBoardResponse.TaskBoardItemDto toDto(TaskBoard taskBoard) {
+        public static TaskBoardResponse.TaskBoardItemDto toDto(Question question) {
             TaskBoardResponse.TaskBoardItemDto boardDto = new TaskBoardResponse.TaskBoardItemDto();
-            boardDto.setId(taskBoard.getId());
-            boardDto.setNumber(taskBoard.getNumber());
-            boardDto.setTitle(taskBoard.getTitle());
-            boardDto.setContent(taskBoard.getContent());
-            boardDto.setRegAt(taskBoard.getRegAt());
-            boardDto.setEditAt(taskBoard.getEditAt());
-            boardDto.setApproverAt(taskBoard.getApproverAt());
-            boardDto.setBoardCategory(taskBoard.getBoardCategory());
-            boardDto.setBoardStatus(taskBoard.getBoardStatus());
-            boardDto.setDeletedYn(taskBoard.getDeletedYn());
+            boardDto.setId(question.getId());
+            boardDto.setNumber(question.getNumber());
+            boardDto.setTitle(question.getTitle());
+            boardDto.setContent(question.getContent());
+            boardDto.setRegAt(question.getRegAt());
+            boardDto.setEditAt(question.getEditAt());
+            boardDto.setApproverAt(question.getApproverAt());
+            boardDto.setBoardCategory(question.getBoardCategory());
+            boardDto.setBoardStatus(question.getBoardStatus());
+            boardDto.setDeletedYn(question.getDeletedYn());
 
             // Entity -> Dto (TaskBoardComment)
             List<TaskBoardCommentDto> comments =
-                TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(taskBoard.getCommentList());
+                TaskBoardCommentResponse.TaskBoardCommentDto.toDtoList(question.getCommentList());
             boardDto.setCommentList(comments);
 
             // Entity -> Dto (TaskBoardLink)
             List<TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
-                taskBoard.getTaskBoardLinkList());
+                question.getTaskBoardLinkList());
             boardDto.setTaskBoardLinkList(links);
 
             // Entity -> Dto (TaskBoardFile)
-            List<FileResponse> fileList = FileResponse.toDtoList(taskBoard.getTaskBoardFileList());
+            List<FileResponse> fileList = FileResponse.toDtoList(question.getTaskBoardFileList());
             boardDto.setTaskBoardFileList(fileList);
 
             return boardDto;

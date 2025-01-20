@@ -1,6 +1,6 @@
 package com.checkping.dto.question;
 
-import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.Question;
 import com.checkping.dto.question.link.TaskBoardLinkRequest;
 import com.checkping.exception.question.TaskBoardInvalidBoardCategoryException;
 import com.checkping.exception.question.TaskBoardInvalidBoardStatusException;
@@ -40,10 +40,10 @@ public class TaskBoardRequest {
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
          *
          * @param registerDto 엄무 관리 게시글 등록 요청 정보
-         * @return TaskBoard Entity
+         * @return Question Entity
          */
-        public static TaskBoard toEntity(RegisterDto registerDto) {
-            return TaskBoard.builder()
+        public static Question toEntity(RegisterDto registerDto) {
+            return Question.builder()
                 .title(registerDto.getTitle())
                 .content(registerDto.getContent())
                 .boardCategory(TaskBoardRequest.convertBoardCategory(registerDto.getBoardCategory()))
@@ -61,17 +61,17 @@ public class TaskBoardRequest {
         keyword : 게시글 검색어 (String)
          */
         @Schema(description = "게시글 유형")
-        private final TaskBoard.BoardCategory boardCategory;
+        private final Question.BoardCategory boardCategory;
         @Schema(description = "게시글 상태")
-        private final TaskBoard.BoardStatus boardStatus;
+        private final Question.BoardStatus boardStatus;
         @Schema(description = "게시글 검색어")
         private final String keyword;
 
         /**
          * String 으로 들어온 값을 Enum 으로 변경한다.
          *
-         * @param boardCategory RequestParam 으로 받아온 TaskBoard.BoardCategory 로 변경할 문자열
-         * @param boardStatus   RequestParam 으로 받아온 TaskBoard.BoardStatus 로 변경할 문자열
+         * @param boardCategory RequestParam 으로 받아온 Question.BoardCategory 로 변경할 문자열
+         * @param boardStatus   RequestParam 으로 받아온 Question.BoardStatus 로 변경할 문자열
          * @param keyword       검색어
          */
         public SearchCondition(String boardCategory, String boardStatus, String keyword) {
@@ -110,11 +110,11 @@ public class TaskBoardRequest {
      * Enum : BoardCategory 변환 함수
      *
      * @param value BoardCategory 로 변환할 문자열
-     * @return TaskBoard.BoardCategory
+     * @return Question.BoardCategory
      */
-    public static TaskBoard.BoardCategory convertBoardCategory(String value) {
+    public static Question.BoardCategory convertBoardCategory(String value) {
         try {
-            return TaskBoard.BoardCategory.valueOf(value.toUpperCase());
+            return Question.BoardCategory.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new TaskBoardInvalidBoardCategoryException(value);
         }
@@ -124,12 +124,12 @@ public class TaskBoardRequest {
      * Enum : BoardStatus 변환 함수
      *
      * @param value BoardStatus 로 변환할 문자열
-     * @return TaskBoard.BoardStatus
+     * @return Question.BoardStatus
      *
      */
-    public static TaskBoard.BoardStatus convertBoardStatus(String value) {
+    public static Question.BoardStatus convertBoardStatus(String value) {
         try {
-            return TaskBoard.BoardStatus.valueOf(value.toUpperCase());
+            return Question.BoardStatus.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new TaskBoardInvalidBoardStatusException(value);
         }
