@@ -1,7 +1,7 @@
 package com.checkping.service.project;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardComment;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardComment;
 import com.checkping.dto.TaskBoardCommentRequest;
 import com.checkping.dto.TaskBoardCommentRequest.RegisterDto;
 import com.checkping.dto.TaskBoardCommentRequest.UpdateDto;

@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.project.taskboard;
 
-import com.checkping.domain.board.TaskBoard;
+import com.checkping.domain.question.TaskBoard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

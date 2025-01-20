@@ -1,7 +1,7 @@
 package com.checkping.dto;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardComment;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardComment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;

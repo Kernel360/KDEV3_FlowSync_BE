@@ -1,9 +1,9 @@
 package com.checkping.service.project;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardComment;
-import com.checkping.domain.board.TaskBoardFile;
-import com.checkping.domain.board.TaskBoardLink;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.TaskBoardFile;
+import com.checkping.domain.question.TaskBoardLink;
 import com.checkping.dto.TaskBoardLinkRequest;
 import com.checkping.dto.TaskBoardRequest;
 import com.checkping.dto.TaskBoardRequest.RegisterDto;

@@ -1,7 +1,7 @@
 package com.checkping.infra.repository.project.taskboardfile;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoardFile;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoardFile;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 

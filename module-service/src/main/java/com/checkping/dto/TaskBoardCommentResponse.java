@@ -1,7 +1,7 @@
 package com.checkping.dto;
 
-import com.checkping.domain.board.TaskBoardComment;
-import com.checkping.domain.board.TaskBoardComment.DeleteStatus;
+import com.checkping.domain.question.TaskBoardComment;
+import com.checkping.domain.question.TaskBoardComment.DeleteStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

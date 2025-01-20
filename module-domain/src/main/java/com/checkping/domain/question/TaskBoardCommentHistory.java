@@ -1,4 +1,4 @@
-package com.checkping.domain.board;
+package com.checkping.domain.question;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

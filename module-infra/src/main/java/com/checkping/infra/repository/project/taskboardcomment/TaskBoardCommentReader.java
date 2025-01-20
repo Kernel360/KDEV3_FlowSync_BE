@@ -1,6 +1,6 @@
 package com.checkping.infra.repository.project.taskboardcomment;
 
-import com.checkping.domain.board.TaskBoardComment;
+import com.checkping.domain.question.TaskBoardComment;
 import java.util.Optional;
 
 public interface TaskBoardCommentReader {

@@ -1,8 +1,8 @@
 package com.checkping.infra.repository.project.taskboard;
 
-import com.checkping.domain.board.TaskBoard;
-import com.checkping.domain.board.TaskBoard.BoardCategory;
-import com.checkping.domain.board.TaskBoard.BoardStatus;
+import com.checkping.domain.question.TaskBoard;
+import com.checkping.domain.question.TaskBoard.BoardCategory;
+import com.checkping.domain.question.TaskBoard.BoardStatus;
 import java.util.List;
 import java.util.Optional;
 
