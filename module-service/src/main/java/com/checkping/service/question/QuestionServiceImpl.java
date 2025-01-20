@@ -4,7 +4,7 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
-import com.checkping.dto.question.link.TaskBoardLinkRequest;
+import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
@@ -60,13 +60,13 @@ public class QuestionServiceImpl implements QuestionService {
         question.addFile(questionFileList);
 
         // get register info
-        List<TaskBoardLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
+        List<QuestionLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
 
         // loop for add taskBoardLinkRequest
-        for (TaskBoardLinkRequest.RegisterDto linkDto : linkDtoList) {
+        for (QuestionLinkRequest.RegisterDto linkDto : linkDtoList) {
 
             // QuestionLink Dto -> Entity
-            QuestionLink initQuestionLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
+            QuestionLink initQuestionLink = QuestionLinkRequest.RegisterDto.toEntity(question,
                 linkDto);
 
             // save QuestionLink

@@ -4,8 +4,8 @@ import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse;
 import com.checkping.dto.question.comment.TaskBoardCommentResponse.TaskBoardCommentDto;
-import com.checkping.dto.question.link.TaskBoardLinkResponse;
-import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
+import com.checkping.dto.question.link.QuestionLinkResponse;
+import com.checkping.dto.question.link.QuestionLinkResponse.TaskBoardLinkDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -139,7 +139,7 @@ public class QuestionResponse {
             boardDto.setCommentList(comments);
 
             // Entity -> Dto (QuestionLink)
-            List<TaskBoardLinkDto> links = TaskBoardLinkResponse.TaskBoardLinkDto.toDtoList(
+            List<TaskBoardLinkDto> links = QuestionLinkResponse.TaskBoardLinkDto.toDtoList(
                 question.getQuestionLinkList());
             boardDto.setTaskBoardLinkList(links);
 

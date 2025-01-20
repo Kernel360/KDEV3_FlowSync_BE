@@ -1,7 +1,7 @@
 package com.checkping.dto.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.dto.question.link.TaskBoardLinkRequest;
+import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.exception.question.QuestionCategoryException;
 import com.checkping.exception.question.QuestionStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +23,7 @@ public class QuestionRequest {
         content : 게시글 본문 내용
         boardCategory : 게시글 카테고리 (enum, String
         boardStatus : 게시글 상태 (enum, String)
-        questionLinkList : 첨부 링크 리스트 (List<TaskBoardLinkRequest.RegisterDto>)
+        questionLinkList : 첨부 링크 리스트 (List<QuestionLinkRequest.RegisterDto>)
          */
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
@@ -34,7 +34,7 @@ public class QuestionRequest {
         @Schema(description = "게시글 상태")
         private String boardStatus;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<TaskBoardLinkRequest.RegisterDto> taskBoardLinkList;
+        private List<QuestionLinkRequest.RegisterDto> taskBoardLinkList;
 
         /**
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드

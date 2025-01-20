@@ -2,8 +2,8 @@ package com.checkping.service.question.link;
 
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionLink;
-import com.checkping.dto.question.link.TaskBoardLinkRequest;
-import com.checkping.dto.question.link.TaskBoardLinkResponse.TaskBoardLinkDto;
+import com.checkping.dto.question.link.QuestionLinkRequest;
+import com.checkping.dto.question.link.QuestionLinkResponse.TaskBoardLinkDto;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
@@ -21,19 +21,19 @@ public class QuestionLinkServiceImpl implements QuestionLinkService {
      * 업무 관리 게시글 첨부 링크 서비스 - 등록
      *
      * @param taskBoardId 업무 관리 게시글 ID
-     * @param request     TaskBoardLinkRequest.RegisterDto 업무 관리 게시글 첨부 링크 Dto
+     * @param request     QuestionLinkRequest.RegisterDto 업무 관리 게시글 첨부 링크 Dto
      * @return 업무 관리 게시글 - 첨부 링크 DTO
      */
     @Override
     public TaskBoardLinkDto register(Long taskBoardId,
-        TaskBoardLinkRequest.RegisterDto request) {
+        QuestionLinkRequest.RegisterDto request) {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
-        QuestionLink initQuestionLink = TaskBoardLinkRequest.RegisterDto.toEntity(question,
+        QuestionLink initQuestionLink = QuestionLinkRequest.RegisterDto.toEntity(question,
             request);
 
         // save
