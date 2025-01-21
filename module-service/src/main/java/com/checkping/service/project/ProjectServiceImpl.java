@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,19 +44,8 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        Organization devOrganization = organizationRepository.findById(UUID.fromString(request.getDeveloperOrgId()))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-        Organization custOrganization = organizationRepository.findById(UUID.fromString(request.getCustomerOrgId()))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-
-        List<Organization> organizations = new ArrayList<>();
-        organizations.add(devOrganization);
-        organizations.add(custOrganization);
-
-        List<Member> members = request.getMembers().stream()
-                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
-                .collect(Collectors.toList());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
+        List<Member> members = getMembers(request.getMembers());
 
         Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
         return ProjectResponse.ProjectDto.toDto(project);
@@ -89,7 +78,10 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project));
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
+        List<Member> members = getMembers(request.getMembers());
+
+        project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
@@ -105,16 +97,24 @@ public class ProjectServiceImpl implements ProjectService {
 
             ProjectResponse.ProjectDto projectDto = ProjectResponse.ProjectDto.toDto(project);
 
-            // 추가된 정보인 개발사 및 고객사 정보를 설정
-            projectDto.setOrganizationInfo(
-                !project.getOrganizations().isEmpty() ? project.getOrganizations().get(0)
-                    .getName() : null,            // developerName
-                !project.getOrganizations().isEmpty() ? project.getOrganizations().get(1)
-                    .getName() : null             // customerName
-            );
-
             return projectDto;
         }).collect(Collectors.toList());
+    }
+
+    private List<Organization> getOrganizations(String developerOrgId, String customerOrgId) {
+        return Arrays.asList(
+                organizationRepository.findById(UUID.fromString(developerOrgId))
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
+                organizationRepository.findById(UUID.fromString(customerOrgId))
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
+        );
+    }
+
+    private List<Member> getMembers(List<String> memberIds) {
+        return memberIds.stream()
+                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                .collect(Collectors.toList());
     }
 
 }
