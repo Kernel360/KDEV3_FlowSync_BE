@@ -12,6 +12,7 @@ public enum ErrorCode {
         400 Bad Request
     */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 형식 또는 누락된 데이터가 있습니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력 값이 올바르지 않습니다."),
 
     /*
         401 Unauthorized
