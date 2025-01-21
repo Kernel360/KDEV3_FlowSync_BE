@@ -42,12 +42,12 @@ public class QuestionReaderImpl implements QuestionReader {
 
         // category AND keyword
         if (category != null && keyword != null) {
-            return questionRepository.findTaskBoardByCategoryAndTitleContaining(category, keyword);
+            return questionRepository.findQuestionByCategoryAndTitleContaining(category, keyword);
         }
 
         // status AND keyword
         if (status != null && keyword != null) {
-            return questionRepository.findTaskBoardByStatusAndTitleContaining(status, keyword);
+            return questionRepository.findQuestionByStatusAndTitleContaining(status, keyword);
         }
 
         // category
