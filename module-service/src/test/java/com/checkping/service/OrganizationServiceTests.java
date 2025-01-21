@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ class OrganizationServiceTests {
     @BeforeAll
     static void init(@Autowired OrganizationService organizationService) {
         for (int i = 0; i < 10; i++) {
-            organizationService.createOrganization(OrganizationCreate.Request.builder()
+
+            OrganizationCreate.Request request = OrganizationCreate.Request.builder()
                     .type(i < 5 ? "CUSTOMER" : "DEVELOPER")
                     .brNumber("123456" + i)
                     .name("커널" + i)
@@ -31,13 +33,15 @@ class OrganizationServiceTests {
                     .streetAddress("강남대로")
                     .detailAddress("")
                     .phoneNumber("")
-                    .build());
+                    .build();
+
+            organizationService.createOrganization(request, null);
         }
     }
 
     @Test
     void testCreateOrganization() {
-        organizationService.createOrganization(OrganizationCreate.Request.builder()
+        OrganizationCreate.Request request = OrganizationCreate.Request.builder()
                 .type("CUSTOMER")
                 .brNumber("123456mnb")
                 .name("새로운 커널고객사")
@@ -45,7 +49,9 @@ class OrganizationServiceTests {
                 .streetAddress("강남대로 364")
                 .detailAddress("")
                 .phoneNumber("")
-                .build());
+                .build();
+
+        organizationService.createOrganization(request, null);
     }
 
     @Test
@@ -82,6 +88,9 @@ class OrganizationServiceTests {
 
     @Test
     void testModifyOrganization() {
+
+
+
         Organization organization =
                 organizationRepository.save(OrganizationCreate.Request.toEntity(OrganizationCreate.Request.builder()
                         .type("CUSTOMER")
@@ -103,7 +112,8 @@ class OrganizationServiceTests {
 
         OrganizationUpdate.Response response = organizationService.modifyOrganization(
                 organization.getId(),
-                request
+                request,
+                null
         );
     }
 
