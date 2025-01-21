@@ -90,8 +90,8 @@ public class QuestionServiceImpl implements QuestionService {
 
         // 조회
         List<Question> questionList = questionReader.getTaskBoard(
-            searchCondition.getBoardCategory(),
-            searchCondition.getBoardStatus(),
+            searchCondition.getCategory(),
+            searchCondition.getStatus(),
             searchCondition.getKeyword());
 
         // Question -> QuestionListDto

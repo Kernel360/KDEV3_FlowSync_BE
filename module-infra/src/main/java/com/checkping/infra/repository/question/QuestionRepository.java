@@ -1,8 +1,8 @@
 package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.Question.BoardCategory;
-import com.checkping.domain.question.Question.BoardStatus;
+import com.checkping.domain.question.Question.Category;
+import com.checkping.domain.question.Question.Status;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,22 +11,22 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    List<Question> findByBoardCategory(BoardCategory boardCategory);
+    List<Question> findByCategory(Category category);
 
-    List<Question> findByBoardStatus(BoardStatus boardStatus);
+    List<Question> findByStatus(Status status);
 
     List<Question> findByTitleContaining(String taskBoardTitle);
 
-    List<Question> findByBoardCategoryAndBoardStatus(BoardCategory boardCategory,
-        BoardStatus boardStatus);
+    List<Question> findByCategoryAndStatus(Category category,
+        Status status);
 
-    List<Question> findTaskBoardByBoardCategoryAndTitleContaining(BoardCategory boardCategory,
+    List<Question> findTaskBoardByCategoryAndTitleContaining(Category category,
         String title);
 
-    List<Question> findTaskBoardByBoardStatusAndTitleContaining(BoardStatus boardStatus, String title);
+    List<Question> findTaskBoardByStatusAndTitleContaining(Status status, String title);
 
-    List<Question> findByBoardCategoryAndBoardStatusAndTitleContaining(BoardCategory boardCategory,
-        BoardStatus boardStatus, String title);
+    List<Question> findByCategoryAndStatusAndTitleContaining(Category category,
+        Status status, String title);
 
     Optional<Question> findById(Long id);
 }

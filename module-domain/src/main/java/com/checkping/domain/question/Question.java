@@ -42,8 +42,8 @@ public class Question extends BaseEntity {
     regAt : 작성 일시
     editAt : 수정 일시
     approverAt : 승인 일시
-    boardCategory : 게시글 유형
-    boardStatus : 게시글 상태
+    category : 게시글 유형
+    status : 게시글 상태
     deletedYn : 삭제 여부
     parent : 부모 게시글
      */
@@ -74,12 +74,12 @@ public class Question extends BaseEntity {
     private LocalDateTime approverAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "board_category", nullable = false, length = 100)
-    private BoardCategory boardCategory;
+    @Column(name = "category", nullable = false, length = 100)
+    private Category category;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "board_status", nullable = false, length = 100)
-    private BoardStatus boardStatus;
+    @Column(name = "status", nullable = false, length = 100)
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
@@ -102,14 +102,14 @@ public class Question extends BaseEntity {
 
     @Getter
     @RequiredArgsConstructor
-    public enum BoardCategory {
+    public enum Category {
         QUESTION("질문"), REQUEST("요청"), ANSWER("답변");
         private final String description;
     }
 
     @Getter
     @RequiredArgsConstructor
-    public enum BoardStatus {
+    public enum Status {
         PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
         private final String description;
     }
