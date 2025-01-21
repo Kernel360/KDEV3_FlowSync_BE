@@ -9,8 +9,13 @@ import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.exception.member.InvalidInputValueException;
+import com.checkping.exception.member.MemberNotFoundException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +45,30 @@ public class MemberService {
     }
 
     //모든 회원 목록 조회
-    public MemberListResponseDto getAllMemberListAsDto() {
-        List<Member> members = memberRepository.findAll();
-        return MemberListResponseDto.fromEntityList(members);
+//    public MemberListResponseDto getAllMemberListAsDto() {
+//        List<Member> members = memberRepository.findAll();
+//        return MemberListResponseDto.fromEntityList(members);
+//    }
+    // 페이징된 전체 회원 목록 조회
+    public MemberListResponseDto getAllMembersWithPaging(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Member> memberPage = memberRepository.findAll(pageable);
+
+        //페이지에 음수들어온 경우 예외 처리
+        if(page < 0 || size < 0) {
+            throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
+        }
+        //범위 바깥의 페이지 요청
+        if(page >= memberPage.getTotalPages()) {
+            throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
+        }
+        //페이지에 회원이 없는 경우 예외 처리
+        if(memberPage.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+
+        // MemberListResponseDto로 변환
+        return MemberListResponseDto.fromEntityPage(memberPage);
     }
 
     // 회원 등록

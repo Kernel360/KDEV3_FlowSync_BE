@@ -1,6 +1,7 @@
 package com.checkping.api.auth.filter;
 
 
+import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.util.JwtUtil;
@@ -81,12 +82,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // 실패 응답 생성 (BaseResponse 활용)
             BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
-
-            // 응답 설정
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         }
 
@@ -98,12 +94,8 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
 
-            //response body
-            PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
-
-            //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            String errorMessage = "access token expired";
+            ResponseUtil.sendErrorResponse(response, HttpStatus.valueOf(HttpServletResponse.SC_UNAUTHORIZED), errorMessage);
             return;
         }
 
@@ -111,13 +103,8 @@ public class JWTFilter extends OncePerRequestFilter {
         String category = jwtUtil.getCategory(accessToken);
 
         if (!category.equals("access")) {
-
-            //response body
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid access token");
-
-            //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 애러 응답 때, 리프레시 토큰으로 재발급 받을 수 있도록 프론트와 결정
+            String errorMessage = "invalid access token";
+            ResponseUtil.sendErrorResponse(response, HttpStatus.valueOf(HttpServletResponse.SC_UNAUTHORIZED), errorMessage);
             return;
         }
 
