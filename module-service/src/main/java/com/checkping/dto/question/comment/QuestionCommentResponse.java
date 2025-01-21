@@ -20,7 +20,7 @@ public class QuestionCommentResponse {
     public static class QuestionCommentDto {
 
         @Schema(description = "게시글 댓글 ID")
-        private Long taskBoardCommentId;
+        private Long id;
         @Schema(description = "게시글 댓글 내용")
         private String content;
         @Schema(description = "게시글 댓글 등록 일시")
@@ -40,7 +40,7 @@ public class QuestionCommentResponse {
          */
         public static QuestionCommentDto toDto(QuestionComment questionComment) {
             QuestionCommentDto dto = new QuestionCommentDto();
-            dto.taskBoardCommentId = questionComment.getId();
+            dto.id = questionComment.getId();
             dto.content = questionComment.getContent();
             dto.regAt = questionComment.getRegAt();
             dto.editAt = questionComment.getEditAt();
