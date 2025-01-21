@@ -1,8 +1,8 @@
 package com.checkping.infra.repository.question.file;
 
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionFile;
-import com.checkping.common.utils.FileRequest;
 import com.checkping.infra.repository.file.FileRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,7 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
      * QuestionFileStore 첨부 파일 저장
      *
      * @param question 업무 관리 게시글 ID
-     * @param fileList  게시글 첨부 파일 리스트
+     * @param fileList 게시글 첨부 파일 리스트
      * @return List<QuestionFile>
      */
     @Override
@@ -44,8 +44,7 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
     }
 
     /**
-     * QuestionFileStore 첨부 파일 저장
-     * S3 에는 저장하지 않는다.
+     * QuestionFileStore 첨부 파일 저장 S3 에는 저장하지 않는다.
      *
      * @param question 업무 관리 게시글 ID
      * @param fileList 게시글 첨부 파일 리스트
@@ -54,8 +53,8 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
     @Override
     public List<QuestionFile> storeFileList(Question question, List<FileRequest> fileList) {
 
-        // empty check
-        if (fileList.isEmpty()) {
+        // null, empty check
+        if (fileList == null || fileList.isEmpty()) {
             return List.of();
         }
 
