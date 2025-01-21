@@ -116,9 +116,9 @@ public class QuestionResponse {
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<QuestionLinkDto> taskBoardLinkList;
+        private List<QuestionLinkDto> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
-        private List<FileResponse> taskBoardFileList;
+        private List<FileResponse> fileList;
 
         public static QuestionItemDto toDto(Question question) {
             QuestionItemDto boardDto = new QuestionItemDto();
@@ -141,11 +141,11 @@ public class QuestionResponse {
             // Entity -> Dto (QuestionLink)
             List<QuestionLinkDto> links = QuestionLinkDto.toDtoList(
                 question.getQuestionLinkList());
-            boardDto.setTaskBoardLinkList(links);
+            boardDto.setLinkList(links);
 
             // Entity -> Dto (QuestionFile)
             List<FileResponse> fileList = FileResponse.toDtoList(question.getQuestionFileList());
-            boardDto.setTaskBoardFileList(fileList);
+            boardDto.setFileList(fileList);
 
             return boardDto;
         }
