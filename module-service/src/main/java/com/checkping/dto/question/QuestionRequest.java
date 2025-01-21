@@ -20,6 +20,7 @@ public class QuestionRequest {
     @Getter
     @ToString
     public static class RegisterDto {
+
         /*
         title : 게시글 제목
         content : 게시글 본문 내용
@@ -31,10 +32,6 @@ public class QuestionRequest {
         private String title;
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
-        @Schema(description = "게시글 유형")
-        private String boardCategory;
-        @Schema(description = "게시글 상태")
-        private String boardStatus;
         @Schema(description = "게시글 첨부 링크 목록")
         private List<QuestionLinkRequest.RegisterDto> taskBoardLinkList;
 
@@ -48,8 +45,6 @@ public class QuestionRequest {
             return Question.builder()
                 .title(registerDto.getTitle())
                 .content(registerDto.getContent())
-                .category(QuestionRequest.convertBoardCategory(registerDto.getBoardCategory()))
-                .status(QuestionRequest.convertBoardStatus(registerDto.getBoardStatus()))
                 .build();
         }
     }
@@ -57,6 +52,7 @@ public class QuestionRequest {
     @Getter
     @ToString
     public static class SearchCondition {
+
         /*
         category : 게시글 카테고리 (enum, String)
         status : 게시글 상태 (enum, String)
@@ -79,10 +75,14 @@ public class QuestionRequest {
         public SearchCondition(String boardCategory, String boardStatus, String keyword) {
 
             // String -> Enum
-            this.category = StringUtils.hasText(boardCategory) ? QuestionRequest.convertBoardCategory(boardCategory) : null;
+            this.category =
+                StringUtils.hasText(boardCategory) ? QuestionRequest.convertCategory(
+                    boardCategory) : null;
 
             // String -> Enum
-            this.status = StringUtils.hasText(boardStatus) ? QuestionRequest.convertBoardStatus(boardStatus) : null;
+            this.status =
+                StringUtils.hasText(boardStatus) ? QuestionRequest.convertStatus(boardStatus)
+                    : null;
 
             // 검색어
             this.keyword = StringUtils.hasText(keyword) ? keyword : null;
@@ -92,6 +92,7 @@ public class QuestionRequest {
     @Getter
     @ToString
     public static class UpdateDto {
+
         /*
         title : 게시글 제목
         content : 게시글 본문
@@ -114,7 +115,7 @@ public class QuestionRequest {
      * @param value Category 로 변환할 문자열
      * @return Question.Category
      */
-    public static Category convertBoardCategory(String value) {
+    public static Category convertCategory(String value) {
         try {
             return Category.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -127,9 +128,8 @@ public class QuestionRequest {
      *
      * @param value Status 로 변환할 문자열
      * @return Question.Status
-     *
      */
-    public static Status convertBoardStatus(String value) {
+    public static Status convertStatus(String value) {
         try {
             return Status.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
