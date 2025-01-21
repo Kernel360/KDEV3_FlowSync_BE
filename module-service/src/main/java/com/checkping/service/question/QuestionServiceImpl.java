@@ -88,7 +88,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 조회한 QuestionListDto 의 리스트
      */
     @Override
-    public List<QuestionListDto> getTaskBoardList(SearchCondition searchCondition) {
+    public List<QuestionListDto> getQuestionList(SearchCondition searchCondition) {
 
         // 조회
         List<Question> questionList = questionReader.getTaskBoard(
@@ -107,7 +107,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return QuestionListDto
      */
     @Override
-    public QuestionItemDto getTaskBoardById(Long taskBoardId) {
+    public QuestionItemDto getQuestionById(Long taskBoardId) {
 
         // find Question Entity
         Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
