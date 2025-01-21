@@ -28,32 +28,32 @@ public interface QuestionApi {
     BaseResponse<List<QuestionListDto>> getQuestionList(
         @Parameter(description = "게시글 유형 - null 가능") String category,
         @Parameter(description = "게시글 상태 - null 가능") String status,
-        @Parameter(description = "게시글 검색어")String keyword);
+        @Parameter(description = "게시글 검색어") String keyword);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
-    BaseResponse<QuestionItemDto> getQuestion(@Parameter(description = "게시글 ID") Long postId);
+    BaseResponse<QuestionItemDto> getQuestion(@Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 수정", description = "질문 게시글을 수정하는 기능입니다.")
-    BaseResponse<QuestionItemDto> updateQuestion(@Parameter(description = "게시글 ID") Long postId,
+    BaseResponse<QuestionItemDto> updateQuestion(@Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 수정 정보 Dto") QuestionRequest.UpdateDto request);
 
     @Operation(summary = "질문 게시글 소프트 삭제", description = "질문 게시글을 약한 삭제를 하는 기능입니다..")
     BaseResponse<QuestionListDto> deleteSoftQuestion(
-        @Parameter(description = "게시글 ID") Long postId);
+        @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 댓글 등록", description = "질문 게시글의 댓글을 등록하는 기능입니다.")
     BaseResponse<QuestionCommentDto> registerComment(
-        @Parameter(description = "게시글 ID") Long postId,
+        @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRequest.RegisterDto request);
 
     @Operation(summary = "질문 게시글 댓글 소프트 삭제", description = "질문 게시글의 댓글을 소프트 삭제하는 기능입니다.")
     BaseResponse<QuestionCommentDto> deleteSoftComment(
-        @Parameter(description = "게시글 ID") Long postId,
+        @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 ID") Long commentId);
 
     @Operation(summary = "질문 게시글 댓글 수정", description = "질문 게시글의 댓글을 수정하는 기능입니다.")
     BaseResponse<QuestionCommentDto> updateComment(
-        @Parameter(description = "게시글 ID") Long postId,
+        @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
         @Parameter(description = "게시글 댓글 수정 Dto") QuestionCommentRequest.UpdateDto request);
 }
