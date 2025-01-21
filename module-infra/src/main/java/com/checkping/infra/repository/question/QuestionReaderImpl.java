@@ -25,7 +25,7 @@ public class QuestionReaderImpl implements QuestionReader {
      * @return Question 전체 조회
      */
     @Override
-    public List<Question> getTaskBoard(Category category, Status status,
+    public List<Question> getQuestion(Category category, Status status,
         String keyword) {
 
         // keyword, category, status
@@ -77,7 +77,7 @@ public class QuestionReaderImpl implements QuestionReader {
      * @return Question 조회 결과
      */
     @Override
-    public Optional<Question> getTaskBoardById(Long id) {
+    public Optional<Question> getQuestionById(Long id) {
         return questionRepository.findById(id);
     }
 }

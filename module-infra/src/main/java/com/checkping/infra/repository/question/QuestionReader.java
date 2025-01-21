@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface QuestionReader {
 
-    List<Question> getTaskBoard(Category category, Status status,
+    List<Question> getQuestion(Category category, Status status,
         String keyword);
 
-    Optional<Question> getTaskBoardById(Long id);
+    Optional<Question> getQuestionById(Long id);
 }

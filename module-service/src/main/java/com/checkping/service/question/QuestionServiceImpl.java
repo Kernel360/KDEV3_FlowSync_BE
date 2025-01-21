@@ -91,7 +91,7 @@ public class QuestionServiceImpl implements QuestionService {
     public List<QuestionListDto> getQuestionList(SearchCondition searchCondition) {
 
         // 조회
-        List<Question> questionList = questionReader.getTaskBoard(
+        List<Question> questionList = questionReader.getQuestion(
             searchCondition.getCategory(),
             searchCondition.getStatus(),
             searchCondition.getKeyword());
@@ -110,7 +110,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto getQuestionById(Long taskBoardId) {
 
         // find Question Entity
-        Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
@@ -127,7 +127,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
@@ -157,7 +157,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
@@ -183,7 +183,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // update

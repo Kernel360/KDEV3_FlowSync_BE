@@ -29,7 +29,7 @@ public class QuestionLinkServiceImpl implements QuestionLinkService {
         QuestionLinkRequest.RegisterDto request) {
 
         // find Question Entity
-        Question question = questionReader.getTaskBoardById(taskBoardId).orElseThrow(
+        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
