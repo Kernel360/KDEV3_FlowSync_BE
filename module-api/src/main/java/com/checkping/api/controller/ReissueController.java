@@ -1,5 +1,6 @@
 package com.checkping.api.controller;
 
+import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.Cookie;
@@ -37,15 +38,8 @@ public class ReissueController {
 
         // Set response
         response.setHeader("Authorization", "Bearer " + newAccess);
-        response.addCookie(createCookie("refresh", newRefresh));
+        response.addCookie(ResponseUtil.createCookie("refresh", newRefresh));
 
         return BaseResponse.success("Reissue success");
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24 * 60 * 60);
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 }
