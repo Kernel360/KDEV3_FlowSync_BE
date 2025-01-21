@@ -61,7 +61,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.addFile(questionFileList);
 
         // get register info
-        List<QuestionLinkRequest.RegisterDto> linkDtoList = request.getTaskBoardLinkList();
+        List<QuestionLinkRequest.RegisterDto> linkDtoList = request.getLinkList();
 
         // loop for add taskBoardLinkRequest
         for (QuestionLinkRequest.RegisterDto linkDto : linkDtoList) {
