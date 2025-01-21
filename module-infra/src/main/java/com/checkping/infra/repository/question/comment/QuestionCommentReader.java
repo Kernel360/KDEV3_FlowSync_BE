@@ -7,5 +7,5 @@ public interface QuestionCommentReader {
 
     Optional<QuestionComment> getByQuestionCommentId(Long questionCommentId);
 
-    boolean checkCommentContaining(Long taskBoardId, Long taskBoardCommentId);
+    boolean checkCommentContaining(Long questionId, Long questionCommentId);
 }
