@@ -9,6 +9,8 @@ import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.exception.member.InvalidInputValueException;
+import com.checkping.exception.member.MemberNotFoundException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,18 @@ public class MemberService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Member> memberPage = memberRepository.findAll(pageable);
 
+        //페이지에 회원이 없는 경우 예외 처리
+        if(memberPage.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        //페이지에 음수들어온 경우 예외 처리
+        if(page < 1 || size < 0) {
+            throw new InvalidInputValueException("페이지 번호와 사이즈는 1보다 커야합니다.");
+        }
+        //범위 바깥의 페이지 요청
+        if(page >= memberPage.getTotalPages()) {
+            throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
+        }
         // MemberListResponseDto로 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
     }

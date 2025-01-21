@@ -25,7 +25,7 @@ public interface MemberApi {
 
     @Operation(summary = "전체 회원 조회", description = "페이징 지원을 포함한 전체 회원 목록을 조회하는 기능입니다.")
     BaseResponse<MemberListResponseDto> getAllMembers(
-            @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = true)
+            @Parameter(description = "페이지 번호 (1부터 시작)", example = "0", required = true)
             int page,
             @Parameter(description = "페이지 크기", example = "10", required = true)
             int size);

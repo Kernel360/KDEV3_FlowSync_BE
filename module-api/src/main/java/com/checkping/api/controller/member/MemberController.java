@@ -33,9 +33,9 @@ public class MemberController implements MemberApi {
     @Override
     @GetMapping
     public BaseResponse<MemberListResponseDto> getAllMembers(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        MemberListResponseDto response = memberService.getAllMembersWithPaging(page, size);
+        MemberListResponseDto response = memberService.getAllMembersWithPaging(page-1, size);
         return BaseResponse.success(response);
     }
 
