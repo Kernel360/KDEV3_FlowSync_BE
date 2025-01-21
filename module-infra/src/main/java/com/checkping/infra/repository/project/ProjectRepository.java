@@ -1,6 +1,7 @@
 package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
+import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +30,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "AND (:status IS NULL OR p.status = :status)", nativeQuery = true)
     List<Project> findProjectsWithOrganizationInfoByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status);
 
+    @Query("SELECT p.management_step AS managementStep, COUNT(p) AS projectCount " +
+            "FROM Project p " +
+            "GROUP BY p.management_step")
+    List<Tuple> countProjectsByManagementStep();
 
 }

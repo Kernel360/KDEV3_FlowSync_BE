@@ -25,6 +25,8 @@ public class ProjectResponse {
         private String detail;
         @Schema(description = "프로젝트 상태")
         private Project.Status status;
+        @Schema(description = "프로젝트 관리 단계")
+        private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
@@ -51,6 +53,7 @@ public class ProjectResponse {
             projectDto.setDescription(project.getDescription());
             projectDto.setDetail(project.getDetail());
             projectDto.setStatus(project.getStatus());
+            projectDto.setManagementStep(project.getManagement_step());
             projectDto.setRegAt(project.getRegAt());
             projectDto.setUpdateAt(project.getUpdateAt());
             projectDto.setStartAt(project.getStartAt());

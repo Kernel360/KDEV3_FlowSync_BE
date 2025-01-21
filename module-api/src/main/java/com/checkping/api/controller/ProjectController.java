@@ -4,12 +4,14 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.dto.ProjectRequest;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -49,5 +51,11 @@ public class ProjectController {
         List<ProjectResponse.ProjectDto> projects = projectService.findAllProjects(keyword, status);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
+    }
+
+    @GetMapping("/admins/projects/management-steps")
+    public BaseResponse<Map<String, Long>> countProjectsByManagementStep() {
+        Map<String, Long> managementCountMap = projectService.countProjectsByManagementStep();
+        return BaseResponse.success(managementCountMap);
     }
 }
