@@ -42,10 +42,8 @@ public class QuestionRequest {
          * @return Question Entity
          */
         public static Question toEntity(RegisterDto registerDto) {
-            return Question.builder()
-                .title(registerDto.getTitle())
-                .content(registerDto.getContent())
-                .build();
+            return Question.builder().title(registerDto.getTitle())
+                .content(registerDto.getContent()).build();
         }
     }
 
@@ -68,21 +66,19 @@ public class QuestionRequest {
         /**
          * String 으로 들어온 값을 Enum 으로 변경한다.
          *
-         * @param boardCategory RequestParam 으로 받아온 Question.Category 로 변경할 문자열
-         * @param boardStatus   RequestParam 으로 받아온 Question.Status 로 변경할 문자열
-         * @param keyword       검색어
+         * @param category RequestParam 으로 받아온 Question.Category 로 변경할 문자열
+         * @param status   RequestParam 으로 받아온 Question.Status 로 변경할 문자열
+         * @param keyword  검색어
          */
-        public SearchCondition(String boardCategory, String boardStatus, String keyword) {
+        public SearchCondition(String category, String status, String keyword) {
 
             // String -> Enum
             this.category =
-                StringUtils.hasText(boardCategory) ? QuestionRequest.convertCategory(
-                    boardCategory) : null;
+                StringUtils.hasText(category) ? QuestionRequest.convertCategory(category) : null;
 
             // String -> Enum
             this.status =
-                StringUtils.hasText(boardStatus) ? QuestionRequest.convertStatus(boardStatus)
-                    : null;
+                StringUtils.hasText(status) ? QuestionRequest.convertStatus(status) : null;
 
             // 검색어
             this.keyword = StringUtils.hasText(keyword) ? keyword : null;
@@ -104,9 +100,9 @@ public class QuestionRequest {
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
         @Schema(description = "게시글 유형")
-        private String boardCategory;
+        private String category;
         @Schema(description = "게시글 상태")
-        private String boardStatus;
+        private String status;
     }
 
     /**
