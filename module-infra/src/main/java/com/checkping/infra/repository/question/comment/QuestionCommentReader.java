@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface QuestionCommentReader {
 
-    Optional<QuestionComment> getByTaskBoardCommentId(Long taskBoardCommentId);
+    Optional<QuestionComment> getByQuestionCommentId(Long questionCommentId);
 
     boolean checkCommentContaining(Long taskBoardId, Long taskBoardCommentId);
 }
