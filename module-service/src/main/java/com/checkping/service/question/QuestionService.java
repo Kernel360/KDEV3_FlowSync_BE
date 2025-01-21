@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface QuestionService {
     QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList);
-    List<QuestionListDto> getTaskBoardList(QuestionRequest.SearchCondition searchCondition);
-    QuestionItemDto getTaskBoardById(Long taskBoardId);
+    List<QuestionListDto> getQuestionList(QuestionRequest.SearchCondition searchCondition);
+    QuestionItemDto getQuestionById(Long taskBoardId);
     QuestionListDto deleteSoft (Long taskBoardId);
     QuestionListDto deleteHard(Long taskBoardId);
     QuestionItemDto update(Long taskBoardId, UpdateDto request);

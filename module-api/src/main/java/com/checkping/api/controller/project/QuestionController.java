@@ -56,7 +56,7 @@ public class QuestionController implements QuestionApi {
             status, keyword);
 
         // getTaskBoardList
-        List<QuestionListDto> questionListDtoList = questionService.getTaskBoardList(
+        List<QuestionListDto> questionListDtoList = questionService.getQuestionList(
             searchCondition);
 
         return BaseResponse.success(questionListDtoList);
@@ -66,7 +66,7 @@ public class QuestionController implements QuestionApi {
     @Override
     public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long postId) {
 
-        QuestionItemDto questionItemDto = questionService.getTaskBoardById(postId);
+        QuestionItemDto questionItemDto = questionService.getQuestionById(postId);
 
         return BaseResponse.success(questionItemDto);
     }
