@@ -1,10 +1,14 @@
 package com.checkping.api.controller.organization;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.*;
+import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationUpdate;
 import com.checkping.service.member.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,11 +19,14 @@ public class OrganizationController implements OrganizationApi {
 
     private final OrganizationService organizationService;
 
-    @PostMapping("/admins/organizations")
+    @PostMapping(value = "/admins/organizations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public BaseResponse<OrganizationCreate.Response> createOrganization(@RequestBody OrganizationCreate.Request request) {
+    public BaseResponse<OrganizationCreate.Response> createOrganization(
+            @RequestPart(value = "content") OrganizationCreate.Request request,
+            @RequestPart(required = false, value = "file") MultipartFile file
+    ) {
 
-        OrganizationCreate.Response response = organizationService.createOrganization(request);
+        OrganizationCreate.Response response = organizationService.createOrganization(request, file);
 
         return BaseResponse.success(response, "업체 생성 성공");
     }
@@ -43,15 +50,16 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
-    @PutMapping("/admins/organizations/{organizationId}")
+    @PutMapping(value = "/admins/organizations/{organizationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
             @PathVariable UUID organizationId,
-            @RequestBody OrganizationUpdate.Request request) {
+            @RequestPart(value = "content") OrganizationUpdate.Request request,
+            @RequestPart(required = false, value = "file") MultipartFile file) {
 
         OrganizationUpdate.Response response = organizationService.modifyOrganization(
                 organizationId,
-                request);
+                request, file);
 
         return BaseResponse.success(response, "업체 수정 성공");
     }

@@ -1,19 +1,20 @@
 package com.checkping.service.member;
 
 import com.checkping.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationService {
 
-    OrganizationCreate.Response createOrganization(OrganizationCreate.Request request);
+    OrganizationCreate.Response createOrganization(OrganizationCreate.Request request, MultipartFile file);
 
     OrganizationGet.Response getOrganization(UUID id);
 
     List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status);
 
-    OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request);
+    OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request, MultipartFile file);
 
     OrganizationGet.Response removeOrganization(UUID id);
 }

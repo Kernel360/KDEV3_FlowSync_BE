@@ -2,11 +2,17 @@ package com.checkping.service.member;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.*;
+import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationUpdate;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +25,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
+    private final S3FileRepositoryImpl s3FileRepository;
+    private final S3FileRepositoryImpl s3FileRepositoryImpl;
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public OrganizationCreate.Response createOrganization(OrganizationCreate.Request request) {
+    public OrganizationCreate.Response createOrganization(OrganizationCreate.Request request, MultipartFile file) {
 
         if (request == null) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
@@ -30,6 +40,11 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
+        if (file != null ) {
+            FileRequest fileRequest = s3FileRepository.uploadFile(file);
+            request.setBrCertificateUrl(fileRequest.saveName()+"|"+fileRequest.url());
+        }
+
         Organization organization = OrganizationCreate.Request.toEntity(request);
 
         Organization createOrganization = organizationRepository.save(organization);
@@ -37,6 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationCreate.Response.toDto(createOrganization);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public OrganizationGet.Response getOrganization(UUID id) {
 
@@ -47,6 +63,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationGet.Response.toDto(organization);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status) {
 
@@ -78,13 +95,24 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public OrganizationUpdate.Response modifyOrganization(
             UUID id,
-            OrganizationUpdate.Request request
+            OrganizationUpdate.Request request,
+            MultipartFile file
     ) {
         Optional<Organization> result = organizationRepository.findById(id);
         Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        // 저장 파일명
+        String saveName = organization.getBrCertificateUrl().split("\\|")[0];
+
+        // 수정 파일 등록
+        if (file != null) {
+            FileRequest fileRequest = s3FileRepository.uploadFile(file);
+            request.setBrCertificateUrl(fileRequest.saveName()+"|"+fileRequest.url());
+        }
 
         organization.updateOrganization(
                 request.getBrNumber(),
@@ -95,6 +123,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         );
 
         Organization updateOrganization = organizationRepository.save(organization);
+
+        // 기존 파일 삭제
+        s3FileRepositoryImpl.deleteFile(saveName);
 
         OrganizationUpdate.Response.toDto(updateOrganization);
 

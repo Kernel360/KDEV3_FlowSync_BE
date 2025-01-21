@@ -9,6 +9,7 @@ import lombok.*;
 public class OrganizationCreate {
 
     @Getter
+    @Setter
     @ToString
     @Builder
     @NoArgsConstructor
@@ -30,7 +31,7 @@ public class OrganizationCreate {
         private String brNumber;
         @Schema(description = "업체명", example = "커널360")
         private String name;
-        @Schema(description = "사업자 등록증 이미지 링크", example = "http://www.naver.com")
+        @Schema(description = "사업자 등록증 이미지 링크")
         private String brCertificateUrl;
         @Schema(description = "도로명 주소", example = "서울시 강남구")
         private String streetAddress;
