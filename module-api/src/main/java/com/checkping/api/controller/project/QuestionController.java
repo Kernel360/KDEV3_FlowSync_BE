@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -36,7 +37,7 @@ public class QuestionController implements QuestionApi {
         MediaType.MULTIPART_FORM_DATA_VALUE})
     @Override
     public BaseResponse<QuestionItemDto> register(
-        @RequestPart(value = "content") QuestionRequest.RegisterDto request,
+        @RequestPart(value = "content") Request request,
         @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
 
         QuestionItemDto taskBoardDto = questionService.register(request, fileList);

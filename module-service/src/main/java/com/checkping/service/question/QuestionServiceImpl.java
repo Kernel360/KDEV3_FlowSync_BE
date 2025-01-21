@@ -4,8 +4,8 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -42,7 +42,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList) {
+    public QuestionItemDto register(Request request, List<MultipartFile> fileList) {
 
         // dto -> entity
         Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
