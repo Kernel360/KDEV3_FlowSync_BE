@@ -20,10 +20,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByCategoryAndStatus(Category category,
         Status status);
 
-    List<Question> findTaskBoardByCategoryAndTitleContaining(Category category,
+    List<Question> findQuestionByCategoryAndTitleContaining(Category category,
         String title);
 
-    List<Question> findTaskBoardByStatusAndTitleContaining(Status status, String title);
+    List<Question> findQuestionByStatusAndTitleContaining(Status status, String title);
 
     List<Question> findByCategoryAndStatusAndTitleContaining(Category category,
         Status status, String title);
