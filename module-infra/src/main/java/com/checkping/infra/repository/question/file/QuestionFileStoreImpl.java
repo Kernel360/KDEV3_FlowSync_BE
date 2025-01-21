@@ -37,14 +37,14 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
 
         // File Dto -> Entity
         List<QuestionFile> files = uploadedFiles.stream()
-            .map(request -> createTaskBoardFile(question, request))
+            .map(request -> createQuestionFile(question, request))
             .toList();
 
         // Save Entity
         return taskBoardFileRepository.saveAll(files);
     }
 
-    private QuestionFile createTaskBoardFile(Question question, FileRequest request) {
+    private QuestionFile createQuestionFile(Question question, FileRequest request) {
         return QuestionFile.builder()
             .originalName(request.originalName())
             .saveName(request.saveName())
