@@ -114,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
                         tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
                         tuple -> (Long) tuple.get("projectCount")
                 ));
-
+        }
     private List<Organization> getOrganizations(String developerOrgId, String customerOrgId) {
         return Arrays.asList(
                 organizationRepository.findById(UUID.fromString(developerOrgId))
@@ -130,5 +130,5 @@ public class ProjectServiceImpl implements ProjectService {
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
                 .collect(Collectors.toList());
     }
-
 }
+
