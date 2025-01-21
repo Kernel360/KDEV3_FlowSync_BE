@@ -26,8 +26,8 @@ public interface QuestionApi {
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<List<QuestionListDto>> getQuestionList(
-        @Parameter(description = "게시글 유형 - null 가능") String boardCategory,
-        @Parameter(description = "게시글 상태 - null 가능") String boardStatus,
+        @Parameter(description = "게시글 유형 - null 가능") String category,
+        @Parameter(description = "게시글 상태 - null 가능") String status,
         @Parameter(description = "게시글 검색어")String keyword);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
