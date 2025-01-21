@@ -103,14 +103,14 @@ public class Question extends BaseEntity {
     @Getter
     @RequiredArgsConstructor
     public enum Category {
-        QUESTION("질문"), REQUEST("요청"), ANSWER("답변");
+        QUESTION("질문"), ANSWER("답변");
         private final String description;
     }
 
     @Getter
     @RequiredArgsConstructor
     public enum Status {
-        PROGRESS("진행중"), COMPLETED("완료"), SUSPENSION("보류"), PERMISSION_REQUEST("승인 요청");
+        WAIT("대기"), RETURNING("반려"), COMPLETED("승인");
         private final String description;
     }
 
