@@ -131,6 +131,16 @@ public class Question extends BaseEntity {
         this.deletedYn = DeleteStatus.N;
     }
 
+    // update status
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+
+    // update category
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
+
     // update
     public void update(String title, String content) {
 
@@ -165,7 +175,7 @@ public class Question extends BaseEntity {
     // ADD QuestionFile List
     public void addFile(List<QuestionFile> fileList) {
         // loop for Add
-        for(QuestionFile file : fileList) {
+        for (QuestionFile file : fileList) {
 
             // Add QuestionFile
             addFile(file);

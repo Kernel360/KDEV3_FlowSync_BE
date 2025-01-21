@@ -4,13 +4,13 @@ import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
-import com.checkping.dto.question.QuestionResponse.QuestionListDto;
-import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -47,6 +47,8 @@ public class QuestionServiceImpl implements QuestionService {
         // dto -> entity
         Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
         initQuestion.activate();
+        initQuestion.updateCategory(Question.Category.QUESTION);
+        initQuestion.updateStatus(Question.Status.WAIT);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
