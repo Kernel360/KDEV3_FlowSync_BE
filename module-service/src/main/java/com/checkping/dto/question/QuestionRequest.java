@@ -26,14 +26,14 @@ public class QuestionRequest {
         content : 게시글 본문 내용
         category : 게시글 카테고리 (enum, String
         status : 게시글 상태 (enum, String)
-        questionLinkList : 첨부 링크 리스트 (List<QuestionLinkRequest.RegisterDto>)
+        linkList : 첨부 링크 리스트 (List<QuestionLinkRequest.RegisterDto>)
          */
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<QuestionLinkRequest.RegisterDto> taskBoardLinkList;
+        private List<QuestionLinkRequest.RegisterDto> linkList;
 
         /**
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
