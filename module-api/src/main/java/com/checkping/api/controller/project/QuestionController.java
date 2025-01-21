@@ -47,13 +47,13 @@ public class QuestionController implements QuestionApi {
     @GetMapping("/posts")
     @Override
     public BaseResponse<List<QuestionListDto>> getQuestionList(
-        @RequestParam(required = false) String boardCategory,
-        @RequestParam(required = false) String boardStatus,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String status,
         @RequestParam(required = false) String keyword) {
 
         // RequestParam -> SearchCondition
-        QuestionRequest.SearchCondition searchCondition = new SearchCondition(boardCategory,
-            boardStatus, keyword);
+        QuestionRequest.SearchCondition searchCondition = new SearchCondition(category,
+            status, keyword);
 
         // getTaskBoardList
         List<QuestionListDto> questionListDtoList = questionService.getTaskBoardList(
