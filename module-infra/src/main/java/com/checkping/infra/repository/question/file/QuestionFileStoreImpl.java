@@ -54,6 +54,11 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
     @Override
     public List<QuestionFile> storeFileList(Question question, List<FileRequest> fileList) {
 
+        // empty check
+        if (fileList.isEmpty()) {
+            return List.of();
+        }
+
         // File Dto -> Entity
         List<QuestionFile> files = fileList.stream()
             .map(request -> createQuestionFile(question, request))
