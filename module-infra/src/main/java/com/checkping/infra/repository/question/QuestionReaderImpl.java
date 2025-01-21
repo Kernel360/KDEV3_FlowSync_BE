@@ -1,8 +1,8 @@
 package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.Question.BoardCategory;
-import com.checkping.domain.question.Question.BoardStatus;
+import com.checkping.domain.question.Question.Category;
+import com.checkping.domain.question.Question.Status;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,45 +19,45 @@ public class QuestionReaderImpl implements QuestionReader {
     /**
      * Question 전체 조회 및 필터링 조회
      *
-     * @param boardCategory Question.BoardCategory
-     * @param boardStatus   Question.BoardStatus
+     * @param category Question.Category
+     * @param status   Question.Status
      * @param keyword       검색어
      * @return Question 전체 조회
      */
     @Override
-    public List<Question> getTaskBoard(BoardCategory boardCategory, BoardStatus boardStatus,
+    public List<Question> getTaskBoard(Category category, Status status,
         String keyword) {
 
-        // keyword, boardCategory, boardStatus
-        if (boardCategory != null && boardStatus != null && keyword != null) {
-            return questionRepository.findByBoardCategoryAndBoardStatusAndTitleContaining(boardCategory,
-                boardStatus, keyword);
+        // keyword, category, status
+        if (category != null && status != null && keyword != null) {
+            return questionRepository.findByCategoryAndStatusAndTitleContaining(category,
+                status, keyword);
         }
 
-        // boardCategory AND boardStatus
-        if (boardCategory != null && boardStatus != null) {
-            return questionRepository.findByBoardCategoryAndBoardStatus(boardCategory,
-                boardStatus);
+        // category AND status
+        if (category != null && status != null) {
+            return questionRepository.findByCategoryAndStatus(category,
+                status);
         }
 
-        // boardCategory AND keyword
-        if (boardCategory != null && keyword != null) {
-            return questionRepository.findTaskBoardByBoardCategoryAndTitleContaining(boardCategory, keyword);
+        // category AND keyword
+        if (category != null && keyword != null) {
+            return questionRepository.findTaskBoardByCategoryAndTitleContaining(category, keyword);
         }
 
-        // boardStatus AND keyword
-        if (boardStatus != null && keyword != null) {
-            return questionRepository.findTaskBoardByBoardStatusAndTitleContaining(boardStatus, keyword);
+        // status AND keyword
+        if (status != null && keyword != null) {
+            return questionRepository.findTaskBoardByStatusAndTitleContaining(status, keyword);
         }
 
-        // boardCategory
-        if (boardCategory != null) {
-            return questionRepository.findByBoardCategory(boardCategory);
+        // category
+        if (category != null) {
+            return questionRepository.findByCategory(category);
         }
 
-        // boardStatus
-        if (boardStatus != null) {
-            return questionRepository.findByBoardStatus(boardStatus);
+        // status
+        if (status != null) {
+            return questionRepository.findByStatus(status);
         }
 
         // keyword

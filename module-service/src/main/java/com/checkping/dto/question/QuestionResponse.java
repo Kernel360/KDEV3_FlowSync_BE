@@ -2,6 +2,8 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
+import com.checkping.domain.question.Question.Category;
+import com.checkping.domain.question.Question.Status;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.link.QuestionLinkResponse.QuestionLinkDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,8 +32,8 @@ public class QuestionResponse {
         regAt : 게시글 작성 일시
         editAt : 게시글 마지막 수정 일시
         approverAt : 게시글 승인 일시
-        boardCategory : 게시글 카테고리 (enum, String)
-        boardStatus : 게시글 상태 (enum, String)
+        category : 게시글 카테고리 (enum, String)
+        status : 게시글 상태 (enum, String)
         deletedYn : 게시글 삭제 여부 ('Y' 또는 'N')
          */
         private Long id;
@@ -51,9 +53,9 @@ public class QuestionResponse {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
         @Schema(description = "게시글 유형")
-        private Question.BoardCategory boardCategory;
+        private Category category;
         @Schema(description = "게시글 상태")
-        private Question.BoardStatus boardStatus;
+        private Status status;
         private Question.DeleteStatus deletedYn;
 
         public static QuestionListDto toDto(Question question) {
@@ -65,8 +67,8 @@ public class QuestionResponse {
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
             boardDto.setApproverAt(question.getApproverAt());
-            boardDto.setBoardCategory(question.getBoardCategory());
-            boardDto.setBoardStatus(question.getBoardStatus());
+            boardDto.setCategory(question.getCategory());
+            boardDto.setStatus(question.getStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
             return boardDto;
         }
@@ -85,8 +87,8 @@ public class QuestionResponse {
         regAt : 게시글 작성 일시
         editAt : 게시글 마지막 수정 일시
         approverAt : 게시글 승인 일시
-        boardCategory : 게시글 카테고리 (enum, String)
-        boardStatus : 게시글 상태 (enum, String)
+        category : 게시글 카테고리 (enum, String)
+        status : 게시글 상태 (enum, String)
         deletedYn : 게시글 삭제 여부 ('Y' 또는 'N')
         commentList : 게시글 댓글 리스트
          */
@@ -107,9 +109,9 @@ public class QuestionResponse {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime approverAt;
         @Schema(description = "게시글 유형")
-        private Question.BoardCategory boardCategory;
+        private Category category;
         @Schema(description = "게시글 상태")
-        private Question.BoardStatus boardStatus;
+        private Status status;
         private Question.DeleteStatus deletedYn;
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentDto> commentList;
@@ -127,8 +129,8 @@ public class QuestionResponse {
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
             boardDto.setApproverAt(question.getApproverAt());
-            boardDto.setBoardCategory(question.getBoardCategory());
-            boardDto.setBoardStatus(question.getBoardStatus());
+            boardDto.setCategory(question.getCategory());
+            boardDto.setStatus(question.getStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
 
             // Entity -> Dto (QuestionComment)
