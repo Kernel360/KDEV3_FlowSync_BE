@@ -19,12 +19,12 @@ public class QuestionCommentReaderImpl implements QuestionCommentReader {
     /**
      * 업무 관리 게시글 댓글의 게시글 포함 여부
      *
-     * @param taskBoardId 업무 관리 게시글 ID
-     * @param taskBoardCommentId 업무 관리 게시글 댓글 ID
+     * @param questionId 업무 관리 게시글 ID
+     * @param questionCommentId 업무 관리 게시글 댓글 ID
      * @return 업무 관리 게시글 댓글의 해당 업무 관리 게시글 포함 여부
      */
     @Override
-    public boolean checkCommentContaining(Long taskBoardId, Long taskBoardCommentId) {
-        return questionCommentRepository.existsByIdAndQuestionId(taskBoardId, taskBoardCommentId);
+    public boolean checkCommentContaining(Long questionId, Long questionCommentId) {
+        return questionCommentRepository.existsByIdAndQuestionId(questionId, questionCommentId);
     }
 }
