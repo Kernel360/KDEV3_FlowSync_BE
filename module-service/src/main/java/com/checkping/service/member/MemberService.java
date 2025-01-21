@@ -56,7 +56,7 @@ public class MemberService {
 
         //페이지에 음수들어온 경우 예외 처리
         if(page < 0 || size < 0) {
-            throw new InvalidInputValueException("페이지 번호와 사이즈는 0보다 커야합니다.(페이지 입력값은 1보다 커야 합니다)");
+            throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
         }
         //범위 바깥의 페이지 요청
         if(page >= memberPage.getTotalPages()) {
