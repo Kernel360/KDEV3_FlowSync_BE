@@ -12,8 +12,8 @@ public class QuestionCommentReaderImpl implements QuestionCommentReader {
     private final QuestionCommentRepository questionCommentRepository;
 
     @Override
-    public Optional<QuestionComment> getByTaskBoardCommentId(Long taskBoardCommentId) {
-        return questionCommentRepository.findById(taskBoardCommentId);
+    public Optional<QuestionComment> getByQuestionCommentId(Long questionCommentId) {
+        return questionCommentRepository.findById(questionCommentId);
     }
 
     /**

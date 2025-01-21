@@ -68,7 +68,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
             taskBoardCommentId).orElseThrow(
             QuestionCommentNotFoundEntityException::new);
 
@@ -100,7 +100,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
             taskBoardCommentId).orElseThrow(
             QuestionCommentNotFoundEntityException::new);
 
@@ -131,7 +131,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         }
 
         // find QuestionComment Entity
-        QuestionComment initComment = questionCommentReader.getByTaskBoardCommentId(
+        QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
             taskBoardCommentId).orElseThrow(QuestionCommentNotFoundEntityException::new);
 
         // update
