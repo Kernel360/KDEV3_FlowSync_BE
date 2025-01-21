@@ -36,4 +36,31 @@ public record FileResponse(String originalName, String saveName, String url, lon
 
         return questionFiles.stream().map(FileResponse::toDto).toList();
     }
+
+
+    /**
+     * FileRequest Dto -> FileResponse Dto
+     *
+     * @param request FileRequest Dto
+     * @return FileResponse Dto
+     */
+    public static FileResponse toDto(FileRequest request) {
+        return FileResponse.builder().originalName(request.originalName())
+            .saveName(request.saveName()).url(request.url())
+            .size(request.size()).build();
+    }
+
+    /**
+     * FileRequest Dto List -> FileResponse Dto List
+     *
+     * @param requests FileRequest Dto List
+     * @return FileResponse Dto List
+     */
+    public static List<FileResponse> toResponseDtoList(List<FileRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return requests.stream().map(FileResponse::toDto).toList();
+    }
 }
