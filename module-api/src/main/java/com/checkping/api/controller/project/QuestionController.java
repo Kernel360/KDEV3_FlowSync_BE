@@ -46,7 +46,7 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/posts")
     @Override
-    public BaseResponse<List<QuestionListDto>> getTaskBoardList(
+    public BaseResponse<List<QuestionListDto>> getQuestionList(
         @RequestParam(required = false) String boardCategory,
         @RequestParam(required = false) String boardStatus,
         @RequestParam(required = false) String keyword) {
@@ -64,7 +64,7 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/posts/{postId}")
     @Override
-    public BaseResponse<QuestionItemDto> getTaskBoard(@PathVariable Long postId) {
+    public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long postId) {
 
         QuestionItemDto questionItemDto = questionService.getTaskBoardById(postId);
 
@@ -73,7 +73,7 @@ public class QuestionController implements QuestionApi {
 
     @PutMapping("/posts/{postId}")
     @Override
-    public BaseResponse<QuestionItemDto> updateTaskBoard(@PathVariable Long postId,
+    public BaseResponse<QuestionItemDto> updateQuestion(@PathVariable Long postId,
         @RequestBody QuestionRequest.UpdateDto request) {
 
         QuestionItemDto updatedBoardDto = questionService.update(postId,
@@ -84,7 +84,7 @@ public class QuestionController implements QuestionApi {
 
     @DeleteMapping("/posts/{postId}")
     @Override
-    public BaseResponse<QuestionListDto> deleteSoftTaskBoard(
+    public BaseResponse<QuestionListDto> deleteSoftQuestion(
         @PathVariable Long postId) {
 
         QuestionListDto deletedBoardDto = questionService.deleteSoft(postId);
@@ -105,7 +105,7 @@ public class QuestionController implements QuestionApi {
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     @Override
-    public BaseResponse<QuestionCommentDto> deleteSoft(
+    public BaseResponse<QuestionCommentDto> deleteSoftComment(
         @PathVariable Long postId, @PathVariable Long commentId) {
 
         QuestionCommentDto deletedCommentDto = questionCommentService.deleteSoft(
