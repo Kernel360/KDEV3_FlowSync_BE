@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@Tag(name = "회원 관리 API", description = "회원 관리 관련 REST API")
+@Tag(name = "회원 관리 API(MemberApi)", description = "회원 관리 API입니다.")
 @RestController
 @RequestMapping("/admins/members")
 public class MemberController implements MemberApi {
@@ -32,8 +32,10 @@ public class MemberController implements MemberApi {
 
     @Override
     @GetMapping
-    public BaseResponse<MemberListResponseDto> getAllMembers() {
-        MemberListResponseDto response = memberService.getAllMemberListAsDto();
+    public BaseResponse<MemberListResponseDto> getAllMembers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        MemberListResponseDto response = memberService.getAllMembersWithPaging(page-1, size);
         return BaseResponse.success(response);
     }
 

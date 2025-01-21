@@ -60,6 +60,7 @@ public class ProjectRequest {
                 .detail(resisterDto.getDetail())
                 .status(Project.Status.IN_PROGRESS)
                 .management_step(Project.ManagementStep.IN_PROGRESS)
+                .regAt(LocalDateTime.now())
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .resisterId(resisterDto.getResisterId())
@@ -96,7 +97,12 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         private Long updaterId;
 
-        public static Project toEntity(UpdateDto updateDto, Project existingProject) {
+        private String developerOrgId;
+        private String customerOrgId;
+
+        private List<String> members;
+
+        public static Project toEntity(UpdateDto updateDto, Project existingProject, List<Organization> organizations, List<Member> members) {
             return existingProject.toBuilder()
                 .id(existingProject.getId())
                 .name(updateDto.getName())
@@ -108,6 +114,8 @@ public class ProjectRequest {
                 .closeAt(updateDto.getCloseAt())
                 .updateAt(LocalDateTime.now())
                 .updaterId(updateDto.getUpdaterId())
+                .organizations(organizations)
+                .members(members)
                 .build();
         }
     }
