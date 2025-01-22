@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class notice extends BaseEntity {
+public class Notice extends BaseEntity {
 
     /*
         id : 공지사항 아이디
