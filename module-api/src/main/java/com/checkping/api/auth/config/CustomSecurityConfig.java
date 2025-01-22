@@ -98,7 +98,7 @@ public class CustomSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
-        configuration.setAllowedOrigins(List.of("https://www.flowssync.com", "http://localhost:3000", "https://dev.flowssync.com"));
+        configuration.setAllowedOrigins(List.of("https://www.flowssync.com", "http://localhost:3000", "https://dev.flowssync.com", "https://api.flowssync.com", "https://test.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
