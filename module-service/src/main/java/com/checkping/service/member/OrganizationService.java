@@ -1,9 +1,12 @@
 package com.checkping.service.member;
 
-import com.checkping.dto.*;
+import com.checkping.common.dto.PageRequestDto;
+import com.checkping.common.dto.PageResponseDto;
+import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationUpdate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationService {
@@ -12,7 +15,7 @@ public interface OrganizationService {
 
     OrganizationGet.Response getOrganization(UUID id);
 
-    List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status);
+    PageResponseDto<OrganizationGet.Response> getListOrganization(String type, String status, PageRequestDto pageRequestDto);
 
     OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request, MultipartFile file);
 

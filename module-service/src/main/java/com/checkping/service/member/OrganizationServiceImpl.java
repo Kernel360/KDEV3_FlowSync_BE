@@ -1,5 +1,7 @@
 package com.checkping.service.member;
 
+import com.checkping.common.dto.PageRequestDto;
+import com.checkping.common.dto.PageResponseDto;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
@@ -10,6 +12,9 @@ import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,34 +65,24 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OrganizationGet.Response> getAllByTypeAndStatusOrganizations(String type, String status) {
+    public PageResponseDto<OrganizationGet.Response> getListOrganization(String type, String status, PageRequestDto pageRequestDto) {
 
-        // 전체 조회
-        if (type == null && status == null) {
-            return organizationRepository.findAll().stream()
-                    .map(OrganizationGet.Response::toDto)
-                    .collect(Collectors.toList());
-        }
-        // 전체 조회 (상태별)
-        else if (type == null) {
-            return organizationRepository.findByStatus(Organization.Status.valueOf(status.toUpperCase())).stream()
-                    .map(OrganizationGet.Response::toDto)
-                    .collect(Collectors.toList());
-        }
-        // 타입별 전체 조회
-        else if (status == null) {
-            return organizationRepository.findByType(Organization.Type.valueOf(type.toUpperCase())).stream()
-                    .map(OrganizationGet.Response::toDto)
-                    .collect(Collectors.toList());
-        }
-        // 타입별 전체 조회 (상태별)
-        else {
-            return organizationRepository.findByTypeAndStatus(
-                            Organization.Type.valueOf(type.toUpperCase()),
-                            Organization.Status.valueOf(status.toUpperCase())).stream()
-                    .map(OrganizationGet.Response::toDto)
-                    .collect(Collectors.toList());
-        }
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
+
+        Page<Organization> result = organizationRepository.findByTypeAndStatus(
+                type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
+                status != null ? Organization.Status.valueOf(status.toUpperCase()) : null,
+                pageable);
+
+        List<OrganizationGet.Response> dtoList = result.getContent().stream().map(OrganizationGet.Response::toDto).toList();
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDto.<OrganizationGet.Response>builder()
+                .dtoList(dtoList)
+                .pageRequestDto(pageRequestDto)
+                .totalCount((int)totalCount)
+                .build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -141,5 +135,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return OrganizationGet.Response.toDto(removeOrganization);
     }
+
 
 }
