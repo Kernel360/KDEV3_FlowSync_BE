@@ -1,12 +1,12 @@
 package com.checkping.service.member;
 
-import com.checkping.common.enums.ErrorCode;
-import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
+import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
+import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,17 +32,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationCreate.Response createOrganization(OrganizationCreate.Request request, MultipartFile file) {
 
-        if (request == null) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
-
         if (organizationRepository.findByNameAndType(request.getName(), request.getTypeEnum()).isPresent()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new OrganizationAlreadyExistEntityException();
         }
 
-        if (file != null ) {
+        if (file != null) {
             FileRequest fileRequest = s3FileRepository.uploadFile(file);
-            request.setBrCertificateUrl(fileRequest.saveName()+"|"+fileRequest.url());
+            request.setBrCertificateUrl(fileRequest.saveName() + "|" + fileRequest.url());
         }
 
         Organization organization = OrganizationCreate.Request.toEntity(request);
@@ -58,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
-        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
         return OrganizationGet.Response.toDto(organization);
     }
@@ -88,8 +84,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         // 타입별 전체 조회 (상태별)
         else {
             return organizationRepository.findByTypeAndStatus(
-                    Organization.Type.valueOf(type.toUpperCase()),
-                    Organization.Status.valueOf(status.toUpperCase())).stream()
+                            Organization.Type.valueOf(type.toUpperCase()),
+                            Organization.Status.valueOf(status.toUpperCase())).stream()
                     .map(OrganizationGet.Response::toDto)
                     .collect(Collectors.toList());
         }
@@ -103,7 +99,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             MultipartFile file
     ) {
         Optional<Organization> result = organizationRepository.findById(id);
-        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
         // 저장 파일명
         String saveName = organization.getBrCertificateUrl().split("\\|")[0];
@@ -111,7 +107,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         // 수정 파일 등록
         if (file != null) {
             FileRequest fileRequest = s3FileRepository.uploadFile(file);
-            request.setBrCertificateUrl(fileRequest.saveName()+"|"+fileRequest.url());
+            request.setBrCertificateUrl(fileRequest.saveName() + "|" + fileRequest.url());
         }
 
         organization.updateOrganization(
@@ -137,7 +133,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
-        Organization organization = result.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
         organization.changeStatus();
 
