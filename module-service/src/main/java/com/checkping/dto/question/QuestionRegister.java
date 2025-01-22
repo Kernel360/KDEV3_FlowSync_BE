@@ -2,7 +2,7 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.question.Question;
-import com.checkping.dto.question.link.QuestionLinkRequest.RegisterDto;
+import com.checkping.dto.question.link.QuestionLinkRegister;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -28,7 +28,7 @@ public class QuestionRegister {
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
         private String content;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<RegisterDto> linkList;
+        private List<QuestionLinkRegister.Request> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileRequest> fileInfoList;
 
@@ -39,8 +39,10 @@ public class QuestionRegister {
          * @return Question Entity
          */
         public static Question toEntity(QuestionRegister.Request registerDto) {
-            return Question.builder().title(registerDto.getTitle())
-                .content(registerDto.getContent()).build();
+            return Question.builder()
+                .title(registerDto.getTitle())
+                .content(registerDto.getContent())
+                .build();
         }
     }
 
