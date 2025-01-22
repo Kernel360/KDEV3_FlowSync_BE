@@ -44,7 +44,10 @@ public class CurrentMemberUtil {
      */
     public Member getCurrentMember() {
         String email = getCurrentUserEmail();
-        Optional<Member> result = memberRepository.findByEmail(email);// 현재 인증된 사용자의 이메일을 가져옴
+//        Optional<Member> result = memberRepository.findByEmail(email);// 현재 인증된 사용자의 이메일을 가져옴
+
+        // 1/22 테스트용 코드 (관리자 계정으로 로그인) //TODO: 추후 삭제
+        Optional<Member> result = memberRepository.findByEmail("admin@example.com");
         return result
                 .orElseThrow(() -> new MemberException("사용자를 찾을 수 없습니다: " + email, ErrorCode.USER_NOT_FOUND));
     }
