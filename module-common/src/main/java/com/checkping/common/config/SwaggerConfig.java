@@ -43,7 +43,7 @@ public class SwaggerConfig {
 
                 return cls.getName()
                     .substring(cls.getName().lastIndexOf(".") + 1)
-                    .replace("$", "");
+                    .replace("$", ".");
             }
         };
 
