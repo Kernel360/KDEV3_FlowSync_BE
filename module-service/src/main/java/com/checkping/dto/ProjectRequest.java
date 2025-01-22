@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -40,16 +41,18 @@ public class ProjectRequest {
         private String detail;
         private String status;
         private String managementStep;
+        private Long progressStepId;
         @Schema(description = "프로젝트 시작 일시", example = "yyyy-MM-dd HH:mm:ss" )
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
         @Schema(description = "프로젝트 마감 일시", examples = {"2025-01-15 10:17:15", "2025-12-28 11:17:15"} )
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
-        private Long resisterId;
+        private UUID resisterId;
+        private UUID devOwnerId;
 
-        private String developerOrgId;
-        private String customerOrgId;
+        private UUID developerOrgId;
+        private UUID customerOrgId;
 
         private List<String> members;
 
@@ -64,6 +67,7 @@ public class ProjectRequest {
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .resisterId(resisterDto.getResisterId())
+                .devOwnerId(resisterDto.getDevOwnerId())
                 .organizations(organizations)
                 .members(members)
                 .deletedYn("N")
@@ -91,14 +95,16 @@ public class ProjectRequest {
         private String detail;
         private String status;
         private String managementStep;
+        private Long progressStepId;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
-        private Long updaterId;
+        private UUID updaterId;
+        private UUID devOwnerId;
 
-        private String developerOrgId;
-        private String customerOrgId;
+        private UUID developerOrgId;
+        private UUID customerOrgId;
 
         private List<String> members;
 
@@ -110,6 +116,8 @@ public class ProjectRequest {
                 .detail(updateDto.getDetail())
                 .status(Project.Status.valueOf(updateDto.getStatus()))
                 .management_step(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
+                .progressStepId(updateDto.getProgressStepId())
+                .devOwnerId(updateDto.getDevOwnerId())
                 .startAt(updateDto.getStartAt())
                 .closeAt(updateDto.getCloseAt())
                 .updateAt(LocalDateTime.now())
