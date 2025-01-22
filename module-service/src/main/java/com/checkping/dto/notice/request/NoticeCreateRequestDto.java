@@ -5,14 +5,11 @@ import com.checkping.domain.notice.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeCreateRequest {
+public class NoticeCreateRequestDto {
     private Long adminId;
 
     private String title;
