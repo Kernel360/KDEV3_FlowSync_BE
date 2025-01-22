@@ -18,7 +18,6 @@ import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -64,17 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Long firstStepId = steps.get(0).getId();
 
-        System.out.println(":: " + project);
-
-       /* project.toBuilder()
-                .progressStepId(firstStepId)
-                .build();*/
-
         project.updateProgressStep(firstStepId);
-
-        System.out.println(":: " + project);
-
-        //projectRepository.save(project);
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
