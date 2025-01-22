@@ -50,13 +50,15 @@ public class Approval extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "project_id")
+//    private Project project;
+    private Long projectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "progress_step_id")
-    private ProgressStep progressStep;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "progress_step_id")
+//    private ProgressStep progressStep;
+    private Long progressStepId;
 
     @Column(name = "title", nullable = false, length = 100)
     private String title;
@@ -68,9 +70,10 @@ public class Approval extends BaseEntity {
     @Column(name = "status", nullable = false)
     private ApprovalStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "register_id", nullable = false)
-    private Member register;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "register_id", nullable = false)
+//    private Member register;
+    private Long registerId;
 
     @Column(name = "register_name")
     private String registerName;
