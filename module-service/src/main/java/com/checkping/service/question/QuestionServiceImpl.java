@@ -1,19 +1,18 @@
 package com.checkping.service.question;
 
-import com.checkping.common.utils.FileResponse;
+import com.checkping.domain.project.Project;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionRegister;
-import com.checkping.dto.question.QuestionRegister.Request;
-import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.link.QuestionLinkRequest;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
+import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
@@ -34,18 +33,23 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionCommentStore questionCommentStore;
     private final QuestionLinkStore questionLinkStore;
     private final QuestionFileStore questionFileStore;
+    private final ProjectReader projectReader;
 
     /**
      * 업무 관리 게시글 등록하기
      *
-     * @param request 업무 관리 게시글에 필요한 request
+     * @param projectId 프로젝트 ID
+     * @param request   업무 관리 게시글에 필요한 request
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionItemDto register(Request request) {
+    public QuestionItemDto register(Long projectId, QuestionRegister.Request request) {
 
-        // dto -> entity
-        Question initQuestion = QuestionRegister.Request.toEntity(request);
+        // Project ID -> Project Entity
+        Project project = projectReader.getById(projectId);
+
+        // Question Dto -> Question Entity
+        Question initQuestion = QuestionRegister.Request.toEntity(project, request);
         initQuestion.activate();
         initQuestion.updateCategory(Question.Category.QUESTION);
         initQuestion.updateStatus(Question.Status.WAIT);
@@ -54,7 +58,8 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionStore.store(initQuestion);
 
         // Save & Add QuestionFile List
-        List<QuestionFile> questionFileList = questionFileStore.storeFileList(question, request.getFileInfoList());
+        List<QuestionFile> questionFileList = questionFileStore.storeFileList(question,
+            request.getFileInfoList());
         question.addFile(questionFileList);
 
         // get register info
