@@ -81,7 +81,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return PageResponseDto.<OrganizationGet.Response>builder()
                 .dtoList(dtoList)
                 .pageRequestDto(pageRequestDto)
-                .totalCount((int)totalCount)
+                .totalCount((int) totalCount)
                 .build();
     }
 
@@ -95,8 +95,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         Optional<Organization> result = organizationRepository.findById(id);
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        // 저장 파일명
-        String saveName = organization.getBrCertificateUrl().split("\\|")[0];
+        // 기존 파일이 있다면 삭제
+        if (organization.getBrCertificateUrl() != null && !organization.getBrCertificateUrl().isEmpty()) {
+            // 저장 파일명
+            String saveName = organization.getBrCertificateUrl().split("\\|")[0];
+            // 기존 파일 삭제
+            s3FileRepositoryImpl.deleteFile(saveName);
+        }
 
         // 수정 파일 등록
         if (file != null) {
@@ -113,9 +118,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         );
 
         Organization updateOrganization = organizationRepository.save(organization);
-
-        // 기존 파일 삭제
-        s3FileRepositoryImpl.deleteFile(saveName);
 
         OrganizationUpdate.Response.toDto(updateOrganization);
 
