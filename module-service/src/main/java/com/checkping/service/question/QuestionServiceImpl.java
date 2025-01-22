@@ -49,10 +49,11 @@ public class QuestionServiceImpl implements QuestionService {
         Project project = projectReader.getById(projectId);
 
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(project, request);
+        Question initQuestion = QuestionRegister.Request.toEntity(request);
         initQuestion.activate();
         initQuestion.updateCategory(Question.Category.QUESTION);
         initQuestion.updateStatus(Question.Status.WAIT);
+        initQuestion.containedProject(project);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
