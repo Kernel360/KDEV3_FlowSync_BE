@@ -75,9 +75,9 @@ public class CustomSecurityConfig {
                         //anyRequest().authenticated());
                         .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
-        //기능 테스트 위해서 일시적인 주석처리 2025/01/15
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        //기능 테스트 위해서 일시적인 주석처리 2025/01/15 TODO : 추후 주석 해제
+//        http
+//                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http
