@@ -1,9 +1,6 @@
 package com.checkping.domain.approval;
 
 import com.checkping.domain.BaseEntity;
-import com.checkping.domain.member.Member;
-import com.checkping.domain.project.ProgressStep;
-import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,8 +9,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -85,8 +80,8 @@ public class Approval extends BaseEntity {
     private LocalDateTime updatedAt;
 
     @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "reg_at")
+    private LocalDateTime regAt;
 
     @OneToMany(mappedBy = "approval", fetch = FetchType.LAZY)
     private List<ApprovalComment> commentList;
