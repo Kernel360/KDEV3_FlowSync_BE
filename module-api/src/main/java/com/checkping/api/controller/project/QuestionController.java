@@ -1,7 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.question.QuestionRegister;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequestMapping("/project/{projectId}")
 @RequiredArgsConstructor
 public class QuestionController implements QuestionApi {
 
@@ -33,10 +35,9 @@ public class QuestionController implements QuestionApi {
     @PostMapping(value = "/question")
     @Override
     public BaseResponse<QuestionItemDto> register(
-        @RequestBody QuestionRegister.Request request) {
+        @PathVariable Long projectId, @RequestBody Request request) {
 
-
-        QuestionItemDto taskBoardDto = questionService.register(request);
+        QuestionItemDto taskBoardDto = questionService.register(projectId, request);
 
         return BaseResponse.success(taskBoardDto);
     }
