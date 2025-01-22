@@ -1,8 +1,6 @@
 package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.ProjectRequest;
-import com.checkping.dto.ProjectResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
 import com.checkping.dto.notice.response.NoticeResponseDto;
 import com.checkping.service.notice.NoticeServiceImpl;

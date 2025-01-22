@@ -4,6 +4,9 @@ import com.checkping.domain.BaseEntity;
 import com.checkping.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +32,6 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
     private Long adminId;
 
@@ -47,9 +49,11 @@ public class Notice extends BaseEntity {
     @Column(name = "priority", nullable = false)
     private Priority priority;
 
+    @CreatedDate
     @Column(name = "reg_at", nullable = false)
     private LocalDateTime regAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
