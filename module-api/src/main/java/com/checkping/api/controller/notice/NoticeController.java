@@ -20,8 +20,8 @@ public class NoticeController {
     private NoticeServiceImpl noticeService;
 
     @PostMapping("/admins/notices")
-    public BaseResponse<NoticeResponseDto> resisterProjects(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
-        NoticeResponseDto noticeResponseDto  = noticeService.registerNotice(noticeCreateRequestDto);
+    public BaseResponse<NoticeResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
+        NoticeResponseDto noticeResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
         return BaseResponse.success(noticeResponseDto);
     }
 }
