@@ -2,6 +2,7 @@ package com.checkping.api.auth.config;
 
 
 import com.checkping.api.auth.filter.CustomLogoutFilter;
+import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
 import java.util.List;
@@ -74,7 +75,7 @@ public class CustomSecurityConfig {
                         //anyRequest().authenticated());
                         .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
-        //기능 테스트 위해서 일시적인 주석처리 2025/01/15
+        //기능 테스트 위해서 일시적인 주석처리 2025/01/15 TODO : 추후 주석 해제
 //        http
 //                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
@@ -98,7 +99,7 @@ public class CustomSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
-        configuration.setAllowedOrigins(List.of("https://www.flowssync.com", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("https://www.flowssync.com", "http://localhost:3000", "https://dev.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));

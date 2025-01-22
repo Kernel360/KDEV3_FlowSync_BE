@@ -53,14 +53,18 @@ public class JWTFilter extends OncePerRequestFilter {
         if (request.getRequestURI().equals("/admins/members")){
             return true;
         }
+
+        // 주소에 swagger 있으면 필터 제외
+        if (request.getRequestURI().contains("swagger")) {
+            return true;
+        }
         
         // 업체 생성시 필터 제외
         if (request.getRequestURI().equals("/admins/organizations")){
             return true;
         }
 
-//        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
-
+        // TODO 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
 
         //return super.shouldNotFilter(request);
             return false;

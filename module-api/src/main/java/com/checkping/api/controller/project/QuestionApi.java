@@ -1,19 +1,16 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.question.QuestionResponse.QuestionListDto;
-import com.checkping.dto.question.comment.QuestionCommentRequest;
+import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
+import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Tag(name = "Question API(QuestionController)", description = "질문 게시판 API 입니다.")
@@ -21,8 +18,7 @@ public interface QuestionApi {
 
     @Operation(summary = "질문 게시글 등록", description = "질문 게시글을 등록하는 기능입니다.")
     BaseResponse<QuestionItemDto> register(
-        @Parameter(description = "등록 게시글 정보", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @RequestPart(value = "content") QuestionRequest.RegisterDto request,
-        @Parameter(description = "등록 첨부 파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList);
+        @Parameter(description = "등록 게시글 정보") QuestionRegister.Request request);
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<List<QuestionListDto>> getQuestionList(

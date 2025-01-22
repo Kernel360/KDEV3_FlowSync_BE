@@ -1,11 +1,13 @@
 package com.checkping.service.question;
 
+import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
+import com.checkping.dto.question.QuestionRegister;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionRequest.RegisterDto;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -21,7 +23,6 @@ import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +38,14 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 등록하기
      *
-     * @param request  업무 관리 게시글에 필요한 request
-     * @param fileList 첨부 파일 리스트
+     * @param request 업무 관리 게시글에 필요한 request
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList) {
+    public QuestionItemDto register(Request request) {
 
         // dto -> entity
-        Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
+        Question initQuestion = QuestionRegister.Request.toEntity(request);
         initQuestion.activate();
         initQuestion.updateCategory(Question.Category.QUESTION);
         initQuestion.updateStatus(Question.Status.WAIT);
@@ -53,11 +53,8 @@ public class QuestionServiceImpl implements QuestionService {
         // save Question entity
         Question question = questionStore.store(initQuestion);
 
-        // Save File in S3
-        List<QuestionFile> questionFileList = questionFileStore.saveFileList(question,
-            fileList);
-
-        // Add QuestionFile List
+        // Save & Add QuestionFile List
+        List<QuestionFile> questionFileList = questionFileStore.storeFileList(question, request.getFileInfoList());
         question.addFile(questionFileList);
 
         // get register info

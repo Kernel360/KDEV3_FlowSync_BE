@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -12,7 +13,6 @@ import com.checkping.service.question.comment.QuestionCommentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -32,14 +30,13 @@ public class QuestionController implements QuestionApi {
     private final QuestionService questionService;
     private final QuestionCommentService questionCommentService;
 
-    @PostMapping(value = "/question", consumes = {MediaType.APPLICATION_JSON_VALUE,
-        MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/question")
     @Override
     public BaseResponse<QuestionItemDto> register(
-        @RequestPart(value = "content") QuestionRequest.RegisterDto request,
-        @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
+        @RequestBody QuestionRegister.Request request) {
 
-        QuestionItemDto taskBoardDto = questionService.register(request, fileList);
+
+        QuestionItemDto taskBoardDto = questionService.register(request);
 
         return BaseResponse.success(taskBoardDto);
     }
