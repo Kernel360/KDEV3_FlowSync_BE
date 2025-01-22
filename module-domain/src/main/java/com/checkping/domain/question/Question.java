@@ -104,11 +104,13 @@ public class Question extends BaseEntity {
     private Member updater;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+//    @JoinColumn(name = "project_id", nullable = false, updatable = false)
+    @JoinColumn(name = "project_id", updatable = false)
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "progress_step_id", nullable = false)
+//    @JoinColumn(name = "progress_step_id", nullable = false)
+    @JoinColumn(name = "progress_step_id")
     private ProgressStep progressStep;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
@@ -202,5 +204,10 @@ public class Question extends BaseEntity {
             // Add QuestionFile
             addFile(file);
         }
+    }
+
+    // Contained Project
+    public void containedProject(Project project) {
+        this.project = project;
     }
 }
