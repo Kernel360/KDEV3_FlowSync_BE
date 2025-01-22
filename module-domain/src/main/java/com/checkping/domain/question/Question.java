@@ -24,7 +24,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -182,6 +181,15 @@ public class Question extends BaseEntity {
         // null check & contains check
         if (link != null && !this.questionLinkList.contains(link)) {
             this.questionLinkList.add(link);
+        }
+    }
+
+    // ADD QuestionLink List
+    public void addLink(List<QuestionLink> linkList) {
+        // loop for Add
+        for (QuestionLink link : linkList) {
+            // Add QuestionLink
+            addLink(link);
         }
     }
 
