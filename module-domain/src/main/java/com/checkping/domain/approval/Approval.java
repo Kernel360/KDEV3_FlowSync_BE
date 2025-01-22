@@ -50,14 +50,10 @@ public class Approval extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "project_id")
-//    private Project project;
+    // TODO : 연관 관계 맵핑 필요
     private Long projectId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "progress_step_id")
-//    private ProgressStep progressStep;
+    // TODO : 연관 관계 맵핑 필요
     private Long progressStepId;
 
     @Column(name = "title", nullable = false, length = 100)
@@ -66,13 +62,7 @@ public class Approval extends BaseEntity {
     @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private ApprovalStatus status;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "register_id", nullable = false)
-//    private Member register;
+    // TODO : 연관 관계 맵핑 필요
     private Long registerId;
 
     @Column(name = "register_name")
@@ -84,9 +74,8 @@ public class Approval extends BaseEntity {
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "approver_id")
-    private Member approver;
+    // TODO : 연관 관계 맵핑 필요
+    private Long approverId;
 
     @Column(name = "approver_name")
     private String approverName;
@@ -106,11 +95,15 @@ public class Approval extends BaseEntity {
     private List<ApprovalLink> linkList;
 
     @OneToMany(mappedBy = "approval", fetch = FetchType.LAZY)
-    private List<ApprovalFile>  fileList;
+    private List<ApprovalFile> fileList;
 
     /*
     ENUM
      */
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ApprovalStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
@@ -129,4 +122,29 @@ public class Approval extends BaseEntity {
         Y("비활성화"), N("활성화");
         private final String description;
     }
+
+    /*
+    Generate
+     */
+
+    public static Approval generate(Long projectId, Long progressStepId, Long registerId,
+        String registerName, String title, String content) {
+
+        Approval approval = new Approval();
+        approval.title = title;
+        approval.content = content;
+
+        // TODO : 엔티티를 참조하도록 변경 필요
+        approval.projectId = projectId;
+        approval.progressStepId = progressStepId;
+        approval.registerId = registerId;
+        approval.registerName = registerName;
+
+        // 생성 시 기본 값
+        approval.status = ApprovalStatus.WAIT;
+        approval.deleteYn = DeleteStatus.N;
+
+        return approval;
+    }
+
 }
