@@ -31,7 +31,7 @@ public class Notice extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    private Member member;
+    private Long adminId;
 
     @Column(name = "title", nullable = false)
     private String title;
