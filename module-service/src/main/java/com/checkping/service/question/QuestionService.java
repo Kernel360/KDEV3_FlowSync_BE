@@ -8,7 +8,7 @@ import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import java.util.List;
 
 public interface QuestionService {
-    QuestionItemDto register(Request request);
+    QuestionItemDto register(Long projectId, Request request);
     List<QuestionListDto> getQuestionList(QuestionRequest.SearchCondition searchCondition);
     QuestionItemDto getQuestionById(Long taskBoardId);
     QuestionListDto deleteSoft (Long taskBoardId);
