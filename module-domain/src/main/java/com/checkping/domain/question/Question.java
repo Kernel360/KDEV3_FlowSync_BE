@@ -145,9 +145,8 @@ public class Question extends BaseEntity {
         question.progressStepId = progressStepId;
         question.title = title;
         question.content = content;
-        question.category = category;
 
-        question.updateCategory(Question.Category.QUESTION);
+        question.updateCategory(category);
         question.updateStatus(Question.Status.WAIT);
         question.activate();
 
