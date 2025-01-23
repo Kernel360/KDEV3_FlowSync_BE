@@ -1,11 +1,11 @@
 package com.checkping.service.question;
 
-import com.checkping.domain.project.Project;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionRegister;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -43,7 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionItemDto register(Long projectId, QuestionRegister.Request request) {
+    public QuestionRegister.Response register(Long projectId, Request request) {
 
         // Question Dto -> Question Entity
         Question initQuestion = QuestionRegister.Request.toEntity(projectId, request);
@@ -66,7 +66,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.addLink(links);
 
         // Entity -> Dto
-        return QuestionItemDto.toDto(question);
+        return QuestionRegister.Response.toDto(question);
     }
 
     /**
