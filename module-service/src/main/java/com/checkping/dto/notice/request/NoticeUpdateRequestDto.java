@@ -26,5 +26,4 @@ public class NoticeUpdateRequestDto {
                 .priority(Notice.Priority.valueOf(priority))
                 .build();
     }
-
 }

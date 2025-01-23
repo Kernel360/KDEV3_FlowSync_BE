@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 public class NoticeUpdateResponseDto {
 
+    private Long id;
+
     private Long adminId;
 
     private String title;
@@ -29,6 +31,7 @@ public class NoticeUpdateResponseDto {
 
     public static NoticeUpdateResponseDto toDto(Notice notice){
         return NoticeUpdateResponseDto.builder()
+                .id(notice.getId())
                 .adminId(notice.getAdminId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
