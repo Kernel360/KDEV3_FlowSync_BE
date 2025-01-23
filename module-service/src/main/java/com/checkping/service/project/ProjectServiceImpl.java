@@ -10,6 +10,7 @@ import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
+import com.checkping.infra.repository.project.ProjectDetailsDto;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
@@ -95,10 +96,12 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
+            request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
+        project = projectRepository.save(
+            ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
@@ -131,6 +134,12 @@ public class ProjectServiceImpl implements ProjectService {
                         tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
                         tuple -> (Long) tuple.get("projectCount")
                 ));
+    }
+
+    @Override
+    public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
     }
 
     private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {

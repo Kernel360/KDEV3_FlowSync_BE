@@ -18,8 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProjectController {
 
-    @Autowired
-    private ProjectServiceImpl projectService;
+    private final ProjectServiceImpl projectService;
 
     @PostMapping("/admins/projects")
     public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@RequestBody ProjectRequest.ResisterDto request) {
@@ -57,5 +56,11 @@ public class ProjectController {
     public BaseResponse<Map<String, Long>> countProjectsByManagementStep() {
         Map<String, Long> managementCountMap = projectService.countProjectsByManagementStep();
         return BaseResponse.success(managementCountMap);
+    }
+
+    @GetMapping(value = {"/admins/projects/{projectId}", "/projects/{projectId}"})
+    public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
+        ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
+        return BaseResponse.success(project);
     }
 }
