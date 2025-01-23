@@ -35,7 +35,7 @@ public class ReissueController implements ReissueApi {
         String newRefresh = reissueService.generateRefreshToken(name, email, role);
 
         // Set response
-        response.setHeader("Authorization", "Bearer " + newAccess);
+        response.addCookie(ResponseUtil.createCookie("access", newAccess));
         response.addCookie(ResponseUtil.createCookie("refresh", newRefresh));
 
         return BaseResponse.success("Reissue success");

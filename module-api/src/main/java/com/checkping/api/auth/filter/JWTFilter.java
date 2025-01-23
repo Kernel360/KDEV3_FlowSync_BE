@@ -4,12 +4,13 @@ package com.checkping.api.auth.filter;
 import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.exception.auth.AccessTokenNotFoundException;
 import com.checkping.service.member.util.JwtUtil;
 import com.checkping.service.member.auth.CustomUserDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -48,23 +47,19 @@ public class JWTFilter extends OncePerRequestFilter {
         if (request.getRequestURI().startsWith(("/reissue"))) {
             return true;
         }
-        
+
         // 회원 생성 시 필터 제외
         if (request.getRequestURI().equals("/admins/members")){
             return true;
         }
 
-        // 주소에 swagger 있으면 필터 제외
-        if (request.getRequestURI().contains("swagger")) {
-            return true;
-        }
-        
         // 업체 생성시 필터 제외
         if (request.getRequestURI().equals("/admins/organizations")){
             return true;
         }
 
-        // TODO 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
+//        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
+
 
         //return super.shouldNotFilter(request);
             return false;
@@ -78,19 +73,28 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // 헤더에서 access키에 담긴 토큰을 꺼내서 Bearer를 제거 후 accessToken에 담음
-        String authorizationHeader = request.getHeader("Authorization");
+        // 쿠키에서 토큰 추출
+        Cookie[] cookies = request.getCookies();
 
-        // 헤더에 토큰이 없거나 Bearer로 시작하지 않는 경우
-        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        // 쿠키가 없는 경우
+        if (cookies == null) {
 
-            // 실패 응답 생성 (BaseResponse 활용)
             BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         }
 
-        String accessToken = authorizationHeader.substring(7);
+        // access 토큰 추출
+        Cookie cookie = null;
+
+        for (Cookie c : cookies) {
+            if ("access".equals(c.getName())) {
+                cookie = c;
+                break;
+            }
+        }
+
+        String accessToken = cookie.getValue();
 
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음

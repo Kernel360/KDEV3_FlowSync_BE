@@ -15,7 +15,7 @@ public class ResponseUtil {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
         //cookie.setSecure(true);
-        //cookie.setPath("/");
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;
@@ -42,7 +42,7 @@ public class ResponseUtil {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(status.value());
-        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.addCookie(createCookie("access", accessToken));
         response.addCookie(createCookie("refresh", refreshToken));
         response.getWriter().write(objectMapper.writeValueAsString(successResponse));
     }
