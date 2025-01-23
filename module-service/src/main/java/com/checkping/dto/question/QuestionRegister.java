@@ -99,7 +99,7 @@ public class QuestionRegister {
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
-        private List<QuestionLinkDto> linkList;
+        private List<QuestionLinkRegister.Response> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<QuestionFileRegister.Response> fileList;
 
@@ -115,6 +115,8 @@ public class QuestionRegister {
             questionDto.setStatus(question.getStatus());
             questionDto.setFileList(
                 QuestionFileRegister.Response.toDto(question.getQuestionFileList()));
+            questionDto.setLinkList(
+                QuestionLinkRegister.Response.toDto(question.getQuestionLinkList()));
             return questionDto;
         }
     }
