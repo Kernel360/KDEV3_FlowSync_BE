@@ -1,18 +1,16 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.member.auth;
 
 import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.ReissueService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class ReissueController {
+public class ReissueController implements ReissueApi {
 
     private final ReissueService reissueService;
 
@@ -20,7 +18,7 @@ public class ReissueController {
         this.reissueService = reissueService;
     }
 
-    @PostMapping("/reissue")
+    @Override
     public BaseResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         // Get refresh token
