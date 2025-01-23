@@ -10,6 +10,7 @@ import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.project.ProjectReader;
@@ -51,18 +52,16 @@ public class QuestionServiceImpl implements QuestionService {
         // save Question entity
         Question question = questionStore.store(initQuestion);
 
+        // QuestionFileRequest.RegisterDto -> QuestionFile Entity
+        List<QuestionFile> files = QuestionFileRegister.Request.toEntity(question, request.getFileInfoList());
         // Save & Add QuestionFile List
-        List<QuestionFile> questionFileList = questionFileStore.storeFileList(question,
-            request.getFileInfoList());
-        question.addFile(questionFileList);
+        questionFileStore.store(files);
+        question.addFile(files);
 
         // QuestionLinkRequest.RegisterDto -> QuestionLink Entity
-        List<QuestionLink> links = QuestionLinkRegister.toEntity(question, request.getLinkList());
-
-        // save QuestionLink
+        List<QuestionLink> links = QuestionLinkRegister.Request.toEntity(question, request.getLinkList());
+        // Save & Add QuestionLink
         questionLinkStore.store(links);
-
-        // ADD QuestionLink (in Question)
         question.addLink(links);
 
         // Entity -> Dto
