@@ -10,6 +10,7 @@ import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
+import com.checkping.infra.repository.project.ProjectDetailsDto;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
@@ -133,6 +134,12 @@ public class ProjectServiceImpl implements ProjectService {
                         tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
                         tuple -> (Long) tuple.get("projectCount")
                 ));
+    }
+
+    @Override
+    public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
     }
 
     private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {
