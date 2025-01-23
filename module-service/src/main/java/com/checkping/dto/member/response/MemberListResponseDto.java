@@ -1,6 +1,6 @@
 package com.checkping.dto.member.response;
 
-import com.checkping.common.response.PageMetaResponse;
+import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.domain.member.Member;
 import lombok.Getter;
 import org.springframework.data.domain.Page;

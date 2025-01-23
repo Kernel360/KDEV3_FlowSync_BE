@@ -1,4 +1,4 @@
-package com.checkping.common.response;
+package com.checkping.common.dto;
 
 import lombok.Getter;
 
