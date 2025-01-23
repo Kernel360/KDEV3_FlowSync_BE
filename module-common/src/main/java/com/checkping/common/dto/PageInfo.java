@@ -7,12 +7,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class PageInfo {
-
     /*
     page : 페이지 번호
     size : 한 페이지에 나오는 게시글 수
      */
-
     @Getter
     @Setter
     @ToString
@@ -22,12 +20,11 @@ public class PageInfo {
     public static class Request {
 
         @Builder.Default
-        private int page = 1;
+        private int currentpage = 1;
         @Builder.Default
-        private int size = 10;
+        private int pageSize = 10;
 
     }
-
 
     /*
     dtoList :
@@ -56,12 +53,12 @@ public class PageInfo {
             this.dtoList = dtoList;
             this.pageRequest = pageRequest;
             this.totalCount = (int) totalCount;
-            int end = (int) (Math.ceil(pageRequest.getPage() / 10.0)) * 10;
+            int end = (int) (Math.ceil(pageRequest.getCurrentpage() / 10.0)) * 10;
             int start = end - 9;
-            int last = (int) (Math.ceil((totalCount / (double) pageRequest.getSize())));
+            int last = (int) (Math.ceil((totalCount / (double) pageRequest.getPageSize())));
             end = Math.min(end, last);
             this.prev = start > 1;
-            this.next = totalCount > end * pageRequest.getSize();
+            this.next = totalCount > end * pageRequest.getPageSize();
             this.pageNumList = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
             if (prev) {
                 this.prevPage = start - 1;
@@ -70,7 +67,7 @@ public class PageInfo {
                 this.nextPage = end + 1;
             }
             this.totalPage = this.pageNumList.size();
-            this.current = pageRequest.getPage();
+            this.current = pageRequest.getCurrentpage();
         }
     }
 
