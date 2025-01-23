@@ -95,10 +95,6 @@ public class Question extends BaseEntity {
     // TODO : Member register 로 변경할 것
     private Long registerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater_id")
-    private Member updater;
-
     // TODO  : Member updater 로 변경할 것
     private Long updaterId;
 
@@ -138,6 +134,29 @@ public class Question extends BaseEntity {
     public enum DeleteStatus {
         Y("비활성화"), N("활성화");
         private final String description;
+    }
+
+    /*
+    GENERATE
+     */
+
+    public static Question generate(Long projectId, Long progressStepId, String title,
+        String content, Category category) {
+
+        Question question = new Question();
+        // TODO : 연관관계 맵핑하는 것들 변경할 것
+        question.projectId = projectId;
+        question.progressStepId = progressStepId;
+        question.title = title;
+        question.content = content;
+        question.category = category;
+
+        question.updateCategory(Question.Category.QUESTION);
+        question.updateStatus(Question.Status.WAIT);
+        question.activate();
+
+        return question;
+
     }
 
     // soft delete 적용 = 게시글 비활성화

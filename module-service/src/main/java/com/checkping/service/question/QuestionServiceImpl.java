@@ -45,15 +45,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionItemDto register(Long projectId, QuestionRegister.Request request) {
 
-        // Project ID -> Project Entity
-        Project project = projectReader.getById(projectId);
-
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(request);
-        initQuestion.activate();
-        initQuestion.updateCategory(Question.Category.QUESTION);
-        initQuestion.updateStatus(Question.Status.WAIT);
-        initQuestion.containedProject(project);
+        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
