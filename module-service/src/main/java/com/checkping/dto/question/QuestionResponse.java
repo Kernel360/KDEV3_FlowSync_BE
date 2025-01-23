@@ -128,8 +128,8 @@ public class QuestionResponse {
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
             boardDto.setCategory(question.getCategory());
-            boardDto.setStatus(question.getStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
+            boardDto.setStatus(question.getStatus());
 
             // Entity -> Dto (QuestionComment)
             List<QuestionCommentDto> comments =
