@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
@@ -36,12 +37,12 @@ public class QuestionController implements QuestionApi {
 
     @PostMapping(value = "/questions")
     @Override
-    public BaseResponse<QuestionItemDto> register(
+    public BaseResponse<QuestionRegister.Response> register(
         @PathVariable Long projectId, @RequestBody Request request) {
 
-        QuestionItemDto taskBoardDto = questionService.register(projectId, request);
+        QuestionRegister.Response response = questionService.register(projectId, request);
 
-        return BaseResponse.success(taskBoardDto);
+        return BaseResponse.success(response);
     }
 
     @GetMapping("/questions")
