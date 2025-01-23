@@ -67,7 +67,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
-        Pageable pageable = PageRequest.of(pageRequest.getPage() - 1, pageRequest.getSize());
+        Pageable pageable = PageRequest.of(pageRequest.getCurrentpage() - 1, pageRequest.getPageSize());
 
         Page<Organization> result = organizationRepository.findByTypeAndStatus(
                 type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
