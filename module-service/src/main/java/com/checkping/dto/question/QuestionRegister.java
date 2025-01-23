@@ -1,11 +1,11 @@
 package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileRequest;
-import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.dto.question.link.QuestionLinkResponse.QuestionLinkDto;
 import com.checkping.exception.question.QuestionCategoryException;
@@ -101,7 +101,7 @@ public class QuestionRegister {
         @Schema(description = "게시글 첨부 링크 목록")
         private List<QuestionLinkDto> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
-        private List<FileResponse> fileList;
+        private List<QuestionFileRegister.Response> fileList;
 
         public static Response toDto(Question question) {
             Response questionDto = new Response();
@@ -113,6 +113,8 @@ public class QuestionRegister {
             questionDto.setEditAt(question.getEditAt());
             questionDto.setCategory(question.getCategory());
             questionDto.setStatus(question.getStatus());
+            questionDto.setFileList(
+                QuestionFileRegister.Response.toDto(question.getQuestionFileList()));
             return questionDto;
         }
     }
