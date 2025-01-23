@@ -1,7 +1,7 @@
 package com.checkping.service.member;
 
-import com.checkping.common.dto.PageRequestDto;
-import com.checkping.common.dto.PageResponseDto;
+
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
@@ -65,9 +65,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDto<OrganizationGet.Response> getListOrganization(String type, String status, PageRequestDto pageRequestDto) {
+    public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
+        Pageable pageable = PageRequest.of(pageRequest.getPage() - 1, pageRequest.getSize());
 
         Page<Organization> result = organizationRepository.findByTypeAndStatus(
                 type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
@@ -78,9 +78,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         long totalCount = result.getTotalElements();
 
-        return PageResponseDto.<OrganizationGet.Response>builder()
+        return PageInfo.Response.<OrganizationGet.Response>builder()
                 .dtoList(dtoList)
-                .pageRequestDto(pageRequestDto)
+                .pageRequest(pageRequest)
                 .totalCount((int) totalCount)
                 .build();
     }

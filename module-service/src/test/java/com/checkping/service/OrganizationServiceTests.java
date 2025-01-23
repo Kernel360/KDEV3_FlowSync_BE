@@ -73,8 +73,6 @@ class OrganizationServiceTests {
     @Test
     void testModifyOrganization() {
 
-
-
         Organization organization =
                 organizationRepository.save(OrganizationCreate.Request.toEntity(OrganizationCreate.Request.builder()
                         .type("CUSTOMER")

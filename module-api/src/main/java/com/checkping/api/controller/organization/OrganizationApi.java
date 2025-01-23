@@ -1,7 +1,6 @@
 package com.checkping.api.controller.organization;
 
-import com.checkping.common.dto.PageRequestDto;
-import com.checkping.common.dto.PageResponseDto;
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationGet;
@@ -31,11 +30,11 @@ public interface OrganizationApi {
     BaseResponse<OrganizationGet.Response> getOrganization(@Parameter(description = "업체 ID")UUID organizationId);
 
     @Operation(summary = "업체 전체 조회", description = "업체 조회 기능입니다.")
-    BaseResponse<PageResponseDto<OrganizationGet.Response>> getListOrganization(
+    BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @Parameter(description = "업체 타입") @RequestParam(required = false) String type,
             @Parameter(description = "업체 상태") @RequestParam(required = false) String status,
-            @Parameter(description = "page & size")PageRequestDto pageRequestDto
-            );
+            @Parameter(description = "page & size") PageInfo.Request pageRequest
+    );
 
     @Operation(summary = "업체 수정", description = "업체 정보 수정 기능입니다.")
     BaseResponse<OrganizationUpdate.Response> modifyOrganization(

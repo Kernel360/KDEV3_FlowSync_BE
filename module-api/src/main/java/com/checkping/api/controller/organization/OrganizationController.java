@@ -1,7 +1,7 @@
 package com.checkping.api.controller.organization;
 
-import com.checkping.common.dto.PageRequestDto;
-import com.checkping.common.dto.PageResponseDto;
+
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationGet;
@@ -42,12 +42,13 @@ public class OrganizationController implements OrganizationApi {
     }
 
     @GetMapping("/admins/organizations")
-    public BaseResponse<PageResponseDto<OrganizationGet.Response>> getListOrganization(
+    @Override
+    public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String status,
-            PageRequestDto pageRequestDto
+            PageInfo.Request pageRequest
     ) {
-        PageResponseDto<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, pageRequestDto);
+        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, pageRequest);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
