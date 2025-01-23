@@ -2,8 +2,6 @@ package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
 import com.checkping.domain.member.Member;
-import com.checkping.domain.project.ProgressStep;
-import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -94,23 +92,21 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Question parent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "register_id", nullable = false)
-    private Member register;
+    // TODO : Member register 로 변경할 것
+    private Long registerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updater_id")
     private Member updater;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "project_id", nullable = false, updatable = false)
-    @JoinColumn(name = "project_id", updatable = false)
-    private Project project;
+    // TODO  : Member updater 로 변경할 것
+    private Long updaterId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "progress_step_id", nullable = false)
-    @JoinColumn(name = "progress_step_id")
-    private ProgressStep progressStep;
+    // TODO : Project project 로 변경할 것
+    private Long projectId;
+
+    // TODO : ProgressStep progressStep 로 변경할 것
+    private Long progressStepId;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionComment> commentList = new ArrayList<>();
@@ -215,7 +211,7 @@ public class Question extends BaseEntity {
     }
 
     // Contained Project
-    public void containedProject(Project project) {
-        this.project = project;
+    public void containedProject(Long projectId) {
+        this.projectId = projectId;
     }
 }
