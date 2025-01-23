@@ -2,8 +2,6 @@ package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
 import com.checkping.domain.member.Member;
-import com.checkping.domain.project.ProgressStep;
-import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,7 +40,6 @@ public class Question extends BaseEntity {
     content : 게시글 본문
     regAt : 작성 일시
     editAt : 수정 일시
-    approverAt : 승인 일시
     category : 게시글 유형
     status : 게시글 상태
     deletedYn : 삭제 여부
@@ -75,9 +72,6 @@ public class Question extends BaseEntity {
     @Column(name = "edit_at")
     private LocalDateTime editAt;
 
-    @Column(name = "approver_at")
-    private LocalDateTime approverAt;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 100)
     private Category category;
@@ -94,23 +88,17 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Question parent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "register_id", nullable = false)
-    private Member register;
+    // TODO : Member register 로 변경할 것
+    private Long registerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater_id")
-    private Member updater;
+    // TODO  : Member updater 로 변경할 것
+    private Long updaterId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "project_id", nullable = false, updatable = false)
-    @JoinColumn(name = "project_id", updatable = false)
-    private Project project;
+    // TODO : Project project 로 변경할 것
+    private Long projectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "progress_step_id", nullable = false)
-    @JoinColumn(name = "progress_step_id")
-    private ProgressStep progressStep;
+    // TODO : ProgressStep progressStep 로 변경할 것
+    private Long progressStepId;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionComment> commentList = new ArrayList<>();
@@ -142,6 +130,29 @@ public class Question extends BaseEntity {
     public enum DeleteStatus {
         Y("비활성화"), N("활성화");
         private final String description;
+    }
+
+    /*
+    GENERATE
+     */
+
+    public static Question generate(Long projectId, Long progressStepId, String title,
+        String content, Category category) {
+
+        Question question = new Question();
+        // TODO : 연관관계 맵핑하는 것들 변경할 것
+        question.projectId = projectId;
+        question.progressStepId = progressStepId;
+        question.title = title;
+        question.content = content;
+        question.category = category;
+
+        question.updateCategory(Question.Category.QUESTION);
+        question.updateStatus(Question.Status.WAIT);
+        question.activate();
+
+        return question;
+
     }
 
     // soft delete 적용 = 게시글 비활성화
@@ -215,7 +226,7 @@ public class Question extends BaseEntity {
     }
 
     // Contained Project
-    public void containedProject(Project project) {
-        this.project = project;
+    public void containedProject(Long projectId) {
+        this.projectId = projectId;
     }
 }
