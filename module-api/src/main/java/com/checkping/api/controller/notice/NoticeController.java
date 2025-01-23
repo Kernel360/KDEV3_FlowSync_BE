@@ -2,7 +2,7 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.response.NoticeResponseDto;
+import com.checkping.dto.notice.response.NoticeCreateResponseDto;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ public class NoticeController {
     private NoticeServiceImpl noticeService;
 
     @PostMapping("/admins/notices")
-    public BaseResponse<NoticeResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
-        NoticeResponseDto noticeResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
-        return BaseResponse.success(noticeResponseDto);
+    public BaseResponse<NoticeCreateResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
+        NoticeCreateResponseDto noticeCreateResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
+        return BaseResponse.success(noticeCreateResponseDto);
     }
 }
