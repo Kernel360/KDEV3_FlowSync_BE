@@ -1,6 +1,9 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
+import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,12 +24,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString(exclude = "commentList")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,6 +47,10 @@ public class Question extends BaseEntity {
     status : 게시글 상태
     deletedYn : 삭제 여부
     parent : 부모 게시글
+    register : 작성자 (register_id)
+    updater : 수정자 (updater_id)
+    project : 프로젝트 (project_id)
+    progress_step : 진행 단계 (progress_step_id)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,6 +93,24 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Question parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id", nullable = false)
+    private Member register;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater_id")
+    private Member updater;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "project_id", nullable = false, updatable = false)
+    @JoinColumn(name = "project_id", updatable = false)
+    private Project project;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "progress_step_id", nullable = false)
+    @JoinColumn(name = "progress_step_id")
+    private ProgressStep progressStep;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionComment> commentList = new ArrayList<>();
@@ -161,6 +184,15 @@ public class Question extends BaseEntity {
         }
     }
 
+    // ADD QuestionLink List
+    public void addLink(List<QuestionLink> linkList) {
+        // loop for Add
+        for (QuestionLink link : linkList) {
+            // Add QuestionLink
+            addLink(link);
+        }
+    }
+
     // ADD QuestionFile
     public void addFile(QuestionFile file) {
 
@@ -180,5 +212,10 @@ public class Question extends BaseEntity {
             // Add QuestionFile
             addFile(file);
         }
+    }
+
+    // Contained Project
+    public void containedProject(Project project) {
+        this.project = project;
     }
 }

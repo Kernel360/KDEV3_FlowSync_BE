@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest;
 import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -12,39 +13,36 @@ import com.checkping.service.question.comment.QuestionCommentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
+@RequestMapping("/projects/{projectId}")
 @RequiredArgsConstructor
 public class QuestionController implements QuestionApi {
 
     private final QuestionService questionService;
     private final QuestionCommentService questionCommentService;
 
-    @PostMapping(value = "/question", consumes = {MediaType.APPLICATION_JSON_VALUE,
-        MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/questions")
     @Override
     public BaseResponse<QuestionItemDto> register(
-        @RequestPart(value = "content") QuestionRequest.RegisterDto request,
-        @RequestPart(required = false, value = "fileList") List<MultipartFile> fileList) {
+        @PathVariable Long projectId, @RequestBody Request request) {
 
-        QuestionItemDto taskBoardDto = questionService.register(request, fileList);
+        QuestionItemDto taskBoardDto = questionService.register(projectId, request);
 
         return BaseResponse.success(taskBoardDto);
     }
 
-    @GetMapping("/question")
+    @GetMapping("/questions")
     @Override
     public BaseResponse<List<QuestionListDto>> getQuestionList(
         @RequestParam(required = false) String category,
@@ -62,7 +60,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionListDtoList);
     }
 
-    @GetMapping("/question/{questionId}")
+    @GetMapping("/questions/{questionId}")
     @Override
     public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long questionId) {
 
@@ -71,7 +69,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionItemDto);
     }
 
-    @PutMapping("/question/{questionId}")
+    @PutMapping("/questions/{questionId}")
     @Override
     public BaseResponse<QuestionItemDto> updateQuestion(@PathVariable Long questionId,
         @RequestBody QuestionRequest.UpdateDto request) {
@@ -82,7 +80,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(updatedBoardDto);
     }
 
-    @DeleteMapping("/question/{questionId}")
+    @DeleteMapping("/questions/{questionId}")
     @Override
     public BaseResponse<QuestionListDto> deleteSoftQuestion(
         @PathVariable Long questionId) {
@@ -92,7 +90,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(deletedBoardDto);
     }
 
-    @PostMapping("/question/{questionId}/comments")
+    @PostMapping("/questions/{questionId}/comments")
     @Override
     public BaseResponse<QuestionCommentDto> registerComment(
         @PathVariable Long questionId, @RequestBody QuestionCommentRequest.RegisterDto request) {
@@ -103,7 +101,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionCommentDto);
     }
 
-    @DeleteMapping("/question/{questionId}/comments/{commentId}")
+    @DeleteMapping("/questions/{questionId}/comments/{commentId}")
     @Override
     public BaseResponse<QuestionCommentDto> deleteSoftComment(
         @PathVariable Long questionId, @PathVariable Long commentId) {
@@ -114,7 +112,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(deletedCommentDto);
     }
 
-    @PutMapping("/question/{questionId}/comments/{commentId}")
+    @PutMapping("/questions/{questionId}/comments/{commentId}")
     @Override
     public BaseResponse<QuestionCommentDto> updateComment(
         @PathVariable Long questionId, @PathVariable Long commentId,
