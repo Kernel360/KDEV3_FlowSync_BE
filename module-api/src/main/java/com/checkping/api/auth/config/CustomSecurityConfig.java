@@ -50,29 +50,23 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         //CORS 설정
-        http
-            .cors((cors) -> cors.configurationSource(corsConfiguration()));
+        http.cors((cors) -> cors.configurationSource(corsConfiguration()));
         //csrf disable
-        http
-            .csrf((auth) -> auth.disable());
+        http.csrf((auth) -> auth.disable());
 
         //From 로그인 방식 disable
-        http
-            .formLogin((auth) -> auth.disable());
+        http.formLogin((auth) -> auth.disable());
 
         //http basic 인증 방식 disable
-        http
-            .httpBasic((auth) -> auth.disable());
+        http.httpBasic((auth) -> auth.disable());
 
-        http
-            .headers(
-                headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        http.headers(
+            headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         //경로별 인가 작업
-        http
-            .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/reissue").permitAll()
+        http.authorizeHttpRequests(
+            (auth) -> auth.requestMatchers("/login").permitAll().requestMatchers("/reissue")
+                .permitAll()
                 //anyRequest().authenticated());
                 .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
@@ -81,18 +75,15 @@ public class CustomSecurityConfig {
 //                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http
-            .addFilterAt(
-                new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
-                UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(
+            new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+            UsernamePasswordAuthenticationFilter.class);
 
-        http
-            .addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class);
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class);
 
         //세션 설정
-        http
-            .sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(
+            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -103,7 +94,7 @@ public class CustomSecurityConfig {
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedOrigins(
-            List.of("https://www.flowssync.com", "http://localhost:3000",
+            List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
                 "https://dev.flowssync.com", "https://api.flowssync.com",
                 "https://test.flowssync.com"));
         configuration.setAllowCredentials(true);
