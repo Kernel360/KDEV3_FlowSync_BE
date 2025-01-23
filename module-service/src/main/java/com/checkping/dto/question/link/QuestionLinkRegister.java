@@ -55,6 +55,7 @@ public class QuestionLinkRegister {
         }
     }
 
+    @Getter
     public static class Response {
         /*
         id : 게시글 링크 아이디
