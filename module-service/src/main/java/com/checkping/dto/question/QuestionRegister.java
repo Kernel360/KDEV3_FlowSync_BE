@@ -41,8 +41,6 @@ public class QuestionRegister {
         private List<QuestionLinkRegister.Request> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileRequest> fileInfoList;
-        @Schema(description = "게시글 카테고리", example = "QUESTION")
-        private String category;
         @Schema(description = "진행 단계 ID", example = "1")
         private Long progressStepId;
 
@@ -56,7 +54,7 @@ public class QuestionRegister {
             QuestionRegister.Request registerDto) {
             return Question.generate(projectId, registerDto.getProgressStepId(),
                 registerDto.getTitle(), registerDto.getContent(),
-                convertCategory(registerDto.getCategory()));
+                Category.QUESTION);
         }
     }
 
