@@ -3,11 +3,13 @@ package com.checkping.dto.approval;
 import com.checkping.domain.approval.Approval;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalRegister {
 
+    @Getter
     public static class Request {
 
         /*
@@ -18,13 +20,13 @@ public class ApprovalRegister {
         private Long progressStepId;
         private String title;
         private String content;
-    }
 
-    public static Approval toEntity(Long projectId, Long registerId, Request request) {
-        // TODO: Member 에서 get 하도록 변경 필요
-        String registerName = "TEST_NAME";
-        return Approval.generate(projectId, request.progressStepId, registerId, registerName,
-            request.title, request.content);
+        public static Approval toEntity(Long projectId, Long progressStepId, Long registerId, Request request) {
+            // TODO: Member 에서 get 하도록 변경 필요
+            String registerName = "TEST_NAME";
+            return Approval.generate(projectId, progressStepId, registerId, registerName,
+                request.title, request.content);
+        }
     }
 
     public static class Response {
@@ -59,24 +61,26 @@ public class ApprovalRegister {
         private String approverName;
         private LocalDateTime updatedAt;
         private LocalDateTime regAt;
+
+        public static Response toDto(Approval approval) {
+            Response dto = new Response();
+            dto.id = approval.getId();
+            dto.projectId = approval.getProjectId();
+            dto.progressStepId = approval.getProgressStepId();
+            dto.title = approval.getTitle();
+            dto.content = approval.getContent();
+            dto.status = approval.getStatus().name();
+            dto.registerId = approval.getRegisterId();
+            dto.registerName = approval.getRegisterName();
+            dto.cancelAt = approval.getCancelAt();
+            dto.approverAt = approval.getApproverAt();
+            dto.approverId = approval.getApproverId();
+            dto.approverName = approval.getApproverName();
+            dto.updatedAt = approval.getUpdatedAt();
+            dto.regAt = approval.getRegAt();
+            return dto;
+        }
     }
 
-    public static Response toDto(Approval approval) {
-        Response dto = new Response();
-        dto.id = approval.getId();
-        dto.projectId = approval.getProjectId();
-        dto.progressStepId = approval.getProgressStepId();
-        dto.title = approval.getTitle();
-        dto.content = approval.getContent();
-        dto.status = approval.getStatus().name();
-        dto.registerId = approval.getRegisterId();
-        dto.registerName = approval.getRegisterName();
-        dto.cancelAt = approval.getCancelAt();
-        dto.approverAt = approval.getApproverAt();
-        dto.approverId = approval.getApproverId();
-        dto.approverName = approval.getApproverName();
-        dto.updatedAt = approval.getUpdatedAt();
-        dto.regAt = approval.getRegAt();
-        return dto;
-    }
+
 }
