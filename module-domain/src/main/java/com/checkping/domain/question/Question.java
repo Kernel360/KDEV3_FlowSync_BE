@@ -40,7 +40,6 @@ public class Question extends BaseEntity {
     content : 게시글 본문
     regAt : 작성 일시
     editAt : 수정 일시
-    approverAt : 승인 일시
     category : 게시글 유형
     status : 게시글 상태
     deletedYn : 삭제 여부
@@ -72,9 +71,6 @@ public class Question extends BaseEntity {
     @LastModifiedDate
     @Column(name = "edit_at")
     private LocalDateTime editAt;
-
-    @Column(name = "approver_at")
-    private LocalDateTime approverAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 100)
