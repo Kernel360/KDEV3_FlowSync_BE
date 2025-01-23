@@ -1,5 +1,6 @@
 package com.checkping.api.controller.organization;
 
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationGet;
@@ -42,11 +43,12 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping("/admins/organizations")
     @Override
-    public BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
+    public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @RequestParam(required = false) String type,
-            @RequestParam(required = false) String status
+            @RequestParam(required = false) String status,
+            PageInfo.Request pageRequest
     ) {
-        List<OrganizationGet.Response> list = organizationService.getAllByTypeAndStatusOrganizations(type, status);
+        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, pageRequest);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
