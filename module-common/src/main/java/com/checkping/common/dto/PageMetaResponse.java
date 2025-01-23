@@ -1,7 +1,6 @@
 package com.checkping.common.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.domain.Page;
 import lombok.Getter;
 
 import java.util.Map;
@@ -24,7 +23,7 @@ public class PageMetaResponse {
         this.currentPage = currentPage;
     }
 
-    public static PageMetaResponse fromPage(org.springframework.data.domain.Page<?> page) {
+    public static PageMetaResponse fromPage(Page<?> page) {
         return new PageMetaResponse(
                 page.getTotalElements(),
                 page.isFirst(),
