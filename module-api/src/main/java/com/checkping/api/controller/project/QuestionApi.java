@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
@@ -18,7 +19,7 @@ import java.util.List;
 public interface QuestionApi {
 
     @Operation(summary = "질문 게시글 등록", description = "질문 게시글을 등록하는 기능입니다.")
-    BaseResponse<QuestionItemDto> register(
+    BaseResponse<QuestionRegister.Response> register(
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "등록 게시글 정보") Request request);
 
