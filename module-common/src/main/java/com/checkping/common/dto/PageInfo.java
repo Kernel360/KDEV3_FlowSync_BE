@@ -1,5 +1,6 @@
 package com.checkping.common.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.stream.IntStream;
 
 public class PageInfo {
     /*
-    page : 페이지 번호
-    size : 한 페이지에 나오는 게시글 수
+    currentpage : 페이지 번호
+    pageSize : 한 페이지에 나오는 게시글 수
+
      */
     @Getter
     @Setter
@@ -20,10 +22,13 @@ public class PageInfo {
     public static class Request {
 
         @Builder.Default
+        @Schema(description = "페이지 번호", example = "1")
         private int currentpage = 1;
         @Builder.Default
+        @Schema(description = "게시글 수", example = "10")
         private int pageSize = 10;
-
+        @Schema(description = "검색어")
+        private String keyword;
     }
 
     /*

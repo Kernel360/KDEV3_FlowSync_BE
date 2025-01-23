@@ -72,6 +72,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Page<Organization> result = organizationRepository.findByTypeAndStatus(
                 type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
                 status != null ? Organization.Status.valueOf(status.toUpperCase()) : null,
+                pageRequest.getKeyword(),
                 pageable);
 
         List<OrganizationGet.Response> dtoList = result.getContent().stream().map(OrganizationGet.Response::toDto).toList();
