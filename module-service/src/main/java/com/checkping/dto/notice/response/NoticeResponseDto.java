@@ -4,7 +4,6 @@ package com.checkping.dto.notice.response;
 import com.checkping.domain.notice.Notice;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -23,8 +22,6 @@ public class NoticeResponseDto {
 
     private LocalDateTime regAt;
 
-    private LocalDateTime updatedAt;
-
     public static NoticeResponseDto toDto(Notice notice){
         return NoticeResponseDto.builder()
                 .adminId(notice.getAdminId())
@@ -33,7 +30,6 @@ public class NoticeResponseDto {
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .regAt(notice.getRegAt())
-                .updatedAt(notice.getUpdatedAt())
                 .build();
     }
 }
