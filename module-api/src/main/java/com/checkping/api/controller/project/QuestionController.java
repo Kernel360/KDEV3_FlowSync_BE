@@ -28,14 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/projects/{projectId}")
+@RequestMapping("/projects/{projectId}/questions")
 @RequiredArgsConstructor
 public class QuestionController implements QuestionApi {
 
     private final QuestionService questionService;
     private final QuestionCommentService questionCommentService;
 
-    @PostMapping(value = "/questions")
+    @PostMapping
     @Override
     public BaseResponse<QuestionRegister.Response> register(
         @PathVariable Long projectId, @RequestBody Request request) {
@@ -45,7 +45,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(response);
     }
 
-    @GetMapping("/questions")
+    @GetMapping
     @Override
     public BaseResponse<List<QuestionListDto>> getQuestionList(
         @PathVariable Long projectId, @RequestParam(required = false) String category,
@@ -63,7 +63,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionListDtoList);
     }
 
-    @GetMapping("/questions/{questionId}")
+    @GetMapping("/{questionId}")
     @Override
     public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long projectId,
         @PathVariable Long questionId) {
@@ -73,7 +73,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionItemDto);
     }
 
-    @PutMapping("/questions/{questionId}")
+    @PutMapping("/{questionId}")
     @Override
     public BaseResponse<QuestionItemDto> updateQuestion(Long projectId,
         @PathVariable Long questionId,
@@ -85,7 +85,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(updatedBoardDto);
     }
 
-    @DeleteMapping("/questions/{questionId}")
+    @DeleteMapping("/{questionId}")
     @Override
     public BaseResponse<QuestionListDto> deleteSoftQuestion(
         @PathVariable Long projectId, @PathVariable Long questionId) {
@@ -95,7 +95,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(deletedBoardDto);
     }
 
-    @PostMapping("/questions/{questionId}/comments")
+    @PostMapping("/{questionId}/comments")
     @Override
     public BaseResponse<QuestionCommentDto> registerComment(
         @PathVariable Long projectId, @PathVariable Long questionId,
@@ -107,7 +107,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(questionCommentDto);
     }
 
-    @DeleteMapping("/questions/{questionId}/comments/{commentId}")
+    @DeleteMapping("/{questionId}/comments/{commentId}")
     @Override
     public BaseResponse<QuestionCommentDto> deleteSoftComment(
         @PathVariable Long projectId, @PathVariable Long questionId, @PathVariable Long commentId) {
@@ -118,7 +118,7 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(deletedCommentDto);
     }
 
-    @PutMapping("/questions/{questionId}/comments/{commentId}")
+    @PutMapping("/{questionId}/comments/{commentId}")
     @Override
     public BaseResponse<QuestionCommentDto> updateComment(
         @PathVariable Long projectId, @PathVariable Long questionId, @PathVariable Long commentId,
