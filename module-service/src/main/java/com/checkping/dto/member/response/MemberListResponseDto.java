@@ -6,14 +6,15 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class MemberListResponseDto {
 
     private final List<MemberResponseDto> members;
-    private final PageMetaResponse meta;
+    private final Map<String, Object> meta;
 
-    public MemberListResponseDto(List<MemberResponseDto> members, PageMetaResponse meta) {
+    public MemberListResponseDto(List<MemberResponseDto> members, Map<String, Object> meta) {
         this.members = members;
         this.meta = meta;
     }
@@ -24,7 +25,8 @@ public class MemberListResponseDto {
                 .toList();
 
         PageMetaResponse meta = PageMetaResponse.fromPage(page);
+        Map<String, Object> result =  meta.toMap();
 
-        return new MemberListResponseDto(memberDtos, meta);
+        return new MemberListResponseDto(memberDtos, result);
     }
 }
