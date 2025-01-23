@@ -67,6 +67,16 @@ public class QuestionFileStoreImpl implements QuestionFileStore {
         return questionFileRepository.saveAll(files);
     }
 
+    @Override
+    public QuestionFile store(QuestionFile file) {
+        return questionFileRepository.save(file);
+    }
+
+    @Override
+    public List<QuestionFile> store(List<QuestionFile> files) {
+        return questionFileRepository.saveAll(files);
+    }
+
     private QuestionFile createQuestionFile(Question question, FileRequest request) {
         return QuestionFile.builder()
             .originalName(request.originalName())

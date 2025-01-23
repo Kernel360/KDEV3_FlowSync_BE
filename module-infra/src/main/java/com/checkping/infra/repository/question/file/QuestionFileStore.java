@@ -11,4 +11,8 @@ public interface QuestionFileStore {
     List<QuestionFile> saveFileList(Question question, List<MultipartFile> fileList);
 
     List<QuestionFile> storeFileList(Question question, List<FileRequest> fileList);
+
+    QuestionFile store(QuestionFile file);
+
+    List<QuestionFile> store(List<QuestionFile> files);
 }
