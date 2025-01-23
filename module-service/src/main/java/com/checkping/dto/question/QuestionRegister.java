@@ -7,7 +7,6 @@ import com.checkping.domain.question.Question.Status;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
-import com.checkping.dto.question.link.QuestionLinkResponse.QuestionLinkDto;
 import com.checkping.exception.question.QuestionCategoryException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
