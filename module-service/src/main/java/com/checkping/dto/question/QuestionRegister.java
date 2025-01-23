@@ -2,7 +2,9 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.question.Question;
+import com.checkping.domain.question.Question.Category;
 import com.checkping.dto.question.link.QuestionLinkRegister;
+import com.checkping.exception.question.QuestionCategoryException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -22,6 +24,8 @@ public class QuestionRegister {
         content : 게시글 본문 내용
         linkList : 첨부 링크 리스트 (List<QuestionLinkRequest.RegisterDto>)
         fileInfoList : 첨부 파일 정보 리스트 (List<FileRequest>)
+        category : 게시글 카테고리 (enum, String)
+        progressStepId : 진행 단계 ID
          */
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
@@ -31,6 +35,10 @@ public class QuestionRegister {
         private List<QuestionLinkRegister.Request> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<FileRequest> fileInfoList;
+        @Schema(description = "게시글 카테고리", example = "QUESTION")
+        private String category;
+        @Schema(description = "진행 단계 ID", example = "1")
+        private Long progressStepId;
 
         /**
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
@@ -38,13 +46,29 @@ public class QuestionRegister {
          * @param registerDto 엄무 관리 게시글 등록 요청 정보
          * @return Question Entity
          */
-        public static Question toEntity(QuestionRegister.Request registerDto) {
-            return Question.builder()
-                .title(registerDto.getTitle())
-                .content(registerDto.getContent())
-                .build();
+        public static Question toEntity(Long projectId,
+            QuestionRegister.Request registerDto) {
+            return Question.generate(projectId, registerDto.getProgressStepId(),
+                registerDto.getTitle(), registerDto.getContent(),
+                convertCategory(registerDto.getCategory()));
         }
     }
 
+    /**
+     * Enum : Category 변환 함수
+     *
+     * @param value Category 로 변환할 문자열
+     * @return Question.Category
+     */
+    public static Category convertCategory(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
 
+        try {
+            return Category.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new QuestionCategoryException(value);
+        }
+    }
 }
