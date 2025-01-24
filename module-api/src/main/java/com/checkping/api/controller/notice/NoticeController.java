@@ -5,9 +5,8 @@ import com.checkping.dto.notice.request.NoticeCreateRequestDto;
 import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
 import com.checkping.dto.notice.response.NoticeCreateResponseDto;
 import com.checkping.dto.notice.response.NoticeGetListResponseDto;
-import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
+import com.checkping.dto.notice.response.NoticeResponseDto;
 import com.checkping.service.notice.NoticeServiceImpl;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,18 +27,18 @@ public class NoticeController {
     }
 
     @PatchMapping("/admins/notices/{noticeid}")
-    public BaseResponse<NoticeUpdateResponseDto> updateNotice(
+    public BaseResponse<NoticeResponseDto> updateNotice(
             @PathVariable Long noticeid,
             @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto) {
-        NoticeUpdateResponseDto noticeUpdateResponseDto = noticeService.updateNotice(noticeid, noticeUpdateRequestDto);
-        return BaseResponse.success(noticeUpdateResponseDto);
+        NoticeResponseDto noticeResponseDto = noticeService.updateNotice(noticeid, noticeUpdateRequestDto);
+        return BaseResponse.success(noticeResponseDto);
     }
 
     @DeleteMapping("/admins/notices/{noticeid}")
-    public BaseResponse<NoticeUpdateResponseDto> deleteNotice(
+    public BaseResponse<NoticeResponseDto> deleteNotice(
             @PathVariable Long noticeid
     ) {
-        NoticeUpdateResponseDto noticeDeleteResponse = noticeService.deleteNotice(noticeid);
+        NoticeResponseDto noticeDeleteResponse = noticeService.deleteNotice(noticeid);
         return BaseResponse.success(noticeDeleteResponse);
     }
 
@@ -50,10 +49,10 @@ public class NoticeController {
     }
 
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<NoticeUpdateResponseDto> getNotice(
+    public BaseResponse<NoticeResponseDto> getNotice(
             @PathVariable Long noticeid
     ){
-        NoticeUpdateResponseDto noticeGetResponse = noticeService.getNotice(noticeid);
+        NoticeResponseDto noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 }

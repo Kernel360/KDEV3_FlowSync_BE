@@ -3,14 +3,12 @@ package com.checkping.service.notice;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.notice.Notice;
-import com.checkping.domain.project.Project;
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
 import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
 import com.checkping.dto.notice.response.NoticeCreateResponseDto;
 import com.checkping.dto.notice.response.NoticeGetListResponseDto;
-import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
+import com.checkping.dto.notice.response.NoticeResponseDto;
 import com.checkping.infra.repository.notice.NoticeRepository;
-import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +42,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public NoticeUpdateResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto) {
+    public NoticeResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto) {
 
         if(StringUtils.isBlank(noticeUpdateRequestDto.getTitle()) &&
                 StringUtils.isBlank(noticeUpdateRequestDto.getContent()) &&
@@ -58,19 +56,19 @@ public class NoticeServiceImpl implements NoticeService {
 
         notice.updateNotice(noticeUpdateRequestDto.getTitle(), noticeUpdateRequestDto.getContent(), noticeUpdateRequestDto.getCategory(), noticeUpdateRequestDto.getPriority());
 
-        return NoticeUpdateResponseDto.toDto(notice);
+        return NoticeResponseDto.toDto(notice);
 
     }
 
     @Override
-    public NoticeUpdateResponseDto deleteNotice(Long noticeid){
+    public NoticeResponseDto deleteNotice(Long noticeid){
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         noticeRepository.deleteById(noticeid);
 
-        return NoticeUpdateResponseDto.toDto(notice);
+        return NoticeResponseDto.toDto(notice);
     }
 
     @Override
@@ -83,11 +81,11 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeUpdateResponseDto getNotice(Long noticeid) {
+    public NoticeResponseDto getNotice(Long noticeid) {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        return NoticeUpdateResponseDto.toDto(notice);
+        return NoticeResponseDto.toDto(notice);
     }
 }

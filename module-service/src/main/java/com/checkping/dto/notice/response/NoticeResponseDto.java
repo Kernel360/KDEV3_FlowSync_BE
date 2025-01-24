@@ -1,18 +1,15 @@
 package com.checkping.dto.notice.response;
 
 import com.checkping.domain.notice.Notice;
-import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 
 @Getter
 @Builder
-public class NoticeUpdateResponseDto {
+public class NoticeResponseDto {
 
     private Long id;
 
@@ -30,8 +27,8 @@ public class NoticeUpdateResponseDto {
 
     private LocalDateTime updatedAt;
 
-    public static NoticeUpdateResponseDto toDto(Notice notice){
-        return NoticeUpdateResponseDto.builder()
+    public static NoticeResponseDto toDto(Notice notice){
+        return NoticeResponseDto.builder()
                 .id(notice.getId())
                 .adminId(notice.getAdminId())
                 .title(notice.getTitle())

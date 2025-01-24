@@ -4,7 +4,7 @@ import com.checkping.dto.notice.request.NoticeCreateRequestDto;
 import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
 import com.checkping.dto.notice.response.NoticeCreateResponseDto;
 import com.checkping.dto.notice.response.NoticeGetListResponseDto;
-import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
+import com.checkping.dto.notice.response.NoticeResponseDto;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ public interface NoticeService {
 
     NoticeCreateResponseDto registerNotice(NoticeCreateRequestDto noticeCreateRequestDto);
 
-    NoticeUpdateResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
+    NoticeResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
 
-    NoticeUpdateResponseDto deleteNotice(Long noticeid);
+    NoticeResponseDto deleteNotice(Long noticeid);
 
     List<NoticeGetListResponseDto> findAllNotices();
 
-    NoticeUpdateResponseDto getNotice(Long noticeid);
+    NoticeResponseDto getNotice(Long noticeid);
 
 }
