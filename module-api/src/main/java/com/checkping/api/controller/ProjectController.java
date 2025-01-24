@@ -58,7 +58,7 @@ public class ProjectController {
         return BaseResponse.success(managementCountMap);
     }
 
-    @GetMapping(value = {"/admins/projects/{projectId}", "/projects/{projectId}"})
+    @GetMapping(value = {"/admins/projects/{projectId}/projectInfo", "/projects/{projectId}/projectInfo"})
     public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
         ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
