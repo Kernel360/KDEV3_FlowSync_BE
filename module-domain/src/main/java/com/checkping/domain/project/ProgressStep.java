@@ -50,7 +50,7 @@ public class ProgressStep extends BaseEntity {
     private LocalDateTime closeAt;
 
     @Column(name = "project_id")
-    private Long project_id;
+    private Long projectId;
 
     /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
