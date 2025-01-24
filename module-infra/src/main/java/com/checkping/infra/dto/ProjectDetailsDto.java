@@ -1,7 +1,6 @@
-package com.checkping.infra.repository.project;
+package com.checkping.infra.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Date;
 
