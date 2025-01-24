@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 public class QuestionSearchInfo {
 
     /*
-    category : 게시글 카테고리 (Enum 으로 변경해야함)
+    progressId : 게시글 진행 단계 ID
     status : 게시글 상태 (Enum 으로 변경해야함)
     keyword : 게시글 검색어 (String)
     currentPage: 현재 페이지
     pageSize: 페이지 사이즈
      */
-    public record SearchCondition(Category category, Status status, String keyword,
+    public record SearchCondition(Long progressId, Status status, String keyword,
                                   Integer currentPage, Integer pageSize) {
 
-        public SearchCondition(Category category, Status status, String keyword,
+        public SearchCondition(Long progressId, Status status, String keyword,
             Integer currentPage, Integer pageSize) {
-            this.category = category;
+            this.progressId = progressId;
             this.status = status;
             this.keyword = keyword;
 
