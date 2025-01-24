@@ -21,10 +21,10 @@ public class ApprovalRegister {
         private String title;
         private String content;
 
-        public static Approval toEntity(Long projectId, Long progressStepId, Long registerId, Request request) {
+        public static Approval toEntity(Long projectId, Long registerId, Request request) {
             // TODO: Member 에서 get 하도록 변경 필요
             String registerName = "TEST_NAME";
-            return Approval.generate(projectId, progressStepId, registerId, registerName,
+            return Approval.generate(projectId, request.progressStepId, registerId, registerName,
                 request.title, request.content);
         }
     }
