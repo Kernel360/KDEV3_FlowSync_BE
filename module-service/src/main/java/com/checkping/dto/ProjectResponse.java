@@ -2,7 +2,7 @@ package com.checkping.dto;
 
 
 import com.checkping.domain.project.Project;
-import com.checkping.infra.repository.project.ProjectDetailsDto;
+import com.checkping.infra.dto.ProjectDetailsDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -117,5 +117,16 @@ public class ProjectResponse {
         }
     }
 
+    @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoDto {
+        @Schema(description = "프로젝트 아이디")
+        private Long id;
+        @Schema(description = "프로젝트 이름")
+        private String projectName;
+    }
 
 }
