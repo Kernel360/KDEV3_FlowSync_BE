@@ -9,6 +9,7 @@ import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
 import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import java.awt.print.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +83,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         // 타입별 전체 조회 (상태별)
         else {
+
             return organizationRepository.findByTypeAndStatus(
                             Organization.Type.valueOf(type.toUpperCase()),
                             Organization.Status.valueOf(status.toUpperCase())).stream()
