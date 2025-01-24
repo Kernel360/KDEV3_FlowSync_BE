@@ -7,6 +7,7 @@ import com.checkping.domain.project.Project;
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
 import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
 import com.checkping.dto.notice.response.NoticeCreateResponseDto;
+import com.checkping.dto.notice.response.NoticeGetListResponseDto;
 import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
 import com.checkping.infra.repository.notice.NoticeRepository;
 import jakarta.persistence.Id;
@@ -15,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +71,14 @@ public class NoticeServiceImpl implements NoticeService {
         noticeRepository.deleteById(noticeid);
 
         return NoticeUpdateResponseDto.toDto(notice);
+    }
+
+    @Override
+    public List<NoticeGetListResponseDto> findAllNotices(){
+        List<Notice> result = noticeRepository.findAll();
+
+        return result.stream()
+                .map(NoticeGetListResponseDto::toDto)
+                .collect(Collectors.toList());
     }
 }
