@@ -62,9 +62,10 @@ public class Project extends BaseEntity {
     @Column(name = "progress_step_id")
     private Long progressStepId;
 
-    @Column(name = "dev_owner_id", columnDefinition = "BINARY(16)")
-    private UUID devOwnerId;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dev_owner_id")
+    private Member devOwner;
+  
     @Column(name = "reg_at")
     private LocalDateTime regAt;
 

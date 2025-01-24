@@ -10,6 +10,7 @@ import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
+import com.checkping.infra.repository.project.ProjectDetailsDto;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
@@ -43,8 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-            request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
@@ -130,10 +130,16 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return list.stream()
-            .collect(Collectors.toMap(
-                tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
-                tuple -> (Long) tuple.get("projectCount")
-            ));
+                .collect(Collectors.toMap(
+                        tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
+                        tuple -> (Long) tuple.get("projectCount")
+                ));
+    }
+
+    @Override
+    public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
     }
 
     private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {
@@ -147,9 +153,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     private List<Member> getMembers(List<String> memberIds) {
         return memberIds.stream()
-            .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
-            .collect(Collectors.toList());
+                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                .collect(Collectors.toList());
     }
 
 }

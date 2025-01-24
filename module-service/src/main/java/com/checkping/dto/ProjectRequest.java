@@ -57,6 +57,10 @@ public class ProjectRequest {
         private List<String> members;
 
         public static Project toEntity(ResisterDto resisterDto, List<Organization> organizations, List<Member> members) {
+            Member devOwnerMember = Member.builder()
+                    .id(resisterDto.getDevOwnerId())
+                    .build();
+
             return Project.builder()
                 .name(resisterDto.getName())
                 .description(resisterDto.getDescription())
@@ -67,7 +71,7 @@ public class ProjectRequest {
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .resisterId(resisterDto.getResisterId())
-                .devOwnerId(resisterDto.getDevOwnerId())
+                .devOwner(devOwnerMember)
                 .organizations(organizations)
                 .members(members)
                 .deletedYn("N")
@@ -109,6 +113,10 @@ public class ProjectRequest {
         private List<String> members;
 
         public static Project toEntity(UpdateDto updateDto, Project existingProject, List<Organization> organizations, List<Member> members) {
+            Member devOwnerMember = Member.builder()
+                    .id(updateDto.getDevOwnerId())
+                    .build();
+
             return existingProject.toBuilder()
                 .id(existingProject.getId())
                 .name(updateDto.getName())
@@ -117,7 +125,7 @@ public class ProjectRequest {
                 .status(Project.Status.valueOf(updateDto.getStatus()))
                 .management_step(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
                 .progressStepId(updateDto.getProgressStepId())
-                .devOwnerId(updateDto.getDevOwnerId())
+                .devOwner(devOwnerMember)
                 .startAt(updateDto.getStartAt())
                 .closeAt(updateDto.getCloseAt())
                 .updateAt(LocalDateTime.now())
