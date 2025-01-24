@@ -1,16 +1,16 @@
 package com.checkping.service.question;
 
-import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionRequest.RegisterDto;
+import com.checkping.dto.question.QuestionRegister;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
-import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
-import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
+import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.QuestionSearchCondition;
 
 public interface QuestionService {
-    QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList);
-    List<QuestionListDto> getQuestionList(QuestionRequest.SearchCondition searchCondition);
+    QuestionRegister.Response register(Long projectId, Request request);
+    QuestionSearch.Response searchQuestions(Long projectId, QuestionSearchCondition searchCondition);
     QuestionItemDto getQuestionById(Long taskBoardId);
     QuestionListDto deleteSoft (Long taskBoardId);
     QuestionListDto deleteHard(Long taskBoardId);
