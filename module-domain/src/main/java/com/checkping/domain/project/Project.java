@@ -65,7 +65,7 @@ public class Project extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_owner_id")
     private Member devOwner;
-
+  
     @Column(name = "reg_at")
     private LocalDateTime regAt;
 
