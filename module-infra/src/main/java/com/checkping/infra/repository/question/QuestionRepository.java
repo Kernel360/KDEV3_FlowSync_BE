@@ -1,7 +1,6 @@
 package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -16,17 +15,17 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Page<Question> findByProjectId(Long projectId, Pageable pageable);
 
-    Page<Question> findByProjectIdAndCategory(Long projectId, Category category, Pageable pageable);
+    Page<Question> findByProjectIdAndProgressStepId(Long projectId, Long progressStepId, Pageable pageable);
 
     Page<Question> findByProjectIdAndStatus(Long projectId, Status status, Pageable pageable);
 
-    Page<Question> findByProjectIdAndCategoryAndStatus(Long projectId, Category category, Status status, Pageable pageable);
+    Page<Question> findByProjectIdAndProgressStepIdAndStatus(Long projectId, Long progressId, Status status, Pageable pageable);
 
     Page<Question> findByProjectIdAndTitleContaining(Long projectId, String title, Pageable pageable);
 
-    Page<Question> findByProjectIdAndCategoryAndTitleContaining(Long projectId, Category category, String title, Pageable pageable);
+    Page<Question> findByProjectIdAndProgressStepIdAndTitleContaining(Long projectId, Long progressStepId, String title, Pageable pageable);
 
     Page<Question> findByProjectIdAndStatusAndTitleContaining(Long projectId, Status status, String title, Pageable pageable);
 
-    Page<Question> findByProjectIdAndCategoryAndStatusAndTitleContaining(Long projectId, Category category, Status status, String title, Pageable pageable);
+    Page<Question> findByProjectIdAndProgressStepIdAndStatusAndTitleContaining(Long projectId, Long progressStepId, Status status, String title, Pageable pageable);
 }

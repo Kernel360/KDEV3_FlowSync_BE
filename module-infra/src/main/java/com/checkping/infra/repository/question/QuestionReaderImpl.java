@@ -2,7 +2,6 @@ package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
 import com.checkping.info.question.QuestionSearchInfo;
-import io.awspring.cloud.s3.S3OutputStreamProvider;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class QuestionReaderImpl implements QuestionReader {
 
     private final QuestionRepository questionRepository;
-    private final S3OutputStreamProvider s3OutputStreamProvider;
 
     /**
      * Question 검색 기능
@@ -39,54 +37,54 @@ public class QuestionReaderImpl implements QuestionReader {
         // keyword / category / status 검색 조건 여부 확인
         boolean isKeyword = searchCondition.keyword() != null && !searchCondition.keyword()
             .isEmpty();
-        boolean isCategory = searchCondition.category() != null;
+        boolean isProgressStep = searchCondition.progressId() != null;
         boolean isStatus = searchCondition.status() != null;
 
         // Search all
-        if (!isCategory && !isStatus && !isKeyword) {
+        if (!isProgressStep && !isStatus && !isKeyword) {
             return questionRepository.findByProjectId(
                 projectId, pageable);
         }
 
         // Search keyword
-        if (!isCategory && !isStatus && isKeyword) {
+        if (!isProgressStep && !isStatus && isKeyword) {
             return questionRepository.findByProjectIdAndTitleContaining(
                 projectId, searchCondition.keyword(), pageable);
         }
 
         // Search status
-        if (!isCategory && isStatus && !isKeyword) {
+        if (!isProgressStep && isStatus && !isKeyword) {
             return questionRepository.findByProjectIdAndStatus(
                 projectId, searchCondition.status(), pageable);
         }
 
         // Search category
-        if (isCategory && !isStatus && !isKeyword) {
-            return questionRepository.findByProjectIdAndCategory(
-                projectId, searchCondition.category(), pageable);
+        if (isProgressStep && !isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepId(
+                projectId, searchCondition.progressId(), pageable);
         }
 
         // Search category AND status
-        if (isCategory && isStatus && !isKeyword) {
-            return questionRepository.findByProjectIdAndCategoryAndStatus(
-                projectId, searchCondition.category(), searchCondition.status(), pageable);
+        if (isProgressStep && isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepIdAndStatus(
+                projectId, searchCondition.progressId(), searchCondition.status(), pageable);
         }
 
         // Search category AND keyword
-        if (isCategory && !isStatus && isKeyword) {
-            return questionRepository.findByProjectIdAndCategoryAndTitleContaining(
-                projectId, searchCondition.category(), searchCondition.keyword(), pageable);
+        if (isProgressStep && !isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepIdAndTitleContaining(
+                projectId, searchCondition.progressId(), searchCondition.keyword(), pageable);
         }
 
         // Search status AND keyword
-        if (!isCategory && isStatus && isKeyword) {
+        if (!isProgressStep && isStatus && isKeyword) {
             return questionRepository.findByProjectIdAndStatusAndTitleContaining(
                 projectId, searchCondition.status(), searchCondition.keyword(), pageable);
         }
 
         // Search category AND status AND keyword
-        return questionRepository.findByProjectIdAndCategoryAndStatusAndTitleContaining(
-            projectId, searchCondition.category(), searchCondition.status(),
+        return questionRepository.findByProjectIdAndProgressStepIdAndStatusAndTitleContaining(
+            projectId, searchCondition.progressId(), searchCondition.status(),
             searchCondition.keyword(), pageable);
     }
 
