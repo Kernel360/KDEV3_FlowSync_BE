@@ -13,8 +13,10 @@ import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/projects/{projectId}/questions")
 @RequiredArgsConstructor
@@ -48,14 +51,14 @@ public class QuestionController implements QuestionApi {
     @Override
     public BaseResponse<QuestionSearch.Response> searchQuestions(
         @PathVariable Long projectId,
-        @RequestParam(required = false) String category,
+        @RequestParam(required = false) Long progressId,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String keyword,
-        @RequestParam(defaultValue = "1") Integer currentPage,
+        @Min(0) @RequestParam(defaultValue = "1") Integer currentPage,
         @RequestParam(defaultValue = "10") Integer pageSize) {
 
         // Create QuestionSearchCondition
-        QuestionSearchCondition searchCondition = new QuestionSearchCondition(category, status,
+        QuestionSearchCondition searchCondition = new QuestionSearchCondition(progressId, status,
             keyword, currentPage, pageSize);
 
         // Search Questions

@@ -26,7 +26,7 @@ public interface QuestionApi {
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<QuestionSearch.Response> searchQuestions(
         @Parameter(description = "프로젝트 ID") Long projectId,
-        @Parameter(description = "질문 게시글 유형") String category,
+        @Parameter(description = "질문 게시글 유형") Long progressId,
         @Parameter(description = "질문 게시글 상태") String status,
         @Parameter(description = "질문 게시글 검색어") String keyword,
         @Parameter(description = "현재 페이지") Integer currentPage,
