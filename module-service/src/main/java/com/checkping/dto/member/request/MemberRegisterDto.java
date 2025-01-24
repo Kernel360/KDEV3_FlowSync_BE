@@ -7,15 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
 public class MemberRegisterDto {
 
     @Schema(description = "조직 ID", example = "123e4567-e89b-12d3-a456-426614174000")
-    private UUID organizationId;
+    private Long organizationId;
     @Schema(description = "이메일", example = "example@example.com")
     private String email;
     @Schema(description = "비밀번호", example = "password1234")

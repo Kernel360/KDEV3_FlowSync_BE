@@ -8,15 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface OrganizationRepository extends JpaRepository<Organization, UUID> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
     // 업체명과 타입을 통한 중복 검사
     Optional<Organization> findByNameAndType(String name, Organization.Type type);
 
     // ID를 통한 업체 조회
-    Optional<Organization> findById(UUID id);
+    Optional<Organization> findById(Long id);
 
     // 업체 전제 조회
     @Query("SELECT o FROM Organization o " +

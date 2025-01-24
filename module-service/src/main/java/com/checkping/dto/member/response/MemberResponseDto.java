@@ -5,16 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 public class MemberResponseDto {
 
     @Schema(description = "회원 ID", example = "123e4567-e89b-12d3-a456-426614174000")
-    private UUID id;
+    private Long id;
     @Schema(description = "소속 업체 ID", example = "123e4567-e89b-12d3-a456-426614174000")
-    private UUID organizationId;
+    private Long organizationId;
     @Schema(description = "소속 업체 이름", example = "CheckPing")
     private String organizationName;
     @Schema(description = "역할", example = "ADMIN") // ADMIN, USER

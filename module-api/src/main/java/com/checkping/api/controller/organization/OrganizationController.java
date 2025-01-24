@@ -1,7 +1,5 @@
 package com.checkping.api.controller.organization;
 
-
-import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationGet;
@@ -11,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.UUID;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping({"/admins/organizations/{organizationId}", "/organization/{organizationId}"})
     @Override
-    public BaseResponse<OrganizationGet.Response> getOrganization(@PathVariable UUID organizationId) {
+    public BaseResponse<OrganizationGet.Response> getOrganization(@PathVariable Long organizationId) {
 
         OrganizationGet.Response response = organizationService.getOrganization(organizationId);
 
@@ -42,19 +41,18 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping("/admins/organizations")
     @Override
-    public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
+    public BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
             @RequestParam(required = false) String type,
-            @RequestParam(required = false) String status,
-            PageInfo.Request pageRequest
+            @RequestParam(required = false) String status
     ) {
-        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, pageRequest);
+        List<OrganizationGet.Response> list = organizationService.getAllByTypeAndStatusOrganizations(type, status);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
     @PutMapping(value = "/admins/organizations/{organizationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
-            @PathVariable UUID organizationId,
+            @PathVariable Long organizationId,
             @RequestPart(value = "content") OrganizationUpdate.Request request,
             @RequestPart(required = false, value = "file") MultipartFile file) {
 
@@ -67,7 +65,7 @@ public class OrganizationController implements OrganizationApi {
 
     @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable UUID organizationId) {
+    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable Long organizationId) {
 
         OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
 
