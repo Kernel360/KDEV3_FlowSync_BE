@@ -18,7 +18,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // TODO : registerId 는 시큐리티에서 가져오도록 변경 필요
         Long registerId = 123123L;
 
-        Approval init = ApprovalRegister.Request.toEntity(projectId, request.getProgressStepId(),
+        Approval init = ApprovalRegister.Request.toEntity(projectId,
             registerId, request);
 
         Approval approval = approvalStore.store(init);
