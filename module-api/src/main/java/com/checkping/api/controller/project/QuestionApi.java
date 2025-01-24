@@ -1,6 +1,8 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -13,6 +15,7 @@ import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommen
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 
 @Tag(name = "Question API(QuestionController)", description = "질문 게시판 API 입니다.")
@@ -64,4 +67,8 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
         @Parameter(description = "게시글 댓글 수정 Dto") QuestionCommentRequest.UpdateDto request);
+
+    @Operation(summary = "프로젝트 진행 단계 별 질문 게시글 수 조회", description = "프로젝트 진행 단계 별 질문 게시글 수를 조회하는 기능입니다.")
+    BaseResponse<List<Response>> countByProgressStep(
+        @Parameter(description = "프로젝트 ID") Long projectId);
 }

@@ -10,4 +10,6 @@ public interface QuestionReader {
     Page<Question> searchQuestions(Long projectId, QuestionSearchInfo.SearchCondition searchCondition);
 
     Optional<Question> getQuestionById(Long id);
+
+    Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
 }
