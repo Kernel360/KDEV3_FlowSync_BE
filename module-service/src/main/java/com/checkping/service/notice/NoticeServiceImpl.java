@@ -57,4 +57,15 @@ public class NoticeServiceImpl implements NoticeService {
         return NoticeUpdateResponseDto.toDto(notice);
 
     }
+
+    @Override
+    public NoticeUpdateResponseDto deleteNotice(Long noticeid){
+
+        Notice notice = noticeRepository.findById(noticeid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        noticeRepository.deleteById(noticeid);
+
+        return NoticeUpdateResponseDto.toDto(notice);
+    }
 }

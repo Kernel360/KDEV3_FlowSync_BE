@@ -27,8 +27,16 @@ public class NoticeController {
     @PatchMapping("/admins/notices/{noticeid}")
     public BaseResponse<NoticeUpdateResponseDto> updateNotice(
             @PathVariable Long noticeid,
-            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto){
+            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto) {
         NoticeUpdateResponseDto noticeUpdateResponseDto = noticeService.updateNotice(noticeid, noticeUpdateRequestDto);
         return BaseResponse.success(noticeUpdateResponseDto);
+    }
+
+    @DeleteMapping("/admins/notices/{noticeid}")
+    public BaseResponse<NoticeUpdateResponseDto> deleteNotice(
+            @PathVariable Long noticeid
+    ){
+        NoticeUpdateResponseDto noticeDeleteResponseDto = noticeService.deleteNotice(noticeid);
+        return BaseResponse.success(noticeDeleteResponseDto);
     }
 }

@@ -11,4 +11,6 @@ public interface NoticeService {
 
     NoticeUpdateResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
 
+    NoticeUpdateResponseDto deleteNotice(Long noticeid);
+
 }
