@@ -43,7 +43,8 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
+            request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
@@ -95,10 +96,12 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
+            request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        project = projectRepository.save(ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
+        project = projectRepository.save(
+            ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
@@ -127,10 +130,10 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return list.stream()
-                .collect(Collectors.toMap(
-                        tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
-                        tuple -> (Long) tuple.get("projectCount")
-                ));
+            .collect(Collectors.toMap(
+                tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
+                tuple -> (Long) tuple.get("projectCount")
+            ));
     }
 
     private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {
@@ -144,9 +147,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     private List<Member> getMembers(List<String> memberIds) {
         return memberIds.stream()
-                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
-                .collect(Collectors.toList());
+            .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+            .collect(Collectors.toList());
     }
 
 }
