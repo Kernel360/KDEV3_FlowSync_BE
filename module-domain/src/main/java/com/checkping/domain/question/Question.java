@@ -121,7 +121,7 @@ public class Question extends BaseEntity {
     @Getter
     @RequiredArgsConstructor
     public enum Status {
-        WAIT("대기"), RETURNING("반려"), COMPLETED("승인");
+        WAIT("대기"), COMPLETED("완료");
         private final String description;
     }
 

@@ -3,17 +3,16 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
-import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,20 +46,23 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping
     @Override
-    public BaseResponse<List<QuestionListDto>> getQuestionList(
-        @PathVariable Long projectId, @RequestParam(required = false) String category,
+    public BaseResponse<QuestionSearch.Response> searchQuestions(
+        @PathVariable Long projectId,
+        @RequestParam(required = false) String category,
         @RequestParam(required = false) String status,
-        @RequestParam(required = false) String keyword) {
+        @RequestParam(required = false) String keyword,
+        @RequestParam(defaultValue = "1") Integer currentPage,
+        @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        // RequestParam -> SearchCondition
-        QuestionRequest.SearchCondition searchCondition = new SearchCondition(category,
-            status, keyword);
+        // Create QuestionSearchCondition
+        QuestionSearchCondition searchCondition = new QuestionSearchCondition(category, status,
+            keyword, currentPage, pageSize);
 
-        // getTaskBoardList
-        List<QuestionListDto> questionListDtoList = questionService.getQuestionList(
+        // Search Questions
+        QuestionSearch.Response response = questionService.searchQuestions(projectId,
             searchCondition);
 
-        return BaseResponse.success(questionListDtoList);
+        return BaseResponse.success(response);
     }
 
     @GetMapping("/{questionId}")

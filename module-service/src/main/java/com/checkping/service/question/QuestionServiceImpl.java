@@ -6,13 +6,15 @@ import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
-import com.checkping.dto.question.QuestionRequest.SearchCondition;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
+import com.checkping.info.question.QuestionSearchInfo;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -22,6 +24,7 @@ import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,13 +56,15 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionStore.store(initQuestion);
 
         // QuestionFileRequest.RegisterDto -> QuestionFile Entity
-        List<QuestionFile> files = QuestionFileRegister.Request.toEntity(question, request.getFileInfoList());
+        List<QuestionFile> files = QuestionFileRegister.Request.toEntity(question,
+            request.getFileInfoList());
         // Save & Add QuestionFile List
         questionFileStore.store(files);
         question.addFile(files);
 
         // QuestionLinkRequest.RegisterDto -> QuestionLink Entity
-        List<QuestionLink> links = QuestionLinkRegister.Request.toEntity(question, request.getLinkList());
+        List<QuestionLink> links = QuestionLinkRegister.Request.toEntity(question,
+            request.getLinkList());
         // Save & Add QuestionLink
         questionLinkStore.store(links);
         question.addLink(links);
@@ -71,20 +76,23 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * Question 조회 하기 (게시글 유형, 게시글 상태 별 필터링)
      *
+     * @param projectId       프로젝트 ID
      * @param searchCondition RequestParam 에서 받아오는 String 을 관리하는 타입
      * @return 조회한 QuestionListDto 의 리스트
      */
     @Override
-    public List<QuestionListDto> getQuestionList(SearchCondition searchCondition) {
+    public QuestionSearch.Response searchQuestions(Long projectId,
+        QuestionSearchCondition searchCondition) {
 
-        // 조회
-        List<Question> questionList = questionReader.getQuestion(
-            searchCondition.getCategory(),
-            searchCondition.getStatus(),
-            searchCondition.getKeyword());
+        // RequestParam -> Info
+        QuestionSearchInfo.SearchCondition searchInfo = QuestionSearchCondition.toInfo(
+            searchCondition);
 
-        // Question -> QuestionListDto
-        return questionList.stream().map(QuestionListDto::toDto).toList();
+        // search
+        Page<Question> questions = questionReader.searchQuestions(projectId, searchInfo);
+
+        // Page -> Response Dto
+        return QuestionSearch.Response.toDto(questions);
     }
 
     /**

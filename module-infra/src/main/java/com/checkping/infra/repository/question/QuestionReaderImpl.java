@@ -1,13 +1,16 @@
 package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.Question.Category;
-import com.checkping.domain.question.Question.Status;
-import java.util.List;
+import com.checkping.info.question.QuestionSearchInfo;
+import io.awspring.cloud.s3.S3OutputStreamProvider;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
 
 @Slf4j
 @Component
@@ -15,59 +18,76 @@ import org.springframework.stereotype.Component;
 public class QuestionReaderImpl implements QuestionReader {
 
     private final QuestionRepository questionRepository;
+    private final S3OutputStreamProvider s3OutputStreamProvider;
 
     /**
-     * Question 전체 조회 및 필터링 조회
+     * Question 검색 기능
+     * TODO : 동적 쿼리가 가능하도록 변경
      *
-     * @param category Question.Category
-     * @param status   Question.Status
-     * @param keyword       검색어
-     * @return Question 전체 조회
+     * @param projectId 프로젝트 아이디
+     * @param searchCondition 검색 조건
+     * @return Question 검색 결과
      */
     @Override
-    public List<Question> getQuestion(Category category, Status status,
-        String keyword) {
+    public Page<Question> searchQuestions(Long projectId,
+        QuestionSearchInfo.SearchCondition searchCondition) {
 
-        // keyword, category, status
-        if (category != null && status != null && keyword != null) {
-            return questionRepository.findByCategoryAndStatusAndTitleContaining(category,
-                status, keyword);
+        // 페이지 객체 생성
+        Pageable pageable = PageRequest.of(searchCondition.currentPage(),
+            searchCondition.pageSize());
+
+        // keyword / category / status 검색 조건 여부 확인
+        boolean isKeyword = searchCondition.keyword() != null && !searchCondition.keyword()
+            .isEmpty();
+        boolean isCategory = searchCondition.category() != null;
+        boolean isStatus = searchCondition.status() != null;
+
+        // Search all
+        if (!isCategory && !isStatus && !isKeyword) {
+            return questionRepository.findByProjectId(
+                projectId, pageable);
         }
 
-        // category AND status
-        if (category != null && status != null) {
-            return questionRepository.findByCategoryAndStatus(category,
-                status);
+        // Search keyword
+        if (!isCategory && !isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndTitleContaining(
+                projectId, searchCondition.keyword(), pageable);
         }
 
-        // category AND keyword
-        if (category != null && keyword != null) {
-            return questionRepository.findQuestionByCategoryAndTitleContaining(category, keyword);
+        // Search status
+        if (!isCategory && isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndStatus(
+                projectId, searchCondition.status(), pageable);
         }
 
-        // status AND keyword
-        if (status != null && keyword != null) {
-            return questionRepository.findQuestionByStatusAndTitleContaining(status, keyword);
+        // Search category
+        if (isCategory && !isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndCategory(
+                projectId, searchCondition.category(), pageable);
         }
 
-        // category
-        if (category != null) {
-            return questionRepository.findByCategory(category);
+        // Search category AND status
+        if (isCategory && isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndCategoryAndStatus(
+                projectId, searchCondition.category(), searchCondition.status(), pageable);
         }
 
-        // status
-        if (status != null) {
-            return questionRepository.findByStatus(status);
+        // Search category AND keyword
+        if (isCategory && !isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndCategoryAndTitleContaining(
+                projectId, searchCondition.category(), searchCondition.keyword(), pageable);
         }
 
-        // keyword
-        if (keyword != null) {
-            return questionRepository.findByTitleContaining(keyword);
+        // Search status AND keyword
+        if (!isCategory && isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndStatusAndTitleContaining(
+                projectId, searchCondition.status(), searchCondition.keyword(), pageable);
         }
 
-        // 조회
-        return questionRepository.findAll();
-
+        // Search category AND status AND keyword
+        return questionRepository.findByProjectIdAndCategoryAndStatusAndTitleContaining(
+            projectId, searchCondition.category(), searchCondition.status(),
+            searchCondition.keyword(), pageable);
     }
 
     /**
