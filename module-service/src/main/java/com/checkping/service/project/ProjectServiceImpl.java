@@ -10,7 +10,8 @@ import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
-import com.checkping.infra.repository.project.ProjectDetailsDto;
+import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
@@ -140,6 +141,35 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
         ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
         return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
+    }
+
+    @Override
+    public Map<String, List<ProjectResponse.ProjectInfoDto>> getProjectInfoListByStatus(){
+
+        List<ProjectInfoProjection> inProgressList = projectRepository.findByStatus(Project.Status.IN_PROGRESS);
+        List<ProjectInfoProjection> completedList =projectRepository.findByStatus(Project.Status.COMPLETED);
+
+        List<ProjectResponse.ProjectInfoDto> inProgressDTOList = new ArrayList<>();
+        inProgressList.forEach(project ->
+                inProgressDTOList.add(ProjectResponse.ProjectInfoDto.builder()
+                        .id(project.getId())
+                        .projectName(project.getName())
+                        .build())
+        );
+
+        List<ProjectResponse.ProjectInfoDto> completedDTOList = new ArrayList<>();
+        completedList.forEach(project ->
+                completedDTOList.add(ProjectResponse.ProjectInfoDto.builder()
+                        .id(project.getId())
+                        .projectName(project.getName())
+                        .build())
+        );
+
+        Map<String, List<ProjectResponse.ProjectInfoDto>> result = new HashMap<>();
+        result.put("inProgressList", inProgressDTOList);
+        result.put("completedList", completedDTOList);
+
+        return result;
     }
 
     private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {

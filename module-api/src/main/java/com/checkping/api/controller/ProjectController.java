@@ -62,9 +62,16 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @GetMapping(value = {"/admins/projects/{projectId}", "/projects/{projectId}"})
+    @GetMapping(value = {"/admins/projects/{projectId}/projectInfo", "/projects/{projectId}/projectInfo"})
     public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
         ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
+    }
+
+    @Override
+    @GetMapping("/admins/projects/status")
+    public BaseResponse<Map<String, List<ProjectResponse.ProjectInfoDto>>> listProjectInfoByStatus() {
+        Map<String, List<ProjectResponse.ProjectInfoDto>> projectList = projectService.getProjectInfoListByStatus();
+        return BaseResponse.success(projectList);
     }
 }

@@ -1,6 +1,8 @@
 package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
+import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -52,4 +54,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "WHERE p.id = :projectId", nativeQuery = true)
     ProjectDetailsDto findProjectById(@Param("projectId") Long projectId);
 
+    List<ProjectInfoProjection> findByStatus(Project.Status status);
 }
