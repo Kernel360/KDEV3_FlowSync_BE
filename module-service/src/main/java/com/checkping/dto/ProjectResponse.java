@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.UUID;
 
 public class ProjectResponse {
 
@@ -46,7 +45,7 @@ public class ProjectResponse {
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
         @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID devOwnerId;
+        private Long devOwnerId;
         @Schema(description = "개발사 이름")
         private String developerName;
         @Schema(description = "고객사 이름")
