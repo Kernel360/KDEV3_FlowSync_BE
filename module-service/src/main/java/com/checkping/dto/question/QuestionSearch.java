@@ -17,12 +17,15 @@ public class QuestionSearch {
         /*
         id : 게시글 ID
         title : 게시글 제목
-        category : 게시글 카테고리
+        progressStepId : 게시글 진행 단계 ID
+        category : 게시글 유형
         status : 게시글 상태
         createdDate : 게시글 생성일
          */
         private Long id;
         private String title;
+        // TODO : progressStepId 는 ProgressStep Entity 으로 변경할 에정
+        private Long progressStepId;
         private String category;
         private String status;
         private String createdDate;
@@ -31,6 +34,7 @@ public class QuestionSearch {
             QuestionItem dto = new QuestionItem();
             dto.id = question.getId();
             dto.title = question.getTitle();
+            dto.progressStepId = question.getProgressStepId();
             dto.category = question.getCategory().name();
             dto.status = question.getStatus().name();
             dto.createdDate = question.getCreatedBy();
@@ -53,12 +57,12 @@ public class QuestionSearch {
         meta : 페이징 정보
          */
 
-        private List<QuestionItem> items;
+        private List<QuestionItem> projectQuestions;
         private PaginationProps meta;
 
         public static Response toDto(Page<Question> page) {
             Response response = new Response();
-            response.items = QuestionItem.toDto(page.getContent());
+            response.projectQuestions = QuestionItem.toDto(page.getContent());
             response.meta = PaginationProps.toDto(page);
             return response;
         }
