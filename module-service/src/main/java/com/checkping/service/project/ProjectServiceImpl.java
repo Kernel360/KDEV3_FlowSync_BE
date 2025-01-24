@@ -58,7 +58,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
             ProgressStep progressStep = ProgressStep.builder()
-                    .project_id(project.getId())
+                    .projectId(project.getId())
                     .name(step.getDescription())
                     .build();
 
