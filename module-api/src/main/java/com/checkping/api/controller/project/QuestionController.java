@@ -1,6 +1,8 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -14,6 +16,7 @@ import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommen
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -133,5 +136,14 @@ public class QuestionController implements QuestionApi {
             questionId, commentId, request);
 
         return BaseResponse.success(updatedCommentDto);
+    }
+
+    @GetMapping("/counts")
+    @Override
+    public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(@PathVariable Long projectId) {
+
+        List<Response> response = questionService.countByProgressStep(projectId);
+
+        return BaseResponse.success(response);
     }
 }
