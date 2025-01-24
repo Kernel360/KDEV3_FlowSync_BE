@@ -39,13 +39,21 @@ public class NoticeController {
     public BaseResponse<NoticeUpdateResponseDto> deleteNotice(
             @PathVariable Long noticeid
     ) {
-        NoticeUpdateResponseDto noticeDeleteResponseDto = noticeService.deleteNotice(noticeid);
-        return BaseResponse.success(noticeDeleteResponseDto);
+        NoticeUpdateResponseDto noticeDeleteResponse = noticeService.deleteNotice(noticeid);
+        return BaseResponse.success(noticeDeleteResponse);
     }
 
     @GetMapping("/notices")
     public BaseResponse<List<NoticeGetListResponseDto>> findAllNotices(){
         List<NoticeGetListResponseDto> result = noticeService.findAllNotices();
         return BaseResponse.success(result);
+    }
+
+    @GetMapping("/notices/{noticeid}")
+    public BaseResponse<NoticeUpdateResponseDto> getNotice(
+            @PathVariable Long noticeid
+    ){
+        NoticeUpdateResponseDto noticeGetResponse = noticeService.getNotice(noticeid);
+        return BaseResponse.success(noticeGetResponse);
     }
 }

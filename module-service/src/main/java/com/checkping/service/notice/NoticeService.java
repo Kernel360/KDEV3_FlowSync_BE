@@ -18,6 +18,6 @@ public interface NoticeService {
 
     List<NoticeGetListResponseDto> findAllNotices();
 
-//    NoticeUpdateResponseDto getNotice(Long noticeid);
+    NoticeUpdateResponseDto getNotice(Long noticeid);
 
 }

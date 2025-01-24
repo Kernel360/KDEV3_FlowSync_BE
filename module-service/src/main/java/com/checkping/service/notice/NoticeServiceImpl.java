@@ -81,4 +81,13 @@ public class NoticeServiceImpl implements NoticeService {
                 .map(NoticeGetListResponseDto::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public NoticeUpdateResponseDto getNotice(Long noticeid) {
+
+        Notice notice = noticeRepository.findById(noticeid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        return NoticeUpdateResponseDto.toDto(notice);
+    }
 }
