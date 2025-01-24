@@ -4,6 +4,7 @@ import com.checkping.common.enums.ErrorCode;
 import com.checkping.domain.member.Member;
 import com.checkping.exception.member.MemberException;
 import com.checkping.infra.repository.member.MemberRepository;
+import com.checkping.service.member.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,10 +31,20 @@ public class CurrentMemberUtil {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new MemberException("사용자가 인증되지 않았습니다.", ErrorCode.UNAUTHORIZED);
         }
-        UserDetails userDetail = (UserDetails) authentication.getPrincipal();
+        Object principal = authentication.getPrincipal();
+        String email;
 
+        if (principal instanceof CustomUserDetails) {
+            email = ((CustomUserDetails) principal).getUsername(); // getUsername()은 이메일을 반환한다고 가정
+        } else if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            email = (String) principal;
+        } else {
+            throw new MemberException("인증된 사용자의 정보를 불러올 수 없습니다.", ErrorCode.USER_NOT_FOUND);
+        }
 
-        return authentication.getName(); // 토큰에서 추출된 이메일
+        return email;
     }
 
     /**
@@ -44,10 +55,8 @@ public class CurrentMemberUtil {
      */
     public Member getCurrentMember() {
         String email = getCurrentUserEmail();
-//        Optional<Member> result = memberRepository.findByEmail(email);// 현재 인증된 사용자의 이메일을 가져옴
 
-        // 1/22 테스트용 코드 (관리자 계정으로 로그인) //TODO: 추후 삭제
-        Optional<Member> result = memberRepository.findByEmail("admin@example.com");
+        Optional<Member> result = memberRepository.findByEmail(email);
         return result
                 .orElseThrow(() -> new MemberException("사용자를 찾을 수 없습니다: " + email, ErrorCode.USER_NOT_FOUND));
     }
