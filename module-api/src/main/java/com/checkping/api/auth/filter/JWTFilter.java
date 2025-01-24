@@ -72,7 +72,6 @@ public class JWTFilter extends OncePerRequestFilter {
      #2. 권한이 필요 없는 경우에도 만료된 토큰이 들어오면 접근 차단하는 문제 해결*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         // 쿠키에서 토큰 추출
         Cookie[] cookies = request.getCookies();
 

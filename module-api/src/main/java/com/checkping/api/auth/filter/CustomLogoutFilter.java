@@ -13,6 +13,8 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+// TODO : 1/24 로그인을 필터에서 처리하지 않고 컨트롤러에서 처리하도록 변경 - 테스트 후 파일 삭제 예정
+
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
