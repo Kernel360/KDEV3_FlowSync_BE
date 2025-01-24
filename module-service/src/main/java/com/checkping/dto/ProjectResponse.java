@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class ProjectResponse {
 
@@ -39,10 +40,10 @@ public class ProjectResponse {
         @Schema(description = "프로젝트 마감 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
-        private Long resisterId;
-        private Long updaterId;
+        private UUID resisterId;
+        private UUID updaterId;
         private String deletedYn;
-
+        private UUID devOwnerId;
         private String developerName;
         private String customerName;
 
@@ -61,6 +62,7 @@ public class ProjectResponse {
             projectDto.setResisterId(project.getResisterId());
             projectDto.setUpdaterId(project.getUpdaterId());
             projectDto.setDeletedYn(project.getDeletedYn());
+            projectDto.setDevOwnerId(project.getDevOwnerId());
             projectDto.setDeveloperName(project.getOrganizations().get(0).getName());
             projectDto.setCustomerName(project.getOrganizations().get(1).getName());
             return projectDto;

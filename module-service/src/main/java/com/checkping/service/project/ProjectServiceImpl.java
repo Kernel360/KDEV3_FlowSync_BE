@@ -4,18 +4,20 @@ import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.infra.repository.project.ProgressStepRepository;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Tuple;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,16 +31,13 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private OrganizationRepository organizationRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private final ProjectRepository projectRepository;
+    private final OrganizationRepository organizationRepository;
+    private final MemberRepository memberRepository;
+    private final ProgressStepRepository progressStepRepository;
 
     @Override
+    @Transactional
     public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
@@ -48,8 +47,25 @@ public class ProjectServiceImpl implements ProjectService {
             request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        Project project = projectRepository.save(
-            ProjectRequest.ResisterDto.toEntity(request, organizations, members));
+        Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
+
+        List<ProgressStep> steps = new ArrayList<>();
+
+        for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
+            ProgressStep progressStep = ProgressStep.builder()
+                    .project_id(project.getId())
+                    .name(step.getDescription())
+                    .build();
+
+            steps.add(progressStep);
+        }
+
+        progressStepRepository.saveAll(steps);
+
+        Long firstStepId = steps.get(0).getId();
+
+        project.updateProgressStep(firstStepId);
+
         return ProjectResponse.ProjectDto.toDto(project);
     }
 
@@ -120,12 +136,12 @@ public class ProjectServiceImpl implements ProjectService {
             ));
     }
 
-    private List<Organization> getOrganizations(String developerOrgId, String customerOrgId) {
+    private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {
         return Arrays.asList(
-            organizationRepository.findById(UUID.fromString(developerOrgId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
-            organizationRepository.findById(UUID.fromString(customerOrgId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
+                organizationRepository.findById(developerOrgId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
+                organizationRepository.findById(customerOrgId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
         );
     }
 
