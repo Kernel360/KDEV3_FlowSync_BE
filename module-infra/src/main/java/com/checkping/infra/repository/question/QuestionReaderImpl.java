@@ -98,4 +98,16 @@ public class QuestionReaderImpl implements QuestionReader {
     public Optional<Question> getQuestionById(Long id) {
         return questionRepository.findById(id);
     }
+
+    /**
+     * 진행상태별 Question 개수 조회
+     *
+     * @param projectId project id
+     * @param progressStepId progress step id
+     * @return 진행상태별 Question 개수
+     */
+    @Override
+    public Long countQuestionsByProgressStep(Long projectId, Long progressStepId) {
+        return questionRepository.countByProjectIdAndProgressStepId(projectId, progressStepId);
+    }
 }
