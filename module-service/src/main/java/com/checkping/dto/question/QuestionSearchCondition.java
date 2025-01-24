@@ -12,12 +12,13 @@ public class QuestionSearchCondition {
 
     /*
     category : 게시글 카테고리 (Enum 으로 변경해야함)
+    progressId : 게시글 진행 단계 ID
     status : 게시글 상태 (Enum 으로 변경해야함)
     keyword : 게시글 검색어 (String)
     currentPage: 현재 페이지
     pageSize: 페이지 사이즈
      */
-    private String category;
+    private Long progressId;
     private String status;
     private String keyword;
     private Integer currentPage;
@@ -26,15 +27,15 @@ public class QuestionSearchCondition {
     public static QuestionSearchInfo.SearchCondition toInfo(
         QuestionSearchCondition searchCondition) {
         return new QuestionSearchInfo.SearchCondition(
-            convertCategory(searchCondition.getCategory()),
+            searchCondition.getProgressId(),
             convertStatus(searchCondition.getStatus()), searchCondition.getKeyword(),
             searchCondition.getCurrentPage(), searchCondition.getPageSize());
     }
 
-    public QuestionSearchCondition(String category, String status, String keyword,
+    public QuestionSearchCondition(Long progressId, String status, String keyword,
         Integer currentPage,
         Integer pageSize) {
-        this.category = category;
+        this.progressId = progressId;
         this.status = status;
         this.keyword = keyword;
         this.currentPage = currentPage;
