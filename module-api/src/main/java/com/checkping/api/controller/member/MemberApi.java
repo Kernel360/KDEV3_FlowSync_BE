@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 
 import java.util.UUID;
-import org.springframework.http.MediaType;
 
 @Tag(name = "회원 관리 API(MemberApi)", description = "회원 관리 API입니다.")
 public interface MemberApi {
@@ -52,7 +52,7 @@ public interface MemberApi {
             @Schema(description = "회원 ID", example = "123e4567-e89b-12d3-a456-426614174000")
             @Parameter(description = "회원 ID", required = true) UUID memberId,
             //이유 예외처리 예시
-            @Schema(description = "탈퇴 사유", example ="{reason : '퇴사로 인한 탈퇴'}")
+            @Schema(description = "탈퇴 사유", example ="퇴사로 인한 탈퇴")
             @Parameter(description = "탈퇴 사유", required = true) String reason);
 
 }

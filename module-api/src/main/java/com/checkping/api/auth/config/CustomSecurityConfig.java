@@ -2,9 +2,6 @@ package com.checkping.api.auth.config;
 
 import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.service.member.util.JwtUtil;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 
 @Configuration
 @EnableWebSecurity
@@ -62,15 +64,14 @@ public class CustomSecurityConfig {
             headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         //경로별 인가 작업
-        http.authorizeHttpRequests(
-            (auth) -> auth.requestMatchers("/login").permitAll().requestMatchers("/reissue")
-                .permitAll()
+        http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/reissue").permitAll()
                 //anyRequest().authenticated());
                 .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
         //기능 테스트 위해서 일시적인 주석처리 2025/01/15
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http.sessionManagement(

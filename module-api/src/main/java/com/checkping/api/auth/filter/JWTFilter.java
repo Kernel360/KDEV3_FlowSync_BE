@@ -4,9 +4,8 @@ package com.checkping.api.auth.filter;
 import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
-import com.checkping.exception.auth.AccessTokenNotFoundException;
-import com.checkping.service.member.util.JwtUtil;
 import com.checkping.service.member.auth.CustomUserDetails;
+import com.checkping.service.member.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,36 +32,25 @@ public class JWTFilter extends OncePerRequestFilter {
     // TODO 필터 거치지 않을 경로 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // h2-console 경로는 필터 제외
-        if (request.getRequestURI().startsWith("/h2-console")) {
+        String uri = request.getRequestURI();
+
+        // 기존 제외 경로
+        if (uri.startsWith("/h2-console") ||
+                uri.startsWith("/login") ||
+                uri.startsWith("/reissue") ||
+                uri.equals("/admins/members") ||
+                uri.equals("/admins/organizations")) {
             return true;
         }
 
-        // login 경로는 필터 제외
-        if (request.getRequestURI().startsWith("/login")) {
+        // 스웨거 관련 경로 제외
+        if (uri.startsWith("/swagger-ui/") ||
+                uri.equals("/swagger-ui") ||
+                uri.startsWith("/v3/api-docs")) {
             return true;
         }
 
-        // 리프레시 토큰 재발급 시 필터 제외
-        if (request.getRequestURI().startsWith(("/reissue"))) {
-            return true;
-        }
-
-        // 회원 생성 시 필터 제외
-        if (request.getRequestURI().equals("/admins/members")){
-            return true;
-        }
-
-        // 업체 생성시 필터 제외
-        if (request.getRequestURI().equals("/admins/organizations")){
-            return true;
-        }
-
-//        // 비밀번호 까먹었을 때 재설정 요청 시 필터 제외
-
-
-        //return super.shouldNotFilter(request);
-            return false;
+        return false;
     }
 
 
