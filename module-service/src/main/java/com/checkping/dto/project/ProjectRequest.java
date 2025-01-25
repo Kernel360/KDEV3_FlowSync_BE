@@ -1,4 +1,4 @@
-package com.checkping.dto;
+package com.checkping.dto.project;
 
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
