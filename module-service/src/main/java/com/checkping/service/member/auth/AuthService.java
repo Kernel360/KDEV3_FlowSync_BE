@@ -43,7 +43,7 @@ public class AuthService {
             String accessToken = jwtUtil.createJwt("access", name, email, role, 15);
             String refreshToken = jwtUtil.createJwt("refresh", name, email, role, 1440);
 
-            // 4) 토큰 묶음을 반환 (Controller에서 쿠키로 만들어 응답할 수도 있음)
+            // 4) 토큰을 반환
             return new AuthTokens(accessToken, refreshToken);
 
         } catch (Exception e) {
@@ -82,8 +82,6 @@ public class AuthService {
             throw new InvalidTokenException();
         }
 
-        // (필요하다면 서버 측에서 refresh 토큰을 블랙리스트 처리 등)
-
-        // 로그아웃 자체는 쿠키 제거(Controller단에서 처리) 등으로 완성
+        // TODO:  refresh 토큰을 블랙리스트 처리
     }
 }
