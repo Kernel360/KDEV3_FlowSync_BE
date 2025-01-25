@@ -38,6 +38,7 @@ public enum ErrorCode {
     */
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    ORGANIZATION_NOT_FOUND(HttpStatus.NOT_FOUND, "업체를 찾을 수 없습니다."),
 
     /*
         409 Conflict
