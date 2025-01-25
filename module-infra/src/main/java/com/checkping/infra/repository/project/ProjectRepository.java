@@ -1,6 +1,8 @@
 package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
+import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +37,22 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "GROUP BY p.management_step")
     List<Tuple> countProjectsByManagementStep();
 
+    @Query(value = "SELECT " +
+            "    p.id, " +
+            "    p.name AS project_name, " +
+            "    p.description, " +
+            "    o.name AS dev_org_name, " +
+            "    m.profile_image_url, " +
+            "    m.name AS member_name, " +
+            "    m.job_role, " +
+            "    m.phone_num, " +
+            "    p.start_at, " +
+            "    p.close_at " +
+            "FROM project p " +
+            "LEFT JOIN member m ON p.dev_owner_id = m.id " +
+            "LEFT JOIN organization o ON m.org_id = o.id " +
+            "WHERE p.id = :projectId", nativeQuery = true)
+    ProjectDetailsDto findProjectById(@Param("projectId") Long projectId);
+
+    List<ProjectInfoProjection> findByStatus(Project.Status status);
 }
