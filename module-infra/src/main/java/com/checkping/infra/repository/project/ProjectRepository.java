@@ -4,6 +4,8 @@ import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import jakarta.persistence.Tuple;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +32,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             ") AS org_info ON p.id = org_info.project_id " +
             "WHERE (:keyword IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
             "AND (:status IS NULL OR p.status = :status)", nativeQuery = true)
-    List<Project> findProjectsWithOrganizationInfoByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status);
+    Page<Project> findProjectsWithOrganizationInfoByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable);
 
     @Query("SELECT p.management_step AS managementStep, COUNT(p) AS projectCount " +
             "FROM Project p " +

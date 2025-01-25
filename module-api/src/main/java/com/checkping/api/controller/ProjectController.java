@@ -1,11 +1,14 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.ProjectResponse;
+import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
-import com.checkping.dto.ProjectRequest;
+import com.checkping.dto.project.ProjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,9 +50,13 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping(value = {"/admins/projects", "/projects"})
-    public BaseResponse<List<ProjectResponse.ProjectDto>> listProjects(@RequestParam(required = false) String keyword, @RequestParam(required = false) String status) {
+    public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status,
+            @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            ) {
 
-        List<ProjectResponse.ProjectDto> projects = projectService.findAllProjects(keyword, status);
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, pageable);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
     }
