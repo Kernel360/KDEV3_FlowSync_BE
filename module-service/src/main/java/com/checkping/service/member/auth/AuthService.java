@@ -61,7 +61,7 @@ public class AuthService {
         // 1) 쿠키에서 refresh 추출
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            throw new RefreshTokenNotFoundException();
+            throw new LoginFailureException();
         }
 
         String refresh = null;
