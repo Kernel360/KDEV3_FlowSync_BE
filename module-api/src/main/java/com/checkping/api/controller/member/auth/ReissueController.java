@@ -1,6 +1,6 @@
 package com.checkping.api.controller.member.auth;
 
-import com.checkping.api.auth.util.ResponseUtil;
+import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +35,8 @@ public class ReissueController implements ReissueApi {
         String newRefresh = reissueService.generateRefreshToken(name, email, role);
 
         // Set response
-        response.addCookie(ResponseUtil.createCookie("access", newAccess));
-        response.addCookie(ResponseUtil.createCookie("refresh", newRefresh));
+        response.addCookie(CookieUtil.createCookie("access", newAccess));
+        response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
 
         return BaseResponse.success("Reissue success");
     }
