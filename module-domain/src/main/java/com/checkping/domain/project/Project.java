@@ -10,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 @Getter
@@ -39,7 +38,7 @@ public class Project extends BaseEntity {
     */
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 추후 UUID로 수정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", length = 100)
@@ -80,10 +79,10 @@ public class Project extends BaseEntity {
     private LocalDateTime closeAt;
 
     @Column(name = "resister_id", columnDefinition = "BINARY(16)")
-    private UUID resisterId;
+    private Long resisterId;
 
     @Column(name = "updater_id", columnDefinition = "BINARY(16)")
-    private UUID updaterId;
+    private Long updaterId;
 
     @Column(name = "deleted_yn")
     private String deletedYn;
