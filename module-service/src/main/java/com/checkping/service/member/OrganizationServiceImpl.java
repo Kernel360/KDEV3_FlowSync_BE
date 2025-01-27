@@ -1,6 +1,7 @@
 package com.checkping.service.member;
 
 import com.checkping.common.dto.PageInfo;
+import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
@@ -65,7 +66,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
-        Pageable pageable = PageRequest.of(pageRequest.getCurrentpage() - 1, pageRequest.getPageSize());
+        Pageable pageable = PageRequest.of(pageRequest.getCurrentPage() - 1, pageRequest.getPageSize());
 
         Page<Organization> result = organizationRepository.findByTypeAndStatus(
                 type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
@@ -74,12 +75,11 @@ public class OrganizationServiceImpl implements OrganizationService {
                 pageable);
 
         List<OrganizationGet.Response> dtoList = result.getContent().stream().map(OrganizationGet.Response::toDto).toList();
+        PageMetaResponse meta = PageMetaResponse.fromPage(result);
 
-        long totalCount = result.getTotalElements();
         return PageInfo.Response.<OrganizationGet.Response>builder()
                 .dtoList(dtoList)
-                .pageRequest(pageRequest)
-                .totalCount((int) totalCount)
+                .meta(meta.toMap())
                 .build();
     }
 

@@ -4,8 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Map;
 
 public class PageInfo {
     /*
@@ -23,7 +22,7 @@ public class PageInfo {
 
         @Builder.Default
         @Schema(description = "페이지 번호", example = "1")
-        private int currentpage = 1;
+        private int currentPage = 1;
         @Builder.Default
         @Schema(description = "게시글 수", example = "10")
         private int pageSize = 10;
@@ -32,48 +31,22 @@ public class PageInfo {
     }
 
     /*
-    dtoList :
-    pageNumList :
-    pageRequest :
-    prev :
-    next :
-    totalCount :
-    prevPage :
-    nextPage :
-    totalPage :
-    current :
+    dtoList : 전체 조회 목록
+    meta : 페이지 정보
      */
     @Getter
     @Setter
     public static class Response<E> {
 
         private List<E> dtoList;
-        private List<Integer> pageNumList;
-        private PageInfo.Request pageRequest;
-        private boolean prev, next;
-        private int totalCount, prevPage, nextPage, totalPage, current;
+        private Map<String, Object> meta;
 
         @Builder
-        public Response(List<E> dtoList, PageInfo.Request pageRequest, long totalCount) {
+        public Response(List<E> dtoList, Map<String, Object> meta) {
             this.dtoList = dtoList;
-            this.pageRequest = pageRequest;
-            this.totalCount = (int) totalCount;
-            int end = (int) (Math.ceil(pageRequest.getCurrentpage() / 10.0)) * 10;
-            int start = end - 9;
-            int last = (int) (Math.ceil((totalCount / (double) pageRequest.getPageSize())));
-            end = Math.min(end, last);
-            this.prev = start > 1;
-            this.next = totalCount > end * pageRequest.getPageSize();
-            this.pageNumList = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
-            if (prev) {
-                this.prevPage = start - 1;
-            }
-            if (next) {
-                this.nextPage = end + 1;
-            }
-            this.totalPage = this.pageNumList.size();
-            this.current = pageRequest.getCurrentpage();
+            this.meta = meta;
         }
+
     }
 
 }
