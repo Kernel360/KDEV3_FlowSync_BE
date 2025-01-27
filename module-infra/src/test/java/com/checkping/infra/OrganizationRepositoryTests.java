@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @SpringBootTest
 class OrganizationRepositoryTests {
@@ -36,7 +35,7 @@ class OrganizationRepositoryTests {
     @Test
     void testCreateAndGetOrganization() {
 
-        UUID id = null;
+        Long id = null;
 
         for (int i = 0; i < 5; i++) {
             Organization organization = Organization.builder()

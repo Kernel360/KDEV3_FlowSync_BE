@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping({"/admins/organizations/{organizationId}", "/organization/{organizationId}"})
     @Override
-    public BaseResponse<OrganizationGet.Response> getOrganization(@PathVariable UUID organizationId) {
+    public BaseResponse<OrganizationGet.Response> getOrganization(@PathVariable Long organizationId) {
 
         OrganizationGet.Response response = organizationService.getOrganization(organizationId);
 
@@ -53,7 +52,7 @@ public class OrganizationController implements OrganizationApi {
     @PutMapping(value = "/admins/organizations/{organizationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
-            @PathVariable UUID organizationId,
+            @PathVariable Long organizationId,
             @RequestPart(value = "content") OrganizationUpdate.Request request,
             @RequestPart(required = false, value = "file") MultipartFile file) {
 
@@ -66,7 +65,7 @@ public class OrganizationController implements OrganizationApi {
 
     @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable UUID organizationId) {
+    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable Long organizationId) {
 
         OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
 

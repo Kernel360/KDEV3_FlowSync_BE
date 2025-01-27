@@ -6,17 +6,15 @@ import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 public interface OrganizationService {
 
     OrganizationCreate.Response createOrganization(OrganizationCreate.Request request, MultipartFile file);
 
-    OrganizationGet.Response getOrganization(UUID id);
+    OrganizationGet.Response getOrganization(Long id);
 
     PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest);
 
-    OrganizationUpdate.Response modifyOrganization(UUID id, OrganizationUpdate.Request request, MultipartFile file);
+    OrganizationUpdate.Response modifyOrganization(Long id, OrganizationUpdate.Request request, MultipartFile file);
 
-    OrganizationGet.Response removeOrganization(UUID id);
+    OrganizationGet.Response removeOrganization(Long id);
 }
