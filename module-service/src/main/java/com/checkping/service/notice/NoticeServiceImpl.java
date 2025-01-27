@@ -63,17 +63,23 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeResponse deleteNotice(Long noticeid){
 
-        Notice notice = noticeRepository.findById(noticeid)
+        Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        noticeRepository.deleteById(noticeid);
+        if(notice.getIsDeleted()){
+            throw new BaseException(ErrorCode.BAD_REQUEST);
+        }
+
+        notice.markAsDeleted();
+
+        noticeRepository.save(notice);
 
         return NoticeResponse.toDto(notice);
     }
 
     @Override
     public List<NoticeGetListResponse> findAllNotices(){
-        List<Notice> result = noticeRepository.findAll();
+        List<Notice> result = noticeRepository.findAllByIsDeletedFalse();
 
         return result.stream()
                 .map(NoticeGetListResponse::toDto)
@@ -83,7 +89,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeResponse getNotice(Long noticeid) {
 
-        Notice notice = noticeRepository.findById(noticeid)
+        Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         return NoticeResponse.toDto(notice);

@@ -22,6 +22,8 @@ public class NoticeCreateResponse {
 
     private Notice.Priority priority;
 
+    private Boolean isDeleted;
+
     private LocalDateTime regAt;
 
     public static NoticeCreateResponse toDto(Notice notice){
@@ -32,6 +34,7 @@ public class NoticeCreateResponse {
                 .content(notice.getContent())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
+                .isDeleted(notice.getIsDeleted())
                 .regAt(notice.getRegAt())
                 .build();
     }

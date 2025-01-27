@@ -20,6 +20,8 @@ public class NoticeGetListResponse {
 
     private Notice.Priority priority;
 
+    private Boolean isDeleted;
+
     private LocalDateTime regAt;
 
     private LocalDateTime updatedAt;
@@ -31,6 +33,7 @@ public class NoticeGetListResponse {
                 .title(notice.getTitle())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
+                .isDeleted(notice.getIsDeleted())
                 .regAt(notice.getUpdatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();

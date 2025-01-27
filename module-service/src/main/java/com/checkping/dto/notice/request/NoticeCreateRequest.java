@@ -27,6 +27,7 @@ public class NoticeCreateRequest {
                 .content(content)
                 .category(Notice.Category.valueOf(category))
                 .priority(Notice.Priority.valueOf(priority))
+                .isDeleted(false)
                 .build();
     }
 }
