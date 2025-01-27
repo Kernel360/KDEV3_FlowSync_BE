@@ -50,11 +50,11 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, page, size);
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, currentPage, pageSize);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
     }
@@ -75,8 +75,8 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping("/admins/projects/status")
-    public BaseResponse<Map<String, List<ProjectResponse.ProjectInfoDto>>> listProjectInfoByStatus() {
-        Map<String, List<ProjectResponse.ProjectInfoDto>> projectList = projectService.getProjectInfoListByStatus();
+    public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
+        ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
         return BaseResponse.success(projectList);
     }
 }

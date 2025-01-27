@@ -46,5 +46,5 @@ public interface ProjectApi {
     );
 
     @Operation(summary = "프로젝트 상태별 리스트", description = "프로젝트 상태별 리스트를 조회하는 기능입니다.")
-    BaseResponse<Map<String, List<ProjectResponse.ProjectInfoDto>>> listProjectInfoByStatus();
+    BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus();
 }

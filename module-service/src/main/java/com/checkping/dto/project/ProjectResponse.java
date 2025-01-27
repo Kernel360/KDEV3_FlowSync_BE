@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ProjectResponse {
 
@@ -151,6 +150,17 @@ public class ProjectResponse {
             Map<String, Object> result =  meta.toMap();
 
             return new ProjectListDto(projectDtos, result);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoListDto {
+        private Map<String, List<ProjectInfoDto>> projectInfoMap;
+
+        public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
+            return new ProjectInfoListDto(projectInfoMap);
         }
     }
 }
