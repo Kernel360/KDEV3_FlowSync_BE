@@ -29,9 +29,9 @@ public interface OrganizationApi {
 
     @Operation(summary = "업체 전체 조회", description = "업체 조회 기능입니다.")
     BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
-            @Parameter(description = "업체 타입") @RequestParam(required = false) String type,
-            @Parameter(description = "업체 상태") @RequestParam(required = false) String status,
-            @Parameter(description = "page & size") PageInfo.Request pageRequest
+            @Parameter(description = "업체 타입(CUSTOMER / DEVELOPER)") @RequestParam(required = false) String type,
+            @Parameter(description = "업체 상태(ACTIVE / INACTIVE") @RequestParam(required = false) String status,
+            @Parameter(description = "page & size & keyword") PageInfo.Request pageRequest
     );
 
     @Operation(summary = "업체 수정", description = "업체 정보 수정 기능입니다.")
