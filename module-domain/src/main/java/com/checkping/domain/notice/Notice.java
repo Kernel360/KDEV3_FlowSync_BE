@@ -41,7 +41,7 @@ public class Notice extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
