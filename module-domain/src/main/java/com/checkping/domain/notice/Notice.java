@@ -41,6 +41,9 @@ public class Notice extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column
+    private Boolean isDeleted;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
@@ -82,5 +85,10 @@ public class Notice extends BaseEntity {
         if (content != null) this.content = content;
         if (category != null) this.category = Category.valueOf(category);
         if (priority != null) this.priority = Priority.valueOf(priority);
+    }
+
+    public void markAsDeleted() {
+
+        this.isDeleted = true;
     }
 }
