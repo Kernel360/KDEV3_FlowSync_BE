@@ -21,7 +21,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -111,7 +113,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, Pageable pageable) {
+    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "id");
 
         Page<Project> results = projectRepository.findProjectsWithOrganizationInfoByKeywordAndStatus(
             keyword, status, pageable);
