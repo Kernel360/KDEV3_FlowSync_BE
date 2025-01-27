@@ -28,14 +28,6 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
-        if (noticeCreateRequest.getAdminId() == null ||
-                StringUtils.isBlank(noticeCreateRequest.getTitle()) ||
-                StringUtils.isBlank(noticeCreateRequest.getContent()) ||
-                noticeCreateRequest.getCategory() == null ||
-                noticeCreateRequest.getPriority() == null) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
-
         Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
         return NoticeCreateResponse.toDto(notice);
     }
@@ -43,13 +35,6 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
-
-        if(StringUtils.isBlank(noticeUpdateRequest.getTitle()) &&
-                StringUtils.isBlank(noticeUpdateRequest.getContent()) &&
-                noticeUpdateRequest.getCategory() == null &&
-                noticeUpdateRequest.getPriority() == null){
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
