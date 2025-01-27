@@ -1,23 +1,23 @@
 package com.checkping.service.notice;
 
-import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
-import com.checkping.dto.notice.response.NoticeCreateResponseDto;
-import com.checkping.dto.notice.response.NoticeGetListResponseDto;
-import com.checkping.dto.notice.response.NoticeResponseDto;
+import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeUpdateRequest;
+import com.checkping.dto.notice.response.NoticeCreateResponse;
+import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeResponse;
 
 import java.util.List;
 
 public interface NoticeService {
 
-    NoticeCreateResponseDto registerNotice(NoticeCreateRequestDto noticeCreateRequestDto);
+    NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest);
 
-    NoticeResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
+    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest);
 
-    NoticeResponseDto deleteNotice(Long noticeid);
+    NoticeResponse deleteNotice(Long noticeid);
 
-    List<NoticeGetListResponseDto> findAllNotices();
+    List<NoticeGetListResponse> findAllNotices();
 
-    NoticeResponseDto getNotice(Long noticeid);
+    NoticeResponse getNotice(Long noticeid);
 
 }

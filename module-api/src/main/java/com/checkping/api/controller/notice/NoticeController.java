@@ -1,11 +1,11 @@
 package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
-import com.checkping.dto.notice.response.NoticeCreateResponseDto;
-import com.checkping.dto.notice.response.NoticeGetListResponseDto;
-import com.checkping.dto.notice.response.NoticeResponseDto;
+import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeUpdateRequest;
+import com.checkping.dto.notice.response.NoticeCreateResponse;
+import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeResponse;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,38 +21,38 @@ public class NoticeController {
     private NoticeServiceImpl noticeService;
 
     @PostMapping("/admins/notices")
-    public BaseResponse<NoticeCreateResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
-        NoticeCreateResponseDto noticeCreateResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
-        return BaseResponse.success(noticeCreateResponseDto);
+    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest) {
+        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest);
+        return BaseResponse.success(noticeCreateResponse);
     }
 
     @PatchMapping("/admins/notices/{noticeid}")
-    public BaseResponse<NoticeResponseDto> updateNotice(
+    public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
-            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto) {
-        NoticeResponseDto noticeResponseDto = noticeService.updateNotice(noticeid, noticeUpdateRequestDto);
-        return BaseResponse.success(noticeResponseDto);
+            @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
+        NoticeResponse noticeResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
+        return BaseResponse.success(noticeResponse);
     }
 
     @DeleteMapping("/admins/notices/{noticeid}")
-    public BaseResponse<NoticeResponseDto> deleteNotice(
+    public BaseResponse<NoticeResponse> deleteNotice(
             @PathVariable Long noticeid
     ) {
-        NoticeResponseDto noticeDeleteResponse = noticeService.deleteNotice(noticeid);
+        NoticeResponse noticeDeleteResponse = noticeService.deleteNotice(noticeid);
         return BaseResponse.success(noticeDeleteResponse);
     }
 
     @GetMapping("/notices")
-    public BaseResponse<List<NoticeGetListResponseDto>> findAllNotices(){
-        List<NoticeGetListResponseDto> result = noticeService.findAllNotices();
+    public BaseResponse<List<NoticeGetListResponse>> findAllNotices(){
+        List<NoticeGetListResponse> result = noticeService.findAllNotices();
         return BaseResponse.success(result);
     }
 
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<NoticeResponseDto> getNotice(
+    public BaseResponse<NoticeResponse> getNotice(
             @PathVariable Long noticeid
     ){
-        NoticeResponseDto noticeGetResponse = noticeService.getNotice(noticeid);
+        NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 }

@@ -1,14 +1,16 @@
 package com.checkping.dto.notice.request;
 
+
 import com.checkping.domain.notice.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class NoticeUpdateRequestDto {
+public class NoticeCreateRequest {
+    private Long adminId;
 
     private String title;
 
@@ -20,6 +22,7 @@ public class NoticeUpdateRequestDto {
 
     public Notice toEntity(){
         return Notice.builder()
+                .adminId(adminId)
                 .title(title)
                 .content(content)
                 .category(Notice.Category.valueOf(category))
