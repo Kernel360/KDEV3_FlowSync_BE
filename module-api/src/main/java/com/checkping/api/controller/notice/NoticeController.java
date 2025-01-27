@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class NoticeController {
+public class NoticeController implements NoticeApi {
 
     @Autowired
     private NoticeServiceImpl noticeService;
