@@ -31,7 +31,10 @@ public interface OrganizationApi {
     BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @Parameter(description = "업체 타입(CUSTOMER / DEVELOPER)") @RequestParam(required = false) String type,
             @Parameter(description = "업체 상태(ACTIVE / INACTIVE") @RequestParam(required = false) String status,
-            @Parameter(description = "page & size & keyword") PageInfo.Request pageRequest
+            @Parameter(description = "페이지 번호") @RequestParam int page,
+            @Parameter(description = "게시글 수") @RequestParam int size,
+            @Parameter(description = "검색어") @RequestParam String keyword
+
     );
 
     @Operation(summary = "업체 수정", description = "업체 정보 수정 기능입니다.")

@@ -43,9 +43,14 @@ public class OrganizationController implements OrganizationApi {
     public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String status,
-            PageInfo.Request pageRequest
+            @RequestParam(defaultValue = "1") int CurrentPage,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam String keyword
     ) {
-        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, pageRequest);
+
+        PageInfo.Request request = new PageInfo.Request(CurrentPage, pageSize, keyword);
+
+        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, request);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
