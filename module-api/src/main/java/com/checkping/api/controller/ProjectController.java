@@ -6,9 +6,6 @@ import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.dto.project.ProjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,10 +50,11 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status,
-            @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, pageable);
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, page, size);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
     }

@@ -6,7 +6,6 @@ import com.checkping.dto.project.ProjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,8 @@ public interface ProjectApi {
     BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @Parameter(description = "프로젝트 상태") String status,
             @Parameter(description = "프로젝트 검색어") String keyword,
-            @Parameter(description = "페이지 정보") Pageable pageable
+            @Parameter(description = "페이지 번호") int page,
+            @Parameter(description = "페이지 사이즈") int size
     );
 
     @Operation(summary = "프로젝트 관리단계 별 개수 조회", description = "프로젝트 관리단계 별 개수를 조회하는 기능입니다.")
