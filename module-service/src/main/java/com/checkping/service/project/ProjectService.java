@@ -19,5 +19,5 @@ public interface ProjectService {
 
     ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId);
 
-    Map<String, List<ProjectResponse.ProjectInfoDto>> getProjectInfoListByStatus();
+    ProjectResponse.ProjectInfoListDto getProjectInfoListByStatus();
 }

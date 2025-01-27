@@ -75,8 +75,8 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping("/admins/projects/status")
-    public BaseResponse<Map<String, List<ProjectResponse.ProjectInfoDto>>> listProjectInfoByStatus() {
-        Map<String, List<ProjectResponse.ProjectInfoDto>> projectList = projectService.getProjectInfoListByStatus();
+    public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
+        ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
         return BaseResponse.success(projectList);
     }
 }
