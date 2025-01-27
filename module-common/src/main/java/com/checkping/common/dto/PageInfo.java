@@ -20,12 +20,11 @@ public class PageInfo {
     @NoArgsConstructor
     public static class Request {
 
-        @Builder.Default
+
         @Schema(description = "페이지 번호", example = "1")
-        private int currentPage = 1;
-        @Builder.Default
+        private int currentPage;
         @Schema(description = "게시글 수", example = "10")
-        private int pageSize = 10;
+        private int pageSize;
         @Schema(description = "검색어")
         private String keyword;
     }

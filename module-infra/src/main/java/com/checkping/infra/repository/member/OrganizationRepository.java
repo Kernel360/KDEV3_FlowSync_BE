@@ -21,7 +21,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     @Query("SELECT o FROM Organization o " +
             "WHERE (:type IS NULL OR o.type = :type) " +
             "AND (:status IS NULL OR o.status = :status)" +
-            "AND (:keyword IS NULL OR (TRIM(:keyword) != '' AND LOWER(o.name) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
+            "AND (:keyword IS NULL OR TRIM(:keyword) = '' OR LOWER(o.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<Organization> findByTypeAndStatus(
             @Param("type") Organization.Type type,
             @Param("status") Organization.Status status,
