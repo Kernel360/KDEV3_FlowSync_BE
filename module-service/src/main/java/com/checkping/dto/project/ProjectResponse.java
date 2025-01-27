@@ -152,4 +152,15 @@ public class ProjectResponse {
             return new ProjectListDto(projectDtos, result);
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoListDto {
+        private Map<String, List<ProjectInfoDto>> projectInfoMap;
+
+        public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
+            return new ProjectInfoListDto(projectInfoMap);
+        }
+    }
 }
