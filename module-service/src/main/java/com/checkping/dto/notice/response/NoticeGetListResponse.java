@@ -11,19 +11,19 @@ import java.time.LocalDateTime;
 @Builder
 public class NoticeGetListResponse {
 
-    @Schema(description = "공지사항 아이디", example = "123456")
+    @Schema(description = "공지사항 아이디", example = "1")
     private Long id;
 
-    @Schema(description = "관리자 아이디", example = "ADMINID")
+    @Schema(description = "관리자 아이디", example = "1")
     private Long adminId;
 
     @Schema(description = "공지사항 글 제목", example = "드릴말씀")
     private String title;
 
-    @Schema(description = "공지사항 글 카테고리", example = "정책변경")
+    @Schema(description = "공지사항 글 카테고리", example = "MAINTENANCE")
     private Notice.Category category;
 
-    @Schema(description = "공지사항 글 중요도", example = "긴급")
+    @Schema(description = "공지사항 글 중요도", example = "EMERGENCY")
     private Notice.Priority priority;
 
     @Schema(description = "업체 유형", example = "DEVELOPER")
