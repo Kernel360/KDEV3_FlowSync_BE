@@ -1,14 +1,18 @@
-package com.checkping.dto;
+package com.checkping.dto.project;
 
 
+import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class ProjectResponse {
 
@@ -128,4 +132,24 @@ public class ProjectResponse {
         private String projectName;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectListDto {
+        private List<ProjectDto> projects;
+        private Map<String, Object> meta;
+
+
+        public static ProjectListDto fromEntityPage(Page<Project> page) {
+            List<ProjectResponse.ProjectDto> projectDtos = page.getContent().stream()
+                    .map(ProjectResponse.ProjectDto::toDto)
+                    .toList();
+
+            PageMetaResponse meta = PageMetaResponse.fromPage(page);
+            Map<String, Object> result =  meta.toMap();
+
+            return new ProjectListDto(projectDtos, result);
+        }
+    }
 }

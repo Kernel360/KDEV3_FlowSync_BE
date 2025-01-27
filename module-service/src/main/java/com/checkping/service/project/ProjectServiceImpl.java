@@ -6,20 +6,24 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
-import com.checkping.dto.ProjectResponse;
+import com.checkping.dto.project.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import com.checkping.infra.repository.project.ProjectRepository;
-import com.checkping.dto.ProjectRequest;
+import com.checkping.dto.project.ProjectRequest;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -109,17 +113,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public List<ProjectResponse.ProjectDto> findAllProjects(String keyword, String status) {
-        List<Project> results = projectRepository.findProjectsWithOrganizationInfoByKeywordAndStatus(
-            keyword, status);
+    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "id");
 
-        return results.stream().map(result -> {
-            Project project = result;
+        Page<Project> results = projectRepository.findProjectsWithOrganizationInfoByKeywordAndStatus(
+            keyword, status, pageable);
 
-            ProjectResponse.ProjectDto projectDto = ProjectResponse.ProjectDto.toDto(project);
-
-            return projectDto;
-        }).collect(Collectors.toList());
+        return ProjectResponse.ProjectListDto.fromEntityPage(results);
     }
 
     @Override
