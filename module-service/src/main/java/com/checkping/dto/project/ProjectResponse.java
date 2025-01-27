@@ -69,9 +69,9 @@ public class ProjectResponse {
                     .startAt(project.getStartAt())
                     .closeAt(project.getCloseAt())
                     .deletedYn(project.getDeletedYn())
-                    /*.devOwnerId(project.getDevOwner().getId())*/
-                    /*.developerName(project.getOrganizations().get(0).getName())
-                    .customerName(project.getOrganizations().get(1).getName())*/
+                    .devOwnerId(project.getDevOwner().getId())
+                    .developerName(project.getOrganizations().get(0).getName())
+                    .customerName(project.getOrganizations().get(1).getName())
                     .build();
         }
     }
