@@ -1,6 +1,8 @@
 package com.checkping.api.auth.config;
 
 import com.checkping.service.member.util.JwtUtil;
+import org.springframework.boot.web.server.Cookie;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.HeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,7 +31,7 @@ public class CustomSecurityConfig {
     private final JwtUtil jwtUtil;
 
     public CustomSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-        JwtUtil jwtUtil) {
+                                JwtUtil jwtUtil) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
@@ -37,7 +40,7 @@ public class CustomSecurityConfig {
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-        throws Exception {
+            throws Exception {
 
         return configuration.getAuthenticationManager();
     }
@@ -56,10 +59,13 @@ public class CustomSecurityConfig {
         //http basic 인증 방식 disable
         http.httpBasic((auth) -> auth.disable());
         // 기본 로그아웃 비활성화
-        http.logout(logout->logout.disable());
+        http.logout(logout -> logout.disable());
 
-        http.headers(
-            headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        http.headers(headers ->
+                headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .addHeaderWriter((HeaderWriter) CookieSameSiteSupplier.of(Cookie.SameSite.NONE)
+                        ));
+
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
@@ -73,7 +79,7 @@ public class CustomSecurityConfig {
 
         //세션 설정
         http.sessionManagement(
-            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -84,13 +90,13 @@ public class CustomSecurityConfig {
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedOrigins(
-            List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
-                "https://dev.flowssync.com", "https://api.flowssync.com",
-                "https://test.flowssync.com"));
+                List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
+                        "https://dev.flowssync.com", "https://api.flowssync.com",
+                        "https://test.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(
-            Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
+                Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
