@@ -1,8 +1,6 @@
 package com.checkping.api.auth.config;
 
 import com.checkping.service.member.util.JwtUtil;
-import org.springframework.boot.web.server.Cookie;
-import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.header.HeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -63,8 +61,8 @@ public class CustomSecurityConfig {
 
         http.headers(headers ->
                 headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                        .addHeaderWriter((HeaderWriter) CookieSameSiteSupplier.of(Cookie.SameSite.NONE)
-                        ));
+                        .addHeaderWriter(new StaticHeadersWriter("Set-Cookie", "SameSite=None; Secure"))
+                        );
 
 
         //경로별 인가 작업
