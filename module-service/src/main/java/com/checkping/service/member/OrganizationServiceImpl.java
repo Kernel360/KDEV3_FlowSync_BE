@@ -68,9 +68,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Pageable pageable = PageRequest.of(pageRequest.getCurrentPage() - 1, pageRequest.getPageSize());
 
+        Organization.Type validType = checkType(type);
+        Organization.Status validStatus = checkStatus(status);
+
         Page<Organization> result = organizationRepository.findByTypeAndStatus(
-                type != null ? Organization.Type.valueOf(type.toUpperCase()) : null,
-                status != null ? Organization.Status.valueOf(status.toUpperCase()) : null,
+                validType,
+                validStatus,
                 pageRequest.getKeyword(),
                 pageable);
 
@@ -135,5 +138,22 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return OrganizationGet.Response.toDto(removeOrganization);
     }
+
+
+    private Organization.Type checkType(String type) {
+        if (type == null || type.trim().isEmpty()) {
+            return null;
+        }
+        return Organization.Type.valueOf(type.toUpperCase());
+    }
+
+    private Organization.Status checkStatus(String status) {
+        if (status == null || status.trim().isEmpty()) {
+            return null;
+        }
+        return Organization.Status.valueOf(status.toUpperCase());
+    }
+
+
 
 }
