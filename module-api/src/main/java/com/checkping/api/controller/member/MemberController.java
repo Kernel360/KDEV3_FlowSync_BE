@@ -28,12 +28,24 @@ public class MemberController implements MemberApi {
         return BaseResponse.success(response);
     }
 
+    //keyword(예: 이름/이메일 검색)
     @Override
     @GetMapping
     public BaseResponse<MemberListResponseDto> getAllMembers(
-            @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        MemberListResponseDto response = memberService.getAllMembersWithPaging(currentPage-1, pageSize);
+            @RequestParam(defaultValue = "1") int currentPage,  // 1부터 시작
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String keyword
+    ) {
+        // Service layer로 전달 시 0-based index로 맞춰줌
+        MemberListResponseDto response = memberService.getAllMembersWithFilters(
+                currentPage - 1,
+                pageSize,
+                role,
+                status,
+                keyword
+        );
         return BaseResponse.success(response);
     }
 
@@ -48,7 +60,8 @@ public class MemberController implements MemberApi {
     @PatchMapping("/{memberId}")
     public BaseResponse<MemberResponseDto> updateMember(
             @PathVariable Long memberId,
-            @RequestBody MemberUpdateDto request) {
+            @RequestBody MemberUpdateDto request
+    ) {
         MemberResponseDto response = memberService.updateMember(memberId, request);
         return BaseResponse.success(response);
     }
@@ -57,7 +70,8 @@ public class MemberController implements MemberApi {
     @PatchMapping("/{memberId}/password")
     public BaseResponse<String> changePassword(
             @PathVariable Long memberId,
-            @RequestBody ChangePasswordDto request) {
+            @RequestBody ChangePasswordDto request
+    ) {
         memberService.changePassword(memberId, request);
         return BaseResponse.success("비밀번호가 성공적으로 변경되었습니다!");
     }
@@ -66,7 +80,8 @@ public class MemberController implements MemberApi {
     @PostMapping("/delete/{memberId}")
     public BaseResponse<String> deleteMember(
             @PathVariable Long memberId,
-            @RequestBody String reason) {
+            @RequestBody String reason
+    ) {
         memberService.deleteMember(memberId, reason);
         return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");
     }
