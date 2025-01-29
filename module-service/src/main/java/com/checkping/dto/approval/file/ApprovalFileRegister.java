@@ -1,7 +1,9 @@
 package com.checkping.dto.approval.file;
 
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalFile;
+import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ public class ApprovalFileRegister {
         private String originalName;
         private String saveName;
         private String url;
-        private String size;
+        private long size;
 
         /**
          * ApprovalFileRegister.Request ->  Entity
@@ -29,9 +31,9 @@ public class ApprovalFileRegister {
          * @param request  ApprovalFileRegister.Request
          * @return ApprovalFile Entity
          */
-        public static ApprovalFile toEntity(Approval approval, Request request) {
-            return ApprovalFile.generate(approval, request.originalName, request.saveName,
-                request.url, request.size);
+        public static ApprovalFile toEntity(Approval approval, FileRequest request) {
+            return ApprovalFile.generate(approval, request.originalName(), request.saveName(),
+                request.url(), request.size());
         }
 
         /**
@@ -41,7 +43,7 @@ public class ApprovalFileRegister {
          * @param requests ApprovalFileRegister.Request List
          * @return ApprovalFile Entity List
          */
-        public static List<ApprovalFile> toEntity(Approval approval, List<Request> requests) {
+        public static List<ApprovalFile> toEntity(Approval approval, List<FileRequest> requests) {
             // Check null or empty
             if (requests == null || requests.isEmpty()) {
                 return List.of();
