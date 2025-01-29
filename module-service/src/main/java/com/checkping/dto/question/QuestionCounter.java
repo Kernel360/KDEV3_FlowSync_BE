@@ -24,10 +24,17 @@ public class QuestionCounter {
             return response;
         }
 
-        public static Response toDto(String stepName, Long count) {
+        /**
+         * 전체 카운트 생성
+         *
+         * @param count 전체 카운트
+         * @return  전체 카운트 Response
+         */
+        public static Response makeAllCount(Long count) {
             Response response = new Response();
-            response.title = stepName;
-            response.value = stepName;
+            response.id = 0L;
+            response.title = "전체";
+            response.value = "ALL";
             response.count = count;
             return response;
         }

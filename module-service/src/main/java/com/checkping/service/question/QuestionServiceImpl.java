@@ -111,8 +111,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto getQuestionById(Long taskBoardId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question question = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
         return QuestionItemDto.toDto(question);
@@ -128,8 +128,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -158,8 +158,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -184,8 +184,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update
         String title = request.getTitle();
@@ -210,8 +210,8 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionCounter.Response> list = new ArrayList<>();
 
         // 전체 question 의 개수 조회
-        QuestionCounter.Response allCount = QuestionCounter.Response.toDto(
-            "ALL", questionReader.countQuestionsByProject(projectId));
+        QuestionCounter.Response allCount = QuestionCounter.Response.makeAllCount(
+            questionReader.countQuestionsByProject(projectId));
         list.add(allCount);
 
         for (ProgressStep step : steps) {
