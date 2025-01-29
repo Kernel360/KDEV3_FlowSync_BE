@@ -1,5 +1,6 @@
 package com.checkping.dto.approval;
 
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.exception.approval.ApprovalContentsParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,10 +22,13 @@ public class ApprovalRegister {
         progress_step_id : 프로젝트 진행 단계 id
         title : 제목
         content : 내용
+        fileInfoList : 첨부 파일
          */
         private Long progressStepId;
         private String title;
         private List<ApprovalContent> content;
+        private List<FileRequest> fileInfoList;
+
 
         public static Approval toEntity(Long projectId, Long registerId, Request request) {
             // TODO: Member 에서 get 하도록 변경 필요
