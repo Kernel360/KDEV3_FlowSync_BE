@@ -208,6 +208,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         // progressStep 에 해당하는 question 의 개수 조회
         List<QuestionCounter.Response> list = new ArrayList<>();
+
+        // 전체 question 의 개수 조회
+        QuestionCounter.Response allCount = QuestionCounter.Response.toDto(
+            "ALL", questionReader.countQuestionsByProject(projectId));
+        list.add(allCount);
+
         for (ProgressStep step : steps) {
             QuestionCounter.Response dto = QuestionCounter.Response.toDto(step,
                 questionReader.countQuestionsByProgressStep(projectId, step.getId()));
