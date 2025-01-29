@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/project/{projectId}/approval")
+@RequestMapping("/projects/{projectId}/approvals")
 @RequiredArgsConstructor
 public class ApprovalController implements ApprovalApi {
 
