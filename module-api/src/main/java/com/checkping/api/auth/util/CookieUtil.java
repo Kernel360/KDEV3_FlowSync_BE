@@ -11,7 +11,7 @@ public class CookieUtil {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setDomain(".flowssync.com");
+        cookie.setDomain("flowssync.com");
 
         return cookie;
     }
