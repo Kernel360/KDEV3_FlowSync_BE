@@ -100,6 +100,17 @@ public class QuestionReaderImpl implements QuestionReader {
     }
 
     /**
+     * 프로젝트별 Question 개수 조회
+     *
+     * @param projectId project id
+     * @return 프로젝트별 Question 개수
+     */
+    @Override
+    public Long countQuestionsByProject(Long projectId) {
+        return questionRepository.countByProjectId(projectId);
+    }
+
+    /**
      * 진행상태별 Question 개수 조회
      *
      * @param projectId project id

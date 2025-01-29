@@ -11,5 +11,7 @@ public interface QuestionReader {
 
     Optional<Question> getQuestionById(Long id);
 
+    Long countQuestionsByProject(Long projectId);
+
     Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
 }
