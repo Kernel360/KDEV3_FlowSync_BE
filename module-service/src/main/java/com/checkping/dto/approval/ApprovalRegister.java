@@ -86,6 +86,7 @@ public class ApprovalRegister {
         private LocalDateTime updatedAt;
         private LocalDateTime regAt;
         private List<ApprovalFileRegister.Response> fileInfoList;
+        private List<ApprovalLinkRegister.Response> linkList;
 
         public static Response toDto(Approval approval) {
             Response dto = new Response();
@@ -104,6 +105,7 @@ public class ApprovalRegister {
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
             dto.fileInfoList = ApprovalFileRegister.Response.toDto(approval.getFileList());
+            dto.linkList = ApprovalLinkRegister.Response.toDto(approval.getLinkList());
             return dto;
         }
 
