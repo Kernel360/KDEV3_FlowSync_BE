@@ -35,4 +35,20 @@ public class ApprovalLink extends BaseEntity {
 
     @Column(name = "link_url")
     private String linkUrl;
+
+    /**
+     * ApprovalLink 생성 메서드(정적 팩토리 메서드)
+     *
+     * @param approval  결재
+     * @param linkName  링크 이름
+     * @param linkUrl   링크 url
+     * @return  ApprovalLink 인스턴스
+     */
+    public static ApprovalLink generate(Approval approval, String linkName, String linkUrl) {
+        ApprovalLink approvalLink = new ApprovalLink();
+        approvalLink.approval = approval;
+        approvalLink.linkName = linkName;
+        approvalLink.linkUrl = linkUrl;
+        return approvalLink;
+    }
 }
