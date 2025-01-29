@@ -42,5 +42,15 @@ public class ApprovalFile extends BaseEntity {
     private String url;
 
     @Column(name = "size")
-    private String size;
+    private long size;
+
+    public static ApprovalFile generate(Approval approval, String originalName, String saveName, String url, long size) {
+        ApprovalFile approvalFile = new ApprovalFile();
+        approvalFile.approval = approval;
+        approvalFile.originalName = originalName;
+        approvalFile.saveName = saveName;
+        approvalFile.url = url;
+        approvalFile.size = size;
+        return approvalFile;
+    }
 }
