@@ -1,7 +1,12 @@
 package com.checkping.dto.approval;
 
 import com.checkping.domain.approval.Approval;
+import com.checkping.exception.approval.ApprovalContentsParsingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,17 +24,28 @@ public class ApprovalRegister {
          */
         private Long progressStepId;
         private String title;
-        private String content;
+        private List<ApprovalContent> content;
 
         public static Approval toEntity(Long projectId, Long registerId, Request request) {
             // TODO: Member 에서 get 하도록 변경 필요
             String registerName = "TEST_NAME";
             return Approval.generate(projectId, request.progressStepId, registerId, registerName,
-                request.title, request.content);
+                request.title, request.jsonToString());
+        }
+
+        private String jsonToString() {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(this.content);
+            } catch (JsonProcessingException e) {
+                throw new ApprovalContentsParsingException();
+            }
         }
     }
 
+    @Getter
     public static class Response {
+
         /*
         id : id
         projectId : 프로젝트 id
@@ -51,7 +67,7 @@ public class ApprovalRegister {
         private Long projectId;
         private Long progressStepId;
         private String title;
-        private String content;
+        private List<ApprovalContent> content;
         private String status;
         private Long registerId;
         private String registerName;
@@ -68,7 +84,7 @@ public class ApprovalRegister {
             dto.projectId = approval.getProjectId();
             dto.progressStepId = approval.getProgressStepId();
             dto.title = approval.getTitle();
-            dto.content = approval.getContent();
+            dto.content = ApprovalRegister.Response.stringToJson(approval.getContent());
             dto.status = approval.getStatus().name();
             dto.registerId = approval.getRegisterId();
             dto.registerName = approval.getRegisterName();
@@ -79,6 +95,15 @@ public class ApprovalRegister {
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
             return dto;
+        }
+
+        private static List<ApprovalContent> stringToJson(String content) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(content, new TypeReference<List<ApprovalContent>>() {});
+            } catch (JsonProcessingException e) {
+                throw new ApprovalContentsParsingException();
+            }
         }
     }
 
