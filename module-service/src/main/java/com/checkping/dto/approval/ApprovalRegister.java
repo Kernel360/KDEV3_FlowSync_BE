@@ -2,6 +2,7 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
+import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.exception.approval.ApprovalContentsParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,6 +67,7 @@ public class ApprovalRegister {
         updatedAt : 수정 일시
         regAt : 작성 일시
         deletedYn : 삭제 여부
+        fileInfoList : 결재 첨부 파일 리스트
          */
         private Long id;
         private Long projectId;
@@ -81,6 +83,7 @@ public class ApprovalRegister {
         private String approverName;
         private LocalDateTime updatedAt;
         private LocalDateTime regAt;
+        private List<ApprovalFileRegister.Response> fileInfoList;
 
         public static Response toDto(Approval approval) {
             Response dto = new Response();
@@ -98,6 +101,7 @@ public class ApprovalRegister {
             dto.approverName = approval.getApproverName();
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
+            dto.fileInfoList = ApprovalFileRegister.Response.toDto(approval.getFileList());
             return dto;
         }
 
