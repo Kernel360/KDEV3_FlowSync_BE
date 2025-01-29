@@ -26,7 +26,13 @@ public interface MemberApi {
             @Parameter(description = "페이지 번호 (1부터 시작)", example = "1", required = true)
             int page,
             @Parameter(description = "페이지 크기", example = "10", required = true)
-            int size);
+            int size,
+            @Parameter(description = "role(예: ADMIN, MEMBER)", example = "ADMIN")
+            String role,
+            @Parameter(description = "status(예: ACTIVE, INACTIVE)", example = "ACTIVE")
+            String status,
+            @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동")
+            String keyword);
 
     @Operation(summary = "회원 상세 조회", description = "특정 회원의 상세 정보를 조회하는 기능입니다.")
     BaseResponse<MemberResponseDto> getMemberById(
