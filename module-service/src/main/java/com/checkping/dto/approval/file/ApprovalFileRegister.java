@@ -3,9 +3,9 @@ package com.checkping.dto.approval.file;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalFile;
-import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,6 +51,44 @@ public class ApprovalFileRegister {
 
             return requests.stream()
                 .map(req -> ApprovalFileRegister.Request.toEntity(approval, req))
+                .toList();
+        }
+    }
+
+    @Getter
+    public static class Response {
+
+        private Long id;
+        private Long projectId;
+        private String name;
+        private String url;
+
+        /**
+         * Entity -> ApprovalFileRegister.Response
+         *
+         * @param approvalFile ApprovalFile Entity
+         * @return ApprovalFileRegister.Response
+         */
+        public static ApprovalFileRegister.Response toDto(ApprovalFile approvalFile) {
+            ApprovalFileRegister.Response response = new ApprovalFileRegister.Response();
+            response.id = approvalFile.getId();
+            // TODO : project Entity 에서 가져오도록 변경 필요
+            response.projectId = approvalFile.getApproval().getProjectId();
+            response.name = approvalFile.getSaveName();
+            response.url = approvalFile.getUrl();
+
+            return response;
+        }
+
+        /**
+         * Entity List -> ApprovalFileRegister.Response List
+         *
+         * @param approvalFiles Entity List
+         * @return ApprovalFileRegister.Response List
+         */
+        public static List<ApprovalFileRegister.Response> toDto(List<ApprovalFile> approvalFiles) {
+            return approvalFiles.stream()
+                .map(ApprovalFileRegister.Response::toDto)
                 .toList();
         }
     }
