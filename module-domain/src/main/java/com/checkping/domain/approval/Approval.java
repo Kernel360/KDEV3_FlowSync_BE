@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -51,10 +52,12 @@ public class Approval extends BaseEntity {
     // TODO : 연관 관계 맵핑 필요
     private Long progressStepId;
 
+
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "content", nullable = false, length = 5000)
+    @Lob
+    @Column(name = "content", columnDefinition = "TEXT", length = 65536)
     private String content;
 
     // TODO : 연관 관계 맵핑 필요
