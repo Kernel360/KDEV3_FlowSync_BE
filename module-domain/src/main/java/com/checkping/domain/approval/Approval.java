@@ -153,4 +153,29 @@ public class Approval extends BaseEntity {
     public void addFiles(List<ApprovalFile> approvalFiles) {
         this.fileList = approvalFiles;
     }
+
+    /**
+     * 링크 리스트 추가
+     *
+     * @param links 링크 리스트
+     */
+    public void addLinks(List<ApprovalLink> links) {
+        this.linkList = links;
+    }
+
+    /**
+     * 링크 리스트 추가 - 단일 추가
+     * 링크 리스트가 없는 경우에는 리스트를 새로 생성하여 추가
+     *
+     * @param link
+     */
+    public void addLinks(ApprovalLink link) {
+        // 링크 리스트가 없을 경우
+        if (this.linkList == null || this.linkList.isEmpty()) {
+            this.linkList = List.of(link);
+            return;
+        }
+
+        this.linkList.add(link);
+    }
 }

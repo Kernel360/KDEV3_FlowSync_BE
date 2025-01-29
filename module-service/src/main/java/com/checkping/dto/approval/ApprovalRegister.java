@@ -3,6 +3,7 @@ package com.checkping.dto.approval;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
+import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.exception.approval.ApprovalContentsParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,6 +30,7 @@ public class ApprovalRegister {
         private String title;
         private List<ApprovalContent> content;
         private List<FileRequest> fileInfoList;
+        private List<ApprovalLinkRegister.Request> linkList;
 
 
         public static Approval toEntity(Long projectId, Long registerId, Request request) {
@@ -84,6 +86,7 @@ public class ApprovalRegister {
         private LocalDateTime updatedAt;
         private LocalDateTime regAt;
         private List<ApprovalFileRegister.Response> fileInfoList;
+        private List<ApprovalLinkRegister.Response> linkList;
 
         public static Response toDto(Approval approval) {
             Response dto = new Response();
@@ -102,6 +105,7 @@ public class ApprovalRegister {
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
             dto.fileInfoList = ApprovalFileRegister.Response.toDto(approval.getFileList());
+            dto.linkList = ApprovalLinkRegister.Response.toDto(approval.getLinkList());
             return dto;
         }
 
