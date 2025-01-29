@@ -29,5 +29,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Page<Question> findByProjectIdAndProgressStepIdAndStatusAndTitleContaining(Long projectId, Long progressStepId, Status status, String title, Pageable pageable);
 
+    Long countByProjectId(Long projectId);
+
     Long countByProjectIdAndProgressStepId(Long projectId, Long progressStepId);
 }

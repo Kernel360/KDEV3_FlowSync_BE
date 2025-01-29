@@ -23,5 +23,13 @@ public class QuestionCounter {
             response.count = count;
             return response;
         }
+
+        public static Response toDto(String stepName, Long count) {
+            Response response = new Response();
+            response.title = stepName;
+            response.value = stepName;
+            response.count = count;
+            return response;
+        }
     }
 }
