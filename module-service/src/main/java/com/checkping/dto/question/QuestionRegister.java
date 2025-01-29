@@ -8,7 +8,10 @@ import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommen
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.question.QuestionCategoryException;
+import com.checkping.exception.question.QuestionContentParsingException;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.QueryException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuestionRegister {
@@ -36,7 +40,7 @@ public class QuestionRegister {
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
-        private String content;
+        private List<QuestionContent> content;
         @Schema(description = "게시글 첨부 링크 목록")
         private List<QuestionLinkRegister.Request> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
@@ -53,8 +57,22 @@ public class QuestionRegister {
         public static Question toEntity(Long projectId,
             QuestionRegister.Request registerDto) {
             return Question.generate(projectId, registerDto.getProgressStepId(),
-                registerDto.getTitle(), registerDto.getContent(),
+                registerDto.getTitle(), registerDto.toContentString(),
                 Category.QUESTION);
+        }
+
+        /**
+         * JSON LIST -> String
+         *
+         * @return content String
+         */
+        private String toContentString() {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return objectMapper.writeValueAsString(content);
+            } catch (Exception e) {
+                throw new QuestionContentParsingException();
+            }
         }
     }
 
@@ -82,7 +100,7 @@ public class QuestionRegister {
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
-        private String content;
+        private List<QuestionContent> content;
         @Schema(description = "등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
@@ -105,7 +123,7 @@ public class QuestionRegister {
             questionDto.setId(question.getId());
             questionDto.setNumber(question.getNumber());
             questionDto.setTitle(question.getTitle());
-            questionDto.setContent(question.getContent());
+            questionDto.setContent(Response.toContentList(question.getContent()));
             questionDto.setRegAt(question.getRegAt());
             questionDto.setEditAt(question.getEditAt());
             questionDto.setCategory(question.getCategory());
@@ -115,6 +133,22 @@ public class QuestionRegister {
             questionDto.setLinkList(
                 QuestionLinkRegister.Response.toDto(question.getQuestionLinkList()));
             return questionDto;
+        }
+
+
+        /**
+         * String -> JSON LIST
+         *
+         * @param content content String
+         * @return content List
+         */
+        private static List<QuestionContent> toContentList(String content) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return objectMapper.readValue(content, new TypeReference<List<QuestionContent>>() {});
+            } catch (Exception e) {
+                throw new QuestionContentParsingException();
+            }
         }
     }
 
