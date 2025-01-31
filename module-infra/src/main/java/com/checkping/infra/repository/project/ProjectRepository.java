@@ -34,9 +34,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "AND (NULLIF(:status, '') IS NULL OR p.status = :status)", nativeQuery = true)
     Page<Project> findProjectsWithOrganizationInfoByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable);
 
-    @Query("SELECT p.management_step AS managementStep, COUNT(p) AS projectCount " +
+    @Query("SELECT p.managementStep, COUNT(p) AS projectCount " +
             "FROM Project p " +
-            "GROUP BY p.management_step")
+            "GROUP BY p.managementStep")
     List<Tuple> countProjectsByManagementStep();
 
     @Query(value = "SELECT " +

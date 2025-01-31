@@ -62,7 +62,7 @@ public class ProjectResponse {
                     .description(project.getDescription())
                     .detail(project.getDetail())
                     .status(project.getStatus())
-                    .managementStep(project.getManagement_step())
+                    .managementStep(project.getManagementStep())
                     .regAt(project.getRegAt())
                     .updateAt(project.getUpdateAt())
                     .startAt(project.getStartAt())
