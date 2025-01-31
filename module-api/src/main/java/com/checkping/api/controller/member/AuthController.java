@@ -1,6 +1,6 @@
 package com.checkping.api.controller.member;
 
-import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.AuthService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public MemberResponseDto getCurrentMember() {
+    public BaseResponse getCurrentMember() {
         return authService.getCurrentMember();
     }
 }
