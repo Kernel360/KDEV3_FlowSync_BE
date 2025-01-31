@@ -5,6 +5,7 @@ import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
@@ -126,17 +127,17 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationGet.Response removeOrganization(Long id, String reason) {
+    public OrganizationDelete.Response removeOrganization(Long id, OrganizationDelete.Request request) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        organization.changeStatus(reason);
+        organization.changeStatus(request.getReason());
 
         Organization removeOrganization = organizationRepository.save(organization);
 
-        return OrganizationGet.Response.toDto(removeOrganization);
+        return OrganizationDelete.Response.toDto(removeOrganization);
     }
 
 

@@ -4,7 +4,23 @@ import com.checkping.domain.member.Organization;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-public class OrganizationGet {
+public class OrganizationDelete {
+    /*
+    reason : 삭제 사유
+     */
+    @Getter
+    @Setter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request {
+
+        @Schema(description = "삭제 사유")
+        String reason;
+
+    }
+
     /*
    id : 업체 ID
    type : 업체유형
@@ -22,7 +38,7 @@ public class OrganizationGet {
     @AllArgsConstructor
     public static class Response {
 
-        @Schema(description = "업체 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "업체 ID", example = "1")
         private String id;
         @Schema(description = "업체 유형", example = "CUSTOMER")
         private String type;
@@ -38,12 +54,12 @@ public class OrganizationGet {
         private String detailAddress;
         @Schema(description = "전화번호", example = "010-1234-5678")
         private String phoneNumber;
-        @Schema(description = "업체 상태", example = "ACTIVE")
+        @Schema(description = "업체 상태", example = "INACTIVE")
         private String status;
         @Schema(description = "삭제 사유")
         private String reasonForDeleteOrganization;
 
-        public static OrganizationGet.Response toDto(Organization organization) {
+        public static OrganizationDelete.Response toDto(Organization organization) {
             return Response.builder()
                     .id(organization.getId().toString())
                     .type(organization.getType().toString())
