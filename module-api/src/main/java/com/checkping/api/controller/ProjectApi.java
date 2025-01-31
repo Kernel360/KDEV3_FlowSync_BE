@@ -1,8 +1,8 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.ProjectRequest;
-import com.checkping.dto.ProjectResponse;
+import com.checkping.dto.project.ProjectRequest;
+import com.checkping.dto.project.ProjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,9 +30,11 @@ public interface ProjectApi {
     );
 
     @Operation(summary = "프로젝트 전체 목록", description = "프로젝트 전체 목록을 조회하는 기능입니다.")
-    BaseResponse<List<ProjectResponse.ProjectDto>> listProjects(
+    BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @Parameter(description = "프로젝트 상태") String status,
-            @Parameter(description = "프로젝트 검색어") String keyword
+            @Parameter(description = "프로젝트 검색어") String keyword,
+            @Parameter(description = "페이지 번호") int page,
+            @Parameter(description = "페이지 사이즈") int size
     );
 
     @Operation(summary = "프로젝트 관리단계 별 개수 조회", description = "프로젝트 관리단계 별 개수를 조회하는 기능입니다.")
