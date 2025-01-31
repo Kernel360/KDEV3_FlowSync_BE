@@ -20,7 +20,7 @@ public interface NoticeService {
 
     NoticeResponse getNotice(Long noticeid);
 
-    Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable);  // 카테고리 파라미터 추가
+    Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable);
 }
 
-}
+
