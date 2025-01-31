@@ -30,6 +30,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Table(name = "question_comment")
 @Entity
 public class QuestionComment extends BaseEntity {
+
     /*
     id : 업무 관리 게시글 댓글 아이디
     content : 댓글 내용
@@ -55,9 +56,6 @@ public class QuestionComment extends BaseEntity {
     @Column(name = "edit_at", nullable = false)
     private LocalDateTime editAt;
 
-    @Column(name = "parent_id")
-    private Long parentId;
-
     @Column(name = "deleted_yn", nullable = false)
     @Enumerated(EnumType.STRING)
     private DeleteStatus deletedYn;
@@ -65,6 +63,10 @@ public class QuestionComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private QuestionComment parent;
 
     @Getter
     @RequiredArgsConstructor
@@ -76,15 +78,31 @@ public class QuestionComment extends BaseEntity {
     /**
      * 댓글 생성 팩토리 메서드
      *
-     * @param content   댓글 내용
-     * @param question  question (조회한 Entity)
-     * @return  QuestionComment 엔티티
+     * @param content  댓글 내용
+     * @param question question (조회한 Entity)
+     * @return QuestionComment 엔티티
      */
     public static QuestionComment generate(String content, Question question) {
         QuestionComment questionComment = new QuestionComment();
         questionComment.content = content;
         questionComment.question = question;
         questionComment.activate();
+        return questionComment;
+    }
+
+    /**
+     * 댓글 생성 팩토리 메서드
+     *
+     * @param content  댓글 내용
+     * @param question question (조회한 Entity)
+     * @param parent   부모 댓글
+     * @return QuestionComment 엔티티
+     */
+    public static QuestionComment generate(String content, Question question,
+        QuestionComment parent) {
+        QuestionComment questionComment = generate(content, question);
+        // 부모 댓글 추가
+        questionComment.parent = parent;
         return questionComment;
     }
 
