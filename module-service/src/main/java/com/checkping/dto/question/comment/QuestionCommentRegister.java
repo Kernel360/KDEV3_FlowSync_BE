@@ -26,7 +26,7 @@ public class QuestionCommentRegister {
          * @param request   등록 정보
          * @return  QuestionComment 엔티티
          */
-        public static QuestionComment toEntity(Question question, Request request) {
+        public static QuestionComment toEntity(Request request, Question question) {
             return QuestionComment.generate(request.getContent(), question);
         }
     }
