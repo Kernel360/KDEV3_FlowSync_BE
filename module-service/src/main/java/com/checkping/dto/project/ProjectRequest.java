@@ -1,4 +1,4 @@
-package com.checkping.dto;
+package com.checkping.dto.project;
 
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
@@ -50,17 +50,17 @@ public class ProjectRequest {
         private String managementStep;
         @Schema(description = "프로젝트 현재 진행단계 아이디", example = "1")
         private Long progressStepId;
-        @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15")
+        @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
-        @Schema(description = "프로젝트 마감 일시", examples = "2025-12-28 11:17:15")
+        @Schema(description = "프로젝트 마감 일시", example = "2025-12-28 11:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
-        @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
-        @Schema(description = "개발사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
-        @Schema(description = "고객사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "고객사 아이디", example = "2")
         private Long customerOrgId;
         @Schema(description = "추가할 멤버 아이디 목록")
         private List<Long> members;
@@ -117,17 +117,17 @@ public class ProjectRequest {
         private String managementStep;
         @Schema(description = "프로젝트 현재 진행단계 아이디", example = "2")
         private Long progressStepId;
-        @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15")
+        @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
-        @Schema(description = "프로젝트 마감 일시", examples = "2025-12-28 11:17:15")
+        @Schema(description = "프로젝트 마감 일시", examples = "2025-12-28 11:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
-        @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
-        @Schema(description = "개발사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
-        @Schema(description = "고객사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "고객사 아이디", example = "2")
         private Long customerOrgId;
         @Schema(description = "추가할 멤버 아이디 목록")
         private List<Long> members;
