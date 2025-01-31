@@ -1,7 +1,6 @@
-package com.checkping.api.controller.project;
+package com.checkping.api.controller.question;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.question.QuestionCounter;
 import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
