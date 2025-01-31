@@ -189,7 +189,6 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      *
      * @param questionId        질문 Id
      * @param questionCommentId 질문 댓글 Id
-     * @return 댓글 포함 여부(boolean
      */
     private void containingComment(Long questionId, Long questionCommentId) {
         boolean isContaining = questionCommentReader.checkCommentContaining(questionId,
