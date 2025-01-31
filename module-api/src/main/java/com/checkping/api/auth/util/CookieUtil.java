@@ -22,6 +22,7 @@ public class CookieUtil {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setDomain("flowssync.com");
 
         return cookie;
     }
