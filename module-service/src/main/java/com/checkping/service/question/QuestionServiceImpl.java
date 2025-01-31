@@ -1,27 +1,36 @@
 package com.checkping.service.question;
 
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
-import com.checkping.dto.question.QuestionRequest;
-import com.checkping.dto.question.QuestionRequest.RegisterDto;
-import com.checkping.dto.question.QuestionRequest.SearchCondition;
+import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionRegister;
+import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
-import com.checkping.dto.question.link.QuestionLinkRequest;
+import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.QuestionSearchCondition;
+import com.checkping.dto.question.file.QuestionFileRegister;
+import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
+import com.checkping.info.question.QuestionSearchInfo;
+import com.checkping.infra.repository.project.ProgressStepReader;
+import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -33,71 +42,63 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionCommentStore questionCommentStore;
     private final QuestionLinkStore questionLinkStore;
     private final QuestionFileStore questionFileStore;
+    private final ProjectReader projectReader;
+    private final ProgressStepReader progressStepReader;
 
     /**
      * 업무 관리 게시글 등록하기
      *
-     * @param request  업무 관리 게시글에 필요한 request
-     * @param fileList 첨부 파일 리스트
+     * @param projectId 프로젝트 ID
+     * @param request   업무 관리 게시글에 필요한 request
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionItemDto register(RegisterDto request, List<MultipartFile> fileList) {
+    public QuestionRegister.Response register(Long projectId, Request request) {
 
-        // dto -> entity
-        Question initQuestion = QuestionRequest.RegisterDto.toEntity(request);
-        initQuestion.activate();
-        initQuestion.updateCategory(Question.Category.QUESTION);
-        initQuestion.updateStatus(Question.Status.WAIT);
+        // Question Dto -> Question Entity
+        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
 
-        // Save File in S3
-        List<QuestionFile> questionFileList = questionFileStore.saveFileList(question,
-            fileList);
+        // QuestionFileRequest.RegisterDto -> QuestionFile Entity
+        List<QuestionFile> files = QuestionFileRegister.Request.toEntity(question,
+            request.getFileInfoList());
+        // Save & Add QuestionFile List
+        questionFileStore.store(files);
+        question.addFile(files);
 
-        // Add QuestionFile List
-        question.addFile(questionFileList);
-
-        // get register info
-        List<QuestionLinkRequest.RegisterDto> linkDtoList = request.getLinkList();
-
-        // loop for add taskBoardLinkRequest
-        for (QuestionLinkRequest.RegisterDto linkDto : linkDtoList) {
-
-            // QuestionLink Dto -> Entity
-            QuestionLink initQuestionLink = QuestionLinkRequest.RegisterDto.toEntity(question,
-                linkDto);
-
-            // save QuestionLink
-            QuestionLink questionLink = questionLinkStore.store(initQuestionLink);
-
-            // ADD QuestionLink (in Question)
-            question.addLink(questionLink);
-        }
+        // QuestionLinkRequest.RegisterDto -> QuestionLink Entity
+        List<QuestionLink> links = QuestionLinkRegister.Request.toEntity(question,
+            request.getLinkList());
+        // Save & Add QuestionLink
+        questionLinkStore.store(links);
+        question.addLink(links);
 
         // Entity -> Dto
-        return QuestionItemDto.toDto(question);
+        return QuestionRegister.Response.toDto(question);
     }
 
     /**
      * Question 조회 하기 (게시글 유형, 게시글 상태 별 필터링)
      *
+     * @param projectId       프로젝트 ID
      * @param searchCondition RequestParam 에서 받아오는 String 을 관리하는 타입
      * @return 조회한 QuestionListDto 의 리스트
      */
     @Override
-    public List<QuestionListDto> getQuestionList(SearchCondition searchCondition) {
+    public QuestionSearch.Response searchQuestions(Long projectId,
+        QuestionSearchCondition searchCondition) {
 
-        // 조회
-        List<Question> questionList = questionReader.getQuestion(
-            searchCondition.getCategory(),
-            searchCondition.getStatus(),
-            searchCondition.getKeyword());
+        // RequestParam -> Info
+        QuestionSearchInfo.SearchCondition searchInfo = QuestionSearchCondition.toInfo(
+            searchCondition);
 
-        // Question -> QuestionListDto
-        return questionList.stream().map(QuestionListDto::toDto).toList();
+        // search
+        Page<Question> questions = questionReader.searchQuestions(projectId, searchInfo);
+
+        // Page -> Response Dto
+        return QuestionSearch.Response.toDto(questions);
     }
 
     /**
@@ -110,8 +111,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto getQuestionById(Long taskBoardId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question question = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
         return QuestionItemDto.toDto(question);
@@ -127,8 +128,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -157,8 +158,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -183,8 +184,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update
         String title = request.getTitle();
@@ -196,5 +197,28 @@ public class QuestionServiceImpl implements QuestionService {
 
         // Entity -> Dto
         return QuestionItemDto.toDto(updatedQuestion);
+    }
+
+    public List<QuestionCounter.Response> countByProgressStep(Long projectId) {
+
+        // TODO: project id 로 project 조회
+
+        // project 에 해당하는 progressStep 조회
+        List<ProgressStep> steps = progressStepReader.getByProjectId(projectId);
+
+        // progressStep 에 해당하는 question 의 개수 조회
+        List<QuestionCounter.Response> list = new ArrayList<>();
+
+        // 전체 question 의 개수 조회
+        QuestionCounter.Response allCount = QuestionCounter.Response.makeAllCount(
+            questionReader.countQuestionsByProject(projectId));
+        list.add(allCount);
+
+        for (ProgressStep step : steps) {
+            QuestionCounter.Response dto = QuestionCounter.Response.toDto(step,
+                questionReader.countQuestionsByProgressStep(projectId, step.getId()));
+            list.add(dto);
+        }
+        return list;
     }
 }

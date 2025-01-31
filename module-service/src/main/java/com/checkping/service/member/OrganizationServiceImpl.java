@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +49,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public OrganizationGet.Response getOrganization(UUID id) {
+    public OrganizationGet.Response getOrganization(Long id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
@@ -94,7 +93,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public OrganizationUpdate.Response modifyOrganization(
-            UUID id,
+            Long id,
             OrganizationUpdate.Request request,
             MultipartFile file
     ) {
@@ -129,7 +128,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationGet.Response removeOrganization(UUID id) {
+    public OrganizationGet.Response removeOrganization(Long id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
