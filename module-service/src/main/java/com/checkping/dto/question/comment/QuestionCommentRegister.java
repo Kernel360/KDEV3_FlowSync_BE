@@ -65,7 +65,7 @@ public class QuestionCommentRegister {
             dto.content = questionComment.getContent();
             dto.regAt = DateTimeUtils.format(questionComment.getRegAt());
             dto.editAt = DateTimeUtils.format(questionComment.getEditAt());
-            dto.parentId = questionComment.getParent().getId();
+            dto.parentId = questionComment.getParent() == null ? null : questionComment.getParent().getId();
             return dto;
         }
     }
