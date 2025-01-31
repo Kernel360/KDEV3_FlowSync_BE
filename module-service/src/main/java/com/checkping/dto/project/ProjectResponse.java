@@ -48,7 +48,7 @@ public class ProjectResponse {
         private LocalDateTime closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
-        @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 대표자 아이디")
         private Long devOwnerId;
         @Schema(description = "개발사 이름")
         private String developerName;
