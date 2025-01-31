@@ -83,7 +83,7 @@ public class QuestionController implements QuestionApi {
 
     @PutMapping("/{questionId}")
     @Override
-    public BaseResponse<QuestionItemDto> updateQuestion(Long projectId,
+    public BaseResponse<QuestionItemDto> updateQuestion(@PathVariable Long projectId,
         @PathVariable Long questionId,
         @RequestBody UpdateDto request) {
 

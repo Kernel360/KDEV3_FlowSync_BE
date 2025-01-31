@@ -1,7 +1,9 @@
 package com.checkping.dto.question;
 
 import com.checkping.common.response.PaginationProps;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.question.Question;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,7 +39,7 @@ public class QuestionSearch {
             dto.progressStepId = question.getProgressStepId();
             dto.category = question.getCategory().name();
             dto.status = question.getStatus().name();
-            dto.createdDate = question.getCreatedBy();
+            dto.createdDate = DateTimeUtils.format(question.getCreatedAt());
             return dto;
         }
 
