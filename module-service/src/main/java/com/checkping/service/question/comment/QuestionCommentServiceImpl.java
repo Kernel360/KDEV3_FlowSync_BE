@@ -30,7 +30,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @return QuestionCommentResponse.QuestionCommentDto 업무 관리 게시글 등록 결과 Dto
      */
     @Override
-    public QuestionCommentDto register(
+    public QuestionCommentRegister.Response register(
         Long projectId, QuestionCommentRegister.Request request) {
 
         // find Question Entity
@@ -41,10 +41,10 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         QuestionComment initComment = QuestionCommentRegister.Request.toEntity(request, question);
 
         // save
-        QuestionComment questionComment = questionCommentStore.store(initComment);
+        QuestionComment comment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return QuestionCommentDto.toDto(questionComment);
+        return QuestionCommentRegister.Response.toDto(comment);
     }
 
     /**
