@@ -39,8 +39,8 @@ public interface NoticeApi {
             @Parameter(description = "공지사항 아이디") Long noticeid
     );
 
-    @Operation(summary = "공지사항 검색", description = "키워드로 공지사항을 검색하는 기능입니다.")
+    @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
     public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @Parameter(description = "검색할 키워드") @RequestParam String keyword
-    );
+            @Parameter(description = "검색할 키워드") @RequestParam String keyword,
+            @Parameter(description = "검색할 카테고리") @RequestParam(required = false) String category); // 카테고리 파라미터 추가
 }

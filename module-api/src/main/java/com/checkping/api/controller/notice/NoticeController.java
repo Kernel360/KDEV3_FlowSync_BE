@@ -64,11 +64,13 @@ public class NoticeController implements NoticeApi {
     @Override
     @GetMapping("/notices/search")
     public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @RequestParam String keyword) {
-        // 기본 페이지 번호: 1, 기본 페이지 크기: 12, 내림차순 정렬
-        Pageable pageable = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "createdAt"));
+            @RequestParam String keyword,
+            @RequestParam(required = false) String category) {
 
-        Page<NoticeGetListResponse> result = noticeService.searchNotices(keyword, pageable);
+        // 기본 페이지 번호: 1, 기본 페이지 크기: 12, 내림차순 정렬
+        Pageable pageable = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "regAt"));
+
+        Page<NoticeGetListResponse> result = noticeService.searchNotices(keyword, category, pageable);
 
         return BaseResponse.success(result);
     }

@@ -75,9 +75,17 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Page<NoticeGetListResponse> searchNotices(String keyword, Pageable pageable) {
+    public Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable) {
 
-        Page<Notice> notices = noticeRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+        Notice.Category categoryEnum = category != null ? Notice.Category.valueOf(category) : null;
+
+        Page<Notice> notices;
+
+        if (categoryEnum != null) {
+            notices = noticeRepository.findByCategoryAndTitleContainingOrContentContaining(categoryEnum, keyword, keyword, pageable);
+        } else {
+            notices = noticeRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+        }
 
         return notices.map(NoticeGetListResponse::toDto);
     }
