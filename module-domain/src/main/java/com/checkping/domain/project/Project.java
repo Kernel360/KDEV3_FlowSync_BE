@@ -56,7 +56,7 @@ public class Project extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "management_step", length = 100)
-    private ManagementStep management_step;
+    private ManagementStep managementStep;
 
     @Column(name = "progress_step_id")
     private Long progressStepId;
