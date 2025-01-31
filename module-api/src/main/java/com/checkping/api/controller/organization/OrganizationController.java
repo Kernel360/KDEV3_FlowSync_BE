@@ -75,7 +75,7 @@ public class OrganizationController implements OrganizationApi {
             @RequestBody String reason
     ) {
 
-        OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
+        OrganizationGet.Response response = organizationService.removeOrganization(organizationId, reason);
 
         return BaseResponse.success(response, "업체 삭제 완료");
     }

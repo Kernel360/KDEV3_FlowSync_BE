@@ -16,5 +16,5 @@ public interface OrganizationService {
 
     OrganizationUpdate.Response modifyOrganization(Long id, OrganizationUpdate.Request request, MultipartFile file);
 
-    OrganizationGet.Response removeOrganization(Long id);
+    OrganizationGet.Response removeOrganization(Long id, String reason);
 }
