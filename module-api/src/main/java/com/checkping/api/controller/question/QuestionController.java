@@ -1,4 +1,4 @@
-package com.checkping.api.controller.project;
+package com.checkping.api.controller.question;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter;
