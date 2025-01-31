@@ -126,13 +126,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationGet.Response removeOrganization(Long id) {
+    public OrganizationGet.Response removeOrganization(Long id, String reason) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        organization.changeStatus();
+        organization.changeStatus(reason);
 
         Organization removeOrganization = organizationRepository.save(organization);
 
