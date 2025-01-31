@@ -70,4 +70,17 @@ public class QuestionFile extends BaseEntity {
     public int hashCode() {
         return Objects.hash(id, url, size);
     }
+    
+    /*
+    GENERATE
+     */
+    public static QuestionFile generate(Question question, String originalName, String saveName, String url, long size) {
+        QuestionFile questionFile = new QuestionFile();
+        questionFile.setQuestion(question);
+        questionFile.setOriginalName(originalName);
+        questionFile.setSaveName(saveName);
+        questionFile.setUrl(url);
+        questionFile.setSize(size);
+        return questionFile;
+    }
 }

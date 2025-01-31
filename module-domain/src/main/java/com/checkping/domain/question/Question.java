@@ -1,6 +1,7 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,12 +23,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
-@ToString(exclude = "commentList")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,11 +41,14 @@ public class Question extends BaseEntity {
     content : 게시글 본문
     regAt : 작성 일시
     editAt : 수정 일시
-    approverAt : 승인 일시
     category : 게시글 유형
     status : 게시글 상태
     deletedYn : 삭제 여부
     parent : 부모 게시글
+    register : 작성자 (register_id)
+    updater : 수정자 (updater_id)
+    project : 프로젝트 (project_id)
+    progress_step : 진행 단계 (progress_step_id)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +62,8 @@ public class Question extends BaseEntity {
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "content", nullable = false, length = 5000)
+    @Lob
+    @Column(name = "content", columnDefinition = "TEXT", length = 65536)
     private String content;
 
     @CreatedDate
@@ -69,9 +73,6 @@ public class Question extends BaseEntity {
     @LastModifiedDate
     @Column(name = "edit_at")
     private LocalDateTime editAt;
-
-    @Column(name = "approver_at")
-    private LocalDateTime approverAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 100)
@@ -88,6 +89,18 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Question parent;
+
+    // TODO : Member register 로 변경할 것
+    private Long registerId;
+
+    // TODO  : Member updater 로 변경할 것
+    private Long updaterId;
+
+    // TODO : Project project 로 변경할 것
+    private Long projectId;
+
+    // TODO : ProgressStep progressStep 로 변경할 것
+    private Long progressStepId;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionComment> commentList = new ArrayList<>();
@@ -119,6 +132,28 @@ public class Question extends BaseEntity {
     public enum DeleteStatus {
         Y("비활성화"), N("활성화");
         private final String description;
+    }
+
+    /*
+    GENERATE
+     */
+
+    public static Question generate(Long projectId, Long progressStepId, String title,
+        String content, Category category) {
+
+        Question question = new Question();
+        // TODO : 연관관계 맵핑하는 것들 변경할 것
+        question.projectId = projectId;
+        question.progressStepId = progressStepId;
+        question.title = title;
+        question.content = content;
+
+        question.updateCategory(category);
+        question.updateStatus(Question.Status.WAIT);
+        question.activate();
+
+        return question;
+
     }
 
     // soft delete 적용 = 게시글 비활성화
@@ -161,6 +196,15 @@ public class Question extends BaseEntity {
         }
     }
 
+    // ADD QuestionLink List
+    public void addLink(List<QuestionLink> linkList) {
+        // loop for Add
+        for (QuestionLink link : linkList) {
+            // Add QuestionLink
+            addLink(link);
+        }
+    }
+
     // ADD QuestionFile
     public void addFile(QuestionFile file) {
 
@@ -180,5 +224,10 @@ public class Question extends BaseEntity {
             // Add QuestionFile
             addFile(file);
         }
+    }
+
+    // Contained Project
+    public void containedProject(Long projectId) {
+        this.projectId = projectId;
     }
 }
