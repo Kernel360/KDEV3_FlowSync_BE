@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
 public interface NoticeApi {
@@ -36,5 +37,10 @@ public interface NoticeApi {
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
     public BaseResponse<NoticeResponse> getNotice(
             @Parameter(description = "공지사항 아이디") Long noticeid
+    );
+
+    @Operation(summary = "공지사항 검색", description = "키워드로 공지사항을 검색하는 기능입니다.")
+    public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
+            @Parameter(description = "검색할 키워드") @RequestParam String keyword
     );
 }

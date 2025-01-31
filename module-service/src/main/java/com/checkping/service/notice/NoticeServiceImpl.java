@@ -73,4 +73,12 @@ public class NoticeServiceImpl implements NoticeService {
 
         return NoticeResponse.toDto(notice);
     }
+
+    @Override
+    public Page<NoticeGetListResponse> searchNotices(String keyword, Pageable pageable) {
+
+        Page<Notice> notices = noticeRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+
+        return notices.map(NoticeGetListResponse::toDto);
+    }
 }

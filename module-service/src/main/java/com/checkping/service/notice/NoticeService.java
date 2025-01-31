@@ -20,4 +20,6 @@ public interface NoticeService {
 
     NoticeResponse getNotice(Long noticeid);
 
+    Page<NoticeGetListResponse> searchNotices(String keyword, Pageable pageable);
+
 }

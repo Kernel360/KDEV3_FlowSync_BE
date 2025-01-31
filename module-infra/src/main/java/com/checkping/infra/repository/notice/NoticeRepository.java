@@ -21,4 +21,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     // 페이징
     Page<Notice> findAllByIsDeletedFalse(Pageable pageable);
 
+    // 검색
+    Page<Notice> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+
 }

@@ -9,7 +9,9 @@ import com.checkping.dto.notice.response.NoticeResponse;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,5 +59,17 @@ public class NoticeController implements NoticeApi {
     ){
         NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
+    }
+
+    @Override
+    @GetMapping("/notices/search")
+    public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
+            @RequestParam String keyword) {
+        // 기본 페이지 번호: 1, 기본 페이지 크기: 12, 내림차순 정렬
+        Pageable pageable = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<NoticeGetListResponse> result = noticeService.searchNotices(keyword, pageable);
+
+        return BaseResponse.success(result);
     }
 }
