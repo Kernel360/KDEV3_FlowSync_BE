@@ -6,7 +6,6 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionCounter;
-import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
