@@ -172,7 +172,7 @@ public class ProjectServiceImpl implements ProjectService {
         return result;
     }
 
-    private List<Organization> getOrganizations(UUID developerOrgId, UUID customerOrgId) {
+    private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {
         return Arrays.asList(
                 organizationRepository.findById(developerOrgId)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
@@ -181,9 +181,9 @@ public class ProjectServiceImpl implements ProjectService {
         );
     }
 
-    private List<Member> getMembers(List<String> memberIds) {
+    private List<Member> getMembers(List<Long> memberIds) {
         return memberIds.stream()
-                .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
+                .map(memberId -> memberRepository.findById(memberId)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
                 .collect(Collectors.toList());
     }

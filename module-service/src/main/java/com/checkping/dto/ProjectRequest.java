@@ -5,11 +5,13 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -55,13 +57,13 @@ public class ProjectRequest {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID devOwnerId;
+        private Long devOwnerId;
         @Schema(description = "개발사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID developerOrgId;
+        private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID customerOrgId;
+        private Long customerOrgId;
         @Schema(description = "추가할 멤버 아이디 목록")
-        private List<String> members;
+        private List<Long> members;
 
         public static Project toEntity(ResisterDto resisterDto, List<Organization> organizations, List<Member> members) {
             Member devOwnerMember = Member.builder()
@@ -122,13 +124,13 @@ public class ProjectRequest {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID devOwnerId;
+        private Long devOwnerId;
         @Schema(description = "개발사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID developerOrgId;
+        private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
-        private UUID customerOrgId;
+        private Long customerOrgId;
         @Schema(description = "추가할 멤버 아이디 목록")
-        private List<String> members;
+        private List<Long> members;
 
         public static Project toEntity(UpdateDto updateDto, Project existingProject, List<Organization> organizations, List<Member> members) {
             Member devOwnerMember = Member.builder()
