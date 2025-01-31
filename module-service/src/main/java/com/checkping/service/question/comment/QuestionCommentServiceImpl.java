@@ -5,6 +5,7 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest.UpdateDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
@@ -13,6 +14,7 @@ import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,37 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
 
         // Entity -> Dto
         return QuestionCommentRegister.Response.toDto(comment);
+    }
+
+    /**
+     * 질문 게시글 댓글 서비스 - 대댓글 등록
+     *
+     * @param projectId 질문 게시글 ID
+     * @param commentId 질문 게시글 댓글 ID
+     * @param request   QuestionReCommentRegister.Request 업무 관리 게시글 댓글 등록 Dto
+     * @return QuestionReCommentRegister.Response 업무 관리 게시글 댓글 등록 결과 Dto
+     */
+    @Transactional
+    @Override
+    public QuestionReCommentRegister.Response registerReComment(Long projectId, Long commentId,
+        QuestionReCommentRegister.Request request) {
+
+        // find Question Entity
+        Question question = questionReader.getQuestionById(projectId).orElseThrow(
+            QuestionNotFoundEntityException::new);
+
+        // find Parent Comment Entity
+        QuestionComment parentComment = questionCommentReader.getByQuestionCommentId(
+            commentId).orElseThrow(QuestionCommentNotFoundEntityException::new);
+
+        // Dto -> Entity
+        QuestionComment initReComment = QuestionReCommentRegister.Request.toEntity(request, question, parentComment);
+
+        // Save Entity
+        QuestionComment reComment = questionCommentStore.store(initReComment);
+
+        // Entity -> Dto
+        return QuestionReCommentRegister.Response.toDto(reComment);
     }
 
     /**
