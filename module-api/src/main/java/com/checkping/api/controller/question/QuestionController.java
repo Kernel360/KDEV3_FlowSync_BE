@@ -13,6 +13,7 @@ import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
 import jakarta.validation.constraints.Min;
@@ -117,11 +118,15 @@ public class QuestionController implements QuestionApi {
 
     @Override
     @PostMapping("/{questionId}/comments/{commentId}/recomments")
-    public BaseResponse<QuestionCommentRegister.Response> registerReComment(
+    public BaseResponse<QuestionReCommentRegister.Response> registerReComment(
         @PathVariable Long projectId,
         @PathVariable Long questionId, @PathVariable Long commentId,
-        @RequestBody QuestionCommentRegister.Request request) {
-        return null;
+        @RequestBody QuestionReCommentRegister.Request request) {
+
+        QuestionReCommentRegister.Response response = questionCommentService.registerReComment(
+            questionId, commentId, request);
+
+        return BaseResponse.success(response);
     }
 
     @DeleteMapping("/{questionId}/comments/{commentId}")

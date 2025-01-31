@@ -11,6 +11,7 @@ import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,11 +56,11 @@ public interface QuestionApi {
         @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRegister.Request request);
 
     @Operation(summary = "질문 게시글 대댓글 등록", description = "질문 게시글의 대댓글을 등록하는 기능입니다.")
-    BaseResponse<QuestionCommentRegister.Response> registerReComment(
+    BaseResponse<QuestionReCommentRegister.Response> registerReComment(
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
-        @Parameter(description = "게시글 대댓글 등록 Dto") QuestionCommentRegister.Request request);
+        @Parameter(description = "게시글 대댓글 등록 Dto") QuestionReCommentRegister.Request request);
 
     @Operation(summary = "질문 게시글 댓글 소프트 삭제", description = "질문 게시글의 댓글을 소프트 삭제하는 기능입니다.")
     BaseResponse<QuestionCommentDto> deleteSoftComment(
