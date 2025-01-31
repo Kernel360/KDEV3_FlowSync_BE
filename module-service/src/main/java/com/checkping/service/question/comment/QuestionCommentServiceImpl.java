@@ -6,6 +6,7 @@ import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest.UpdateDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.comment.QuestionReCommentRegister;
+import com.checkping.dto.question.comment.QuestionReCommentRegister.Request;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
@@ -52,26 +53,34 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     /**
      * 질문 게시글 댓글 서비스 - 대댓글 등록
      *
-     * @param projectId 질문 게시글 ID
-     * @param commentId 질문 게시글 댓글 ID
-     * @param request   QuestionReCommentRegister.Request 업무 관리 게시글 댓글 등록 Dto
+     * @param projectId  프로젝트 ID
+     * @param questionId 질문 ID
+     * @param commentId  질문 게시글 댓글 ID
+     * @param request    QuestionReCommentRegister.Request 업무 관리 게시글 댓글 등록 Dto
      * @return QuestionReCommentRegister.Response 업무 관리 게시글 댓글 등록 결과 Dto
      */
     @Transactional
     @Override
-    public QuestionReCommentRegister.Response registerReComment(Long projectId, Long commentId,
-        QuestionReCommentRegister.Request request) {
+    public QuestionReCommentRegister.Response registerReComment(Long projectId, Long questionId,
+        Long commentId, Request request) {
+
+        // Check Project contain Question
+        containingProject(projectId, questionId);
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(projectId).orElseThrow(
+        Question question = questionReader.getQuestionById(questionId).orElseThrow(
             QuestionNotFoundEntityException::new);
+
+        // Check Question contain Comment
+        containingComment(question.getId(), commentId);
 
         // find Parent Comment Entity
         QuestionComment parentComment = questionCommentReader.getByQuestionCommentId(
             commentId).orElseThrow(QuestionCommentNotFoundEntityException::new);
 
         // Dto -> Entity
-        QuestionComment initReComment = QuestionReCommentRegister.Request.toEntity(request, question, parentComment);
+        QuestionComment initReComment = QuestionReCommentRegister.Request.toEntity(request,
+            question, parentComment);
 
         // Save Entity
         QuestionComment reComment = questionCommentStore.store(initReComment);
@@ -90,12 +99,8 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     @Override
     public QuestionCommentDto deleteSoft(Long taskBoardId, Long taskBoardCommentId) {
 
-        // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
-            taskBoardCommentId);
-        if (!isContaining) {
-            throw new QuestionCommentMisMatchEntityException();
-        }
+        // Check Project contain Comment(Question)
+        containingComment(taskBoardId, taskBoardCommentId);
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
@@ -122,12 +127,8 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     @Override
     public QuestionCommentDto deleteHard(Long taskBoardId, Long taskBoardCommentId) {
 
-        // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
-            taskBoardCommentId);
-        if (!isContaining) {
-            throw new QuestionCommentMisMatchEntityException();
-        }
+        // Check Project contain Comment(Question)
+        containingComment(taskBoardId, taskBoardCommentId);
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
@@ -153,12 +154,8 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     public QuestionCommentDto update(Long taskBoardId, Long taskBoardCommentId,
         UpdateDto request) {
 
-        // 업무 관리 게시글에 속한 댓글인지 확인
-        boolean isContaining = questionCommentReader.checkCommentContaining(taskBoardId,
-            taskBoardCommentId);
-        if (!isContaining) {
-            throw new QuestionCommentMisMatchEntityException();
-        }
+        // Check Project contain Comment(Question)
+        containingComment(taskBoardId, taskBoardCommentId);
 
         // find QuestionComment Entity
         QuestionComment initComment = questionCommentReader.getByQuestionCommentId(
@@ -172,5 +169,33 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
 
         // Entity -> Dto
         return QuestionCommentDto.toDto(updatedComment);
+    }
+
+    /**
+     * 프로젝트 ID와 질문 ID로 질문 포함 여부 확인
+     *
+     * @param projectId  프로젝트 ID
+     * @param questionId 질문 Id
+     */
+    private void containingProject(Long projectId, Long questionId) {
+        boolean isContaining = questionReader.checkQuestionContaining(projectId, questionId);
+        if (!isContaining) {
+            throw new QuestionNotFoundEntityException();
+        }
+    }
+
+    /**
+     * 질문 게시글 프로젝트 ID와 댓글 ID로 댓글 포함 여부 확인
+     *
+     * @param questionId        질문 Id
+     * @param questionCommentId 질문 댓글 Id
+     * @return 댓글 포함 여부(boolean
+     */
+    private void containingComment(Long questionId, Long questionCommentId) {
+        boolean isContaining = questionCommentReader.checkCommentContaining(questionId,
+            questionCommentId);
+        if (!isContaining) {
+            throw new QuestionCommentMisMatchEntityException();
+        }
     }
 }

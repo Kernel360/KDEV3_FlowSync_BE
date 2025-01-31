@@ -124,7 +124,7 @@ public class QuestionController implements QuestionApi {
         @RequestBody QuestionReCommentRegister.Request request) {
 
         QuestionReCommentRegister.Response response = questionCommentService.registerReComment(
-            questionId, commentId, request);
+            projectId, questionId, commentId, request);
 
         return BaseResponse.success(response);
     }
