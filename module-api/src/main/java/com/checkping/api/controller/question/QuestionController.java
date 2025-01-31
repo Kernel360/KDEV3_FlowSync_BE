@@ -12,7 +12,6 @@ import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
@@ -106,14 +105,14 @@ public class QuestionController implements QuestionApi {
 
     @PostMapping("/{questionId}/comments")
     @Override
-    public BaseResponse<QuestionCommentDto> registerComment(
+    public BaseResponse<QuestionCommentRegister.Response> registerComment(
         @PathVariable Long projectId, @PathVariable Long questionId,
         @RequestBody QuestionCommentRegister.Request request) {
 
-        QuestionCommentDto questionCommentDto = questionCommentService.register(
+        QuestionCommentRegister.Response response = questionCommentService.register(
             questionId, request);
 
-        return BaseResponse.success(questionCommentDto);
+        return BaseResponse.success(response);
     }
 
     @DeleteMapping("/{questionId}/comments/{commentId}")
@@ -141,7 +140,8 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/counts")
     @Override
-    public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(@PathVariable Long projectId) {
+    public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(
+        @PathVariable Long projectId) {
 
         List<Response> response = questionService.countByProgressStep(projectId);
 
