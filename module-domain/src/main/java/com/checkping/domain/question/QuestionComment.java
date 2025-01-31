@@ -73,6 +73,21 @@ public class QuestionComment extends BaseEntity {
         private final String description;
     }
 
+    /**
+     * 댓글 생성 팩토리 메서드
+     *
+     * @param content   댓글 내용
+     * @param question  question (조회한 Entity)
+     * @return  QuestionComment 엔티티
+     */
+    public static QuestionComment generate(String content, Question question) {
+        QuestionComment questionComment = new QuestionComment();
+        questionComment.content = content;
+        questionComment.question = question;
+        questionComment.activate();
+        return questionComment;
+    }
+
     // soft delete 적용 = 게시글 비활성화
     public void deactivate() {
         this.deletedYn = DeleteStatus.Y;
