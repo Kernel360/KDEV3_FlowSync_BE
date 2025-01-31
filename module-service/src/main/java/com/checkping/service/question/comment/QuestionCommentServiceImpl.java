@@ -2,18 +2,19 @@ package com.checkping.service.question.comment;
 
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
-import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
+import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest.UpdateDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
+import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.exception.question.comment.QuestionCommentMisMatchEntityException;
 import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityException;
-import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,28 +27,57 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     /**
      * 업무 관리 게시글 서비스 - 등록 기능
      *
-     * @param taskBoardId 업무 관리 게시글 ID
-     * @param request     QuestionCommentRequest.RegisterDto 업무 관리 게시글 등록 Dto
+     * @param projectId 질문 게시글 ID
+     * @param request   QuestionCommentRegister.Request 업무 관리 게시글 등록 Dto
      * @return QuestionCommentResponse.QuestionCommentDto 업무 관리 게시글 등록 결과 Dto
      */
     @Override
-    public QuestionCommentDto register(
-        Long taskBoardId, RegisterDto request) {
+    public QuestionCommentRegister.Response register(
+        Long projectId, QuestionCommentRegister.Request request) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
+        Question question = questionReader.getQuestionById(projectId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
-        QuestionComment initComment = QuestionCommentRequest.RegisterDto.toEntity(request,
-            question);
-        initComment.activate();
+        QuestionComment initComment = QuestionCommentRegister.Request.toEntity(request, question);
 
         // save
-        QuestionComment questionComment = questionCommentStore.store(initComment);
+        QuestionComment comment = questionCommentStore.store(initComment);
 
         // Entity -> Dto
-        return QuestionCommentDto.toDto(questionComment);
+        return QuestionCommentRegister.Response.toDto(comment);
+    }
+
+    /**
+     * 질문 게시글 댓글 서비스 - 대댓글 등록
+     *
+     * @param projectId 질문 게시글 ID
+     * @param commentId 질문 게시글 댓글 ID
+     * @param request   QuestionReCommentRegister.Request 업무 관리 게시글 댓글 등록 Dto
+     * @return QuestionReCommentRegister.Response 업무 관리 게시글 댓글 등록 결과 Dto
+     */
+    @Transactional
+    @Override
+    public QuestionReCommentRegister.Response registerReComment(Long projectId, Long commentId,
+        QuestionReCommentRegister.Request request) {
+
+        // find Question Entity
+        Question question = questionReader.getQuestionById(projectId).orElseThrow(
+            QuestionNotFoundEntityException::new);
+
+        // find Parent Comment Entity
+        QuestionComment parentComment = questionCommentReader.getByQuestionCommentId(
+            commentId).orElseThrow(QuestionCommentNotFoundEntityException::new);
+
+        // Dto -> Entity
+        QuestionComment initReComment = QuestionReCommentRegister.Request.toEntity(request, question, parentComment);
+
+        // Save Entity
+        QuestionComment reComment = questionCommentStore.store(initReComment);
+
+        // Entity -> Dto
+        return QuestionReCommentRegister.Response.toDto(reComment);
     }
 
     /**
@@ -114,9 +144,9 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     /**
      * 업무 관리 게시판 댓글 서비스 - 수정 기능
      *
-     * @param taskBoardId 업무 관리 게시판 ID
+     * @param taskBoardId        업무 관리 게시판 ID
      * @param taskBoardCommentId 업무 관리 게시판 댓글 Id
-     * @param request QuestionCommentRequest.UpdateDto
+     * @param request            QuestionCommentRequest.UpdateDto
      * @return 수정된 QuestionComment
      */
     @Override

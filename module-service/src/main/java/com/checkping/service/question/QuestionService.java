@@ -11,11 +11,19 @@ import com.checkping.dto.question.QuestionSearchCondition;
 import java.util.List;
 
 public interface QuestionService {
+
     QuestionRegister.Response register(Long projectId, Request request);
-    QuestionSearch.Response searchQuestions(Long projectId, QuestionSearchCondition searchCondition);
+
+    QuestionSearch.Response searchQuestions(Long projectId,
+        QuestionSearchCondition searchCondition);
+
     QuestionItemDto getQuestionById(Long taskBoardId);
-    QuestionListDto deleteSoft (Long taskBoardId);
+
+    QuestionListDto deleteSoft(Long taskBoardId);
+
     QuestionListDto deleteHard(Long taskBoardId);
+
     QuestionItemDto update(Long taskBoardId, UpdateDto request);
+
     List<QuestionCounter.Response> countByProgressStep(Long projectId);
 }
