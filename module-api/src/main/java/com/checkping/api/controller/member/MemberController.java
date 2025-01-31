@@ -10,8 +10,6 @@ import com.checkping.service.member.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @Tag(name = "회원 관리 API(MemberApi)", description = "회원 관리 API입니다.")
 @RestController
 @RequestMapping("/admins/members")
@@ -33,15 +31,15 @@ public class MemberController implements MemberApi {
     @Override
     @GetMapping
     public BaseResponse<MemberListResponseDto> getAllMembers(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        MemberListResponseDto response = memberService.getAllMembersWithPaging(page-1, size);
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        MemberListResponseDto response = memberService.getAllMembersWithPaging(currentPage-1, pageSize);
         return BaseResponse.success(response);
     }
 
     @Override
     @GetMapping("/{memberId}")
-    public BaseResponse<MemberResponseDto> getMemberById(@PathVariable UUID memberId) {
+    public BaseResponse<MemberResponseDto> getMemberById(@PathVariable Long memberId) {
         MemberResponseDto response = memberService.getMemberById(memberId);
         return BaseResponse.success(response);
     }
@@ -49,7 +47,7 @@ public class MemberController implements MemberApi {
     @Override
     @PatchMapping("/{memberId}")
     public BaseResponse<MemberResponseDto> updateMember(
-            @PathVariable UUID memberId,
+            @PathVariable Long memberId,
             @RequestBody MemberUpdateDto request) {
         MemberResponseDto response = memberService.updateMember(memberId, request);
         return BaseResponse.success(response);
@@ -58,7 +56,7 @@ public class MemberController implements MemberApi {
     @Override
     @PatchMapping("/{memberId}/password")
     public BaseResponse<String> changePassword(
-            @PathVariable UUID memberId,
+            @PathVariable Long memberId,
             @RequestBody ChangePasswordDto request) {
         memberService.changePassword(memberId, request);
         return BaseResponse.success("비밀번호가 성공적으로 변경되었습니다!");
@@ -67,7 +65,7 @@ public class MemberController implements MemberApi {
     @Override
     @PostMapping("/delete/{memberId}")
     public BaseResponse<String> deleteMember(
-            @PathVariable UUID memberId,
+            @PathVariable Long memberId,
             @RequestBody String reason) {
         memberService.deleteMember(memberId, reason);
         return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");

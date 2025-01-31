@@ -5,6 +5,8 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class Project extends BaseEntity {
     */
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 추후 UUID로 수정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", length = 100)
@@ -56,9 +58,17 @@ public class Project extends BaseEntity {
     @Column(name = "management_step", length = 100)
     private ManagementStep management_step;
 
+    @Column(name = "progress_step_id")
+    private Long progressStepId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dev_owner_id")
+    private Member devOwner;
+
     @Column(name = "reg_at")
     private LocalDateTime regAt;
 
+    @LastModifiedDate
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
@@ -68,10 +78,10 @@ public class Project extends BaseEntity {
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
-    @Column(name = "resister_id")
+    @Column(name = "resister_id", columnDefinition = "BINARY(16)")
     private Long resisterId;
 
-    @Column(name = "updater_id")
+    @Column(name = "updater_id", columnDefinition = "BINARY(16)")
     private Long updaterId;
 
     @Column(name = "deleted_yn")
@@ -114,6 +124,10 @@ public class Project extends BaseEntity {
         MAINTENANCE("유지보수");
 
         private final String description;
+    }
+
+    public void updateProgressStep(Long id){
+        this.progressStepId = id;
     }
 
 }

@@ -4,18 +4,22 @@ import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.ProjectResponse;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.infra.repository.project.ProgressStepRepository;
+import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.ProjectRequest;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Tuple;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,27 +33,40 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private OrganizationRepository organizationRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private final ProjectRepository projectRepository;
+    private final OrganizationRepository organizationRepository;
+    private final MemberRepository memberRepository;
+    private final ProgressStepRepository progressStepRepository;
 
     @Override
+    @Transactional
     public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-            request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        Project project = projectRepository.save(
-            ProjectRequest.ResisterDto.toEntity(request, organizations, members));
+        Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
+
+        List<ProgressStep> steps = new ArrayList<>();
+
+        for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
+            ProgressStep progressStep = ProgressStep.builder()
+                    .project_id(project.getId())
+                    .name(step.getDescription())
+                    .build();
+
+            steps.add(progressStep);
+        }
+
+        progressStepRepository.saveAll(steps);
+
+        Long firstStepId = steps.get(0).getId();
+
+        project.updateProgressStep(firstStepId);
+
         return ProjectResponse.ProjectDto.toDto(project);
     }
 
@@ -114,26 +131,61 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return list.stream()
-            .collect(Collectors.toMap(
-                tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
-                tuple -> (Long) tuple.get("projectCount")
-            ));
+                .collect(Collectors.toMap(
+                        tuple -> ((Project.ManagementStep) tuple.get("managementStep")).name(),
+                        tuple -> (Long) tuple.get("projectCount")
+                ));
     }
 
-    private List<Organization> getOrganizations(String developerOrgId, String customerOrgId) {
+    @Override
+    public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
+    }
+
+    @Override
+    public Map<String, List<ProjectResponse.ProjectInfoDto>> getProjectInfoListByStatus(){
+
+        List<ProjectInfoProjection> inProgressList = projectRepository.findByStatus(Project.Status.IN_PROGRESS);
+        List<ProjectInfoProjection> completedList =projectRepository.findByStatus(Project.Status.COMPLETED);
+
+        List<ProjectResponse.ProjectInfoDto> inProgressDTOList = new ArrayList<>();
+        inProgressList.forEach(project ->
+                inProgressDTOList.add(ProjectResponse.ProjectInfoDto.builder()
+                        .id(project.getId())
+                        .projectName(project.getName())
+                        .build())
+        );
+
+        List<ProjectResponse.ProjectInfoDto> completedDTOList = new ArrayList<>();
+        completedList.forEach(project ->
+                completedDTOList.add(ProjectResponse.ProjectInfoDto.builder()
+                        .id(project.getId())
+                        .projectName(project.getName())
+                        .build())
+        );
+
+        Map<String, List<ProjectResponse.ProjectInfoDto>> result = new HashMap<>();
+        result.put("inProgressList", inProgressDTOList);
+        result.put("completedList", completedDTOList);
+
+        return result;
+    }
+
+    private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {
         return Arrays.asList(
-            organizationRepository.findById(UUID.fromString(developerOrgId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
-            organizationRepository.findById(UUID.fromString(customerOrgId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
+                organizationRepository.findById(developerOrgId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
+                organizationRepository.findById(customerOrgId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
         );
     }
 
-    private List<Member> getMembers(List<String> memberIds) {
+    private List<Member> getMembers(List<Long> memberIds) {
         return memberIds.stream()
-            .map(memberId -> memberRepository.findById(UUID.fromString(memberId))
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
-            .collect(Collectors.toList());
+                .map(memberId -> memberRepository.findById(memberId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                .collect(Collectors.toList());
     }
 
 }

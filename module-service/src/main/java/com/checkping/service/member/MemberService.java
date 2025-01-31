@@ -10,7 +10,6 @@ import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.exception.member.InvalidInputValueException;
-import com.checkping.exception.member.MemberNotFoundException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import org.springframework.data.domain.Page;
@@ -18,9 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 // TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
@@ -38,17 +34,12 @@ public class MemberService {
     }
 
     // 이메일로 회원 조회
-    public MemberResponseDto getMemberById(UUID memberId) {
+    public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         return MemberResponseDto.fromEntity(member);
     }
 
-    //모든 회원 목록 조회
-//    public MemberListResponseDto getAllMemberListAsDto() {
-//        List<Member> members = memberRepository.findAll();
-//        return MemberListResponseDto.fromEntityList(members);
-//    }
     // 페이징된 전체 회원 목록 조회
     public MemberListResponseDto getAllMembersWithPaging(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -59,13 +50,13 @@ public class MemberService {
             throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
         }
         //범위 바깥의 페이지 요청
-        if(page >= memberPage.getTotalPages()) {
+        if(page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
             throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
         }
         //페이지에 회원이 없는 경우 예외 처리
-        if(memberPage.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
+//        if(memberPage.isEmpty()) {
+//            throw new MemberNotFoundException();
+//        }
 
         // MemberListResponseDto로 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
@@ -96,7 +87,7 @@ public class MemberService {
     }
 
     // 회원 정보 수정
-    public MemberResponseDto updateMember(UUID memberId, MemberUpdateDto dto) {
+    public MemberResponseDto updateMember(Long memberId, MemberUpdateDto dto) {
         // 기존 회원 찾기
         Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
@@ -112,7 +103,7 @@ public class MemberService {
     }
 
     // 비밀번호 변경
-    public void changePassword(UUID memberId, ChangePasswordDto dto) {
+    public void changePassword(Long memberId, ChangePasswordDto dto) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
@@ -138,7 +129,7 @@ public class MemberService {
 
     // 회원 삭제
     // TODO 회원 삭제 되면 로그인 안되도록 코드 수정하기
-    public void deleteMember(UUID memberId, String reasonForDelete) {
+    public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         if (!member.isActive()) {

@@ -1,5 +1,9 @@
 package com.checkping.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.jackson.ModelResolver;
+import io.swagger.v3.core.jackson.TypeNameResolver;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
@@ -7,16 +11,45 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         servers = {
                 @Server(url = "http://localhost:8080", description = "로컬 서버"),
-                @Server(url = "https://api.flowssync.com", description = "개발 서버"),
+                @Server(url = "https://test.flowssync.com", description = "개발 서버"),
+                @Server(url = "https://api.flowssync.com", description = "운영 서버"),
         })
 @Configuration
 public class SwaggerConfig {
+
+    private final ObjectMapper objectMapper;
+
+    public SwaggerConfig(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @PostConstruct
+    public void initialize() {
+        TypeNameResolver innerClassAwareTypeNameResolver = new TypeNameResolver() {
+            @Override
+            public String getNameOfClass(Class<?> cls) {
+                /*
+                    cls.getName() -> com.checkping.dto.OrganizationUpdate$Response
+                    subString(lastIndexOf(".") + 1) -> OrganizationUpdate$Response
+                    replace("$", ".") -> OrganizationUpdate.Response
+                 */
+
+                return cls.getName()
+                    .substring(cls.getName().lastIndexOf(".") + 1)
+                    .replace("$", ".");
+            }
+        };
+
+        ModelConverters.getInstance()
+            .addConverter(new ModelResolver(objectMapper, innerClassAwareTypeNameResolver));
+    }
 
     @Bean
     public OpenAPI openAPI() {
