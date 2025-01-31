@@ -78,10 +78,10 @@ public class Project extends BaseEntity {
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
-    @Column(name = "resister_id", columnDefinition = "BINARY(16)")
+    @Column(name = "resister_id")
     private Long resisterId;
 
-    @Column(name = "updater_id", columnDefinition = "BINARY(16)")
+    @Column(name = "updater_id")
     private Long updaterId;
 
     @Column(name = "deleted_yn")
