@@ -3,7 +3,7 @@ package com.checkping.api.controller.member;
 import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.member.request.LoginRequestDto;
-import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.AuthService;
 import com.checkping.service.member.auth.AuthTokens;
 import jakarta.servlet.http.Cookie;
@@ -20,7 +20,7 @@ public class AuthController implements AuthApi{
     private final AuthService authService;
 
     @GetMapping("/me")
-    public MemberResponseDto getCurrentMember() {
+    public BaseResponse getCurrentMember() {
         return authService.getCurrentMember();
     }
 

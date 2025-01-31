@@ -2,7 +2,6 @@ package com.checkping.api.controller.member;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.member.request.LoginRequestDto;
-import com.checkping.dto.member.response.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,5 +37,5 @@ public interface AuthApi {
             summary = "로그인한 사용자 정보 조회 *JWT 필터 비활성화되어있으면 에러.*",
             description = "현재 로그인한 사용자의 정보를 조회합니다. *JWT Filter를 통해 인증된 사용자만 접근 가능합니다.*"
     )
-    MemberResponseDto getCurrentMember();
+    BaseResponse getCurrentMember();
 }
