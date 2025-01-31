@@ -53,7 +53,7 @@ public class ProjectRequest {
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
-        @Schema(description = "프로젝트 마감 일시", example = "2025-12-28 11:17", type = "string")
+        @Schema(description = "프로젝트 마감 일시", example = "2025-12-28 11:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
