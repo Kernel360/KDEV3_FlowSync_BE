@@ -2,6 +2,7 @@ package com.checkping.api.auth.config;
 
 
 import com.checkping.api.auth.filter.CustomLogoutFilter;
+import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
 import java.util.Arrays;
@@ -96,7 +97,7 @@ public class CustomSecurityConfig {
         configuration.setAllowedOrigins(
             List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
                 "https://dev.flowssync.com", "https://api.flowssync.com",
-                "https://test.flowssync.com"));
+                "https://test.flowssync.com", "https://prod.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(

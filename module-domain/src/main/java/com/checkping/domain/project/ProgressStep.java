@@ -2,24 +2,17 @@ package com.checkping.domain.project;
 
 
 import com.checkping.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
+@Builder
 @Table(name = "progress_step")
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProgressStep extends BaseEntity {
     /*
     id : id
@@ -34,35 +27,51 @@ public class ProgressStep extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", length = 100)
     private String name;
 
     @Column(name = "description", length = 1000)
     private String description;
 
-    @Column(name = "step_order", nullable = false)
+    @Column(name = "step_order")
     private Integer stepOrder;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private Project.Status status;
 
-    @Column(name = "start_at", nullable = false)
+    @Column(name = "start_at")
     private LocalDateTime startAt;
 
-    @Column(name = "close_at", nullable = false)
+    @Column(name = "close_at")
     private LocalDateTime closeAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @Column(name = "project_id")
+    private Long projectId;
+
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;*/
 
     @Getter
     @RequiredArgsConstructor
     public enum ProgressStatus {
         NOT_STARTED, IN_PROGRESS, COMPLETED, CANCELED
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum CurrentStep {
+        REQUIREMENTS("요구사항 정의"),
+        SCREEN_DESIGN("화면설계"),
+        DESIGN( "디자인" ),
+        PUBLISHING("퍼블리싱"),
+        DEVELOPMENT("개발"),
+        REVIEW("검수");
+
+        private final String description;
     }
 }

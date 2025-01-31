@@ -1,9 +1,12 @@
 package com.checkping.service.question;
 
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
+import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -15,6 +18,7 @@ import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.info.question.QuestionSearchInfo;
+import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.QuestionStore;
@@ -22,6 +26,7 @@ import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionLinkStore questionLinkStore;
     private final QuestionFileStore questionFileStore;
     private final ProjectReader projectReader;
+    private final ProgressStepReader progressStepReader;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -105,8 +111,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto getQuestionById(Long taskBoardId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question question = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
         return QuestionItemDto.toDto(question);
@@ -122,8 +128,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -152,8 +158,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
         List<QuestionComment> commentList = initQuestion.getCommentList();
@@ -178,8 +184,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId).orElseThrow(
-            QuestionNotFoundEntityException::new);
+        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update
         String title = request.getTitle();
@@ -191,5 +197,28 @@ public class QuestionServiceImpl implements QuestionService {
 
         // Entity -> Dto
         return QuestionItemDto.toDto(updatedQuestion);
+    }
+
+    public List<QuestionCounter.Response> countByProgressStep(Long projectId) {
+
+        // TODO: project id 로 project 조회
+
+        // project 에 해당하는 progressStep 조회
+        List<ProgressStep> steps = progressStepReader.getByProjectId(projectId);
+
+        // progressStep 에 해당하는 question 의 개수 조회
+        List<QuestionCounter.Response> list = new ArrayList<>();
+
+        // 전체 question 의 개수 조회
+        QuestionCounter.Response allCount = QuestionCounter.Response.makeAllCount(
+            questionReader.countQuestionsByProject(projectId));
+        list.add(allCount);
+
+        for (ProgressStep step : steps) {
+            QuestionCounter.Response dto = QuestionCounter.Response.toDto(step,
+                questionReader.countQuestionsByProgressStep(projectId, step.getId()));
+            list.add(dto);
+        }
+        return list;
     }
 }
