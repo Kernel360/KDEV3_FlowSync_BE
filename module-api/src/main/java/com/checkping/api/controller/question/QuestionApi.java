@@ -49,7 +49,7 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 댓글 등록", description = "질문 게시글의 댓글을 등록하는 기능입니다.")
-    BaseResponse<QuestionCommentDto> registerComment(
+    BaseResponse<QuestionCommentRegister.Response> registerComment(
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRegister.Request request);
