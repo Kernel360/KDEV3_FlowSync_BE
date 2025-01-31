@@ -4,6 +4,7 @@ import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.comment.QuestionReCommentRegister;
+import com.checkping.dto.question.comment.QuestionReCommentRegister.Request;
 
 public interface QuestionCommentService {
 
@@ -11,8 +12,8 @@ public interface QuestionCommentService {
         Long projectId, QuestionCommentRegister.Request request);
 
     QuestionReCommentRegister.Response registerReComment(
-        Long projectId, Long commentId,
-        QuestionReCommentRegister.Request request);
+        Long projectId, Long questionId, Long commentId,
+        Request request);
 
     QuestionCommentDto deleteSoft(Long taskBoardId,
         Long taskBoardCommentId);
