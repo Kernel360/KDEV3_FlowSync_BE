@@ -144,7 +144,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Map<String, List<ProjectResponse.ProjectInfoDto>> getProjectInfoListByStatus(){
+    public ProjectResponse.ProjectInfoListDto getProjectInfoListByStatus(){
 
         List<ProjectInfoProjection> inProgressList = projectRepository.findByStatus(Project.Status.IN_PROGRESS);
         List<ProjectInfoProjection> completedList =projectRepository.findByStatus(Project.Status.COMPLETED);
@@ -169,7 +169,7 @@ public class ProjectServiceImpl implements ProjectService {
         result.put("inProgressList", inProgressDTOList);
         result.put("completedList", completedDTOList);
 
-        return result;
+        return ProjectResponse.ProjectInfoListDto.infoListDto(result);
     }
 
     private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {

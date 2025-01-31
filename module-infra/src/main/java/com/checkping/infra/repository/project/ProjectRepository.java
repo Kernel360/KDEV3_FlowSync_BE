@@ -30,8 +30,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    LEFT JOIN organization o ON obp.org_id = o.id " +
             "    GROUP BY obp.project_id " +
             ") AS org_info ON p.id = org_info.project_id " +
-            "WHERE (:keyword IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
-            "AND (:status IS NULL OR p.status = :status)", nativeQuery = true)
+            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (NULLIF(:status, '') IS NULL OR p.status = :status)", nativeQuery = true)
     Page<Project> findProjectsWithOrganizationInfoByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable);
 
     @Query("SELECT p.management_step AS managementStep, COUNT(p) AS projectCount " +

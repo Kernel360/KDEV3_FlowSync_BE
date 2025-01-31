@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ProjectResponse {
 
@@ -49,7 +48,7 @@ public class ProjectResponse {
         private LocalDateTime closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
-        @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 대표자 아이디")
         private Long devOwnerId;
         @Schema(description = "개발사 이름")
         private String developerName;
@@ -151,6 +150,17 @@ public class ProjectResponse {
             Map<String, Object> result =  meta.toMap();
 
             return new ProjectListDto(projectDtos, result);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoListDto {
+        private Map<String, List<ProjectInfoDto>> projectInfoMap;
+
+        public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
+            return new ProjectInfoListDto(projectInfoMap);
         }
     }
 }
