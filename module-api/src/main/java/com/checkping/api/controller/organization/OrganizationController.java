@@ -3,6 +3,7 @@ package com.checkping.api.controller.organization;
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.service.member.OrganizationService;
@@ -70,9 +71,12 @@ public class OrganizationController implements OrganizationApi {
 
     @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable Long organizationId) {
+    public BaseResponse<OrganizationDelete.Response> removeOrganization(
+            @PathVariable Long organizationId,
+            @RequestBody OrganizationDelete.Request request
+            ) {
 
-        OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
+        OrganizationDelete.Response response = organizationService.removeOrganization(organizationId, request);
 
         return BaseResponse.success(response, "업체 삭제 완료");
     }
