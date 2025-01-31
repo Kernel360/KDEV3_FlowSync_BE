@@ -54,6 +54,13 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRegister.Request request);
 
+    @Operation(summary = "질문 게시글 대댓글 등록", description = "질문 게시글의 대댓글을 등록하는 기능입니다.")
+    BaseResponse<QuestionCommentRegister.Response> registerReComment(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "게시글 ID") Long questionId,
+        @Parameter(description = "게시글 댓글 ID") Long commentId,
+        @Parameter(description = "게시글 대댓글 등록 Dto") QuestionCommentRegister.Request request);
+
     @Operation(summary = "질문 게시글 댓글 소프트 삭제", description = "질문 게시글의 댓글을 소프트 삭제하는 기능입니다.")
     BaseResponse<QuestionCommentDto> deleteSoftComment(
         @Parameter(description = "프로젝트 ID") Long projectId,

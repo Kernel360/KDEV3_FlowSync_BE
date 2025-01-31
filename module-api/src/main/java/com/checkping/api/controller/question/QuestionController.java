@@ -115,6 +115,15 @@ public class QuestionController implements QuestionApi {
         return BaseResponse.success(response);
     }
 
+    @Override
+    @PostMapping("/{questionId}/comments/{commentId}/recomments")
+    public BaseResponse<QuestionCommentRegister.Response> registerReComment(
+        @PathVariable Long projectId,
+        @PathVariable Long questionId, @PathVariable Long commentId,
+        @RequestBody QuestionCommentRegister.Request request) {
+        return null;
+    }
+
     @DeleteMapping("/{questionId}/comments/{commentId}")
     @Override
     public BaseResponse<QuestionCommentDto> deleteSoftComment(
