@@ -31,7 +31,7 @@ public interface NoticeApi {
 
     @Operation(summary = "공지사항 목록 조회", description = "공지사항 목록을 조회하는 기능입니다.")
     public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(
-            @Parameter(description = "페이지네이션 정보") Pageable pageable  // ✅ Pageable 추가
+            @Parameter(description = "페이지네이션 정보") Pageable pageable
     );
 
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
@@ -42,5 +42,5 @@ public interface NoticeApi {
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
     public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
             @Parameter(description = "검색할 키워드") @RequestParam String keyword,
-            @Parameter(description = "검색할 카테고리") @RequestParam(required = false) String category); // 카테고리 파라미터 추가
+            @Parameter(description = "검색할 카테고리") @RequestParam(required = false) String category);
 }

@@ -48,7 +48,8 @@ public class NoticeController implements NoticeApi {
     @Override
     @GetMapping("/notices")
     public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(Pageable pageable) {
-        Page<NoticeGetListResponse> result = noticeService.findAllNotices(pageable);
+        Pageable defaultPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "regAt"));
+        Page<NoticeGetListResponse> result = noticeService.findAllNotices(defaultPageable);
         return BaseResponse.success(result);
     }
 

@@ -87,8 +87,11 @@ public class Notice extends BaseEntity {
         if (priority != null) this.priority = Priority.valueOf(priority);
     }
 
-    public void markAsDeleted() {
+    public void updatePriority(Notice.Priority priority) {
+        this.priority = priority;
+    }
 
+    public void markAsDeleted() {
         this.isDeleted = true;
     }
 }
