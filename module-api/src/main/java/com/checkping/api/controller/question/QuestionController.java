@@ -10,6 +10,7 @@ import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
+import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -107,7 +108,7 @@ public class QuestionController implements QuestionApi {
     @Override
     public BaseResponse<QuestionCommentDto> registerComment(
         @PathVariable Long projectId, @PathVariable Long questionId,
-        @RequestBody RegisterDto request) {
+        @RequestBody QuestionCommentRegister.Request request) {
 
         QuestionCommentDto questionCommentDto = questionCommentService.register(
             questionId, request);
