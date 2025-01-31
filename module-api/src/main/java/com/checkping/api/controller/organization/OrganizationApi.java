@@ -45,7 +45,8 @@ public interface OrganizationApi {
 
     @Operation(summary = "업체 삭제", description = "업체 정보 삭제 기능입니다.")
     BaseResponse<OrganizationGet.Response> removeOrganization(
-            @Parameter(description = "업체 ID") @PathVariable Long organizationId
+            @Parameter(description = "업체 ID") @PathVariable Long organizationId,
+            @Parameter(description = "삭제 사유") @PathVariable String reason
     );
 
 }

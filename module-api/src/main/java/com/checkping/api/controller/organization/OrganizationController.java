@@ -70,7 +70,10 @@ public class OrganizationController implements OrganizationApi {
 
     @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable Long organizationId) {
+    public BaseResponse<OrganizationGet.Response> removeOrganization(
+            @PathVariable Long organizationId,
+            @RequestBody String reason
+    ) {
 
         OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
 
