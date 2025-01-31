@@ -6,7 +6,7 @@ import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommen
 
 public interface QuestionCommentService {
 
-    QuestionCommentDto register(
+    QuestionCommentRegister.Response register(
         Long projectId, QuestionCommentRegister.Request request);
 
     QuestionCommentDto deleteSoft(Long taskBoardId,
