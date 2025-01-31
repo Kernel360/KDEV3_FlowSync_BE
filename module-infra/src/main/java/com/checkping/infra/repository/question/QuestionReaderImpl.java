@@ -22,7 +22,7 @@ public class QuestionReaderImpl implements QuestionReader {
      * Question 검색 기능
      * TODO : 동적 쿼리가 가능하도록 변경
      *
-     * @param projectId 프로젝트 아이디
+     * @param projectId       프로젝트 아이디
      * @param searchCondition 검색 조건
      * @return Question 검색 결과
      */
@@ -113,12 +113,24 @@ public class QuestionReaderImpl implements QuestionReader {
     /**
      * 진행상태별 Question 개수 조회
      *
-     * @param projectId project id
+     * @param projectId      project id
      * @param progressStepId progress step id
      * @return 진행상태별 Question 개수
      */
     @Override
     public Long countQuestionsByProgressStep(Long projectId, Long progressStepId) {
         return questionRepository.countByProjectIdAndProgressStepId(projectId, progressStepId);
+    }
+
+    /**
+     * 프로젝트에 속한 Question 존재 여부 확인
+     *
+     * @param projectId  프로젝트 아이디
+     * @param questionId 질문 아이디
+     * @return 프로젝트에 속한 Question 존재 여부
+     */
+    @Override
+    public boolean checkQuestionContaining(Long projectId, Long questionId) {
+        return questionRepository.existsByIdAndProjectId(questionId, projectId);
     }
 }
