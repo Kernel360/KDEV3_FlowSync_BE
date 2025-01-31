@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "member")
@@ -39,9 +38,8 @@ public class Member extends BaseEntity {
      */
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id; // 회원 아이디
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // 회원 아이디
 
     @ManyToOne
     @JoinColumn(name = "org_id", nullable = false)

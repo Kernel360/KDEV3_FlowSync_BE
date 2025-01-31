@@ -2,6 +2,7 @@ package com.checkping.api.auth.config;
 
 
 import com.checkping.api.auth.filter.CustomLogoutFilter;
+import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.auth.filter.LoginFilter;
 import com.checkping.service.member.util.JwtUtil;
 import java.util.Arrays;
