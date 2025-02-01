@@ -6,6 +6,7 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -107,14 +108,14 @@ public class QuestionServiceImpl implements QuestionService {
      * @return QuestionListDto
      */
     @Override
-    public QuestionItemDto getById(Long questionId) {
+    public QuestionGet.Response getById(Long questionId) {
 
         // find Question Entity
         Question question = questionReader.getQuestionById(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
-        return QuestionItemDto.toDto(question);
+        return QuestionGet.Response.toDto(question);
     }
 
     /**
