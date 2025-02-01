@@ -77,7 +77,7 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<QuestionItemDto> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionItemDto questionItemDto = questionService.getQuestionById(questionId);
+        QuestionItemDto questionItemDto = questionService.getById(questionId);
 
         return BaseResponse.success(questionItemDto);
     }
