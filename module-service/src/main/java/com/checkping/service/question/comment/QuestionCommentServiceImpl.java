@@ -37,7 +37,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         Long projectId, QuestionCommentRegister.Request request) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(projectId).orElseThrow(
+        Question question = questionReader.getById(projectId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
@@ -68,7 +68,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         containingProject(projectId, questionId);
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(questionId).orElseThrow(
+        Question question = questionReader.getById(questionId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Check Question contain Comment
