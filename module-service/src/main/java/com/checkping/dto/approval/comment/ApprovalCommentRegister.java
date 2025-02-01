@@ -32,6 +32,7 @@ public class ApprovalCommentRegister {
         }
     }
 
+    @Getter
     public static class Response {
         /*
         id : 업무 관리 게시글 댓글 아이디
