@@ -7,6 +7,7 @@ import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,19 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalCommentRegister.Response response = approvalService.registerComment(projectId,
             approvalId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{approvalId}/comments/{commentId}/recomments")
+    @Override
+    public BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
+        @PathVariable Long projectId,
+        @PathVariable Long approvalId, @PathVariable Long commentId,
+        @RequestBody ApprovalReCommentRegister.Request request) {
+
+        ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,
+            approvalId, commentId, request);
 
         return BaseResponse.success(response);
     }

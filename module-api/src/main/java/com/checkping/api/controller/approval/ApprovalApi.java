@@ -5,6 +5,7 @@ import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,4 +37,10 @@ public interface ApprovalApi {
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 댓글 등록 정보") @RequestBody ApprovalCommentRegister.Request request);
 
+    @Operation(summary = "결재 대댓글 생성", description = "결재 대댓글을 생성하는 기능입니다.")
+    BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
+        @Parameter(description = "결재 ID") @PathVariable Long approvalId,
+        @Parameter(description = "결재 댓글 ID") @PathVariable Long commentId,
+        @Parameter(description = "결재 대댓글 등록 정보") @RequestBody ApprovalReCommentRegister.Request request);
 }
