@@ -7,4 +7,6 @@ import org.springframework.data.domain.Page;
 public interface ApprovalReader {
 
     Page<Approval> getApprovals(Long projectId, ApprovalSearchInfo.SearchCondition searchCondition);
+
+    boolean isContainingApproval(Long projectId, Long approvalId);
 }
