@@ -100,6 +100,17 @@ public class QuestionReaderImpl implements QuestionReader {
     }
 
     /**
+     * Question 조회 기능 (Comment 포함)
+     *
+     * @param questionId question 아이디
+     * @return Question 조회 결과
+     */
+    @Override
+    public Optional<Question> getByIdWithComments(Long questionId) {
+        return questionRepository.findByIdWithComments(questionId);
+    }
+
+    /**
      * 프로젝트별 Question 개수 조회
      *
      * @param projectId project id

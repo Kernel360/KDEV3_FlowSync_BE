@@ -11,6 +11,8 @@ public interface QuestionReader {
 
     Optional<Question> getById(Long questionId);
 
+    Optional<Question> getByIdWithComments(Long questionId);
+
     Long countQuestionsByProject(Long projectId);
 
     Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
