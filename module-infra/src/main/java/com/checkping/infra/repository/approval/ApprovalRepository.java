@@ -25,4 +25,5 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
 
     Page<Approval> findByProjectIdAndTitleContainingAndProgressStepIdAndStatus(Long projectId, String title, Long progressStepId, Approval.ApprovalStatus status, Pageable pageable);
 
+    boolean existsByProjectIdAndId(Long projectId, Long approvalId);
 }

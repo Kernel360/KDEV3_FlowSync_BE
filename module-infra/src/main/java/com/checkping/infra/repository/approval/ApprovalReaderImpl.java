@@ -74,4 +74,9 @@ public class ApprovalReaderImpl implements ApprovalReader {
             projectId, searchCondition.keyword(), searchCondition.progressId(),
             searchCondition.status(), pageable);
     }
+
+    @Override
+    public boolean isContainingApproval(Long projectId, Long approvalId) {
+        return approvalRepository.existsByProjectIdAndId(projectId, approvalId);
+    }
 }
