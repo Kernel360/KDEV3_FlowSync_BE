@@ -103,14 +103,14 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 서비스 - 상세 조회
      *
-     * @param taskBoardId 업무 관리 게시글 ID
+     * @param questionId 업무 관리 게시글 ID
      * @return QuestionListDto
      */
     @Override
-    public QuestionItemDto getQuestionById(Long taskBoardId) {
+    public QuestionItemDto getById(Long questionId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId)
+        Question question = questionReader.getQuestionById(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto

@@ -17,7 +17,7 @@ public interface QuestionService {
     QuestionSearch.Response searchQuestions(Long projectId,
         QuestionSearchCondition searchCondition);
 
-    QuestionItemDto getQuestionById(Long taskBoardId);
+    QuestionItemDto getById(Long questionId);
 
     QuestionListDto deleteSoft(Long taskBoardId);
 
