@@ -39,6 +39,7 @@ public class QuestionComment extends BaseEntity {
     parentId : 부모 댓글 아이디
     deletedYn : 삭제 여부
     question : 업무 관리 게시글 (join)
+    parent : 부모 댓글 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
