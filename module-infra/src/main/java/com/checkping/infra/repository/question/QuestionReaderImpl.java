@@ -142,6 +142,6 @@ public class QuestionReaderImpl implements QuestionReader {
      */
     @Override
     public boolean checkQuestionContaining(Long projectId, Long questionId) {
-        return questionRepository.existsByIdAndProjectId(questionId, projectId);
+        return questionRepository.existsByProjectIdAndId(projectId, questionId);
     }
 }

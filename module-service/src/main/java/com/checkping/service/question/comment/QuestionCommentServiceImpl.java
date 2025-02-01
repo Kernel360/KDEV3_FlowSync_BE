@@ -178,8 +178,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @param questionId 질문 Id
      */
     private void containingProject(Long projectId, Long questionId) {
-        boolean isContaining = questionReader.checkQuestionContaining(questionId, projectId);
-        if (!isContaining) {
+        if (!questionReader.checkQuestionContaining(projectId, questionId)) {
             throw new QuestionNotFoundEntityException();
         }
     }
