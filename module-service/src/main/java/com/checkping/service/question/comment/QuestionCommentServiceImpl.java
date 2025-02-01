@@ -37,7 +37,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         Long projectId, QuestionCommentRegister.Request request) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(projectId).orElseThrow(
+        Question question = questionReader.getById(projectId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
@@ -68,7 +68,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
         containingProject(projectId, questionId);
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(questionId).orElseThrow(
+        Question question = questionReader.getById(questionId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Check Question contain Comment
@@ -178,7 +178,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @param questionId 질문 Id
      */
     private void containingProject(Long projectId, Long questionId) {
-        boolean isContaining = questionReader.checkQuestionContaining(projectId, questionId);
+        boolean isContaining = questionReader.checkQuestionContaining(questionId, projectId);
         if (!isContaining) {
             throw new QuestionNotFoundEntityException();
         }
@@ -189,11 +189,10 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      *
      * @param questionId        질문 Id
      * @param questionCommentId 질문 댓글 Id
-     * @return 댓글 포함 여부(boolean
      */
     private void containingComment(Long questionId, Long questionCommentId) {
-        boolean isContaining = questionCommentReader.checkCommentContaining(questionId,
-            questionCommentId);
+        boolean isContaining = questionCommentReader.checkCommentContaining(
+            questionCommentId, questionId);
         if (!isContaining) {
             throw new QuestionCommentMisMatchEntityException();
         }

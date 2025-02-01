@@ -91,12 +91,23 @@ public class QuestionReaderImpl implements QuestionReader {
     /**
      * Question 조회 기능
      *
-     * @param id question 아이디
+     * @param questionId question 아이디
      * @return Question 조회 결과
      */
     @Override
-    public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> getById(Long questionId) {
+        return questionRepository.findById(questionId);
+    }
+
+    /**
+     * Question 조회 기능 (Comment 포함)
+     *
+     * @param questionId question 아이디
+     * @return Question 조회 결과
+     */
+    @Override
+    public Optional<Question> getByIdWithComments(Long questionId) {
+        return questionRepository.findByIdWithComments(questionId);
     }
 
     /**

@@ -41,16 +41,14 @@ public class ApprovalServiceImpl implements ApprovalService {
         Approval approval = approvalStore.store(init);
 
         // FileRequest -> Entity
-        List<ApprovalFile> approvalFiles = ApprovalFileRegister.Request.toEntity(approval,
-            request.getFileInfoList());
+        List<ApprovalFile> approvalFiles = ApprovalFileRegister.Request.toEntity(approval, request.getFileInfoList());
         // Save approvalFiles
         approvalFileStore.store(approvalFiles);
         // Add approvalFiles to approval
         approval.addFiles(approvalFiles);
 
         // LinkRequest -> Entity
-        List<ApprovalLink> approvalLinks = ApprovalLinkRegister.Request.toEntity(approval,
-            request.getLinkList());
+        List<ApprovalLink> approvalLinks = ApprovalLinkRegister.Request.toEntity(approval, request.getLinkList());
         // Save approvalLinks
         approvalLinkStore.store(approvalLinks);
         // Add approvalLinks to approval

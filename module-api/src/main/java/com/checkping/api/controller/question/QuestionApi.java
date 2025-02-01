@@ -2,12 +2,14 @@ package com.checkping.api.controller.question;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -36,7 +38,7 @@ public interface QuestionApi {
         @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
-    BaseResponse<QuestionItemDto> getQuestion(@Parameter(description = "프로젝트 ID") Long projectId,
+    BaseResponse<QuestionGet.Response> get(@Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 수정", description = "질문 게시글을 수정하는 기능입니다.")

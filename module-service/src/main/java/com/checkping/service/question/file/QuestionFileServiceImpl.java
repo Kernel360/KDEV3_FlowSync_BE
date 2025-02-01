@@ -21,7 +21,7 @@ public class QuestionFileServiceImpl implements QuestionFileService {
     @Override
     public List<FileResponse> saveFiles(Long taskBoardId, List<MultipartFile> fileRequests) {
 
-        Question question = questionReader.getQuestionById(taskBoardId).orElseThrow(
+        Question question = questionReader.getById(taskBoardId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         List<QuestionFile> files = questionFileStore.saveFileList(question, fileRequests);

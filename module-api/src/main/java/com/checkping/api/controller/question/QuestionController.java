@@ -3,6 +3,7 @@ package com.checkping.api.controller.question;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter;
 import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -10,6 +11,7 @@ import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
+import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -74,17 +76,17 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/{questionId}")
     @Override
-    public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long projectId,
+    public BaseResponse<QuestionGet.Response> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionItemDto questionItemDto = questionService.getQuestionById(questionId);
+        QuestionGet.Response response = questionService.getById(questionId);
 
-        return BaseResponse.success(questionItemDto);
+        return BaseResponse.success(response);
     }
 
     @PutMapping("/{questionId}")
     @Override
-    public BaseResponse<QuestionItemDto> updateQuestion(Long projectId,
+    public BaseResponse<QuestionItemDto> updateQuestion(@PathVariable Long projectId,
         @PathVariable Long questionId,
         @RequestBody UpdateDto request) {
 
