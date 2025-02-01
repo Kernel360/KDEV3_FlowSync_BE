@@ -111,7 +111,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionGet.Response getById(Long questionId) {
 
         // find Question Entity
-        Question question = questionReader.getById(questionId)
+        Question question = questionReader.getByIdWithComments(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
