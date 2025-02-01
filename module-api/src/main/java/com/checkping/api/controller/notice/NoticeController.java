@@ -2,6 +2,7 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
@@ -47,9 +48,8 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(Pageable pageable) {
-        Pageable defaultPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "regAt"));
-        Page<NoticeGetListResponse> result = noticeService.findAllNotices(defaultPageable);
+    public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(@RequestParam(defaultValue = "1") int page) {
+        Page<NoticeGetListResponse> result = noticeService.findAllNotices(page);
         return BaseResponse.success(result);
     }
 
@@ -65,14 +65,9 @@ public class NoticeController implements NoticeApi {
     @Override
     @GetMapping("/notices/search")
     public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @RequestParam String keyword,
-            @RequestParam(required = false) String category) {
+            @RequestParam NoticeSearchRequest noticeSearchRequest) {
 
-        // 기본 페이지 번호: 1, 기본 페이지 크기: 12, 내림차순 정렬
-        Pageable pageable = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "regAt"));
-
-        Page<NoticeGetListResponse> result = noticeService.searchNotices(keyword, category, pageable);
-
+        Page<NoticeGetListResponse> result = noticeService.searchNotices(noticeSearchRequest);
         return BaseResponse.success(result);
     }
 }

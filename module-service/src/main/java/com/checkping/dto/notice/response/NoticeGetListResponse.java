@@ -26,7 +26,7 @@ public class NoticeGetListResponse {
     @Schema(description = "공지사항 글 중요도", example = "EMERGENCY")
     private Notice.Priority priority;
 
-    @Schema(description = "업체 유형", example = "DEVELOPER")
+    @Schema(description = "삭제 여부", example = "DEVELOPER")
     private Boolean isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
