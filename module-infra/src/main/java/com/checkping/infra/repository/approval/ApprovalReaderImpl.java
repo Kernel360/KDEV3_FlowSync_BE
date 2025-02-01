@@ -2,6 +2,7 @@ package com.checkping.infra.repository.approval;
 
 import com.checkping.domain.approval.Approval;
 import com.checkping.info.approval.ApprovalSearchInfo;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,11 @@ import org.springframework.stereotype.Component;
 public class ApprovalReaderImpl implements ApprovalReader {
 
     private final ApprovalRepository approvalRepository;
+
+    @Override
+    public Optional<Approval> getById(Long approvalId) {
+        return approvalRepository.findById(approvalId);
+    }
 
     @Override
     public Page<Approval> getApprovals(Long projectId,
