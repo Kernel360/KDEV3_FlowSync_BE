@@ -178,7 +178,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @param questionId 질문 Id
      */
     private void containingProject(Long projectId, Long questionId) {
-        boolean isContaining = questionReader.checkQuestionContaining(projectId, questionId);
+        boolean isContaining = questionReader.checkQuestionContaining(questionId, projectId);
         if (!isContaining) {
             throw new QuestionNotFoundEntityException();
         }
@@ -191,8 +191,8 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
      * @param questionCommentId 질문 댓글 Id
      */
     private void containingComment(Long questionId, Long questionCommentId) {
-        boolean isContaining = questionCommentReader.checkCommentContaining(questionId,
-            questionCommentId);
+        boolean isContaining = questionCommentReader.checkCommentContaining(
+            questionCommentId, questionId);
         if (!isContaining) {
             throw new QuestionCommentMisMatchEntityException();
         }
