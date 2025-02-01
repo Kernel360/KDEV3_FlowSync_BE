@@ -62,4 +62,35 @@ public class ApprovalComment extends BaseEntity {
         Y("비활성화"), N("활성화");
         private final String description;
     }
+
+    /**
+     * 댓글 생성 팩토리 메서드
+     *
+     * @param content  댓글 내용
+     * @param approval 결재 Entity
+     * @return 댓글 Entity
+     */
+    public static ApprovalComment generate(String content, Approval approval) {
+        ApprovalComment approvalComment = new ApprovalComment();
+        approvalComment.content = content;
+        approvalComment.approval = approval;
+
+        approvalComment.activate();
+
+        return approvalComment;
+    }
+
+    /**
+     * 댓글 비활성화
+     */
+    public void inactivate() {
+        this.deleteYn = DeleteStatus.Y;
+    }
+
+    /**
+     * 댓글 활성화
+     */
+    public void activate() {
+        this.deleteYn = DeleteStatus.N;
+    }
 }
