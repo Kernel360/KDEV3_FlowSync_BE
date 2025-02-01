@@ -14,4 +14,6 @@ public interface QuestionReader {
     Long countQuestionsByProject(Long projectId);
 
     Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
+
+    boolean checkQuestionContaining(Long projectId, Long questionId);
 }
