@@ -95,6 +95,8 @@ public class ProjectResponse {
         private String memberName;
         @Schema(description = "개발사 대표자 직무")
         private String jobRole;
+        @Schema(description = "개발사 대표자 직급")
+        private String jobTitle;
         @Schema(description = "개발사 대표자 연락처")
         private String phoneNum;
         @Schema(description = "프로젝트 시작 일시")
@@ -113,6 +115,7 @@ public class ProjectResponse {
                     .profileImageUrl(detailsDto.getProfileImageUrl())
                     .memberName(detailsDto.getMemberName())
                     .jobRole(detailsDto.getJobRole())
+                    .jobTitle(detailsDto.getJobTitle())
                     .phoneNum(detailsDto.getPhoneNum())
                     .startAt(detailsDto.getStartAt())
                     .closeAt(detailsDto.getCloseAt())

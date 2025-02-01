@@ -2,6 +2,7 @@ package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    m.profile_image_url, " +
             "    m.name AS member_name, " +
             "    m.job_role, " +
+            "    m.job_title, " +
             "    m.phone_num, " +
             "    p.start_at, " +
             "    p.close_at " +
