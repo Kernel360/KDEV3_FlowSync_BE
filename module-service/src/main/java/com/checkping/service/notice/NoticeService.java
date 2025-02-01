@@ -5,8 +5,8 @@ import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface NoticeService {
 
@@ -16,8 +16,11 @@ public interface NoticeService {
 
     NoticeResponse deleteNotice(Long noticeid);
 
-    List<NoticeGetListResponse> findAllNotices();
+    Page<NoticeGetListResponse> findAllNotices(Pageable pageable);
 
     NoticeResponse getNotice(Long noticeid);
 
+    Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable);
 }
+
+

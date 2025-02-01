@@ -7,20 +7,18 @@ import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
 import com.checkping.service.notice.NoticeServiceImpl;
-import jakarta.websocket.OnError;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class NoticeController implements NoticeApi {
 
-    @Autowired
-    private NoticeServiceImpl noticeService;
+    private final NoticeServiceImpl noticeService;
 
     @Override
     @PostMapping("/admins/notices")
@@ -30,7 +28,7 @@ public class NoticeController implements NoticeApi {
     }
 
     @Override
-    @PatchMapping("/admins/notices/{noticeid}")
+    @PutMapping("/admins/notices/{noticeid}")
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
             @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
@@ -49,8 +47,9 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<List<NoticeGetListResponse>> findAllNotices(){
-        List<NoticeGetListResponse> result = noticeService.findAllNotices();
+    public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(Pageable pageable) {
+        Pageable defaultPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "regAt"));
+        Page<NoticeGetListResponse> result = noticeService.findAllNotices(defaultPageable);
         return BaseResponse.success(result);
     }
 
@@ -61,5 +60,19 @@ public class NoticeController implements NoticeApi {
     ){
         NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
+    }
+
+    @Override
+    @GetMapping("/notices/search")
+    public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
+            @RequestParam String keyword,
+            @RequestParam(required = false) String category) {
+
+        // 기본 페이지 번호: 1, 기본 페이지 크기: 12, 내림차순 정렬
+        Pageable pageable = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "regAt"));
+
+        Page<NoticeGetListResponse> result = noticeService.searchNotices(keyword, category, pageable);
+
+        return BaseResponse.success(result);
     }
 }
