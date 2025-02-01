@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApprovalCommentRepository extends JpaRepository<ApprovalComment, Long> {
+
+    boolean existsByApprovalIdAndId(Long approvalId, Long id);
 }

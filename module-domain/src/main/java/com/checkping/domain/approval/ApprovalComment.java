@@ -29,7 +29,7 @@ public class ApprovalComment extends BaseEntity {
     reg_at : 작성 일시
     updated_at : 수정 일시
     deleted_yn : 삭제 여부
-    register : 작성자 (FK : register_id)
+    parent : 부모 댓글
      */
 
     @Id
@@ -56,10 +56,60 @@ public class ApprovalComment extends BaseEntity {
     @Column(name = "deleted_yn", nullable = false)
     private DeleteStatus deleteYn;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ApprovalComment parent;
+
     @Getter
     @RequiredArgsConstructor
     public enum DeleteStatus {
         Y("비활성화"), N("활성화");
         private final String description;
+    }
+
+    /**
+     * 댓글 생성 팩토리 메서드
+     *
+     * @param content  댓글 내용
+     * @param approval 결재 Entity
+     * @return 댓글 Entity
+     */
+    public static ApprovalComment generate(String content, Approval approval) {
+        ApprovalComment approvalComment = new ApprovalComment();
+        approvalComment.content = content;
+        approvalComment.approval = approval;
+
+        approvalComment.activate();
+
+        return approvalComment;
+    }
+
+    /**
+     * 부모 댓글이 있는 경우 생성 팩토리 메서드
+     *
+     * @param content  댓글 내용
+     * @param approval 결재 Entity
+     * @param parent   부모 댓글 Entity
+     * @return 댓글 Entity
+     */
+    public static ApprovalComment generate(String content, Approval approval,
+        ApprovalComment parent) {
+        ApprovalComment approvalComment = generate(content, approval);
+        approvalComment.parent = parent;
+
+        return approvalComment;
+    }
+
+    /**
+     * 댓글 비활성화
+     */
+    public void inactivate() {
+        this.deleteYn = DeleteStatus.Y;
+    }
+
+    /**
+     * 댓글 활성화
+     */
+    public void activate() {
+        this.deleteYn = DeleteStatus.N;
     }
 }
