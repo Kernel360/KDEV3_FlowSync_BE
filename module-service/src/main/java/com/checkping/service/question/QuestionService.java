@@ -1,6 +1,7 @@
 package com.checkping.service.question;
 
 import com.checkping.dto.question.QuestionCounter;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -17,7 +18,7 @@ public interface QuestionService {
     QuestionSearch.Response searchQuestions(Long projectId,
         QuestionSearchCondition searchCondition);
 
-    QuestionItemDto getById(Long questionId);
+    QuestionGet.Response getById(Long questionId);
 
     QuestionListDto deleteSoft(Long taskBoardId);
 
