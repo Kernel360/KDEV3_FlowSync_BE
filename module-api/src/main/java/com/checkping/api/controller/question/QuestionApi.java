@@ -36,7 +36,7 @@ public interface QuestionApi {
         @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
-    BaseResponse<QuestionItemDto> getQuestion(@Parameter(description = "프로젝트 ID") Long projectId,
+    BaseResponse<QuestionItemDto> get(@Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 수정", description = "질문 게시글을 수정하는 기능입니다.")

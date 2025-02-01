@@ -74,7 +74,7 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/{questionId}")
     @Override
-    public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long projectId,
+    public BaseResponse<QuestionItemDto> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
         QuestionItemDto questionItemDto = questionService.getQuestionById(questionId);
