@@ -4,6 +4,7 @@ import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 
 public interface ApprovalService {
 
@@ -12,4 +13,6 @@ public interface ApprovalService {
     ApprovalSearch.Response search(Long projectId, ApprovalSearchCondition request);
 
     ApprovalCommentRegister.Response registerComment(Long projectId, Long approvalId, ApprovalCommentRegister.Request request);
+
+    ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId, Long commentId, ApprovalReCommentRegister.Request request);
 }
