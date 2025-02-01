@@ -1,6 +1,8 @@
 package com.checkping.service.notice;
 
+import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
@@ -16,11 +18,13 @@ public interface NoticeService {
 
     NoticeResponse deleteNotice(Long noticeid);
 
-    Page<NoticeGetListResponse> findAllNotices(Pageable pageable);
-
     NoticeResponse getNotice(Long noticeid);
 
-    Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable);
+    Page<NoticeGetListResponse> findAllNotices(int page);
+
+    Page<NoticeGetListResponse> searchNotices(NoticeSearchRequest noticesearchRequest);
+
+    Page<NoticeGetListResponse> getSortedNotices(String keyword, Notice.Category category, Pageable pageable);
 }
 
 

@@ -2,6 +2,7 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
@@ -22,7 +23,7 @@ public interface NoticeApi {
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 기능입니다.")
     public BaseResponse<NoticeResponse> updateNotice(
             @Parameter(description = "수정할 공지사항 아이디") Long noticeid,
-            @Parameter(description = "수정할 공지사항 정보Dto") NoticeUpdateRequest noticeUpdateRequest);
+            @Parameter(description = "수정할 공지사항 정보") NoticeUpdateRequest noticeUpdateRequest);
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제하는 기능입니다.")
     public BaseResponse<NoticeResponse> deleteNotice(
@@ -31,7 +32,7 @@ public interface NoticeApi {
 
     @Operation(summary = "공지사항 목록 조회", description = "공지사항 목록을 조회하는 기능입니다.")
     public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(
-            @Parameter(description = "페이지네이션 정보") Pageable pageable
+            @Parameter(description = "공지사항 페이지") int page
     );
 
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
@@ -41,6 +42,6 @@ public interface NoticeApi {
 
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
     public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @Parameter(description = "검색할 키워드") @RequestParam String keyword,
-            @Parameter(description = "검색할 카테고리") @RequestParam(required = false) String category);
+            @Parameter(description = "공지사항 검색 시 설정할 키워드, 카테고리 및 페이지") NoticeSearchRequest noticeSearchRequest);
+
 }

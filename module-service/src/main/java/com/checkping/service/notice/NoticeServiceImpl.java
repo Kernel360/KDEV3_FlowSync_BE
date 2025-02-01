@@ -4,6 +4,7 @@ import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
@@ -32,7 +33,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
 
         Notice notice = noticeRepository.findById(noticeid)
@@ -45,12 +46,12 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeResponse deleteNotice(Long noticeid){
+    public NoticeResponse deleteNotice(Long noticeid) {
 
         Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        if(notice.getIsDeleted()){
+        if (notice.getIsDeleted()) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
@@ -59,12 +60,6 @@ public class NoticeServiceImpl implements NoticeService {
         noticeRepository.save(notice);
 
         return NoticeResponse.toDto(notice);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<NoticeGetListResponse> findAllNotices(Pageable pageable) {
-        return getSortedNotices(null, null, pageable);
     }
 
     @Override
@@ -78,43 +73,33 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<NoticeGetListResponse> searchNotices(String keyword, String category, Pageable pageable) {
-        Notice.Category categoryEnum = category != null ? Notice.Category.valueOf(category) : null;
-        return getSortedNotices(keyword, categoryEnum, pageable);
+    public Page<NoticeGetListResponse> findAllNotices(int page) {
+        int pageNumber = page > 0 ? page - 1 : 0;
+
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+
+        return getSortedNotices(null, null, pageable);
     }
 
-    // 공지사항을 정렬하여 가져오는 공통 메서드
-    // 1. 긴급 공지를 먼저 가져옴 (최신순)
-    // 2. 긴급 공지 중 10일이 지난 것은 일반 공지로 전환
-    // 3. 일반 공지를 가져옴 (최신순)
-    // 4. 긴급 + 일반 공지를 합쳐서 반환
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NoticeGetListResponse> searchNotices(NoticeSearchRequest noticeSearchRequest) {
+        int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
 
-    private Page<NoticeGetListResponse> getSortedNotices(String keyword, Notice.Category category, Pageable pageable) {
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.desc("regAt")));
+        Notice.Category category = null;
+        if (noticeSearchRequest.getCategory() != null) {
+            category = Notice.Category.valueOf(noticeSearchRequest.getCategory());
+        }
+        return getSortedNotices(noticeSearchRequest.getKeyword(), category, pageable);
+    }
 
-        // 1. 긴급 공지 가져오기
-        Page<Notice> emergencyNotices = (category != null)
-                ? noticeRepository.findByCategoryAndPriorityAndTitleContainingOrContentContainingAndIsDeletedFalse(category, Notice.Priority.EMERGENCY, keyword, keyword, sortedPageable)
-                : noticeRepository.findByPriorityAndTitleContainingOrContentContainingAndIsDeletedFalse(Notice.Priority.EMERGENCY, keyword, keyword, sortedPageable);
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NoticeGetListResponse> getSortedNotices(String keyword, Notice.Category category, Pageable pageable) {
 
-        // 2. 긴급 공지 중 10일 지난 것은 일반 공지로 변경
-        emergencyNotices.getContent().forEach(notice -> {
-            if (notice.getRegAt().isBefore(LocalDateTime.now().minusDays(10))) {
-                notice.updatePriority(Notice.Priority.NORMAL);
-            }
-        });
-
-        // 3. 일반 공지 가져오기
-        Page<Notice> normalNotices = (category != null)
-                ? noticeRepository.findByCategoryAndPriorityAndTitleContainingOrContentContainingAndIsDeletedFalse(category, Notice.Priority.NORMAL, keyword, keyword, sortedPageable)
-                : noticeRepository.findByPriorityAndTitleContainingOrContentContainingAndIsDeletedFalse(Notice.Priority.NORMAL, keyword, keyword, sortedPageable);
-
-        // 4. 긴급 공지 + 일반 공지를 합침
-        List<Notice> allNotices = new ArrayList<>();
-        allNotices.addAll(emergencyNotices.getContent());
-        allNotices.addAll(normalNotices.getContent());
-
-        return new PageImpl<>(allNotices, pageable, emergencyNotices.getTotalElements() + normalNotices.getTotalElements())
+        return noticeRepository.findSortedNotices(keyword, category, pageable)
                 .map(NoticeGetListResponse::toDto);
     }
+
 }
