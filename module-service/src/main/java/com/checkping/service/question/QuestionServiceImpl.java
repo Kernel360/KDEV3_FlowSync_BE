@@ -111,7 +111,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionGet.Response getById(Long questionId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(questionId)
+        Question question = questionReader.getById(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
@@ -128,7 +128,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
@@ -158,7 +158,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
@@ -184,7 +184,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update
