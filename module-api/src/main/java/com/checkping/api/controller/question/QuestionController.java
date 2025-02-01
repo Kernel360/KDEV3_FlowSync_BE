@@ -79,9 +79,9 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<QuestionGet.Response> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionGet.Response questionItemDto = questionService.getById(questionId);
+        QuestionGet.Response response = questionService.getById(questionId);
 
-        return BaseResponse.success(questionItemDto);
+        return BaseResponse.success(response);
     }
 
     @PutMapping("/{questionId}")
