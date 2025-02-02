@@ -2,6 +2,7 @@ package com.checkping.api.controller.member.auth;
 
 import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.service.member.auth.AuthTokens;
 import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +39,8 @@ public class ReissueController implements ReissueApi {
         response.addCookie(CookieUtil.createCookie("access", newAccess));
         response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
 
-        return BaseResponse.success("Reissue success");
+        AuthTokens tokens = new AuthTokens(newAccess, newRefresh);
+
+        return BaseResponse.success(tokens, "토큰 재발급에 성공하였습니다.");
     }
 }
