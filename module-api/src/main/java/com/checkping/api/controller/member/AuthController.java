@@ -17,7 +17,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public MemberResponseDto getCurrentMember() {
+    public MemberResponseDto.MeResponseDto getCurrentMember() {
         return authService.getCurrentMember();
     }
 }

@@ -12,7 +12,7 @@ public class AuthService {
         this.currentMemberUtil = currentMemberUtil;
     }
 
-    public MemberResponseDto getCurrentMember() {
-        return MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
+    public MemberResponseDto.MeResponseDto getCurrentMember() {
+        return MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
     }
 }
