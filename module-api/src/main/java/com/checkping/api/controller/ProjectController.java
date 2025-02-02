@@ -35,6 +35,13 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
+    @GetMapping("/admins/projects/{projectId}")
+    public BaseResponse<ProjectResponse.ProjectUpdateDto> getProjectUpdateInfo(@PathVariable Long projectId) {
+        ProjectResponse.ProjectUpdateDto projectUpdateDto = projectService.getUpdateProjectInfo(projectId);
+        return BaseResponse.success(projectUpdateDto);
+    }
+
+    @Override
     @PatchMapping("/admins/projects/{projectId}")
     public BaseResponse<ProjectResponse.ProjectDto> updateProjects(
             @PathVariable Long projectId,
@@ -74,7 +81,7 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @GetMapping("/admins/projects/status")
+    @GetMapping(value ={"/admins/projects/status", "/projects/status"})
     public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
         ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
         return BaseResponse.success(projectList);

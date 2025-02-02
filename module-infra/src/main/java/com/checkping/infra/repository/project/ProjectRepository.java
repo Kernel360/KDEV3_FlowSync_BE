@@ -2,6 +2,7 @@ package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
+import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    m.profile_image_url, " +
             "    m.name AS member_name, " +
             "    m.job_role, " +
+            "    m.job_title, " +
             "    m.phone_num, " +
             "    p.start_at, " +
             "    p.close_at " +
@@ -57,4 +59,23 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     ProjectDetailsDto findProjectById(@Param("projectId") Long projectId);
 
     List<ProjectInfoProjection> findByStatus(Project.Status status);
+
+    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.status, p.management_step, p.progress_step_id, p.start_at, p.close_at, p.dev_owner_id, " +
+            "org_info.developer_org_id, " +
+            "org_info.customer_org_id " +
+            "FROM project p " +
+            "LEFT JOIN (" +
+            "    SELECT obp.project_id, " +
+            "           MAX(CASE WHEN o.type = 'DEVELOPER' THEN o.id END) AS developer_org_id, " +
+            "           MAX(CASE WHEN o.type = 'CUSTOMER' THEN o.id END) AS customer_org_id " +
+            "    FROM organization_by_project obp " +
+            "    LEFT JOIN organization o ON obp.org_id = o.id " +
+            "    GROUP BY obp.project_id" +
+            ") AS org_info " +
+            "ON p.id = org_info.project_id " +
+            "WHERE p.id = :projectId", nativeQuery = true)
+    ProjectUpdateDetailsDto getUpdateProjectInfoById(@Param("projectId") Long projectId);
+
+    @Query(value = "select member_id from member_by_project where project_id= :projectId ", nativeQuery = true)
+    List<Long> findProjectMemberListByProjectIdAndOrgId(Long projectId);
 }

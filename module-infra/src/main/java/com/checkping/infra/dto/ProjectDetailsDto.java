@@ -13,12 +13,13 @@ public class ProjectDetailsDto {
     private final String profileImageUrl;
     private final String memberName;
     private final String jobRole;
+    private final String jobTitle;
     private final String phoneNum;
     private final Date startAt;
     private final Date closeAt;
 
     public ProjectDetailsDto(Long id, String projectName, String description, String devOrgName,
-                             String profileImageUrl, String memberName, String jobRole,
+                             String profileImageUrl, String memberName, String jobRole, String jobTitle,
                              String phoneNum, Date startAt, Date closeAt) {
         this.id = id;
         this.projectName = projectName;
@@ -27,6 +28,7 @@ public class ProjectDetailsDto {
         this.profileImageUrl = profileImageUrl;
         this.memberName = memberName;
         this.jobRole = jobRole;
+        this.jobTitle = jobTitle;
         this.phoneNum = phoneNum;
         this.startAt = startAt;
         this.closeAt = closeAt;
