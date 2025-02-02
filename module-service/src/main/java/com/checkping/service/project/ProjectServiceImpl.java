@@ -93,7 +93,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
-        ProjectUpdateDetailsDto dto = projectRepository.getUpdateProjectInfoById(projectId);
+        ProjectUpdateDetailsDto dto = projectRepository.getUpdateProjectInfoById(projectId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
         List<Long> memberList = projectRepository.findProjectMemberListByProjectIdAndOrgId(projectId);
 
         return ProjectResponse.ProjectUpdateDto.toDto(dto, memberList);
@@ -147,7 +149,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
-        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
         return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
     }
 
