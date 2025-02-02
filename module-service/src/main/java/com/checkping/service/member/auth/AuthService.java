@@ -25,8 +25,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     public BaseResponse getCurrentMember() {
-//        return MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
-    return BaseResponse.success(MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
+        return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
     }
 
     /**
