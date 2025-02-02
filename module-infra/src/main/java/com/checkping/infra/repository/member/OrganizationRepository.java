@@ -23,4 +23,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     // 상태별 업체 조회
     List<Organization> findByStatus(Organization.Status status);
 
+    // ID와 타입을 통한 업체 조회
+    Optional<Organization> findByIdAndType(Long id, Organization.Type type);
+
 }
