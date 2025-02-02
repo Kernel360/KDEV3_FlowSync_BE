@@ -3,6 +3,7 @@ package com.checkping.service.member.auth;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import com.checkping.service.member.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,16 +11,25 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import com.checkping.dto.member.response.MemberResponseDto;
 
 @Service
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final CurrentMemberUtil currentMemberUtil;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public AuthService(AuthenticationManager authenticationManager,
+                       JwtUtil jwtUtil,
+                       CurrentMemberUtil currentMemberUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.currentMemberUtil = currentMemberUtil;
+    }
+
+    public MemberResponseDto getCurrentMember() {
+        return MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
     }
 
     /**

@@ -3,16 +3,18 @@ package com.checkping.api.controller.member;
 import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.member.request.LoginRequestDto;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.service.member.auth.AuthService;
 import com.checkping.service.member.auth.AuthTokens;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/")
@@ -21,6 +23,10 @@ public class AuthController implements AuthApi{
 
     private final AuthService authService;
 
+    @GetMapping("/me")
+    public MemberResponseDto getCurrentMember() {
+        return authService.getCurrentMember();
+    }
     /**
      * 로그인
      * - 성공 시 쿠키에 access, refresh 저장 → BaseResponse.success(...)
