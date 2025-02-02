@@ -4,6 +4,7 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
+import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
@@ -90,6 +91,29 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Approval Entity List -> ApprovalItem Dto List
         return ApprovalSearch.Response.toDto(approvals);
+    }
+
+    /**
+     * 결재 상세 조회
+     * 부모 댓글과 자식 댓글도 같이 조회된다.
+     *
+     * @param projectId  프로젝트 아이디
+     * @param approvalId 결재 아이디
+     * @return 결재 상세 조회 결과
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public ApprovalGet.Response get(Long projectId, Long approvalId) {
+
+        // check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // find approval
+        Approval approval = approvalReader.getByIdWithComments(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Entity -> Response
+        return ApprovalGet.Response.toDto(approval);
     }
 
     @Transactional
