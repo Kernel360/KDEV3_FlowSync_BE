@@ -78,10 +78,10 @@ public class Project extends BaseEntity {
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
-    @Column(name = "resister_id", columnDefinition = "BINARY(16)")
+    @Column(name = "resister_id")
     private Long resisterId;
 
-    @Column(name = "updater_id", columnDefinition = "BINARY(16)")
+    @Column(name = "updater_id")
     private Long updaterId;
 
     @Column(name = "deleted_yn")
@@ -91,7 +91,7 @@ public class Project extends BaseEntity {
     @Builder.Default
     @JoinTable(name = "organization_by_project",
             joinColumns = @JoinColumn(name="project_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id"),
             uniqueConstraints =
             @UniqueConstraint(columnNames = {"project_id","org_id"}))
     private List<Organization> organizations = new ArrayList<>();
@@ -100,7 +100,7 @@ public class Project extends BaseEntity {
     @Builder.Default
     @JoinTable(name = "member_by_project",
             joinColumns = @JoinColumn(name="project_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id"),
             uniqueConstraints =
             @UniqueConstraint(columnNames = {"project_id","member_id"}))
     private List<Member> members = new ArrayList<>();

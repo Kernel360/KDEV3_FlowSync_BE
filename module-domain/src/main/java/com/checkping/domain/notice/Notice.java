@@ -68,7 +68,6 @@ public class Notice extends BaseEntity {
         private final String descrption;
 
     }
-
     @Getter
     @RequiredArgsConstructor
     public enum Priority {
@@ -76,5 +75,12 @@ public class Notice extends BaseEntity {
         NORMAL("일반");
 
         private final String descrption;
+    }
+
+    public void updateNotice(String title, String content,String category, String priority){
+        if (title != null) this.title = title;
+        if (content != null) this.content = content;
+        if (category != null) this.category = Category.valueOf(category);
+        if (priority != null) this.priority = Priority.valueOf(priority);
     }
 }

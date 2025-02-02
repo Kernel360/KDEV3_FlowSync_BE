@@ -2,13 +2,14 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.response.NoticeResponseDto;
+import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
+import com.checkping.dto.notice.response.NoticeCreateResponseDto;
+import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
 import com.checkping.service.notice.NoticeServiceImpl;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +19,16 @@ public class NoticeController {
     private NoticeServiceImpl noticeService;
 
     @PostMapping("/admins/notices")
-    public BaseResponse<NoticeResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
-        NoticeResponseDto noticeResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
-        return BaseResponse.success(noticeResponseDto);
+    public BaseResponse<NoticeCreateResponseDto> registerNotice(@RequestBody NoticeCreateRequestDto noticeCreateRequestDto) {
+        NoticeCreateResponseDto noticeCreateResponseDto = noticeService.registerNotice(noticeCreateRequestDto);
+        return BaseResponse.success(noticeCreateResponseDto);
+    }
+
+    @PatchMapping("/admins/notices/{noticeid}")
+    public BaseResponse<NoticeUpdateResponseDto> updateNotice(
+            @PathVariable Long noticeid,
+            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto){
+        NoticeUpdateResponseDto noticeUpdateResponseDto = noticeService.updateNotice(noticeid, noticeUpdateRequestDto);
+        return BaseResponse.success(noticeUpdateResponseDto);
     }
 }

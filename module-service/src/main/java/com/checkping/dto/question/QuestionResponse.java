@@ -66,7 +66,6 @@ public class QuestionResponse {
             boardDto.setContent(question.getContent());
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
-            boardDto.setApproverAt(question.getApproverAt());
             boardDto.setCategory(question.getCategory());
             boardDto.setStatus(question.getStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
@@ -128,10 +127,9 @@ public class QuestionResponse {
             boardDto.setContent(question.getContent());
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
-            boardDto.setApproverAt(question.getApproverAt());
             boardDto.setCategory(question.getCategory());
-            boardDto.setStatus(question.getStatus());
             boardDto.setDeletedYn(question.getDeletedYn());
+            boardDto.setStatus(question.getStatus());
 
             // Entity -> Dto (QuestionComment)
             List<QuestionCommentDto> comments =
