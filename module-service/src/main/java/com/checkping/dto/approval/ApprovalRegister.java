@@ -4,7 +4,7 @@ import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
-import com.checkping.exception.approval.ApprovalContentsParsingException;
+import com.checkping.exception.approval.ApprovalContentParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +45,7 @@ public class ApprovalRegister {
             try {
                 return mapper.writeValueAsString(this.content);
             } catch (JsonProcessingException e) {
-                throw new ApprovalContentsParsingException();
+                throw new ApprovalContentParsingException();
             }
         }
     }
@@ -114,7 +114,7 @@ public class ApprovalRegister {
             try {
                 return mapper.readValue(content, new TypeReference<List<ApprovalContent>>() {});
             } catch (JsonProcessingException e) {
-                throw new ApprovalContentsParsingException();
+                throw new ApprovalContentParsingException();
             }
         }
     }
