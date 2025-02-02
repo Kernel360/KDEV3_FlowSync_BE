@@ -7,6 +7,7 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProjectResponse;
+import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
@@ -89,6 +90,13 @@ public class ProjectServiceImpl implements ProjectService {
             .build();
 
         return ProjectResponse.ProjectDto.toDto(projectRepository.save(updatedProject));
+    }
+
+    public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
+        ProjectUpdateDetailsDto dto = projectRepository.getUpdateProjectInfoById(projectId);
+        List<Long> memberList = projectRepository.findProjectMemberListByProjectIdAndOrgId(projectId);
+
+        return ProjectResponse.ProjectUpdateDto.toDto(dto, memberList);
     }
 
     @Override
@@ -174,9 +182,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {
         return Arrays.asList(
-                organizationRepository.findById(developerOrgId)
+                organizationRepository.findByIdAndType(developerOrgId, Organization.Type.DEVELOPER)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
-                organizationRepository.findById(customerOrgId)
+                organizationRepository.findByIdAndType(customerOrgId, Organization.Type.CUSTOMER)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
         );
     }
@@ -184,7 +192,7 @@ public class ProjectServiceImpl implements ProjectService {
     private List<Member> getMembers(List<Long> memberIds) {
         return memberIds.stream()
                 .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                        .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND)))
                 .collect(Collectors.toList());
     }
 
