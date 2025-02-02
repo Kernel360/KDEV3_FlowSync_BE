@@ -21,6 +21,11 @@ public class ApprovalReaderImpl implements ApprovalReader {
     }
 
     @Override
+    public Optional<Approval> getByIdWithComments(Long approvalId) {
+        return approvalRepository.getByIdWithComments(approvalId);
+    }
+
+    @Override
     public Page<Approval> getApprovals(Long projectId,
         ApprovalSearchInfo.SearchCondition searchCondition) {
 

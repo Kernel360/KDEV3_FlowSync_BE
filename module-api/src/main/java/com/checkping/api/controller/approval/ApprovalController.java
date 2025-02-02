@@ -1,6 +1,7 @@
 package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Request;
 import com.checkping.dto.approval.ApprovalRegister.Response;
@@ -32,8 +33,7 @@ public class ApprovalController implements ApprovalApi {
 
     @PostMapping
     @Override
-    public BaseResponse<ApprovalRegister.Response> register(
-        @PathVariable Long projectId,
+    public BaseResponse<ApprovalRegister.Response> register(@PathVariable Long projectId,
         @RequestBody ApprovalRegister.Request request) {
 
         ApprovalRegister.Response response = approvalService.register(projectId, request);
@@ -60,6 +60,16 @@ public class ApprovalController implements ApprovalApi {
         return BaseResponse.success(response);
     }
 
+    @GetMapping("/{approvalId}")
+    @Override
+    public BaseResponse<ApprovalGet.Response> get(@PathVariable Long projectId,
+        @PathVariable Long approvalId) {
+
+        ApprovalGet.Response response = approvalService.get(projectId, approvalId);
+
+        return BaseResponse.success(response);
+    }
+
     @PostMapping("/{approvalId}/comments")
     @Override
     public BaseResponse<ApprovalCommentRegister.Response> registerComment(
@@ -75,8 +85,7 @@ public class ApprovalController implements ApprovalApi {
     @PostMapping("/{approvalId}/comments/{commentId}/recomments")
     @Override
     public BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
-        @PathVariable Long projectId,
-        @PathVariable Long approvalId, @PathVariable Long commentId,
+        @PathVariable Long projectId, @PathVariable Long approvalId, @PathVariable Long commentId,
         @RequestBody ApprovalReCommentRegister.Request request) {
 
         ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,

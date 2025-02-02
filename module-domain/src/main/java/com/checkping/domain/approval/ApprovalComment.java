@@ -32,6 +32,8 @@ public class ApprovalComment extends BaseEntity {
     parent : 부모 댓글
      */
 
+    // TODO : 연관 관계 맵핑 필요 (ApprovalCommentGet 수정)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
