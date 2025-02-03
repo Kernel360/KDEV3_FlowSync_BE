@@ -26,11 +26,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.info("Request URI: {}", requestURI);
 
-        //프로젝트
+        // 프로젝트
         if (requestURI.matches("^/admins/projects/\\d+/projectInfo$") ||
                 requestURI.matches("^/projects/\\d+/projectInfo$")) {
 
-            log.info("프로젝트 상세 조회 시 체크");
+            log.info("프로젝트 interceptor");
 
             // projectId 추출
             String[] uriParts = requestURI.split("/");
@@ -39,16 +39,30 @@ public class AuthInterceptor implements HandlerInterceptor {
             boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUserId(), projectId);
 
             if(!exist) {
-                throw new BaseException("해당 프로젝트에 접근권한이 없습니다.",ErrorCode.BAD_REQUEST);
+                throw new BaseException("프로젝트 접근 권한이 없습니다.",ErrorCode.BAD_REQUEST);
             }
             return true;
         }
 
-        //질문 게시판
+        // 질문/결재 게시판
+        if (requestURI.matches("^/projects/\\d+/questions.*$")||
+                requestURI.matches("^/projects/\\d+/approvals.*$")) {
 
-        //결재 게시판
+            log.info("게시판 interceptor");
+
+            String[] uriParts = requestURI.split("/");
+            Long projectId = Long.parseLong(uriParts[2]); // 세 번째 마지막 값이 projectId
+
+            boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUserId(), projectId);
+
+            if(!exist) {
+                throw new BaseException("게시판 접근 권한이 없습니다.",ErrorCode.BAD_REQUEST);
+            }
+            return true;
+        }
 
         //결재 요청
+
 
 
         return true;
