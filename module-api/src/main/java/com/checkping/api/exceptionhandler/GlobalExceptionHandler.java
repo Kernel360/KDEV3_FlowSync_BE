@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         logRequestDetails(request, MDC.get("requestId"));
         log.error("Response [{}] msg={}", MDC.get("requestId"), e.getMessage(), e);
 
-        return BaseResponse.fail(e.getErrorCode());
+        return BaseResponse.fail(e.getMessage(),e.getErrorCode());
     }
 
     @ExceptionHandler(Exception.class)

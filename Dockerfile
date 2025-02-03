@@ -9,6 +9,7 @@ COPY . .
 ARG S3Config
 ARG JWTConfig
 ARG ProdConfig
+ARG ApplicationConfig
 
 # 설정 파일 복사
 COPY ${S3Config} /app/module-api/src/main/resources/application-s3.yaml
