@@ -26,5 +26,4 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     Page<Notice> findSortedNotices(@Param("keyword") String keyword,
                                    @Param("category") Notice.Category category,
                                    Pageable pageable);
-
 }
