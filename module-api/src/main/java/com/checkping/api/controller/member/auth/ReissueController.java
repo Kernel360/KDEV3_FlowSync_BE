@@ -1,17 +1,17 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.member.auth;
 
 import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.service.member.auth.AuthTokens;
 import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class ReissueController {
+public class ReissueController implements ReissueApi {
 
     private final ReissueService reissueService;
 
@@ -19,7 +19,7 @@ public class ReissueController {
         this.reissueService = reissueService;
     }
 
-    @GetMapping("/reissue")
+    @Override
     public BaseResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         // Get refresh token
@@ -32,14 +32,17 @@ public class ReissueController {
         String role = reissueService.getRoleFromToken(refresh);
         Long id = reissueService.getIdFromToken(refresh);
 
+
         // Generate new tokens
-        String newAccess = reissueService.generateAccessToken(name,id, email, role);
-        String newRefresh = reissueService.generateRefreshToken(name, id,email, role);
+        String newAccess = reissueService.generateAccessToken(name, id, email, role);
+        String newRefresh = reissueService.generateRefreshToken(name, id, email, role);
 
         // Set response
         response.addCookie(CookieUtil.createCookie("access", newAccess));
         response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
 
-        return BaseResponse.success("토큰이 재발급 되었습니다.");
+        AuthTokens tokens = new AuthTokens(newAccess, newRefresh);
+
+        return BaseResponse.success(tokens, "토큰 재발급에 성공하였습니다.");
     }
 }
