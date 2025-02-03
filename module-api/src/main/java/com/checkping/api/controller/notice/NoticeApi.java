@@ -6,6 +6,7 @@ import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +28,7 @@ public interface NoticeApi {
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제하는 기능입니다.")
     public BaseResponse<NoticeResponse> deleteNotice(
-            @Parameter(description = "공지사항 아이디") Long noticeid
+            @Parameter(description = "삭제할 공지사항 아이디") Long noticeid
     );
 
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
@@ -36,7 +37,9 @@ public interface NoticeApi {
     );
 
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
-    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
-            @Parameter(description = "공지사항 검색 시 설정할 키워드, 카테고리 및 페이지") String keyword, String category, int page);
+    public BaseResponse<NoticeListResponse> getNotices(
+            @Parameter(description = "검색할 키워드") String keyword,
+            @Parameter(description = "검색할 카테고리") String category,
+            @Parameter(description = "검색할 페이지") int page);
 
 }

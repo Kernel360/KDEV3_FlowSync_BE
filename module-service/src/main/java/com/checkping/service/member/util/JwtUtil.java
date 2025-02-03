@@ -46,10 +46,16 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String name, String email, String role, int expiredMin) {
+    public Long getMemberId(String token) {
+
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
+    }
+
+    public String createJwt(String category, Long memberId ,String name, String email, String role, int expiredMin) {
 
         return Jwts.builder()
                 .claim("category", category)
+                .claim("memberId", memberId)
                 .claim("name", name)
                 .claim("email", email)
                 .claim("role", role)

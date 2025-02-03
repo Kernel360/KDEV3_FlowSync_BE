@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -28,6 +29,7 @@ public class NoticeCreateRequest {
 
     public Notice toEntity() {
         return Notice.builder()
+                .adminId(adminId)
                 .title(title)
                 .content(content)
                 .category(Notice.Category.valueOf(category))

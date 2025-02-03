@@ -126,6 +126,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationUpdate.Response.toDto(updateOrganization);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public OrganizationDelete.Response removeOrganization(Long id, OrganizationDelete.Request request) {
 
