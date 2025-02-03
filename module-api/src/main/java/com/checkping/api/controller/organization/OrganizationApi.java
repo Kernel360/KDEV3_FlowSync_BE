@@ -46,7 +46,7 @@ public interface OrganizationApi {
             @Parameter(description = "첨부 파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestPart MultipartFile file);
 
     @Operation(summary = "업체 삭제", description = "업체 정보 삭제 기능입니다.")
-    BaseResponse<OrganizationDelete.Response> removeOrganization(
+    BaseResponse<String> removeOrganization(
             @Parameter(description = "업체 ID") @PathVariable Long organizationId,
             @Parameter(description = "삭제 사유") @RequestBody OrganizationDelete.Request request
             );
