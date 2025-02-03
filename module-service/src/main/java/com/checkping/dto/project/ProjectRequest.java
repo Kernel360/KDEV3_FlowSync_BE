@@ -34,6 +34,7 @@ public class ProjectRequest {
         closeAt : 프로젝트 종료 일시
         resisterId : 등록자 아이디
         devOwnerId : 개발사 대표자 아이디
+        customerOwnerId : 고객사 결재자 아이디
         developerOrgId : 개발사 아이디
         customerOrgId :고객사 아이디
         members : 추가할 멤버 목록
@@ -58,6 +59,8 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디", example = "1")
+        private Long customerOwnerId;
         @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "2")
@@ -68,6 +71,9 @@ public class ProjectRequest {
         public static Project toEntity(ResisterDto resisterDto, List<Organization> organizations, List<Member> members) {
             Member devOwnerMember = Member.builder()
                     .id(resisterDto.getDevOwnerId())
+                    .build();
+            Member customerOwnerMember = Member.builder()
+                    .id(resisterDto.getCustomerOwnerId())
                     .build();
 
             return Project.builder()
@@ -80,6 +86,7 @@ public class ProjectRequest {
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .devOwner(devOwnerMember)
+                .customerOwner(customerOwnerMember)
                 .organizations(organizations)
                 .members(members)
                 .deletedYn("N")
@@ -102,6 +109,7 @@ public class ProjectRequest {
        closeAt : 프로젝트 종료 일시
        devOwnerId : 개발사 대표자 아이디
        developerOrgId : 개발사 아이디
+       customerOwnerId : 고객사 결재자 아이디
        customerOrgId :고객사 아이디
        members : 추가할 멤버 목록
        */
@@ -125,6 +133,8 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디", example = "1")
+        private Long customerOwnerId;
         @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "2")
@@ -136,6 +146,9 @@ public class ProjectRequest {
             Member devOwnerMember = Member.builder()
                     .id(updateDto.getDevOwnerId())
                     .build();
+            Member customerOwnerMember = Member.builder()
+                    .id(updateDto.getCustomerOwnerId())
+                    .build();
 
             return existingProject.toBuilder()
                 .id(existingProject.getId())
@@ -146,6 +159,7 @@ public class ProjectRequest {
                 .managementStep(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
                 .progressStepId(updateDto.getProgressStepId())
                 .devOwner(devOwnerMember)
+                .customerOwner(customerOwnerMember)
                 .startAt(updateDto.getStartAt())
                 .closeAt(updateDto.getCloseAt())
                 .updateAt(LocalDateTime.now())
