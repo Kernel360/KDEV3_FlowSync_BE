@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public BaseResponse handlerBaseException(BaseException e) {
         log.error(e.getMessage(), e);
-        return BaseResponse.fail(e.getErrorCode());
+        return BaseResponse.fail(e.getMessage(),e.getErrorCode());
     }
 
     @ExceptionHandler(Exception.class)
