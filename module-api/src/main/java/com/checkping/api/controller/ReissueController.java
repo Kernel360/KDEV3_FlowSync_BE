@@ -6,7 +6,7 @@ import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -19,7 +19,7 @@ public class ReissueController {
         this.reissueService = reissueService;
     }
 
-    @PostMapping("/reissue")
+    @GetMapping("/reissue")
     public BaseResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         // Get refresh token
@@ -30,15 +30,16 @@ public class ReissueController {
         String name = reissueService.getNameFromToken(refresh);
         String email = reissueService.getEmailFromToken(refresh);
         String role = reissueService.getRoleFromToken(refresh);
+        Long id = reissueService.getIdFromToken(refresh);
 
         // Generate new tokens
-        String newAccess = reissueService.generateAccessToken(name, email, role);
-        String newRefresh = reissueService.generateRefreshToken(name, email, role);
+        String newAccess = reissueService.generateAccessToken(name,id, email, role);
+        String newRefresh = reissueService.generateRefreshToken(name, id,email, role);
 
         // Set response
         response.addCookie(CookieUtil.createCookie("access", newAccess));
         response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
 
-        return BaseResponse.success("Reissue success");
+        return BaseResponse.success("토큰이 재발급 되었습니다.");
     }
 }

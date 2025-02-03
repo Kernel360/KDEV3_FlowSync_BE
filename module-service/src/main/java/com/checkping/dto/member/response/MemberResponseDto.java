@@ -9,9 +9,9 @@ import lombok.Getter;
 @Builder
 public class MemberResponseDto {
 
-    @Schema(description = "회원 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+    @Schema(description = "회원 ID", example = "37")
     private Long id;
-    @Schema(description = "소속 업체 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+    @Schema(description = "소속 업체 ID", example = "1")
     private Long organizationId;
     @Schema(description = "소속 업체 이름", example = "CheckPing")
     private String organizationName;
@@ -54,5 +54,32 @@ public class MemberResponseDto {
                 .remark(member.getRemark())
                 .build();
     }
-}
 
+    @Getter
+    @Builder
+    public static class MeResponseDto{
+        @Schema(description = "회원 ID", example = "37")
+        private Long id;
+        @Schema(description = "역할", example = "ADMIN") // ADMIN, USER
+        private Member.Role role;
+        @Schema (description = "회원 이름", example = "홍길동")
+        private String name;
+        @Schema(description = "소속 업체 ID", example = "1")
+        private Long organizationId;
+        @Schema(description = "소속 업체 이름", example = "CheckPing")
+        private String organizationName;
+        @Schema(description = "소속 업체 유형", example = "DEVELOPER") // DEVELOPER, CUSTOMER
+        private String organizationType;
+
+        public static MeResponseDto fromEntity(Member member) {
+            return MeResponseDto.builder()
+                    .id(member.getId())
+                    .role(member.getRole())  // 예: ADMIN / MEMBER
+                    .name(member.getName())
+                    .organizationId(member.getOrganization().getId())
+                    .organizationName(member.getOrganization().getName())
+                    .organizationType( member.getOrganization().getType().name())  // 예: DEVELOPER / CUSTOMER)
+                    .build();
+        }
+    }
+}

@@ -1,6 +1,7 @@
 package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -30,6 +31,11 @@ public interface ApprovalApi {
         @Parameter(description = "질문 게시글 검색어") String keyword,
         @Parameter(description = "현재 페이지") Integer currentPage,
         @Parameter(description = "페이지 사이즈") Integer pageSize);
+
+    @Operation(summary = "결재 상세 조회", description = "결재 상세를 조회하는 기능입니다.")
+    BaseResponse<ApprovalGet.Response> get(
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
+        @Parameter(description = "결재 ID") @PathVariable Long approvalId);
 
     @Operation(summary = "결재 댓글 생성", description = "결재 댓글을 생성하는 기능입니다.")
     BaseResponse<ApprovalCommentRegister.Response> registerComment(

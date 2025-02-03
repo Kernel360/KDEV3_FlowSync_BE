@@ -6,7 +6,6 @@ import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -77,10 +76,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
         String name = ((CustomUserDetails) authentication.getPrincipal()).getName();
+        Long id = ((CustomUserDetails) authentication.getPrincipal()).getId();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", name, email, role, 15);
-        String refresh = jwtUtil.createJwt("refresh", name, email, role,1440);
+        String access = jwtUtil.createJwt("access", id, name, email, role, 15);
+        String refresh = jwtUtil.createJwt("refresh", id, name, email, role,1440);
 
         BaseResponse<Map<String, String>> successResponse = BaseResponse.success("로그인에 성공하였습니다.");
 

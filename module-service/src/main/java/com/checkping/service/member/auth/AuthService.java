@@ -1,5 +1,6 @@
 package com.checkping.service.member.auth;
 
+import com.checkping.common.response.BaseResponse;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
@@ -28,8 +29,8 @@ public class AuthService {
         this.currentMemberUtil = currentMemberUtil;
     }
 
-    public MemberResponseDto getCurrentMember() {
-        return MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
+    public BaseResponse getCurrentMember() {
+        return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
     }
 
     /**
@@ -46,12 +47,13 @@ public class AuthService {
 
             // 2) 인증 성공 시 사용자 정보 추출
             CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
+            Long id = userDetails.getId();
             String role = authResult.getAuthorities().iterator().next().getAuthority();
             String name = userDetails.getName();
 
             // 3) JWT 생성
-            String accessToken = jwtUtil.createJwt("access", name, email, role, 15);
-            String refreshToken = jwtUtil.createJwt("refresh", name, email, role, 1440);
+            String accessToken = jwtUtil.createJwt("access", id, name, email, role, 15);
+            String refreshToken = jwtUtil.createJwt("refresh", id, name, email, role, 1440);
 
             // 4) 토큰을 반환
             return new AuthTokens(accessToken, refreshToken);
