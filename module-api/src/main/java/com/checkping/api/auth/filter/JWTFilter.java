@@ -110,7 +110,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         CustomUserDetails customUserDetails = new CustomUserDetails(name, email, role, password);
 
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));// 토큰 검증
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

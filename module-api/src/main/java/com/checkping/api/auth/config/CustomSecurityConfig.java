@@ -70,9 +70,12 @@ public class CustomSecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/reissue").permitAll()
                 .requestMatchers("/admins/**").hasRole("ADMIN")
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated());
 //                .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
+        //기능 테스트 위해서 일시적인 주석처리 2025/01/15
         http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
