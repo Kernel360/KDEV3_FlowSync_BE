@@ -106,9 +106,10 @@ public class JWTFilter extends OncePerRequestFilter {
         String name = jwtUtil.getName(accessToken);
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
+        Long id = jwtUtil.getMemberId(accessToken);
         String password = "PASSWORDFORTOKEN";
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(name, email, role, password);
+        CustomUserDetails customUserDetails = new CustomUserDetails(id, name, email, role, password);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
 

@@ -20,9 +20,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final CurrentMemberUtil currentMemberUtil;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final CurrentMemberUtil currentMemberUtil;
+
 
     public BaseResponse getCurrentMember() {
         return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
@@ -42,13 +43,14 @@ public class AuthService {
 
             // 2) 인증 성공 시 사용자 정보 추출
             CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
+            Long id = userDetails.getId();
             String role = authResult.getAuthorities().iterator().next().getAuthority();
             String name = userDetails.getName();
 
             // 3) JWT 생성
             //TODO 엑세스 토큰 유효시간 개발 기간동안 24시간으로 연장, 추후 15분으로 변경
-            String accessToken = jwtUtil.createJwt("access", name, email, role, 1440);
-            String refreshToken = jwtUtil.createJwt("refresh", name, email, role, 1440);
+            String accessToken = jwtUtil.createJwt("access", id, name, email, role, 1440);
+            String refreshToken = jwtUtil.createJwt("refresh", id, name, email, role, 1440);
 
             // 4) 토큰을 반환
             return new AuthTokens(accessToken, refreshToken);

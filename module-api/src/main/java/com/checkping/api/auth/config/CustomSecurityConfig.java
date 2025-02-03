@@ -32,7 +32,7 @@ public class CustomSecurityConfig {
     private final JwtUtil jwtUtil;
 
     public CustomSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-        JwtUtil jwtUtil) {
+                                JwtUtil jwtUtil) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
@@ -41,7 +41,7 @@ public class CustomSecurityConfig {
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-        throws Exception {
+            throws Exception {
 
         return configuration.getAuthenticationManager();
     }
@@ -63,7 +63,7 @@ public class CustomSecurityConfig {
         http.logout(logout->logout.disable());
 
         http.headers(
-            headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+                headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
@@ -80,7 +80,7 @@ public class CustomSecurityConfig {
 
         //세션 설정
         http.sessionManagement(
-            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -91,13 +91,13 @@ public class CustomSecurityConfig {
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedOrigins(
-            List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
-                "https://dev.flowssync.com", "https://api.flowssync.com",
-                "https://test.flowssync.com"));
+                List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
+                        "https://dev.flowssync.com", "https://api.flowssync.com",
+                        "https://test.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(
-            Arrays.asList("Authorization", "Content-Type", "Content-Disposition", "Set-Cookie"));
+                Arrays.asList("Authorization", "Content-Type", "Content-Disposition", "Set-Cookie"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

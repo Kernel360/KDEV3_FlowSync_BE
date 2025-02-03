@@ -81,11 +81,15 @@ public class ReissueService {
         return jwtUtil.getRole(token); // JwtUtil에서 호출
     }
 
-    public String generateAccessToken(String name, String email, String role) {
-        return jwtUtil.createJwt("access", name, email, role, 15);
+    public Long getIdFromToken(String token) {
+        return jwtUtil.getMemberId(token); // JwtUtil에서 호출
     }
 
-    public String generateRefreshToken(String name, String email, String role) {
-        return jwtUtil.createJwt("refresh", name, email, role, 1440);
+    public String generateAccessToken(String name, Long id,  String email, String role) {
+        return jwtUtil.createJwt("access",id, name, email, role, 1440);
+    }
+
+    public String generateRefreshToken(String name, Long id, String email, String role) {
+        return jwtUtil.createJwt("refresh", id, name, email, role, 1440);
     }
 }
