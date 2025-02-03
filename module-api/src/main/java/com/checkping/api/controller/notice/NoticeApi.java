@@ -6,6 +6,7 @@ import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +37,7 @@ public interface NoticeApi {
     );
 
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
-    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
+    public BaseResponse<NoticeListResponse> getNotices(
             @Parameter(description = "검색할 키워드") String keyword,
             @Parameter(description = "검색할 카테고리") String category,
             @Parameter(description = "검색할 페이지") int page);

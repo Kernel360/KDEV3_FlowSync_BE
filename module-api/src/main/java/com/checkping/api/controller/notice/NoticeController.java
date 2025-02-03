@@ -58,7 +58,7 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/search")
-    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
+    public BaseResponse<NoticeListResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int page) {
@@ -70,6 +70,6 @@ public class NoticeController implements NoticeApi {
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
-        return BaseResponse.success(result.toString());
+        return BaseResponse.success(result);
     }
 }
