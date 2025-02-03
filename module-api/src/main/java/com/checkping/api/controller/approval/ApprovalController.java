@@ -3,8 +3,6 @@ package com.checkping.api.controller.approval;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
-import com.checkping.dto.approval.ApprovalRegister.Request;
-import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
