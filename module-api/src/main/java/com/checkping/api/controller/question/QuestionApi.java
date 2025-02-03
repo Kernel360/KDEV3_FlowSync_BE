@@ -1,14 +1,19 @@
-package com.checkping.api.controller.project;
+package com.checkping.api.controller.question;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
+import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.comment.QuestionCommentGet;
+import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,14 +29,16 @@ public interface QuestionApi {
         @Parameter(description = "등록 게시글 정보") Request request);
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
-    BaseResponse<List<QuestionListDto>> getQuestionList(
+    BaseResponse<QuestionSearch.Response> searchQuestions(
         @Parameter(description = "프로젝트 ID") Long projectId,
-        @Parameter(description = "게시글 유형 - null 가능") String category,
-        @Parameter(description = "게시글 상태 - null 가능") String status,
-        @Parameter(description = "게시글 검색어") String keyword);
+        @Parameter(description = "질문 게시글 유형") Long progressId,
+        @Parameter(description = "질문 게시글 상태") String status,
+        @Parameter(description = "질문 게시글 검색어") String keyword,
+        @Parameter(description = "현재 페이지") Integer currentPage,
+        @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
-    BaseResponse<QuestionItemDto> getQuestion(@Parameter(description = "프로젝트 ID") Long projectId,
+    BaseResponse<QuestionGet.Response> get(@Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 수정", description = "질문 게시글을 수정하는 기능입니다.")
@@ -45,10 +52,17 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId);
 
     @Operation(summary = "질문 게시글 댓글 등록", description = "질문 게시글의 댓글을 등록하는 기능입니다.")
-    BaseResponse<QuestionCommentDto> registerComment(
+    BaseResponse<QuestionCommentRegister.Response> registerComment(
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId,
-        @Parameter(description = "게시글 댓글 등록 Dto") RegisterDto request);
+        @Parameter(description = "게시글 댓글 등록 Dto") QuestionCommentRegister.Request request);
+
+    @Operation(summary = "질문 게시글 대댓글 등록", description = "질문 게시글의 대댓글을 등록하는 기능입니다.")
+    BaseResponse<QuestionReCommentRegister.Response> registerReComment(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "게시글 ID") Long questionId,
+        @Parameter(description = "게시글 댓글 ID") Long commentId,
+        @Parameter(description = "게시글 대댓글 등록 Dto") QuestionReCommentRegister.Request request);
 
     @Operation(summary = "질문 게시글 댓글 소프트 삭제", description = "질문 게시글의 댓글을 소프트 삭제하는 기능입니다.")
     BaseResponse<QuestionCommentDto> deleteSoftComment(
@@ -62,4 +76,8 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "게시글 댓글 ID") Long commentId,
         @Parameter(description = "게시글 댓글 수정 Dto") QuestionCommentRequest.UpdateDto request);
+
+    @Operation(summary = "프로젝트 진행 단계 별 질문 게시글 수 조회", description = "프로젝트 진행 단계 별 질문 게시글 수를 조회하는 기능입니다.")
+    BaseResponse<List<Response>> countByProgressStep(
+        @Parameter(description = "프로젝트 ID") Long projectId);
 }
