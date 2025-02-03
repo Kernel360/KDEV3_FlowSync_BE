@@ -4,6 +4,8 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
+import com.checkping.domain.member.Member;
+import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -14,6 +16,7 @@ import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
+import com.checkping.exception.approval.ApprovalAuthorityException;
 import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
 import com.checkping.exception.approval.comment.ApprovalCommentMismatchException;
@@ -25,6 +28,8 @@ import com.checkping.infra.repository.approval.comment.ApprovalCommentReader;
 import com.checkping.infra.repository.approval.comment.ApprovalCommentStore;
 import com.checkping.infra.repository.approval.file.ApprovalFileStore;
 import com.checkping.infra.repository.approval.link.ApprovalLinkStore;
+import com.checkping.infra.repository.project.ProjectReader;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +46,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalReader approvalReader;
     private final ApprovalCommentStore approvalCommentStore;
     private final ApprovalCommentReader approvalCommentReader;
+    private final CurrentMemberUtil currentMemberUtil;
+    private final ProjectReader projectReader;
 
     @Transactional
     @Override
@@ -166,6 +173,38 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Entity -> Response
         return ApprovalReCommentRegister.Response.toDto(reComment);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
+        ApprovalConfirm.Request request) {
+
+        // Get Current Member Info
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // Check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // Check Member Authority
+        if (!projectReader.isCustomerOwner(projectId, member.getId())) {
+            // throw exception
+            throw new ApprovalAuthorityException();
+        }
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Confirm or Reject
+        if (approval.getStatus() == Approval.ApprovalStatus.REJECTED) {
+            approval.reject(member);
+        }
+        if (approval.getStatus() == Approval.ApprovalStatus.APPROVED) {
+            approval.confirm(member);
+        }
+
+        return ApprovalConfirm.Response.toDto(approval);
     }
 
     /**
