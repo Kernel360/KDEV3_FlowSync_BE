@@ -155,4 +155,13 @@ public class Member extends BaseEntity {
         if (introduction != null) this.introduction = introduction;
         if (remark != null) this.remark = remark;
     }
+
+    /**
+     * 서명 파일 업로드
+     *
+     * @param signatureUrl  서명 파일 URL
+     */
+    public void uploadSignature(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
+    }
 }
