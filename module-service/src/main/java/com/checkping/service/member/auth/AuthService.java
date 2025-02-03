@@ -1,5 +1,6 @@
 package com.checkping.service.member.auth;
 
+import com.checkping.common.response.BaseResponse;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
@@ -28,8 +29,8 @@ public class AuthService {
         this.currentMemberUtil = currentMemberUtil;
     }
 
-    public MemberResponseDto getCurrentMember() {
-        return MemberResponseDto.fromEntity(currentMemberUtil.getCurrentMember());
+    public BaseResponse getCurrentMember() {
+        return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
     }
 
     /**
