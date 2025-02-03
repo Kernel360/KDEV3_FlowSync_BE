@@ -1,7 +1,9 @@
 package com.checkping.api.controller.organization;
 
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.service.member.OrganizationService;
@@ -9,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,11 +41,17 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping("/admins/organizations")
     @Override
-    public BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
+    public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
             @RequestParam(required = false) String type,
-            @RequestParam(required = false) String status
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String keyword
     ) {
-        List<OrganizationGet.Response> list = organizationService.getAllByTypeAndStatusOrganizations(type, status);
+
+        PageInfo.Request request = new PageInfo.Request(currentPage, pageSize, keyword);
+
+        PageInfo.Response<OrganizationGet.Response> list = organizationService.getListOrganization(type, status, request);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
@@ -63,13 +69,16 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 수정 성공");
     }
 
-    @PatchMapping("/admins/organizations/{organizationId}/remove")
+    @PostMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationGet.Response> removeOrganization(@PathVariable Long organizationId) {
+    public BaseResponse<String> removeOrganization(
+            @PathVariable Long organizationId,
+            @RequestBody OrganizationDelete.Request request
+    ) {
 
-        OrganizationGet.Response response = organizationService.removeOrganization(organizationId);
+        organizationService.removeOrganization(organizationId, request);
 
-        return BaseResponse.success(response, "업체 삭제 완료");
+        return BaseResponse.success("업체 삭제 완료");
     }
 
 }

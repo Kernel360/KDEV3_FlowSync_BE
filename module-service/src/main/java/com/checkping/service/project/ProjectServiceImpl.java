@@ -7,6 +7,8 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProjectResponse;
+import com.checkping.infra.dto.ProjectListDetailsDto;
+import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
@@ -15,6 +17,7 @@ import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.project.ProjectRequest;
 
+import com.checkping.service.member.util.CurrentMemberUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
@@ -41,6 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
     private final ProgressStepRepository progressStepRepository;
+    private final CurrentMemberUtil currentMemberUtil;
 
     @Override
     @Transactional
@@ -91,6 +95,15 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectResponse.ProjectDto.toDto(projectRepository.save(updatedProject));
     }
 
+    public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
+        ProjectUpdateDetailsDto dto = projectRepository.getUpdateProjectInfoById(projectId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        List<Long> memberList = projectRepository.findProjectMemberListByProjectIdAndOrgId(projectId);
+
+        return ProjectResponse.ProjectUpdateDto.toDto(dto, memberList);
+    }
+
     @Override
     public ProjectResponse.ProjectDto updateProject(Long projectId,
         ProjectRequest.UpdateDto request) {
@@ -115,11 +128,30 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int page, int size) {
         Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "id");
+        Member member = currentMemberUtil.getCurrentMember();
 
-        Page<Project> results = projectRepository.findProjectsWithOrganizationInfoByKeywordAndStatus(
-            keyword, status, pageable);
+        Page<ProjectListDetailsDto> results = getProjectListByRoleAndType(member, keyword, status, pageable);
 
         return ProjectResponse.ProjectListDto.fromEntityPage(results);
+    }
+
+    private Page<ProjectListDetailsDto> getProjectListByRoleAndType(Member member, String keyword, String status, Pageable pageable) {
+        Member.Role role = member.getRole();
+
+        if (role.equals(Member.Role.ADMIN)) {
+            return projectRepository.findAdminProjectsByKeywordAndStatus(keyword, status, pageable);
+        }
+
+        Organization.Type type = member.getOrganization().getType();
+        Long memberId = member.getId();
+
+        if (type == Organization.Type.DEVELOPER) {
+            return projectRepository.findDeveloperProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+        } else if (type == Organization.Type.CUSTOMER) {
+            return projectRepository.findCustomerProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+        }
+
+        return Page.empty(pageable);
     }
 
     @Override
@@ -139,7 +171,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
-        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId);
+        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
         return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
     }
 
@@ -174,9 +207,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {
         return Arrays.asList(
-                organizationRepository.findById(developerOrgId)
+                organizationRepository.findByIdAndType(developerOrgId, Organization.Type.DEVELOPER)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
-                organizationRepository.findById(customerOrgId)
+                organizationRepository.findByIdAndType(customerOrgId, Organization.Type.CUSTOMER)
                         .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
         );
     }
@@ -184,7 +217,7 @@ public class ProjectServiceImpl implements ProjectService {
     private List<Member> getMembers(List<Long> memberIds) {
         return memberIds.stream()
                 .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)))
+                        .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND)))
                 .collect(Collectors.toList());
     }
 

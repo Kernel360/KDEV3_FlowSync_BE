@@ -6,7 +6,7 @@ import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
 import com.checkping.domain.question.QuestionLink;
 import com.checkping.dto.question.QuestionCounter;
-import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -31,6 +31,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -104,18 +105,19 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 서비스 - 상세 조회
      *
-     * @param taskBoardId 업무 관리 게시글 ID
+     * @param questionId 업무 관리 게시글 ID
      * @return QuestionListDto
      */
+    @Transactional(readOnly = true)
     @Override
-    public QuestionItemDto getQuestionById(Long taskBoardId) {
+    public QuestionGet.Response getById(Long questionId) {
 
         // find Question Entity
-        Question question = questionReader.getQuestionById(taskBoardId)
+        Question question = questionReader.getByIdWithComments(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
-        return QuestionItemDto.toDto(question);
+        return QuestionGet.Response.toDto(question);
     }
 
     /**
@@ -128,7 +130,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteSoft(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
@@ -158,7 +160,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionListDto deleteHard(Long taskBoardId) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - HARD DELETE
@@ -184,7 +186,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
         // find Question Entity
-        Question initQuestion = questionReader.getQuestionById(taskBoardId)
+        Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update

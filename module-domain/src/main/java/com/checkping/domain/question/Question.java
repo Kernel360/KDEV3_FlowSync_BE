@@ -1,7 +1,6 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
-import com.checkping.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -102,6 +101,7 @@ public class Question extends BaseEntity {
     // TODO : ProgressStep progressStep 로 변경할 것
     private Long progressStepId;
 
+    @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionComment> commentList = new ArrayList<>();
 

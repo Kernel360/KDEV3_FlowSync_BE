@@ -28,12 +28,13 @@ public class ProjectRequest {
         description : 프로젝트 설명
         detail : 프로젝트 세부 설명
         status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
-        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(유지보수)
+        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
         progressStepId : 프로젝트 현재 진행단계 아이디
         startAt : 프로젝트 시작 일시
         closeAt : 프로젝트 종료 일시
         resisterId : 등록자 아이디
         devOwnerId : 개발사 대표자 아이디
+        customerOwnerId : 고객사 결재자 아이디
         developerOrgId : 개발사 아이디
         customerOrgId :고객사 아이디
         members : 추가할 멤버 목록
@@ -58,6 +59,8 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디", example = "1")
+        private Long customerOwnerId;
         @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "2")
@@ -69,17 +72,21 @@ public class ProjectRequest {
             Member devOwnerMember = Member.builder()
                     .id(resisterDto.getDevOwnerId())
                     .build();
+            Member customerOwnerMember = Member.builder()
+                    .id(resisterDto.getCustomerOwnerId())
+                    .build();
 
             return Project.builder()
                 .name(resisterDto.getName())
                 .description(resisterDto.getDescription())
                 .detail(resisterDto.getDetail())
-                .status(Project.Status.IN_PROGRESS)
-                .management_step(Project.ManagementStep.IN_PROGRESS)
+                .status(Project.Status.valueOf(resisterDto.getStatus()))
+                .managementStep(Project.ManagementStep.valueOf(resisterDto.getManagementStep()))
                 .regAt(LocalDateTime.now())
                 .startAt(resisterDto.getStartAt())
                 .closeAt(resisterDto.getCloseAt())
                 .devOwner(devOwnerMember)
+                .customerOwner(customerOwnerMember)
                 .organizations(organizations)
                 .members(members)
                 .deletedYn("N")
@@ -96,12 +103,13 @@ public class ProjectRequest {
        description : 프로젝트 설명
        detail : 프로젝트 세부 설명
        status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
-       managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(유지보수)
+       managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
        progressStepId : 프로젝트 현재 진행단계 아이디
        startAt : 프로젝트 시작 일시
        closeAt : 프로젝트 종료 일시
        devOwnerId : 개발사 대표자 아이디
        developerOrgId : 개발사 아이디
+       customerOwnerId : 고객사 결재자 아이디
        customerOrgId :고객사 아이디
        members : 추가할 멤버 목록
        */
@@ -125,6 +133,8 @@ public class ProjectRequest {
         private LocalDateTime closeAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디", example = "1")
+        private Long customerOwnerId;
         @Schema(description = "개발사 아이디", example = "1")
         private Long developerOrgId;
         @Schema(description = "고객사 아이디", example = "2")
@@ -136,6 +146,9 @@ public class ProjectRequest {
             Member devOwnerMember = Member.builder()
                     .id(updateDto.getDevOwnerId())
                     .build();
+            Member customerOwnerMember = Member.builder()
+                    .id(updateDto.getCustomerOwnerId())
+                    .build();
 
             return existingProject.toBuilder()
                 .id(existingProject.getId())
@@ -143,9 +156,10 @@ public class ProjectRequest {
                 .description(updateDto.getDescription())
                 .detail(updateDto.getDetail())
                 .status(Project.Status.valueOf(updateDto.getStatus()))
-                .management_step(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
+                .managementStep(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
                 .progressStepId(updateDto.getProgressStepId())
                 .devOwner(devOwnerMember)
+                .customerOwner(customerOwnerMember)
                 .startAt(updateDto.getStartAt())
                 .closeAt(updateDto.getCloseAt())
                 .updateAt(LocalDateTime.now())

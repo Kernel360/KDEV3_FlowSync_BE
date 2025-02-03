@@ -9,9 +9,13 @@ public interface QuestionReader {
 
     Page<Question> searchQuestions(Long projectId, QuestionSearchInfo.SearchCondition searchCondition);
 
-    Optional<Question> getQuestionById(Long id);
+    Optional<Question> getById(Long questionId);
+
+    Optional<Question> getByIdWithComments(Long questionId);
 
     Long countQuestionsByProject(Long projectId);
 
     Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
+
+    boolean checkQuestionContaining(Long projectId, Long questionId);
 }

@@ -6,6 +6,7 @@ import lombok.*;
 
 public class OrganizationGet {
     /*
+   id : 업체 ID
    type : 업체유형
    brNumber : 사업자등록번호
    name : 업체명
@@ -39,9 +40,11 @@ public class OrganizationGet {
         private String phoneNumber;
         @Schema(description = "업체 상태", example = "ACTIVE")
         private String status;
+        @Schema(description = "삭제 사유")
+        private String reasonForDeleteOrganization;
 
         public static OrganizationGet.Response toDto(Organization organization) {
-            return OrganizationGet.Response.builder()
+            return Response.builder()
                     .id(organization.getId().toString())
                     .type(organization.getType().toString())
                     .brNumber(organization.getBrNumber())
@@ -51,6 +54,7 @@ public class OrganizationGet {
                     .detailAddress(organization.getDetailAddress())
                     .phoneNumber(organization.getPhoneNumber())
                     .status(organization.getStatus().toString())
+                    .reasonForDeleteOrganization(organization.getReasonForDeleteOrganization())
                     .build();
         }
     }

@@ -1,7 +1,9 @@
 package com.checkping.api.controller.organization;
 
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,11 +12,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Tag(name = "업체 API(OrganizationController)", description = "업체 API 입니다.")
 public interface OrganizationApi {
@@ -29,9 +30,13 @@ public interface OrganizationApi {
     BaseResponse<OrganizationGet.Response> getOrganization(@Parameter(description = "업체 ID") Long organizationId);
 
     @Operation(summary = "업체 전체 조회", description = "업체 조회 기능입니다.")
-    BaseResponse<List<OrganizationGet.Response>> getAllByTypeOrganization(
-            @Parameter(description = "업체 타입") @RequestParam(required = false) String type,
-            @Parameter(description = "업체 상태") @RequestParam(required = false) String status
+    BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
+            @Parameter(description = "업체 타입(CUSTOMER / DEVELOPER)") @RequestParam(required = false) String type,
+            @Parameter(description = "업체 상태(ACTIVE / INACTIVE") @RequestParam(required = false) String status,
+            @Parameter(description = "페이지 번호") @RequestParam int page,
+            @Parameter(description = "게시글 수") @RequestParam int size,
+            @Parameter(description = "검색어") @RequestParam String keyword
+
     );
 
     @Operation(summary = "업체 수정", description = "업체 정보 수정 기능입니다.")
@@ -41,8 +46,9 @@ public interface OrganizationApi {
             @Parameter(description = "첨부 파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestPart MultipartFile file);
 
     @Operation(summary = "업체 삭제", description = "업체 정보 삭제 기능입니다.")
-    BaseResponse<OrganizationGet.Response> removeOrganization(
-            @Parameter(description = "업체 ID") @PathVariable Long organizationId
-    );
+    BaseResponse<String> removeOrganization(
+            @Parameter(description = "업체 ID") @PathVariable Long organizationId,
+            @Parameter(description = "삭제 사유") @RequestBody OrganizationDelete.Request request
+            );
 
 }

@@ -1,8 +1,9 @@
-package com.checkping.api.controller.project;
+package com.checkping.api.controller.question;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter;
 import com.checkping.dto.question.QuestionCounter.Response;
+import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -10,9 +11,11 @@ import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
+import com.checkping.dto.question.comment.QuestionCommentGet;
+import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
-import com.checkping.dto.question.comment.QuestionCommentRequest.RegisterDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
+import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
 import jakarta.validation.constraints.Min;
@@ -73,12 +76,12 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/{questionId}")
     @Override
-    public BaseResponse<QuestionItemDto> getQuestion(@PathVariable Long projectId,
+    public BaseResponse<QuestionGet.Response> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionItemDto questionItemDto = questionService.getQuestionById(questionId);
+        QuestionGet.Response response = questionService.getById(questionId);
 
-        return BaseResponse.success(questionItemDto);
+        return BaseResponse.success(response);
     }
 
     @PutMapping("/{questionId}")
@@ -105,14 +108,27 @@ public class QuestionController implements QuestionApi {
 
     @PostMapping("/{questionId}/comments")
     @Override
-    public BaseResponse<QuestionCommentDto> registerComment(
+    public BaseResponse<QuestionCommentRegister.Response> registerComment(
         @PathVariable Long projectId, @PathVariable Long questionId,
-        @RequestBody RegisterDto request) {
+        @RequestBody QuestionCommentRegister.Request request) {
 
-        QuestionCommentDto questionCommentDto = questionCommentService.register(
+        QuestionCommentRegister.Response response = questionCommentService.register(
             questionId, request);
 
-        return BaseResponse.success(questionCommentDto);
+        return BaseResponse.success(response);
+    }
+
+    @Override
+    @PostMapping("/{questionId}/comments/{commentId}/recomments")
+    public BaseResponse<QuestionReCommentRegister.Response> registerReComment(
+        @PathVariable Long projectId,
+        @PathVariable Long questionId, @PathVariable Long commentId,
+        @RequestBody QuestionReCommentRegister.Request request) {
+
+        QuestionReCommentRegister.Response response = questionCommentService.registerReComment(
+            projectId, questionId, commentId, request);
+
+        return BaseResponse.success(response);
     }
 
     @DeleteMapping("/{questionId}/comments/{commentId}")
@@ -140,7 +156,8 @@ public class QuestionController implements QuestionApi {
 
     @GetMapping("/counts")
     @Override
-    public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(@PathVariable Long projectId) {
+    public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(
+        @PathVariable Long projectId) {
 
         List<Response> response = questionService.countByProgressStep(projectId);
 

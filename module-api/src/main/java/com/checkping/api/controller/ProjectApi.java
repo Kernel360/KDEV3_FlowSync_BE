@@ -23,6 +23,11 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 ID") Long projectId
     );
 
+    @Operation(summary = "프로젝트 조회", description = "프로젝트를 수정을 위한 정보를 조회하는 기능입니다.")
+    BaseResponse<ProjectResponse.ProjectUpdateDto> getProjectUpdateInfo(
+            @Parameter(description = "프로젝트 ID") Long projectId
+    );
+
     @Operation(summary = "프로젝트 수정", description = "프로젝트를 수정하는 기능입니다.")
     BaseResponse<ProjectResponse.ProjectDto> updateProjects(
             @Parameter(description = "프로젝트 ID") Long projectId,

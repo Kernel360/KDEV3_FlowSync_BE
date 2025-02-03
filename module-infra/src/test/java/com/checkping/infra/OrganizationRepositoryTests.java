@@ -55,34 +55,6 @@ class OrganizationRepositoryTests {
     }
 
     @Test
-    void testCreateAndGetByTypeOrganization() {
-        for (int i = 0; i < 10; i++) {
-            Organization organization;
-            if (i < 5) {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.CUSTOMER)
-                        .status(Organization.Status.ACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            } else {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.DEVELOPER)
-                        .status(Organization.Status.ACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            }
-            organizationRepository.save(organization);
-        }
-        List<Organization> organizationsDev = organizationRepository.findByType(Organization.Type.DEVELOPER);
-        List<Organization> organizationsCs = organizationRepository.findByType(Organization.Type.CUSTOMER);
-
-        Assertions.assertNotNull(organizationsDev);
-        Assertions.assertNotNull(organizationsCs);
-    }
-
-    @Test
     void testCreateAndGetAllOrganization() {
         for (int i = 0; i < 10; i++) {
             Organization organization;
@@ -107,55 +79,8 @@ class OrganizationRepositoryTests {
         Assertions.assertNotNull(organizations);
     }
 
-    @Test
-    void testCreateAndGetByTypeAndStatusOrganization() {
-        for (int i = 0; i < 10; i++) {
-            Organization organization;
-            if (i < 5) {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.CUSTOMER)
-                        .status(Organization.Status.ACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            } else {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.DEVELOPER)
-                        .status(Organization.Status.ACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            }
-            organizationRepository.save(organization);
-        }
-        List<Organization> organizations = organizationRepository.findByTypeAndStatus(Organization.Type.CUSTOMER, Organization.Status.ACTIVE);
-        Assertions.assertNotNull(organizations);
-    }
 
-    @Test
-    void testCreateAndGetByStatusOrganization() {
-        for (int i = 0; i < 10; i++) {
-            Organization organization;
-            if (i < 5) {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.CUSTOMER)
-                        .status(Organization.Status.ACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            } else {
-                organization = Organization.builder()
-                        .name("kernel")
-                        .type(Organization.Type.DEVELOPER)
-                        .status(Organization.Status.INACTIVE)
-                        .regAt(LocalDateTime.now())
-                        .build();
-            }
-            organizationRepository.save(organization);
-        }
-        List<Organization> organizations = organizationRepository.findByStatus(Organization.Status.ACTIVE);
-        Assertions.assertNotNull(organizations);
-    }
+
 
 
 }

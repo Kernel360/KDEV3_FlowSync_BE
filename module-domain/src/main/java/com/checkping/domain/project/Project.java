@@ -27,7 +27,7 @@ public class Project extends BaseEntity {
     description : 프로젝트 설명
     detail : 프로젝트 세부 설명
     status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
-    management_step : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(유지보수)
+    management_step : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
     reg_at : 프로젝트 등록 일시
     update_at : 프로젝트 수정 일시
     start_at : 프로젝트 시작 일시
@@ -56,7 +56,7 @@ public class Project extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "management_step", length = 100)
-    private ManagementStep management_step;
+    private ManagementStep managementStep;
 
     @Column(name = "progress_step_id")
     private Long progressStepId;
@@ -64,6 +64,10 @@ public class Project extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_owner_id")
     private Member devOwner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_owner_id")
+    private Member customerOwner;
 
     @Column(name = "reg_at")
     private LocalDateTime regAt;
@@ -78,10 +82,10 @@ public class Project extends BaseEntity {
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
-    @Column(name = "resister_id", columnDefinition = "BINARY(16)")
+    @Column(name = "resister_id")
     private Long resisterId;
 
-    @Column(name = "updater_id", columnDefinition = "BINARY(16)")
+    @Column(name = "updater_id")
     private Long updaterId;
 
     @Column(name = "deleted_yn")
@@ -91,7 +95,7 @@ public class Project extends BaseEntity {
     @Builder.Default
     @JoinTable(name = "organization_by_project",
             joinColumns = @JoinColumn(name="project_id"),
-            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id"),
             uniqueConstraints =
             @UniqueConstraint(columnNames = {"project_id","org_id"}))
     private List<Organization> organizations = new ArrayList<>();
@@ -100,7 +104,7 @@ public class Project extends BaseEntity {
     @Builder.Default
     @JoinTable(name = "member_by_project",
             joinColumns = @JoinColumn(name="project_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id", columnDefinition = "BINARY(16)"),
+            inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id"),
             uniqueConstraints =
             @UniqueConstraint(columnNames = {"project_id","member_id"}))
     private List<Member> members = new ArrayList<>();
@@ -121,7 +125,8 @@ public class Project extends BaseEntity {
         CONTRACT("계약"),
         IN_PROGRESS("진행중"),
         COMPLETED("납품완료"),
-        MAINTENANCE("유지보수");
+        MAINTENANCE("하자보수"),
+        PAUSED("일시중단");
 
         private final String description;
     }

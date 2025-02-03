@@ -41,6 +41,9 @@ dependencies {
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1")
     implementation("io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1")
 
+    //Querydsl 추가 - Q 클래스 사용을 위한 설정
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+
     implementation project(':module-domain')
     implementation project(':module-common')
 }
