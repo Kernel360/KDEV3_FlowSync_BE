@@ -1,6 +1,7 @@
-profile-name : local
-
 spring:
+  config:
+    activate:
+      on-profile: local
   h2:
     console:
       enabled: true
@@ -23,5 +24,10 @@ spring:
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Seoul
+logging:
+  level:
+    root: info
+log:
   config:
-    import: classpath:/application-s3.yaml, classpath:/application-jwt.yaml
+    path: ./logs/local
+    filename: local_log

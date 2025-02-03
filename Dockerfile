@@ -14,6 +14,7 @@ ARG ProdConfig
 COPY ${S3Config} /app/module-api/src/main/resources/application-s3.yaml
 COPY ${JWTConfig} /app/module-api/src/main/resources/application-jwt.yaml
 COPY ${ProdConfig} /app/module-api/src/main/resources/application-prod.yaml
+COPY ${ApplicationConfig} /app/module-api/src/main/resources/application.yaml
 
 # gradlew에 실행 권한 부여
 RUN chmod +x ./gradlew
