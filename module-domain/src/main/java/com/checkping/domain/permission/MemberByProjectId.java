@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class MemberByProjectId implements Serializable {
