@@ -9,6 +9,7 @@ import com.checkping.dto.OrganizationUpdate;
 import com.checkping.service.member.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 생성 성공");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MEMBER')")
     @GetMapping({"/admins/organizations/{organizationId}", "/organization/{organizationId}"})
     @Override
     public BaseResponse<OrganizationGet.Response> getOrganization(@PathVariable Long organizationId) {
@@ -39,6 +41,7 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 상세조회 성공");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MEMBER')")
     @GetMapping("/admins/organizations")
     @Override
     public BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
@@ -55,6 +58,7 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(value = "/admins/organizations/{organizationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
@@ -69,6 +73,7 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 수정 성공");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping("/admins/organizations/{organizationId}/remove")
     @Override
     public BaseResponse<OrganizationDelete.Response> removeOrganization(
