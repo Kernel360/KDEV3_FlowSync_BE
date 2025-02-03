@@ -77,9 +77,16 @@ public class NoticeServiceImpl implements NoticeService {
                 ? Notice.Category.valueOf(noticeSearchRequest.getCategory())
                 : null;
 
+        if (noticeSearchRequest.getCategory() != null && !noticeSearchRequest.getCategory().isBlank()) {
+            category = Notice.Category.valueOf(noticeSearchRequest.getCategory());
+        }
+
         Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
 
         return NoticeListResponse.fromEntityPage(result);
     }
 
 }
+
+//TODO : 모든 DTO, 엔티티에서 관리자아이디 제거 (DB에서도 해당 컬럼 전부 제거)
+//TODO : 예외처리를 포함한 리팩토링

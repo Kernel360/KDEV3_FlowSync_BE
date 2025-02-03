@@ -61,12 +61,12 @@ public class NoticeController implements NoticeApi {
     public BaseResponse<NoticeListResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "1") int page) {
+            @RequestParam(defaultValue = "1") int currentPage) {
 
         NoticeSearchRequest noticeSearchRequest = NoticeSearchRequest.builder()
                 .keyword(keyword)
                 .category(category)
-                .page(page)
+                .page(currentPage)
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
