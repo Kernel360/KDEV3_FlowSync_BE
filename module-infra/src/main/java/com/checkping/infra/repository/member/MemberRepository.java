@@ -20,4 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndStatus(String email, Member.Status status);
 
     Page<Member> findAll(Pageable pageable); // 페이징 지원
+
+    // 소속 업체 아이디로 회원 조회
+    Page<Member> findByOrganizationId(Long organizationId, Pageable pageable);
 }

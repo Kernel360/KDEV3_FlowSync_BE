@@ -70,4 +70,14 @@ public class MemberController implements MemberApi {
         memberService.deleteMember(memberId, reason);
         return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");
     }
+
+    @Override
+    @GetMapping("/member/org/{organizationId}")
+    public BaseResponse<MemberListResponseDto> getMembersByOrganizationId(
+            @PathVariable Long organizationId,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        MemberListResponseDto response = memberService.getMembersByOrganizationId(organizationId, currentPage-1, pageSize);
+        return BaseResponse.success(response);
+    }
 }
