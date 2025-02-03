@@ -16,5 +16,8 @@ public class NoticeSearchRequest {
     private String category;
 
     @Schema(description = "공지사항 목록 페이지", example = "1")
-    private int page = 1;
+    private int page;
+
+    @Schema(description = "한 페이지에 보이는 공지사항 갯수", example = "10")
+    private int pageSize;
 }
