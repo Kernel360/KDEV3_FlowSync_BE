@@ -29,6 +29,7 @@ public class NoticeCreateRequest {
 
     public Notice toEntity() {
         return Notice.builder()
+                .adminId(adminId)
                 .title(title)
                 .content(content)
                 .category(Notice.Category.valueOf(category))
