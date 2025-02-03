@@ -30,10 +30,11 @@ public class ReissueController {
         String name = reissueService.getNameFromToken(refresh);
         String email = reissueService.getEmailFromToken(refresh);
         String role = reissueService.getRoleFromToken(refresh);
+        Long id = reissueService.getIdFromToken(refresh);
 
         // Generate new tokens
-        String newAccess = reissueService.generateAccessToken(name, email, role);
-        String newRefresh = reissueService.generateRefreshToken(name, email, role);
+        String newAccess = reissueService.generateAccessToken(name,id, email, role);
+        String newRefresh = reissueService.generateRefreshToken(name, id,email, role);
 
         // Set response
         response.addCookie(CookieUtil.createCookie("access", newAccess));
