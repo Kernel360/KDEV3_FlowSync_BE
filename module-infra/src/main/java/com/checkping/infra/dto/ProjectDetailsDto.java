@@ -1,10 +1,12 @@
 package com.checkping.infra.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Date;
 
 @Getter
+@AllArgsConstructor
 public class ProjectDetailsDto {
     private final Long id;
     private final String projectName;
@@ -17,21 +19,4 @@ public class ProjectDetailsDto {
     private final String phoneNum;
     private final Date startAt;
     private final Date closeAt;
-
-    public ProjectDetailsDto(Long id, String projectName, String description, String devOrgName,
-                             String profileImageUrl, String memberName, String jobRole, String jobTitle,
-                             String phoneNum, Date startAt, Date closeAt) {
-        this.id = id;
-        this.projectName = projectName;
-        this.description = description;
-        this.devOrgName = devOrgName;
-        this.profileImageUrl = profileImageUrl;
-        this.memberName = memberName;
-        this.jobRole = jobRole;
-        this.jobTitle = jobTitle;
-        this.phoneNum = phoneNum;
-        this.startAt = startAt;
-        this.closeAt = closeAt;
-    }
-
 }
