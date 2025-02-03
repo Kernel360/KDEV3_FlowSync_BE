@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+// TODO : 1/24 로그인을 필터에서 처리하지 않고 컨트롤러에서 처리하도록 변경 - 테스트 후 파일 삭제 예정
+
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
