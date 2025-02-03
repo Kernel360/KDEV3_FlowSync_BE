@@ -46,8 +46,8 @@ public class AuthService {
             String name = userDetails.getName();
 
             // 3) JWT 생성
-            //TODO 엑세스 토큰 유효시간 개발 기간동안 120분으로 연장, 추후 15분으로 변경
-            String accessToken = jwtUtil.createJwt("access", name, email, role, 15);
+            //TODO 엑세스 토큰 유효시간 개발 기간동안 24시간으로 연장, 추후 15분으로 변경
+            String accessToken = jwtUtil.createJwt("access", name, email, role, 1440);
             String refreshToken = jwtUtil.createJwt("refresh", name, email, role, 1440);
 
             // 4) 토큰을 반환
