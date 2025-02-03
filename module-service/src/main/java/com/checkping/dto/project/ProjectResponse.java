@@ -52,6 +52,8 @@ public class ProjectResponse {
         private String deletedYn;
         @Schema(description = "개발사 대표자 아이디")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디")
+        private Long customerOwnerId;
         @Schema(description = "개발사 이름")
         private String developerName;
         @Schema(description = "고객사 이름")
@@ -71,6 +73,7 @@ public class ProjectResponse {
                     .closeAt(project.getCloseAt())
                     .deletedYn(project.getDeletedYn())
                     .devOwnerId(project.getDevOwner().getId())
+                    .customerOwnerId(project.getCustomerOwner().getId())
                     .developerName(project.getOrganizations().get(0).getName())
                     .customerName(project.getOrganizations().get(1).getName())
                     .build();
@@ -259,6 +262,8 @@ public class ProjectResponse {
         private Date closeAt;
         @Schema(description = "개발사 대표자 아이디")
         private Long devOwnerId;
+        @Schema(description = "고객사 결재자 아이디")
+        private Long customerOwnerId;
         @Schema(description = "개발사 아이디")
         private Long developerOrgId;
         @Schema(description = "고객사 아이디")
@@ -278,6 +283,7 @@ public class ProjectResponse {
                     .startAt(detailsDto.getStartAt())
                     .closeAt(detailsDto.getCloseAt())
                     .devOwnerId(detailsDto.getDevOwnerId())
+                    .customerOwnerId(detailsDto.getCustomerOrgId())
                     .developerOrgId(detailsDto.getDeveloperOrgId())
                     .customerOrgId(detailsDto.getCustomerOrgId())
                     .members(members)
