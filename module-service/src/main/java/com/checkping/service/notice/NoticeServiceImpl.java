@@ -25,8 +25,12 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
-        Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
-        return NoticeCreateResponse.toDto(notice);
+        try {
+            Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
+            return NoticeCreateResponse.toDto(notice);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.BAD_REQUEST);
+        }
     }
 
     @Override
@@ -35,6 +39,10 @@ public class NoticeServiceImpl implements NoticeService {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        if (notice.getIsDeleted()) {
+            throw new BaseException(ErrorCode.BAD_REQUEST);
+        }
 
         notice.updateNotice(noticeUpdateRequest.getTitle(), noticeUpdateRequest.getContent(), noticeUpdateRequest.getCategory(), noticeUpdateRequest.getPriority());
 
@@ -95,3 +103,4 @@ public class NoticeServiceImpl implements NoticeService {
 
 //TODO : 모든 DTO, 엔티티에서 관리자아이디 제거 (DB에서도 해당 컬럼 전부 제거)
 //TODO : 예외처리를 포함한 리팩토링
+//TODO : 모든 컬럼을 동일하게 수정 시 수정 불가 예외처리
