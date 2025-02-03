@@ -73,12 +73,15 @@ public class NoticeServiceImpl implements NoticeService {
         Pageable pageable = PageRequest.of(pageNumber, 10);
 
         String keyword = noticeSearchRequest.getKeyword();
-        Notice.Category category = (noticeSearchRequest.getCategory() != null)
-                ? Notice.Category.valueOf(noticeSearchRequest.getCategory())
-                : null;
+        Notice.Category category = null;
 
-        if (noticeSearchRequest.getCategory() != null && !noticeSearchRequest.getCategory().isBlank()) {
-            category = Notice.Category.valueOf(noticeSearchRequest.getCategory());
+        String categoryStr = noticeSearchRequest.getCategory();
+        if (categoryStr != null && !categoryStr.isBlank()) {
+            try {
+                category = Notice.Category.valueOf(categoryStr);
+            } catch (IllegalArgumentException e) {
+                throw new BaseException(ErrorCode.BAD_REQUEST);
+            }
         }
 
         Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
