@@ -44,7 +44,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "   WHEN EXISTS (" +
             "   SELECT 1 " +
             "   FROM member_by_project mbp " +
-            "   WHERE mbp.project_id = obp.project_id " +
+            "   WHERE mbp.project_id = p.id " +
             "   AND mbp.member_id = m.id " +
             "   ) THEN 1 " +
             "   ELSE 0 " +
