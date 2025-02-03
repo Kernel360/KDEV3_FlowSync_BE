@@ -17,9 +17,9 @@ public class MemberByProjectId implements Serializable {
     memberId : 멤버ID
     projectId : 업체ID
    */
-    @Column
+    @Column(name = "member_id")
     private Long memberId;
 
-    @Column
+    @Column(name = "project_id")
     private Long projectId;
 }
