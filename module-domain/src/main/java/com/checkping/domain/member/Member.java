@@ -99,6 +99,9 @@ public class Member extends BaseEntity {
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
+    @Column(name = "signature_url", length = 2083)
+    private String signatureUrl;
+
     @Column(length = 255)
     private String remark;
 
@@ -151,5 +154,14 @@ public class Member extends BaseEntity {
         if (jobTitle != null) this.jobTitle = jobTitle;
         if (introduction != null) this.introduction = introduction;
         if (remark != null) this.remark = remark;
+    }
+
+    /**
+     * 서명 파일 업로드
+     *
+     * @param signatureUrl  서명 파일 URL
+     */
+    public void uploadSignature(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
     }
 }

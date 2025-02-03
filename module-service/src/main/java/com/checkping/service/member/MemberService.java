@@ -2,6 +2,7 @@ package com.checkping.service.member;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.member.request.ChangePasswordDto;
@@ -9,14 +10,17 @@ import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import com.checkping.exception.member.InvalidInputValueException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
@@ -26,23 +30,28 @@ public class MemberService {
     private final MemberRepository memberRepository;          // 도메인 인터페이스
     private final OrganizationRepository organizationRepository; // 조직 레포지토리(예: JPA)
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CurrentMemberUtil currentMemberUtil;
 
-    public MemberService(MemberRepository memberRepository, OrganizationRepository organizationRepository, BCryptPasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository,
+        OrganizationRepository organizationRepository, BCryptPasswordEncoder passwordEncoder,
+        CurrentMemberUtil currentMemberUtil) {
         this.memberRepository = memberRepository;
         this.organizationRepository = organizationRepository;
         this.passwordEncoder = passwordEncoder;
+        this.currentMemberUtil = currentMemberUtil;
     }
 
     // 이메일로 회원 조회
     public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         return MemberResponseDto.fromEntity(member);
     }
 
     // 페이징된 전체 회원 목록 조회
     public MemberListResponseDto getAllMembersWithFilters(
-            int page, int size, String roleParam, String statusParam, String keyword
+        int page, int size, String roleParam, String statusParam, String keyword
     ) {
         // (1) 페이지, 사이즈 유효성 검증
         if (page < 0 || size < 1) {
@@ -74,7 +83,8 @@ public class MemberService {
         }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberRepository.findAllWithFilters(role, status, keyword, pageable);
+        Page<Member> memberPage = memberRepository.findAllWithFilters(role, status, keyword,
+            pageable);
 
         // (4) page 범위 초과 시 예외 처리
         if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
@@ -94,7 +104,8 @@ public class MemberService {
 
         // 조직(Organization) 존재 여부 확인
         Organization organization = organizationRepository.findById(dto.getOrganizationId())
-                .orElseThrow(() -> new BaseException("조직이 존재하지 않습니다: " + dto.getOrganizationId(), ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new BaseException("조직이 존재하지 않습니다: " + dto.getOrganizationId(),
+                ErrorCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
@@ -113,7 +124,8 @@ public class MemberService {
     public MemberResponseDto updateMember(Long memberId, MemberUpdateDto dto) {
         // 기존 회원 찾기
         Member existingMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
         // DTO -> 엔티티 업데이트
         MemberUpdateDto.toEntity(existingMember, dto);
@@ -128,7 +140,8 @@ public class MemberService {
     // 비밀번호 변경
     public void changePassword(Long memberId, ChangePasswordDto dto) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
         // 현재 비밀번호 확인
         if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
@@ -137,7 +150,8 @@ public class MemberService {
 
         // 새 비밀번호와 확인 비밀번호 일치 여부 확인
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new BaseException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
+            throw new BaseException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.",
+                ErrorCode.INVALID_LOGIN_CREDENTIALS);
         }
 
         // 비밀번호 암호화 적용
@@ -153,7 +167,8 @@ public class MemberService {
     // 회원 삭제
     public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         if (!member.isActive()) {
             throw new BaseException("이미 삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
         }
@@ -163,7 +178,8 @@ public class MemberService {
     }
 
     //업체별 회원 목록 조회
-    public MemberListResponseDto getMembersByOrganizationId(Long organizationId, int page, int size) {
+    public MemberListResponseDto getMembersByOrganizationId(Long organizationId, int page,
+        int size) {
 
         //존재하지 않는 업체 아이디인 경우 예외 처리
         if (!organizationRepository.existsById(organizationId)) {
@@ -188,5 +204,23 @@ public class MemberService {
         }
         // MemberListResponseDto로 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
+    }
+
+    /**
+     * 회원 서명 파일 업로드
+     *
+     * @param signatureFile 서명 파일
+     * @return MemberSignatureResponseDto
+     */
+    @Transactional
+    public MemberSignatureResponseDto uploadSignature(FileResponse signatureFile) {
+        // 회원 조회
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 서명 파일 URL 저장
+        member.uploadSignature(signatureFile.url());
+
+        // 결과 DTO 반환
+        return MemberSignatureResponseDto.toDto(member);
     }
 }
