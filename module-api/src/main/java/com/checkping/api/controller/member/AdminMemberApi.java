@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "회원 관리 API(MemberApi)", description = "회원 관리 API입니다.")
-public interface MemberApi {
+@Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
+public interface AdminMemberApi {
 
     @Operation(summary = "회원 등록", description = "새로운 회원을 등록하는 기능입니다.")
     BaseResponse<MemberResponseDto> registerMember(

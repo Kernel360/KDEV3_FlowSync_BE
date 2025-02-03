@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "회원 관리 API(MemberApi)", description = "회원 관리 API입니다.")
+@Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
 @RestController
 @RequestMapping("/admins/members")
-public class MemberController implements MemberApi {
+public class AdminMemberController implements AdminMemberApi {
 
     private final MemberService memberService;
     private final FileService fileService;
 
-    public MemberController(MemberService memberService, FileService fileService) {
+    public AdminMemberController(MemberService memberService, FileService fileService) {
         this.memberService = memberService;
         this.fileService = fileService;
     }
