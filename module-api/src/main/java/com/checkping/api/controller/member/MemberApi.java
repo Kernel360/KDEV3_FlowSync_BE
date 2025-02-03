@@ -1,6 +1,7 @@
 package com.checkping.api.controller.member;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.member.response.MemberSignatureExistResponseDto;
 import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +16,8 @@ public interface MemberApi {
 
     @Operation(summary = "회원 서명 업로드", description = "회원의 서명 이미지를 업로드하는 기능입니다.")
     BaseResponse<MemberSignatureResponseDto> uploadSignature(
-        @Schema(description = "회원 ID", example = "1")
-        @Parameter(description = "회원 ID", required = true) Long memberId,
         @Parameter(description = "서명 이미지 파일", required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) MultipartFile multipartFile);
+
+    @Operation(summary = "회원 서명 존재 여부 조회", description = "회원의 서명 이미지 존재 여부를 조회하는 기능입니다.")
+    BaseResponse<MemberSignatureExistResponseDto> isExistSignature();
 }
