@@ -2,6 +2,8 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
+import com.checkping.domain.approval.Approval.ApprovalStatus;
+import com.checkping.exception.approval.ApprovalStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +20,15 @@ public class ApprovalConfirm {
          */
         @Schema(description = "변경할 결재 상태", example = "REJECTED, APPROVED")
         private String status;
+
+        /**
+         * Approval.ApprovalStatus 로 변환
+         *
+         * @return Approval.ApprovalStatus
+         */
+        public Approval.ApprovalStatus getStatus() {
+            return convertStatus(this.status);
+        }
     }
 
     @Getter
@@ -65,6 +76,24 @@ public class ApprovalConfirm {
             response.approverId = approval.getApproverId();
             response.approverName = approval.getApproverName();
             return response;
+        }
+    }
+
+    /**
+     * Enum : ApprovalStatus 변환 함수
+     *
+     * @param value ApprovalStatus 로 변환할 문자열
+     * @return ApprovalStatus
+     */
+    public static ApprovalStatus convertStatus(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return ApprovalStatus.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ApprovalStatusException(value);
         }
     }
 
