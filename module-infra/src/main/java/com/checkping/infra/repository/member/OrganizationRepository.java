@@ -29,4 +29,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
             Pageable pageable
     );
 
+    // ID와 타입을 통한 업체 조회
+    Optional<Organization> findByIdAndType(Long id, Organization.Type type);
+
 }
