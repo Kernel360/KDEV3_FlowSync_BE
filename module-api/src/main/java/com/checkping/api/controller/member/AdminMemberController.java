@@ -21,17 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
+@Tag(name = "어드민 회원 관리 API(AdminMemberApi)", description = "어드민 권한으로 회원을 관리할 수 있도록 하는 API입니다.")
 @RestController
 @RequestMapping("/admins/members")
 public class AdminMemberController implements AdminMemberApi {
 
     private final MemberService memberService;
-    private final FileService fileService;
 
-    public AdminMemberController(MemberService memberService, FileService fileService) {
+    public AdminMemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.fileService = fileService;
     }
 
     //keyword(예: 이름/이메일 검색)
@@ -106,20 +104,6 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
         MemberListResponseDto response = memberService.getMembersByOrganizationId(organizationId, currentPage-1, pageSize);
-        return BaseResponse.success(response);
-    }
-
-    @Override
-    @PostMapping(value = "/{memberId}/signatures", consumes = {"multipart/form-data"})
-    public BaseResponse<MemberSignatureResponseDto> uploadSignature(@PathVariable Long memberId,
-        @RequestParam("file") MultipartFile signature) {
-
-        // 파일 업로드 처리
-        FileResponse fileUpload = fileService.upload(signature);
-
-        // 서명 파일 URL 저장
-        MemberSignatureResponseDto response = memberService.uploadSignature(fileUpload);
-
         return BaseResponse.success(response);
     }
 }
