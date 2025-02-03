@@ -69,16 +69,16 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success(response, "업체 수정 성공");
     }
 
-    @PatchMapping("/admins/organizations/{organizationId}/remove")
+    @PostMapping("/admins/organizations/{organizationId}/remove")
     @Override
-    public BaseResponse<OrganizationDelete.Response> removeOrganization(
+    public BaseResponse<String> removeOrganization(
             @PathVariable Long organizationId,
             @RequestBody OrganizationDelete.Request request
-            ) {
+    ) {
 
-        OrganizationDelete.Response response = organizationService.removeOrganization(organizationId, request);
+        organizationService.removeOrganization(organizationId, request);
 
-        return BaseResponse.success(response, "업체 삭제 완료");
+        return BaseResponse.success("업체 삭제 완료");
     }
 
 }
