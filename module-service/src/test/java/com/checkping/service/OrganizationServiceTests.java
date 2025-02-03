@@ -1,16 +1,15 @@
 package com.checkping.service;
 
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.*;
+import com.checkping.dto.OrganizationCreate;
+import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationUpdate;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.OrganizationService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @SpringBootTest
 class OrganizationServiceTests {
@@ -71,25 +70,9 @@ class OrganizationServiceTests {
                 organizationService.getOrganization(organization.getId());
     }
 
-    @Test
-    void testGetAllByTypeOrganization() {
-        List<OrganizationGet.Response> organizationList =
-                organizationService.getAllByTypeAndStatusOrganizations(null, null);
-
-        List<OrganizationGet.Response> organizationActiveList =
-                organizationService.getAllByTypeAndStatusOrganizations(null, "ACTIVE");
-
-        List<OrganizationGet.Response> organizationCsList =
-                organizationService.getAllByTypeAndStatusOrganizations("CUSTOMER", null);
-
-        List<OrganizationGet.Response> organizationDevActivceList =
-                organizationService.getAllByTypeAndStatusOrganizations("DEVELOPER", "ACTIVE");
-    }
 
     @Test
     void testModifyOrganization() {
-
-
 
         Organization organization =
                 organizationRepository.save(OrganizationCreate.Request.toEntity(OrganizationCreate.Request.builder()
