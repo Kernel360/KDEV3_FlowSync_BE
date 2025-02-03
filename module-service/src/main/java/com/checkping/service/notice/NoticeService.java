@@ -19,12 +19,8 @@ public interface NoticeService {
     NoticeResponse deleteNotice(Long noticeid);
 
     NoticeResponse getNotice(Long noticeid);
+    Page<NoticeGetListResponse> getNotices(NoticeSearchRequest noticeSearchRequest);
 
-    Page<NoticeGetListResponse> findAllNotices(int page);
-
-    Page<NoticeGetListResponse> searchNotices(NoticeSearchRequest noticesearchRequest);
-
-    Page<NoticeGetListResponse> getSortedNotices(String keyword, Notice.Category category, Pageable pageable);
 }
 
 

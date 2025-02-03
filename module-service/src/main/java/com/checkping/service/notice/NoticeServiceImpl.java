@@ -63,7 +63,6 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public NoticeResponse getNotice(Long noticeid) {
         Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -72,31 +71,14 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<NoticeGetListResponse> findAllNotices(int page) {
-        int pageNumber = page > 0 ? page - 1 : 0;
-
-        Pageable pageable = PageRequest.of(pageNumber, 10);
-
-        return getSortedNotices(null, null, pageable);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<NoticeGetListResponse> searchNotices(NoticeSearchRequest noticeSearchRequest) {
+    public Page<NoticeGetListResponse> getNotices(NoticeSearchRequest noticeSearchRequest) {
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
         Pageable pageable = PageRequest.of(pageNumber, 10);
 
-        Notice.Category category = null;
-        if (noticeSearchRequest.getCategory() != null) {
-            category = Notice.Category.valueOf(noticeSearchRequest.getCategory());
-        }
-        return getSortedNotices(noticeSearchRequest.getKeyword(), category, pageable);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<NoticeGetListResponse> getSortedNotices(String keyword, Notice.Category category, Pageable pageable) {
+        String keyword = noticeSearchRequest.getKeyword();
+        Notice.Category category = (noticeSearchRequest.getCategory() != null)
+                ? Notice.Category.valueOf(noticeSearchRequest.getCategory())
+                : null;
 
         return noticeRepository.findSortedNotices(keyword, category, pageable)
                 .map(NoticeGetListResponse::toDto);

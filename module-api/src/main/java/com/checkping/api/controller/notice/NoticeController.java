@@ -47,13 +47,6 @@ public class NoticeController implements NoticeApi {
     }
 
     @Override
-    @GetMapping("/notices")
-    public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(@RequestParam(defaultValue = "1") int page) {
-        Page<NoticeGetListResponse> result = noticeService.findAllNotices(page);
-        return BaseResponse.success(result);
-    }
-
-    @Override
     @GetMapping("/notices/{noticeid}")
     public BaseResponse<NoticeResponse> getNotice(
             @PathVariable Long noticeid
@@ -64,10 +57,18 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/search")
-    public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @RequestParam NoticeSearchRequest noticeSearchRequest) {
+    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "1") int page) {
 
-        Page<NoticeGetListResponse> result = noticeService.searchNotices(noticeSearchRequest);
+        NoticeSearchRequest noticeSearchRequest = NoticeSearchRequest.builder()
+                .keyword(keyword)
+                .category(category)
+                .page(page)
+                .build();
+
+        Page<NoticeGetListResponse> result = noticeService.getNotices(noticeSearchRequest);
         return BaseResponse.success(result);
     }
 }
