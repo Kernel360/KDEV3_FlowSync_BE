@@ -67,10 +67,4 @@ public interface AdminMemberApi {
         @Parameter(description = "소속 업체 ID", required = true) Long organizationId,
         @Parameter(description = "페이지 번호 (1부터 시작)", example = "1", required = true) int page,
         @Parameter(description = "페이지 크기", example = "10", required = true) int size);
-
-    @Operation(summary = "회원 서명 업로드", description = "회원의 서명 이미지를 업로드하는 기능입니다.")
-    BaseResponse<MemberSignatureResponseDto> uploadSignature(
-        @Schema(description = "회원 ID", example = "1")
-        @Parameter(description = "회원 ID", required = true) Long memberId,
-        @Parameter(description = "서명 이미지 파일", required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) MultipartFile multipartFile);
 }
