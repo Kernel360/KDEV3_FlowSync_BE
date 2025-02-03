@@ -99,6 +99,9 @@ public class Member extends BaseEntity {
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
+    @Column(name = "signature_url", length = 2083)
+    private String signatureUrl;
+
     @Column(length = 255)
     private String remark;
 
