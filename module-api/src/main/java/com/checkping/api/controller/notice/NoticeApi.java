@@ -30,18 +30,13 @@ public interface NoticeApi {
             @Parameter(description = "공지사항 아이디") Long noticeid
     );
 
-    @Operation(summary = "공지사항 목록 조회", description = "공지사항 목록을 조회하는 기능입니다.")
-    public BaseResponse<Page<NoticeGetListResponse>> findAllNotices(
-            @Parameter(description = "공지사항 페이지") int page
-    );
-
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
     public BaseResponse<NoticeResponse> getNotice(
             @Parameter(description = "공지사항 아이디") Long noticeid
     );
 
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
-    public BaseResponse<Page<NoticeGetListResponse>> searchNotices(
-            @Parameter(description = "공지사항 검색 시 설정할 키워드, 카테고리 및 페이지") NoticeSearchRequest noticeSearchRequest);
+    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
+            @Parameter(description = "공지사항 검색 시 설정할 키워드, 카테고리 및 페이지") String keyword, String category, int page);
 
 }
