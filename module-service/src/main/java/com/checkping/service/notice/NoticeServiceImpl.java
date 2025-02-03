@@ -70,7 +70,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
-        Pageable pageable = PageRequest.of(pageNumber, 10);
+        int pageSize = noticeSearchRequest.getPageSize() > 0 ? noticeSearchRequest.getPageSize() : 10;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         String keyword = noticeSearchRequest.getKeyword();
         Notice.Category category = null;
