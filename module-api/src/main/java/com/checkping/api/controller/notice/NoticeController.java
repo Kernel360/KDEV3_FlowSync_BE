@@ -6,6 +6,7 @@ import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +69,7 @@ public class NoticeController implements NoticeApi {
                 .page(page)
                 .build();
 
-        Page<NoticeGetListResponse> result = noticeService.getNotices(noticeSearchRequest);
-        return BaseResponse.success(result);
+        NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
+        return BaseResponse.success(result.toString());
     }
 }

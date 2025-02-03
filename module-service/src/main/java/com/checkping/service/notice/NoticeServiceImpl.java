@@ -8,16 +8,13 @@ import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.NoticeCreateResponse;
 import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeListResponse;
 import com.checkping.dto.notice.response.NoticeResponse;
 import com.checkping.infra.repository.notice.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +68,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Page<NoticeGetListResponse> getNotices(NoticeSearchRequest noticeSearchRequest) {
+    public NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
         Pageable pageable = PageRequest.of(pageNumber, 10);
 
@@ -80,8 +77,9 @@ public class NoticeServiceImpl implements NoticeService {
                 ? Notice.Category.valueOf(noticeSearchRequest.getCategory())
                 : null;
 
-        return noticeRepository.findSortedNotices(keyword, category, pageable)
-                .map(NoticeGetListResponse::toDto);
+        Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
+
+        return NoticeListResponse.fromEntityPage(result);
     }
 
 }
