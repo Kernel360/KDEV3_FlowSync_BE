@@ -69,8 +69,9 @@ public class CustomSecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/reissue").permitAll()
-                //anyRequest().authenticated());
-                .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
+                .requestMatchers("/admins/**").hasRole("ADMIN")
+                .anyRequest().authenticated());
+//                .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
         http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
