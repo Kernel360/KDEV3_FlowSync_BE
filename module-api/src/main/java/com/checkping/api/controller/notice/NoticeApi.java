@@ -40,6 +40,6 @@ public interface NoticeApi {
     public BaseResponse<NoticeListResponse> getNotices(
             @Parameter(description = "검색할 키워드") String keyword,
             @Parameter(description = "검색할 카테고리") String category,
-            @Parameter(description = "검색할 페이지") int page);
+            @Parameter(description = "검색할 페이지") int currentPage);
 
 }
