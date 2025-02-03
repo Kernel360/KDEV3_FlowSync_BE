@@ -77,6 +77,10 @@ public class NoticeServiceImpl implements NoticeService {
                 ? Notice.Category.valueOf(noticeSearchRequest.getCategory())
                 : null;
 
+        if (noticeSearchRequest.getCategory() != null && !noticeSearchRequest.getCategory().isBlank()) {
+            category = Notice.Category.valueOf(noticeSearchRequest.getCategory());
+        }
+
         Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
 
         return NoticeListResponse.fromEntityPage(result);
