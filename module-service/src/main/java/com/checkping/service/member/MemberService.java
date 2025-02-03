@@ -144,10 +144,11 @@ public class MemberService {
             .orElseThrow(
                 () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
 
+        // TODO 관리자가 비밀번호 변경하므로 현재 비밀번호 확인 일단 보류
         // 현재 비밀번호 확인
-        if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
-            throw new BaseException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
-        }
+//        if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
+//            throw new BaseException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
+//        }
 
         // 새 비밀번호와 확인 비밀번호 일치 여부 확인
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
