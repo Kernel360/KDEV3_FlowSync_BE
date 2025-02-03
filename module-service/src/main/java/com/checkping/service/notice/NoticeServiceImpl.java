@@ -85,5 +85,4 @@ public class NoticeServiceImpl implements NoticeService {
 }
 
 //TODO : 모든 DTO, 엔티티에서 관리자아이디 제거 (DB에서도 해당 컬럼 전부 제거)
-//TODO : 1페이지가 아닌 페이지에서도 긴급 공지사항은 항상 맨 위에 고정
 //TODO : 긴급 공지사항이 일정 기간이 지나면 일반으로 변경되며 고정도 풀림
