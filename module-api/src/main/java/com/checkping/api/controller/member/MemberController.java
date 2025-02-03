@@ -110,7 +110,7 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    @PostMapping("/{memberId}/signatures")
+    @PostMapping(value = "/{memberId}/signatures", consumes = {"multipart/form-data"})
     public BaseResponse<MemberSignatureResponseDto> uploadSignature(@PathVariable Long memberId,
         @RequestParam("file") MultipartFile signature) {
 
