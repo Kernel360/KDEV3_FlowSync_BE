@@ -1,13 +1,15 @@
 package com.checkping.infra.repository.question;
 
 import com.checkping.domain.question.Question;
-import com.checkping.domain.question.Question.Category;
-import com.checkping.domain.question.Question.Status;
-import java.util.List;
+import com.checkping.info.question.QuestionSearchInfo;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
 
 @Slf4j
 @Component
@@ -17,67 +19,129 @@ public class QuestionReaderImpl implements QuestionReader {
     private final QuestionRepository questionRepository;
 
     /**
-     * Question 전체 조회 및 필터링 조회
+     * Question 검색 기능
+     * TODO : 동적 쿼리가 가능하도록 변경
      *
-     * @param category Question.Category
-     * @param status   Question.Status
-     * @param keyword       검색어
-     * @return Question 전체 조회
+     * @param projectId       프로젝트 아이디
+     * @param searchCondition 검색 조건
+     * @return Question 검색 결과
      */
     @Override
-    public List<Question> getQuestion(Category category, Status status,
-        String keyword) {
+    public Page<Question> searchQuestions(Long projectId,
+        QuestionSearchInfo.SearchCondition searchCondition) {
 
-        // keyword, category, status
-        if (category != null && status != null && keyword != null) {
-            return questionRepository.findByCategoryAndStatusAndTitleContaining(category,
-                status, keyword);
+        // 페이지 객체 생성
+        Pageable pageable = PageRequest.of(searchCondition.currentPage(),
+            searchCondition.pageSize());
+
+        // keyword / category / status 검색 조건 여부 확인
+        boolean isKeyword = searchCondition.keyword() != null && !searchCondition.keyword()
+            .isEmpty();
+        boolean isProgressStep = searchCondition.progressId() != null;
+        boolean isStatus = searchCondition.status() != null;
+
+        // Search all
+        if (!isProgressStep && !isStatus && !isKeyword) {
+            return questionRepository.findByProjectId(
+                projectId, pageable);
         }
 
-        // category AND status
-        if (category != null && status != null) {
-            return questionRepository.findByCategoryAndStatus(category,
-                status);
+        // Search keyword
+        if (!isProgressStep && !isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndTitleContaining(
+                projectId, searchCondition.keyword(), pageable);
         }
 
-        // category AND keyword
-        if (category != null && keyword != null) {
-            return questionRepository.findQuestionByCategoryAndTitleContaining(category, keyword);
+        // Search status
+        if (!isProgressStep && isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndStatus(
+                projectId, searchCondition.status(), pageable);
         }
 
-        // status AND keyword
-        if (status != null && keyword != null) {
-            return questionRepository.findQuestionByStatusAndTitleContaining(status, keyword);
+        // Search category
+        if (isProgressStep && !isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepId(
+                projectId, searchCondition.progressId(), pageable);
         }
 
-        // category
-        if (category != null) {
-            return questionRepository.findByCategory(category);
+        // Search category AND status
+        if (isProgressStep && isStatus && !isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepIdAndStatus(
+                projectId, searchCondition.progressId(), searchCondition.status(), pageable);
         }
 
-        // status
-        if (status != null) {
-            return questionRepository.findByStatus(status);
+        // Search category AND keyword
+        if (isProgressStep && !isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndProgressStepIdAndTitleContaining(
+                projectId, searchCondition.progressId(), searchCondition.keyword(), pageable);
         }
 
-        // keyword
-        if (keyword != null) {
-            return questionRepository.findByTitleContaining(keyword);
+        // Search status AND keyword
+        if (!isProgressStep && isStatus && isKeyword) {
+            return questionRepository.findByProjectIdAndStatusAndTitleContaining(
+                projectId, searchCondition.status(), searchCondition.keyword(), pageable);
         }
 
-        // 조회
-        return questionRepository.findAll();
-
+        // Search category AND status AND keyword
+        return questionRepository.findByProjectIdAndProgressStepIdAndStatusAndTitleContaining(
+            projectId, searchCondition.progressId(), searchCondition.status(),
+            searchCondition.keyword(), pageable);
     }
 
     /**
      * Question 조회 기능
      *
-     * @param id question 아이디
+     * @param questionId question 아이디
      * @return Question 조회 결과
      */
     @Override
-    public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> getById(Long questionId) {
+        return questionRepository.findById(questionId);
+    }
+
+    /**
+     * Question 조회 기능 (Comment 포함)
+     *
+     * @param questionId question 아이디
+     * @return Question 조회 결과
+     */
+    @Override
+    public Optional<Question> getByIdWithComments(Long questionId) {
+        return questionRepository.findByIdWithComments(questionId);
+    }
+
+    /**
+     * 프로젝트별 Question 개수 조회
+     *
+     * @param projectId project id
+     * @return 프로젝트별 Question 개수
+     */
+    @Override
+    public Long countQuestionsByProject(Long projectId) {
+        return questionRepository.countByProjectId(projectId);
+    }
+
+    /**
+     * 진행상태별 Question 개수 조회
+     *
+     * @param projectId      project id
+     * @param progressStepId progress step id
+     * @return 진행상태별 Question 개수
+     */
+    @Override
+    public Long countQuestionsByProgressStep(Long projectId, Long progressStepId) {
+        return questionRepository.countByProjectIdAndProgressStepId(projectId, progressStepId);
+    }
+
+    /**
+     * 프로젝트에 속한 Question 존재 여부 확인
+     *
+     * @param projectId  프로젝트 아이디
+     * @param questionId 질문 아이디
+     * @return 프로젝트에 속한 Question 존재 여부
+     */
+    @Override
+    public boolean checkQuestionContaining(Long projectId, Long questionId) {
+        return questionRepository.existsByProjectIdAndId(projectId, questionId);
     }
 }

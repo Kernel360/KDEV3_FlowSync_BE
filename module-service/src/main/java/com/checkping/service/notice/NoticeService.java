@@ -1,10 +1,14 @@
 package com.checkping.service.notice;
 
 import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.response.NoticeResponseDto;
+import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
+import com.checkping.dto.notice.response.NoticeCreateResponseDto;
+import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
 
 public interface NoticeService {
 
-    NoticeResponseDto registerNotice(NoticeCreateRequestDto noticeCreateRequestDto);
+    NoticeCreateResponseDto registerNotice(NoticeCreateRequestDto noticeCreateRequestDto);
+
+    NoticeUpdateResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
 
 }

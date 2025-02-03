@@ -1,14 +1,18 @@
-package com.checkping.dto;
+package com.checkping.dto.project;
 
 
+import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class ProjectResponse {
 
@@ -44,7 +48,7 @@ public class ProjectResponse {
         private LocalDateTime closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
-        @Schema(description = "개발사 대표자 아이디", example = "123e4567-e89b-12d3-a456-426614174000")
+        @Schema(description = "개발사 대표자 아이디")
         private Long devOwnerId;
         @Schema(description = "개발사 이름")
         private String developerName;
@@ -128,4 +132,35 @@ public class ProjectResponse {
         private String projectName;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectListDto {
+        private List<ProjectDto> projects;
+        private Map<String, Object> meta;
+
+
+        public static ProjectListDto fromEntityPage(Page<Project> page) {
+            List<ProjectResponse.ProjectDto> projectDtos = page.getContent().stream()
+                    .map(ProjectResponse.ProjectDto::toDto)
+                    .toList();
+
+            PageMetaResponse meta = PageMetaResponse.fromPage(page);
+            Map<String, Object> result =  meta.toMap();
+
+            return new ProjectListDto(projectDtos, result);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoListDto {
+        private Map<String, List<ProjectInfoDto>> projectInfoMap;
+
+        public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
+            return new ProjectInfoListDto(projectInfoMap);
+        }
+    }
 }

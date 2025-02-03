@@ -1,7 +1,6 @@
 package com.checkping.api.auth.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 
@@ -9,17 +8,6 @@ import java.io.IOException;
 
 public class ResponseUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    public static Cookie createCookie(String key, String value) {
-
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
 
     // 실패 응답 생성
     public static void sendErrorResponse(HttpServletResponse response, HttpStatus status, Object errorResponse) throws IOException {
@@ -42,8 +30,8 @@ public class ResponseUtil {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(status.value());
-        response.addCookie(createCookie("access", accessToken));
-        response.addCookie(createCookie("refresh", refreshToken));
+        response.addCookie(CookieUtil.createCookie("access", accessToken));
+        response.addCookie(CookieUtil.createCookie("refresh", refreshToken));
         response.getWriter().write(objectMapper.writeValueAsString(successResponse));
     }
 }

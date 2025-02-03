@@ -40,4 +40,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                                     Member.Status status,
                                     String keyword,
                                     Pageable pageable);
+
+    // 소속 업체 아이디로 회원 조회
+    Page<Member> findByOrganizationId(Long organizationId, Pageable pageable);
 }

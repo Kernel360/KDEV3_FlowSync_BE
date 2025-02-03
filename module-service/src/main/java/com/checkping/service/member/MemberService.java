@@ -151,7 +151,6 @@ public class MemberService {
     }
 
     // 회원 삭제
-    // TODO 회원 삭제 되면 로그인 안되도록 코드 수정하기
     public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
@@ -161,5 +160,33 @@ public class MemberService {
         // 회원 삭제 처리
         member.deleteAccount(reasonForDelete);
         memberRepository.save(member);
+    }
+
+    //업체별 회원 목록 조회
+    public MemberListResponseDto getMembersByOrganizationId(Long organizationId, int page, int size) {
+
+        //존재하지 않는 업체 아이디인 경우 예외 처리
+        if (!organizationRepository.existsById(organizationId)) {
+            throw new BaseException("해당 업체가 존재하지 않습니다.", ErrorCode.ORGANIZATION_NOT_FOUND);
+        }
+
+        //페이지에 음수들어온 경우 예외 처리
+        if (page < 0 || size < 0) {
+            throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Member> memberPage = memberRepository.findByOrganizationId(organizationId, pageable);
+
+        //범위 바깥의 페이지 요청
+        if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
+            throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
+        }
+        //페이지에 회원이 없는 경우 예외 처리
+        if (memberPage.isEmpty()) {
+            throw new BaseException("해당 업체에 회원이 존재하지 않습니다.", ErrorCode.USER_NOT_FOUND);
+        }
+        // MemberListResponseDto로 변환
+        return MemberListResponseDto.fromEntityPage(memberPage);
     }
 }
