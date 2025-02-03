@@ -70,6 +70,8 @@ public class CustomSecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/reissue").permitAll()
                 .requestMatchers("/admins/**").hasRole("ADMIN")
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated());
 //                .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
