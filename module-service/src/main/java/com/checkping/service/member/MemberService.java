@@ -41,25 +41,47 @@ public class MemberService {
     }
 
     // 페이징된 전체 회원 목록 조회
-    public MemberListResponseDto getAllMembersWithPaging(int page, int size) {
-        //페이지에 음수들어온 경우 예외 처리
-        if(page < 0 || size < 0) {
-            throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
+    public MemberListResponseDto getAllMembersWithFilters(
+            int page, int size, String roleParam, String statusParam, String keyword
+    ) {
+        // (1) 페이지, 사이즈 유효성 검증
+        if (page < 0 || size < 1) {
+            throw new InvalidInputValueException("유효하지 않은 페이지/사이즈 값입니다.");
+        }
+
+        // (2) 문자열로 들어온 role, status를 Enum으로 변환
+        Member.Role role = null;
+        if (roleParam != null && !roleParam.isBlank()) {
+            try {
+                role = Member.Role.valueOf(roleParam.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new InvalidInputValueException("유효하지 않은 role 값입니다. " + roleParam);
+            }
+        }
+
+        Member.Status status = null;
+        if (statusParam != null && !statusParam.isBlank()) {
+            try {
+                status = Member.Status.valueOf(statusParam.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new InvalidInputValueException("유효하지 않은 status 값입니다. " + statusParam);
+            }
+        }
+
+        // (3) 검색어 null 처리
+        if (keyword != null && keyword.isBlank()) {
+            keyword = null;
         }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberRepository.findAll(pageable);
+        Page<Member> memberPage = memberRepository.findAllWithFilters(role, status, keyword, pageable);
 
-        //범위 바깥의 페이지 요청
-        if(page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
+        // (4) page 범위 초과 시 예외 처리
+        if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
             throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
         }
-        //페이지에 회원이 없는 경우 예외 처리
-        if(memberPage.isEmpty()) {
-            throw new BaseException("회원이 존재하지 않습니다.", ErrorCode.USER_NOT_FOUND);
-        }
 
-        // MemberListResponseDto로 변환
+        // (5) 결과 DTO 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
     }
 
@@ -129,7 +151,6 @@ public class MemberService {
     }
 
     // 회원 삭제
-    // TODO 회원 삭제 되면 로그인 안되도록 코드 수정하기
     public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
