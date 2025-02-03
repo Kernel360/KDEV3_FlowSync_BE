@@ -70,6 +70,6 @@ public class NoticeController implements NoticeApi {
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
-        return BaseResponse.success(result.toString());
+        return BaseResponse.success(result);
     }
 }
