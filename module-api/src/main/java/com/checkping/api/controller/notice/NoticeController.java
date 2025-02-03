@@ -58,7 +58,7 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<Page<NoticeGetListResponse>> getNotices(
+    public BaseResponse<NoticeListResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int page) {
