@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
@@ -56,7 +57,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "LEFT JOIN member m ON p.dev_owner_id = m.id " +
             "LEFT JOIN organization o ON m.org_id = o.id " +
             "WHERE p.id = :projectId", nativeQuery = true)
-    ProjectDetailsDto findProjectById(@Param("projectId") Long projectId);
+    Optional<ProjectDetailsDto> findProjectById(@Param("projectId") Long projectId);
 
     List<ProjectInfoProjection> findByStatus(Project.Status status);
 
@@ -74,7 +75,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             ") AS org_info " +
             "ON p.id = org_info.project_id " +
             "WHERE p.id = :projectId", nativeQuery = true)
-    ProjectUpdateDetailsDto getUpdateProjectInfoById(@Param("projectId") Long projectId);
+    Optional<ProjectUpdateDetailsDto> getUpdateProjectInfoById(@Param("projectId") Long projectId);
 
     @Query(value = "select member_id from member_by_project where project_id= :projectId ", nativeQuery = true)
     List<Long> findProjectMemberListByProjectIdAndOrgId(Long projectId);
