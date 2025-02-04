@@ -39,16 +39,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "SELECT " +
             "p.id, p.name, p.description, p.detail, p.status, p.management_step, " +
             "p.reg_at, p.update_at, p.start_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
-            "org_info.developer_name, org_info.customer_name, " +
-            "CASE " +
-            "   WHEN EXISTS (" +
-            "   SELECT 1 " +
-            "   FROM member_by_project mbp " +
-            "   WHERE mbp.project_id = obp.project_id " +
-            "   AND mbp.member_id = m.id " +
-            "   ) THEN 1 " +
-            "   ELSE 0 " +
-            "END AS clickable " +
+            "org_info.developer_name, org_info.customer_name, 1 AS clickable " +
             "FROM project p " +
             "LEFT JOIN organization_by_project obp on p.id = obp.project_id " +
             "LEFT JOIN organization o on obp.org_id = o.id " +
@@ -62,7 +53,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    LEFT JOIN organization o ON m.org_id = o.id " +
             "    GROUP BY mbp.project_id " +
             ") AS org_info ON p.id = org_info.project_id " +
-            "WHERE m.id = :memberId ", nativeQuery = true)
+            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
+            "AND m.id = :memberId ", nativeQuery = true)
     Page<ProjectListDetailsDto> findDeveloperProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
     @Query(value =
@@ -82,7 +75,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    LEFT JOIN organization o ON m.org_id = o.id " +
             "    GROUP BY mbp.project_id " +
             ") AS org_info ON p.id = org_info.project_id " +
-            "WHERE m.id = :memberId ", nativeQuery = true)
+            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
+            "AND m.id = :memberId ", nativeQuery = true)
     Page<ProjectListDetailsDto> findCustomerProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
 
