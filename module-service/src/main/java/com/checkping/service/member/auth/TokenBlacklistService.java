@@ -14,6 +14,16 @@ public class TokenBlacklistService {
         this.redisTemplate = redisTemplate;
     }
 
+    // Redis 연결 가능 여부 체크 메서드
+    public boolean isRedisAvailable() {
+        try {
+            String pong = redisTemplate.getConnectionFactory().getConnection().ping();
+            return "PONG".equalsIgnoreCase(pong);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // Access Token 블랙리스트 저장
     public void blacklistAccessToken(String token, long expiration) {
         redisTemplate.opsForValue().set("access_" + token, "blacklisted", expiration, TimeUnit.MILLISECONDS);

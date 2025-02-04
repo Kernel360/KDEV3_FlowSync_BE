@@ -41,7 +41,14 @@ public class ReissueService {
      * Refresh Token 블랙리스트 확인
      */
     public boolean isRefreshTokenBlacklisted(String refreshToken) {
-        return tokenBlacklistService.isRefreshTokenBlacklisted(refreshToken); // 수정
+        // 1) Redis 연결 여부 확인
+        if (!tokenBlacklistService.isRedisAvailable()) {
+            // Redis가 연결 안 되어 있으면 블랙리스트 검증 스킵
+            return false;
+        }
+        // 2) 정상 연결 시 블랙리스트 검증
+        return tokenBlacklistService.isRefreshTokenBlacklisted(refreshToken);
+
     }
 
     /**

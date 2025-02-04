@@ -80,12 +80,16 @@ public class AuthService {
         }
 
         // 블랙리스트 추가
-        if (accessToken != null) {
-            long accessTokenExpiration = jwtUtil.getExpiration(accessToken);
-            tokenBlacklistService.blacklistAccessToken(accessToken, accessTokenExpiration);
-        }
+        // Redis 연결 가능 시에만 블랙리스트 추가
+        // Redis연결이 안되어있다면(로컬 환경 등) 블랙리스트 등록을 스킵하고 바로 로그아웃 처리
+        if (tokenBlacklistService.isRedisAvailable()) {
+            if (accessToken != null) {
+                long accessTokenExpiration = jwtUtil.getExpiration(accessToken);
+                tokenBlacklistService.blacklistAccessToken(accessToken, accessTokenExpiration);
+            }
 
-        long refreshTokenExpiration = jwtUtil.getExpiration(refresh);
-        tokenBlacklistService.blacklistRefreshToken(refresh, refreshTokenExpiration);
+            long refreshTokenExpiration = jwtUtil.getExpiration(refresh);
+            tokenBlacklistService.blacklistRefreshToken(refresh, refreshTokenExpiration);
+        }
     }
 }

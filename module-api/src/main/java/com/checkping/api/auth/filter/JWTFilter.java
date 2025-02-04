@@ -58,16 +58,17 @@ public class JWTFilter extends OncePerRequestFilter {
             // 토큰 만료 여부 확인
             jwtUtil.isExpired(accessToken);
 
-            // 블랙리스트 확인 (prefix 적용)
-            if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
-                ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "블랙리스트에 등록된 엑세스 토큰입니다");
-                return;
-            }
-
-            // 토큰이 access인지 확인
-            if (!"access".equals(jwtUtil.getCategory(accessToken))) {
-                ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Invalid access token");
-                return;
+            // 3) Redis 블랙리스트 검증 (연결 여부 먼저 확인)
+            if (tokenBlacklistService.isRedisAvailable()) {
+                // 실제 Redis 연결이 된다면 블랙리스트 검사
+                if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
+                    ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "블랙리스트에 등록된 엑세스 토큰입니다");
+                    return;
+                }
+            } else {
+                // Redis 연결 불가능 시 로그만 남기고 스킵
+                // (또는 필요하다면 별도 처리)
+                System.out.println("[JWTFilter] Redis not available -> Skip blacklist check");
             }
 
             // 사용자 정보 추출
