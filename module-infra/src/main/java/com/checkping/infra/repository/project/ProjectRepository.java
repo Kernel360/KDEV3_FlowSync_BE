@@ -54,7 +54,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    LEFT JOIN organization o ON m.org_id = o.id " +
             "    GROUP BY mbp.project_id " +
             ") AS org_info ON p.id = org_info.project_id " +
-            "WHERE m.id = :memberId ", nativeQuery = true)
+            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
+            "AND m.id = :memberId ", nativeQuery = true)
     Page<ProjectListDetailsDto> findDeveloperProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
     @Query(value =
@@ -74,7 +76,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "    LEFT JOIN organization o ON m.org_id = o.id " +
             "    GROUP BY mbp.project_id " +
             ") AS org_info ON p.id = org_info.project_id " +
-            "WHERE m.id = :memberId ", nativeQuery = true)
+            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
+            "AND m.id = :memberId ", nativeQuery = true)
     Page<ProjectListDetailsDto> findCustomerProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
 
