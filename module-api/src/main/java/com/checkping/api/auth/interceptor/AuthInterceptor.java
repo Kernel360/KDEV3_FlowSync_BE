@@ -32,6 +32,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
         }
 
+        if (requestURI.matches("^/projects/\\d+/approvals/\\d+/confirm$")) {
+            return true;
+        }
+
         // 프로젝트
         if (requestURI.matches("^/admins/projects/\\d+/projectInfo$") ||
                 requestURI.matches("^/projects/\\d+/projectInfo$")) {
