@@ -26,6 +26,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.info("Request URI: {}", requestURI);
 
+        if (getAuthenticatedUser() != null) {
+            if (getAuthenticatedUser().getRole().equals("ROLE_ADMIN")){
+                return true;
+            }
+        }
+
         // 프로젝트
         if (requestURI.matches("^/admins/projects/\\d+/projectInfo$") ||
                 requestURI.matches("^/projects/\\d+/projectInfo$")) {
@@ -36,7 +42,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             String[] uriParts = requestURI.split("/");
             Long projectId = Long.parseLong(uriParts[uriParts.length - 2]); // 두 번째 마지막 값이 projectId
 
-            boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUserId(), projectId);
+            boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUser().getId(), projectId);
 
             if (!exist) {
                 throw new BaseException("프로젝트 접근 권한이 없습니다.", ErrorCode.BAD_REQUEST);
@@ -53,7 +59,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             String[] uriParts = requestURI.split("/");
             Long projectId = Long.parseLong(uriParts[2]); // 세 번째 마지막 값이 projectId
 
-            boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUserId(), projectId);
+            boolean exist = memberByProjectService.existsByMemberIdAndProjectId(getAuthenticatedUser().getId(), projectId);
 
             if (!exist) {
                 throw new BaseException("게시판 접근 권한이 없습니다.", ErrorCode.BAD_REQUEST);
@@ -81,15 +87,15 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 로그인한 유저 ID 가져오기
+     * 로그인한 유저 가져오기
      *
-     * @return 유저 ID
+     * @return userDetails
      */
-    public Long getAuthenticatedUserId() {
+    public CustomUserDetails getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            return userDetails.getId();
+            return userDetails;
         }
         return null;
     }
