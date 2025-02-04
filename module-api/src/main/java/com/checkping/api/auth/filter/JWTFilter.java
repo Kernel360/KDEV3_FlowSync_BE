@@ -38,7 +38,8 @@ public class JWTFilter extends OncePerRequestFilter {
         // 기존 제외 경로
         if (uri.startsWith("/h2-console") ||
                 uri.startsWith("/login") ||
-                uri.startsWith("/reissue")) {
+                uri.startsWith("/reissue") ||
+                uri.startsWith("/check")) {
             return true;
         }
 
