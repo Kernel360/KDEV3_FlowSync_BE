@@ -1,11 +1,17 @@
 package com.checkping.dto.notice.request;
 
 
+import com.checkping.common.exception.BaseException;
 import com.checkping.domain.notice.Notice;
+import com.checkping.dto.notice.NoticeContent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,7 +25,7 @@ public class NoticeCreateRequest {
     private String title;
 
     @Schema(description = "공지사항 글 내용", example = "ABCDEFG")
-    private String content;
+    private List<NoticeContent> content;
 
     @Schema(description = "공지사항 글 카테고리", example = "MAINTENANCE")
     private String category;
@@ -31,10 +37,19 @@ public class NoticeCreateRequest {
         return Notice.builder()
                 .adminId(adminId)
                 .title(title)
-                .content(content)
+                .content(convertContentToJson())
                 .category(Notice.Category.valueOf(category))
                 .priority(Notice.Priority.valueOf(priority))
                 .isDeleted(false)
                 .build();
+    }
+
+    private String convertContentToJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(content);
+        } catch (JsonProcessingException e) {
+            throw new BaseException();
+        }
     }
 }
