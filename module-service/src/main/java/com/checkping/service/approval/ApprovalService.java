@@ -1,5 +1,6 @@
 package com.checkping.service.approval;
 
+import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -20,4 +21,7 @@ public interface ApprovalService {
 
     ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId,
         Long commentId, ApprovalReCommentRegister.Request request);
+
+    ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
+        ApprovalConfirm.Request request);
 }

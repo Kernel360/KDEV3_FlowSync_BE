@@ -4,14 +4,11 @@
 
     <!--Environment 내의 프로퍼티들을 개별적으로 설정할 수도 있다.-->
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
-    <!-- log file path -->
     <springProperty scope="context" name="LOG_PATH" source="log.config.path"/>
-    <!-- log file name -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="log.config.filename"/>
-    <!-- err log file name -->
     <property name="ERR_LOG_FILE_NAME" value="err_log"/>
-    <!-- pattern -->
-<!--    <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>-->
+
+    <!-- Log Pattern -->
     <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss} [requestId:%X{requestId}] [%thread] [%logger{0}:%line] - %msg%n"/>
 
     <!-- Console Appender -->
@@ -37,11 +34,11 @@
             <!-- 파일당 최대 용량 설정 -->
             <maxFileSize>10MB</maxFileSize>
             <!-- 최대 보관 일수 -->
-            <maxHistory>30</maxHistory>
+            <maxHistory>5</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <!-- 에러의 경우 파일에 로그 처리 -->
+    <!-- Error File Appender -->
     <appender name="Error" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>error</level>
@@ -63,10 +60,20 @@
         </rollingPolicy>
     </appender>
 
-    <!-- root레벨 설정 -->
-    <root level="${LOG_LEVEL}">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="Error"/>
-    </root>
+    <!-- ✅ 일반적인 설정 (prod가 아닐 때) -->
+    <springProfile name="!prod">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="Error"/>
+        </root>
+    </springProfile>
+
+    <!-- ✅ prod 프로필일 때, 콘솔에만 출력 -->
+    <springProfile name="prod">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
 </configuration>
