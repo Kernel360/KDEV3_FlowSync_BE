@@ -44,7 +44,12 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        notice.updateNotice(noticeUpdateRequest.getTitle(), noticeUpdateRequest.getContent(), noticeUpdateRequest.getCategory(), noticeUpdateRequest.getPriority());
+        notice.updateNotice(
+                noticeUpdateRequest.getTitle(),
+                noticeUpdateRequest.getContent(),
+                noticeUpdateRequest.getCategory(),
+                noticeUpdateRequest.getPriority()
+        );
 
         return NoticeResponse.toDto(notice);
 
