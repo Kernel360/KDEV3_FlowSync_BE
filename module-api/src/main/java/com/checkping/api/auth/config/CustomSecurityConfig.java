@@ -65,6 +65,7 @@ public class CustomSecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/reissue").permitAll()
+                .requestMatchers("/check").permitAll()
                 .requestMatchers("/admins/**").hasRole("ADMIN")
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
