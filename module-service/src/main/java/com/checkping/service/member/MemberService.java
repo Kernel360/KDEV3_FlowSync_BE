@@ -10,6 +10,7 @@ import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.member.response.MemberSignatureExistResponseDto;
 import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import com.checkping.exception.member.InvalidInputValueException;
 import com.checkping.infra.repository.member.MemberRepository;
@@ -222,5 +223,17 @@ public class MemberService {
 
         // 결과 DTO 반환
         return MemberSignatureResponseDto.toDto(member);
+    }
+
+    /**
+     * 회원 서명 파일 존재 여부
+     *
+     * @return MemberSignatureExistResponseDto
+     */
+    public MemberSignatureExistResponseDto getSignature() {
+
+        Member member = currentMemberUtil.getCurrentMember();
+
+        return MemberSignatureExistResponseDto.toDto(member);
     }
 }

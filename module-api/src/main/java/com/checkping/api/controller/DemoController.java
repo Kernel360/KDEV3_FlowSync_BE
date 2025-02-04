@@ -36,4 +36,9 @@ public class DemoController {
     public String customException() throws Exception {
         return demoService.customException();
     }
+
+    @GetMapping("/check")
+    public String check() {
+        return "check";
+    }
 }
