@@ -25,12 +25,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
-        try {
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
             return NoticeCreateResponse.toDto(notice);
-        } catch (Exception e) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
     }
 
     @Override

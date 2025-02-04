@@ -32,7 +32,7 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "admin_id", nullable = false)
+    @Column(name = "admin_id")
     private Long adminId;
 
     @Column(name = "title", nullable = false)
