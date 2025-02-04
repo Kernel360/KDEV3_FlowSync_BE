@@ -33,22 +33,21 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
 
-        Notice notice = noticeRepository.findById(noticeid)
+        Notice updateNotice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        if (notice.getIsDeleted()) {
+        if (updateNotice.getIsDeleted()) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        notice.updateNotice(
+        updateNotice.updateNotice(
                 noticeUpdateRequest.getTitle(),
-                noticeUpdateRequest.getContent(),
+                noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority()
         );
 
-        return NoticeResponse.toDto(notice);
-
+        return NoticeResponse.toDto(updateNotice);
     }
 
     @Override
