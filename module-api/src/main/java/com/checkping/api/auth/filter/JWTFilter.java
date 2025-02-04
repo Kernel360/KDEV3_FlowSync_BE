@@ -35,8 +35,6 @@ public class JWTFilter extends OncePerRequestFilter {
         return uri.startsWith("/h2-console") ||
                 uri.startsWith("/login") ||
                 uri.startsWith("/reissue") ||
-                uri.equals("/admins/members") ||
-                uri.equals("/admins/organizations") ||
                 uri.startsWith("/swagger-ui/") ||
                 uri.equals("/swagger-ui") ||
                 uri.startsWith("/v3/api-docs");
