@@ -1,11 +1,16 @@
 package com.checkping.dto.notice.response;
 
+import com.checkping.common.exception.BaseException;
 import com.checkping.domain.notice.Notice;
+import com.checkping.dto.notice.NoticeContent;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -21,7 +26,7 @@ public class NoticeResponse {
     private String title;
 
     @Schema(description = "공지사항 글 내용", example = "ABCDEFG")
-    private String content;
+    private List<NoticeContent> content;
 
     @Schema(description = "공지사항 글 카테고리", example = "MAINTENANCE")
     private Notice.Category category;
@@ -43,12 +48,21 @@ public class NoticeResponse {
                 .id(notice.getId())
                 .adminId(notice.getAdminId())
                 .title(notice.getTitle())
-                .content(notice.getContent())
+                .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted())
                 .regAt(notice.getUpdatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
+    }
+
+    private static List<NoticeContent> convertJsonToContentList(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(json, new TypeReference<List<NoticeContent>>() {});
+        } catch (Exception e) {
+            throw new BaseException();
+        }
     }
 }
