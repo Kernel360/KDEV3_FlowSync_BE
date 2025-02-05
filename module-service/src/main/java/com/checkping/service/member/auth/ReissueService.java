@@ -56,9 +56,11 @@ public class ReissueService {
      */
     public void checkTokenValidity(String refreshToken) {
         try {
-            // 🔹 블랙리스트에 있는지 확인
-            if (tokenBlacklistService.isRefreshTokenBlacklisted(refreshToken)) { // 수정
-                throw new BlacklistedTokenException();
+            // 블랙리스트에 있는지 확인
+            if (tokenBlacklistService.isRedisAvailable()) {
+                if (tokenBlacklistService.isRefreshTokenBlacklisted(refreshToken)) { // 수정
+                    throw new BlacklistedTokenException();
+                }
             }
 
             // 토큰이 만료되었는지 확인
