@@ -52,7 +52,7 @@ public class NoticeResponse {
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted())
-                .regAt(notice.getUpdatedAt())
+                .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
     }

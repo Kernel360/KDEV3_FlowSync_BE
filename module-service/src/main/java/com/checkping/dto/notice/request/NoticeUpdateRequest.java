@@ -29,16 +29,6 @@ public class NoticeUpdateRequest {
     @Schema(description = "공지사항 글 중요도", example = "EMERGENCY")
     private String priority;
 
-    public Notice toEntity(){
-        return Notice.builder()
-                .title(title)
-                .content(convertContentToJson())
-                .category(Notice.Category.valueOf(category))
-                .priority(Notice.Priority.valueOf(priority))
-                .isDeleted(false)
-                .build();
-    }
-
     public String convertContentToJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
