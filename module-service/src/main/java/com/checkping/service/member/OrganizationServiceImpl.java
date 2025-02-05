@@ -8,6 +8,7 @@ import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
+import com.checkping.exception.member.OrganizationAlreadyDeletedException;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
 import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
@@ -138,11 +139,30 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        organization.changeStatus(request.getReason());
+        organization.removeOrganization(request.getReason());
 
         Organization removeOrganization = organizationRepository.save(organization);
 
         return OrganizationDelete.Response.toDto(removeOrganization);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request) {
+
+        Optional<Organization> result = organizationRepository.findById(id);
+
+        Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
+
+        if (organization.getStatus().toString().equals("DELETED")) {
+            throw new OrganizationAlreadyDeletedException();
+        }
+
+        organization.changeStatus(request.getReason());
+
+        Organization changedOrganization = organizationRepository.save(organization);
+
+        return OrganizationDelete.Response.toDto(changedOrganization);
     }
 
 
@@ -159,7 +179,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         return Organization.Status.valueOf(status.toUpperCase());
     }
-
 
 
 }

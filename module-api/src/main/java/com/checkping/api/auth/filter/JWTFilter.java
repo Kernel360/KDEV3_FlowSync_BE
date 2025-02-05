@@ -1,6 +1,5 @@
 package com.checkping.api.auth.filter;
 
-
 import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
