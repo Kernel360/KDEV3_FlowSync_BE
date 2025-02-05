@@ -30,7 +30,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         this.jwtUtil = jwtUtil;
     }
-
     // TODO 필터 거치지 않을 경로 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -53,11 +52,6 @@ public class JWTFilter extends OncePerRequestFilter {
         return false;
     }
 
-
-    /*
-    TODO
-     #1. 권한이 필요한 요청인데 토큰이 없는 경우 - Spring Security가 기본적으로 처리
-     #2. 권한이 필요 없는 경우에도 만료된 토큰이 들어오면 접근 차단하는 문제 해결*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 쿠키에서 토큰 추출
@@ -66,8 +60,10 @@ public class JWTFilter extends OncePerRequestFilter {
         // 쿠키가 없는 경우
         if (cookies == null) {
 
-            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
+            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.COOKIES_NOT_FOUND);
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
 
@@ -89,8 +85,9 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
 
-            String errorMessage = "access token expired";
-            ResponseUtil.sendErrorResponse(response, HttpStatus.valueOf(HttpServletResponse.SC_UNAUTHORIZED), errorMessage);
+            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
+
             return;
         }
 
