@@ -179,7 +179,7 @@ public class ProjectResponse {
         @Schema(description = "고객사 이름")
         private String customerName;
         @Schema(description = "프로젝트 클릭 가능 여부")
-        private Long clickable;
+        private Integer clickable;
 
         public static ProjectListDetailDto toDto(ProjectListDetailsDto dto) {
             return ProjectListDetailDto.builder()

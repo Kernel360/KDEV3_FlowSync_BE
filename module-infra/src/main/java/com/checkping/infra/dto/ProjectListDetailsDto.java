@@ -24,5 +24,5 @@ public class ProjectListDetailsDto {
     private Long devOwnerId;
     private String developerName;
     private String customerName;
-    private Long clickable;
+    private Integer clickable;
 }
