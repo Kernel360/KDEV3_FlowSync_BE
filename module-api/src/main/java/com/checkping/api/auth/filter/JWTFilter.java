@@ -66,7 +66,8 @@ public class JWTFilter extends OncePerRequestFilter {
             if (tokenBlacklistService.isRedisAvailable()) {
                 // 실제 Redis 연결이 된다면 블랙리스트 검사
                 if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
-                    ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "블랙리스트에 등록된 엑세스 토큰입니다");
+                    BaseResponse errorResponse = BaseResponse.fail(ErrorCode.BLACKLISTED_TOKEN);
+                    ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
                     return;
                 }
             } else {
