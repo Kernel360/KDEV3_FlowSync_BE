@@ -20,7 +20,11 @@ public interface NoticeService {
     NoticeResponse deleteNotice(Long noticeid);
 
     NoticeResponse getNotice(Long noticeid);
+
+    NoticeResponse getAdminNotice(Long noticeid);
     NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest);
+
+    NoticeListResponse getAdminNotices(NoticeSearchRequest noticeSearchRequest);
 
 }
 
