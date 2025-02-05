@@ -18,4 +18,6 @@ public interface OrganizationService {
     OrganizationUpdate.Response modifyOrganization(Long id, OrganizationUpdate.Request request, MultipartFile file);
 
     OrganizationDelete.Response removeOrganization(Long id, OrganizationDelete.Request request);
+
+    OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request);
 }
