@@ -92,7 +92,7 @@ public class Organization extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void deleteOragnization(String reason) {
+    public void removeOrganization(String reason) {
         this.status = Status.DELETED;
         this.reasonForDeleteOrganization = reason;
     }
