@@ -22,6 +22,16 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
+        Notice.Priority priority;
+        priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
+
+        if (priority == Notice.Priority.EMERGENCY) {
+            long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
+            if (emergencyNoticeCount >= 3) {
+                throw new BaseException(ErrorCode.BAD_REQUEST);
+            }
+        }
+
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
             return NoticeCreateResponse.toDto(notice);
     }
