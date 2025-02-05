@@ -81,4 +81,16 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success("업체 삭제 완료");
     }
 
+    @PostMapping("/admins/organizations/{organizationId}/changeStatus")
+    @Override
+    public BaseResponse<String> changeStatusOrganization(
+            @PathVariable Long organizationId,
+            @RequestBody OrganizationDelete.Request request
+    ) {
+
+        organizationService.removeOrganization(organizationId, request);
+
+        return BaseResponse.success("업체 상태 전환 완료");
+    }
+
 }
