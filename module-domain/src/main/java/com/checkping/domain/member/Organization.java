@@ -75,7 +75,7 @@ public class Organization extends BaseEntity {
     }
 
     public enum Status {
-        ACTIVE, INACTIVE
+        ACTIVE, INACTIVE, DELETED
     }
 
     public void updateOrganization(
@@ -92,13 +92,19 @@ public class Organization extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void changeStatus(String reason){
-        if (this.status == Status.ACTIVE) {
-            this.status = Status.INACTIVE;
-        } else {
-            this.status = Status.ACTIVE;
-        }
-
+    public void deleteOragnization(String reason) {
+        this.status = Status.DELETED;
         this.reasonForDeleteOrganization = reason;
     }
+
+    public void changeStatus(String reason) {
+        if (this.status == Status.ACTIVE) {
+            this.status = Status.INACTIVE;
+            this.reasonForDeleteOrganization = reason;
+        } else {
+            this.status = Status.ACTIVE;
+            this.reasonForDeleteOrganization = "";
+        }
+    }
+
 }
