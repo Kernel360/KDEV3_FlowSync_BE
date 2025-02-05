@@ -16,9 +16,6 @@ public class NoticeGetListResponse {
     @Schema(description = "공지사항 아이디", example = "1")
     private Long id;
 
-    @Schema(description = "관리자 아이디", example = "1")
-    private Long adminId;
-
     @Schema(description = "공지사항 글 제목", example = "드릴말씀")
     private String title;
 
@@ -40,7 +37,6 @@ public class NoticeGetListResponse {
     public static NoticeGetListResponse toDto(Notice notice){
         return NoticeGetListResponse.builder()
                 .id(notice.getId())
-                .adminId(notice.getAdminId())
                 .title(notice.getTitle())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())

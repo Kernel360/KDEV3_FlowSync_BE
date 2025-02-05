@@ -18,9 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class NoticeCreateRequest {
 
-    @Schema(description = "관리자 아이디", example = "1")
-    private Long adminId;
-
     @Schema(description = "공지사항 글 제목", example = "드릴말씀")
     private String title;
 
@@ -35,7 +32,6 @@ public class NoticeCreateRequest {
 
     public Notice toEntity(){
         return Notice.builder()
-                .adminId(adminId)
                 .title(title)
                 .content(convertContentToJson())
                 .category(Notice.Category.valueOf(category))
