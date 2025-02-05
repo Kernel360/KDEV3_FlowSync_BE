@@ -4,16 +4,9 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
-import com.checkping.dto.notice.response.NoticeCreateResponse;
-import com.checkping.dto.notice.response.NoticeGetListResponse;
-import com.checkping.dto.notice.response.NoticeListResponse;
-import com.checkping.dto.notice.response.NoticeResponse;
+import com.checkping.dto.notice.response.*;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,10 +42,10 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<NoticeResponse> getNotice(
+    public BaseResponse<NoticeForAllResponse> getNotice(
             @PathVariable Long noticeid
     ){
-        NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
+        NoticeForAllResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 
@@ -67,7 +60,7 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<NoticeListResponse> getNotices(
+    public BaseResponse<NoticeListForAllResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int currentPage,
@@ -80,7 +73,7 @@ public class NoticeController implements NoticeApi {
                 .pageSize(pageSize)
                 .build();
 
-        NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
+        NoticeListForAllResponse result = noticeService.getNotices(noticeSearchRequest);
         return BaseResponse.success(result);
     }
 

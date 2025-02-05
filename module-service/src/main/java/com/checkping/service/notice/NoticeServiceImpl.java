@@ -6,10 +6,7 @@ import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
-import com.checkping.dto.notice.response.NoticeCreateResponse;
-import com.checkping.dto.notice.response.NoticeGetListResponse;
-import com.checkping.dto.notice.response.NoticeListResponse;
-import com.checkping.dto.notice.response.NoticeResponse;
+import com.checkping.dto.notice.response.*;
 import com.checkping.infra.repository.notice.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -68,11 +65,11 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeResponse getNotice(Long noticeid) {
+    public NoticeForAllResponse getNotice(Long noticeid) {
         Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
-        return NoticeResponse.toDto(notice);
+        return NoticeForAllResponse.toDto(notice);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
+    public NoticeListForAllResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
         int pageSize = noticeSearchRequest.getPageSize() > 0 ? noticeSearchRequest.getPageSize() : 10;
 
@@ -103,7 +100,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
 
-        return NoticeListResponse.fromEntityPage(result);
+        return NoticeListForAllResponse.fromEntityPage(result);
     }
 
     @Override
