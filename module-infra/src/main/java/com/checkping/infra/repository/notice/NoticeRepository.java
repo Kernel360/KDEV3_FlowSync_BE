@@ -26,4 +26,14 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     Page<Notice> findSortedNotices(@Param("keyword") String keyword,
                                    @Param("category") Notice.Category category,
                                    Pageable pageable);
+
+    @Query("SELECT n FROM Notice n WHERE (:category IS NULL OR n.category = :category) " +
+            "AND (:keyword IS NULL OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
+            "ORDER BY " +
+            "CASE WHEN n.priority = 'EMERGENCY' THEN 1 ELSE 2 END, " +
+            "n.regAt DESC")
+    Page<Notice> findSortedNoticesForAdmin(@Param("keyword") String keyword,
+                                                   @Param("category") Notice.Category category,
+                                                   Pageable pageable);
+
 }

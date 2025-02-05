@@ -20,9 +20,6 @@ public class NoticeCreateResponse {
     @Schema(description = "공지사항 아이디", example = "1")
     private Long id;
 
-    @Schema(description = "관리자 아이디", example = "1")
-    private Long adminId;
-
     @Schema(description = "공지사항 글 제목", example = "드릴말씀")
     private String title;
 
@@ -44,7 +41,6 @@ public class NoticeCreateResponse {
     public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
                 .id(notice.getId())
-                .adminId(notice.getAdminId())
                 .title(notice.getTitle())
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
