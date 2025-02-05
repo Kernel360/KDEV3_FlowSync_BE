@@ -16,6 +16,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     // 삭제되지 않은 공지사항을 ID로 조회
     Optional<Notice> findByIdAndIsDeletedFalse(Long noticeid);
 
+    // 삭제되지 않은 긴급 공지사항의 갯수를 조회
+    long countByPriorityAndIsDeletedFalse(Notice.Priority priority);
+
     // 키워드와 카테고리를 기반으로 공지사항 목록 조회
     @Query("SELECT n FROM Notice n WHERE (:category IS NULL OR n.category = :category) " +
             "AND (:keyword IS NULL OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
