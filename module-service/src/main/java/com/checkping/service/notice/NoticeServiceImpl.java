@@ -22,8 +22,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
-        Notice.Priority priority;
-        priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
+        Notice.Priority priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
 
         if (priority == Notice.Priority.EMERGENCY) {
             long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
