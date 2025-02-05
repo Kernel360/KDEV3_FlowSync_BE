@@ -88,7 +88,7 @@ public class OrganizationController implements OrganizationApi {
             @RequestBody OrganizationDelete.Request request
     ) {
 
-        organizationService.removeOrganization(organizationId, request);
+        organizationService.changeStatusOrganization(organizationId, request);
 
         return BaseResponse.success("업체 상태 전환 완료");
     }
