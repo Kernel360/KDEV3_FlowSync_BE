@@ -27,6 +27,7 @@ public enum ErrorCode {
     INVALID_LOGIN_CREDENTIALS(HttpStatus.UNAUTHORIZED, "이메일(로그인 전용 이메일) 또는 비밀번호를 잘못 입력했습니다." + "입력하신 내용을 다시 확인해주세요."),
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다. 이메일 또는 비밀번호를 다시 확인하세요."),
     LOGOUT_FAILED(HttpStatus.UNAUTHORIZED, "로그아웃에 실패했습니다."),
+    COOKIE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "쿠키를 찾을 수 없습니다."),
     BLACKLISTED_TOKEN(HttpStatus.UNAUTHORIZED, "블랙리스트에 등록된 토큰입니다."),
 
 

@@ -2,6 +2,8 @@ package com.checkping.api.auth.filter;
 
 
 import com.checkping.api.auth.util.ResponseUtil;
+import com.checkping.common.enums.ErrorCode;
+import com.checkping.common.response.BaseResponse;
 import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.auth.TokenBlacklistService;
 import com.checkping.service.member.util.JwtUtil;
@@ -51,7 +53,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰이 없으면 401 응답
         if (accessToken == null) {
-            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Access token required");
+            BaseResponse errorResponse = BaseResponse.fail(ErrorCode.ACCESS_TOKEN_NOT_FOUND);
+            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         }
 
@@ -84,7 +87,8 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
         } catch (ExpiredJwtException e) {
-            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Access token expired");
+            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         } catch (Exception e) {
             System.out.println(e.getMessage());
