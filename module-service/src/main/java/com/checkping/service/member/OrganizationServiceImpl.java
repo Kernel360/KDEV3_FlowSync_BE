@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +68,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
-        Pageable pageable = PageRequest.of(pageRequest.getCurrentPage() - 1, pageRequest.getPageSize());
+        Pageable pageable = PageRequest.of(
+                pageRequest.getCurrentPage() - 1,
+                pageRequest.getPageSize(),
+                Sort.by("id").descending());
 
         Organization.Type validType = checkType(type);
         Organization.Status validStatus = checkStatus(status);
