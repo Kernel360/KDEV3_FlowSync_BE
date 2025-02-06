@@ -4,8 +4,11 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalRegister.Request;
+import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
+import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
@@ -16,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +69,16 @@ public class ApprovalController implements ApprovalApi {
         @PathVariable Long approvalId) {
 
         ApprovalGet.Response response = approvalService.get(projectId, approvalId);
+
+        return BaseResponse.success(response);
+    }
+
+    @PutMapping("/{approvalId}")
+    @Override
+    public BaseResponse<ApprovalUpdate.Response> update(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @RequestBody ApprovalUpdate.Request request) {
+
+        ApprovalUpdate.Response response = approvalService.update(projectId, approvalId, request);
 
         return BaseResponse.success(response);
     }

@@ -196,4 +196,9 @@ public class Approval extends BaseEntity {
         this.approverName = approver.getName();
         this.approverAt = LocalDateTime.now();
     }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
