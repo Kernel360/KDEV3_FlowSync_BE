@@ -68,8 +68,7 @@ public class ApprovalRegister {
         registerName : 작성자 이름
         cancleAt : 취소 일자
         approverAt : 승인 일시
-        approverId : 승인자 id
-        approverName : 승인자 이름
+        approver : 승인자
         updatedAt : 수정 일시
         regAt : 작성 일시
         deletedYn : 삭제 여부
@@ -84,8 +83,7 @@ public class ApprovalRegister {
         private MeResponseDto register;
         private LocalDateTime cancelAt;
         private LocalDateTime approverAt;
-        private Long approverId;
-        private String approverName;
+        private MeResponseDto approver;
         private LocalDateTime updatedAt;
         private LocalDateTime regAt;
         private List<ApprovalFileRegister.Response> fileInfoList;
@@ -102,8 +100,7 @@ public class ApprovalRegister {
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
             dto.cancelAt = approval.getCancelAt();
             dto.approverAt = approval.getApproverAt();
-            dto.approverId = approval.getApproverId();
-            dto.approverName = approval.getApproverName();
+            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
             dto.fileInfoList = ApprovalFileRegister.Response.toDto(approval.getFileList());

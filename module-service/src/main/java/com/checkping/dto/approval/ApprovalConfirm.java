@@ -3,6 +3,7 @@ package com.checkping.dto.approval;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.Approval.ApprovalStatus;
+import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.exception.approval.ApprovalStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -40,8 +41,7 @@ public class ApprovalConfirm {
         status : 변경된 결재 상태
         cancelAt : 취소 일시
         approverAt : 승인 일시
-        approverId : 승인자 ID
-        approverName : 승인자 이름
+        approver : 승인자
          */
         @Schema(description = "프로젝트 ID", example = "1")
         private Long projectId;
@@ -53,10 +53,8 @@ public class ApprovalConfirm {
         private String cancelAt;
         @Schema(description = "승인 일시", example = "2021-07-01T00:00:00")
         private String approverAt;
-        @Schema(description = "승인자 ID", example = "1")
-        private Long approverId;
-        @Schema(description = "승인자 이름", example = "홍길동")
-        private String approverName;
+        @Schema(description = "승인자")
+        private MeResponseDto approver;
 
         /**
          * Approval 엔티티를 Response DTO로 변환
@@ -66,15 +64,14 @@ public class ApprovalConfirm {
          */
         public static Response toDto(Approval approval) {
             Response response = new Response();
-            response.projectId = approval.getProjectId();
+            response.projectId = approval.getProject().getId();
             response.approvalId = approval.getId();
             response.status = approval.getStatus().name();
             response.cancelAt = approval.getCancelAt() == null ? null
                 : DateTimeUtils.format(approval.getCancelAt());
             response.approverAt = approval.getApproverAt() == null ? null
                 : DateTimeUtils.format(approval.getApproverAt());
-            response.approverId = approval.getApproverId();
-            response.approverName = approval.getApproverName();
+            response.approver = MeResponseDto.fromEntity(approval.getApprover());
             return response;
         }
     }

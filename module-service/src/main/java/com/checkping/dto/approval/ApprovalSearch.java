@@ -27,8 +27,7 @@ public class ApprovalSearch {
         regAt : 작성일
         updatedAt : 수정일
         approvalAt : 결재일
-        approvalId : 결재자 ID
-        approvalName : 결재자 이름
+        approval : 결재자
         cancelAt : 취소일
          */
         private Long id;
@@ -40,8 +39,7 @@ public class ApprovalSearch {
         private String regAt;
         private String updatedAt;
         private String approverAt;
-        private Long approvalId;
-        private String approvalName;
+        private MeResponseDto approver;
         private String cancelAt;
 
         /**
@@ -61,8 +59,7 @@ public class ApprovalSearch {
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            dto.approvalId = approval.getApproverId();
-            dto.approvalName = approval.getApproverName();
+            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
             dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             return dto;
         }

@@ -77,8 +77,9 @@ public class Approval extends BaseEntity {
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long approverId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approver_id")
+    private Member approver;
 
     @Column(name = "approver_name")
     private String approverName;
@@ -184,14 +185,14 @@ public class Approval extends BaseEntity {
 
     public void reject(Member rejector) {
         this.status = ApprovalStatus.REJECTED;
-        this.approverId = rejector.getId();
+        this.approver = rejector;
         this.approverName = rejector.getName();
         this.cancelAt = LocalDateTime.now();
     }
 
     public void confirm(Member approver) {
         this.status = ApprovalStatus.APPROVED;
-        this.approverId = approver.getId();
+        this.approver = approver;
         this.approverName = approver.getName();
         this.approverAt = LocalDateTime.now();
     }

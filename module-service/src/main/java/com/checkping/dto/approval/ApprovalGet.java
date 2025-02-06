@@ -31,8 +31,7 @@ public class ApprovalGet {
         registerName : 작성자 이름
         cancleAt : 취소 일자
         approverAt : 승인 일시
-        approverId : 승인자 id
-        approverName : 승인자 이름
+        approver : 승인자
         updatedAt : 수정 일시
         regAt : 작성 일시
         commentList : 결재 댓글 목록
@@ -57,10 +56,8 @@ public class ApprovalGet {
         private String cancelAt;
         @Schema(description = "승인 일시")
         private String approverAt;
-        @Schema(description = "승인자 id")
-        private Long approverId;
-        @Schema(description = "승인자 이름")
-        private String approverName;
+        @Schema(description = "승인자")
+        private MeResponseDto approver;
         @Schema(description = "수정 일시")
         private String updatedAt;
         @Schema(description = "작성 일시")
@@ -89,8 +86,7 @@ public class ApprovalGet {
             response.register = MeResponseDto.fromEntity(approval.getRegister());
             response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             response.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            response.approverId = approval.getApproverId();
-            response.approverName = approval.getApproverName();
+            response.approver = MeResponseDto.fromEntity(approval.getApprover());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             response.regAt = DateTimeUtils.format(approval.getRegAt());
             response.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
