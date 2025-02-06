@@ -179,26 +179,24 @@ public class ProjectResponse {
         @Schema(description = "고객사 이름")
         private String customerName;
         @Schema(description = "프로젝트 클릭 가능 여부")
-        private Long clickable;
+        private Integer clickable;
 
-        public static ProjectListDetailDto toDto(ProjectListDetailsDto dto) {
-            return ProjectListDetailDto.builder()
-                    .id(dto.getId())
-                    .name(dto.getName())
-                    .description(dto.getDescription())
-                    .detail(dto.getDetail())
-                    .status(Project.Status.valueOf(dto.getStatus()))
-                    .managementStep(Project.ManagementStep.valueOf(dto.getManagementStep()))
-                    .regAt(dto.getRegAt())
-                    .updateAt(dto.getUpdateAt())
-                    .startAt(dto.getStartAt())
-                    .closeAt(dto.getCloseAt())
-                    .deletedYn(dto.getDeletedYn())
-                    .devOwnerId(dto.getDevOwnerId())
-                    .developerName(dto.getDeveloperName())
-                    .customerName(dto.getCustomerName())
-                    .clickable(dto.getClickable())
-                    .build();
+        public ProjectListDetailDto(long id, String name, String description, String detail, String status, String managementStep, Date regAt, Date updateAt, Date startAt, Date closeAt, String deletedYn, long devOwnerId, String developerName, String customerName, int clickable) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.detail = detail;
+            this.status = Project.Status.valueOf(status);
+            this.managementStep = Project.ManagementStep.valueOf(managementStep);
+            this.regAt = regAt;
+            this.updateAt = updateAt;
+            this.startAt = startAt;
+            this.closeAt = closeAt;
+            this.deletedYn = deletedYn;
+            this.devOwnerId = devOwnerId;
+            this.developerName = developerName;
+            this.customerName = customerName;
+            this.clickable = clickable;
         }
     }
 
@@ -210,10 +208,9 @@ public class ProjectResponse {
         private List<ProjectListDetailDto> projects;
         private Map<String, Object> meta;
 
-        public static ProjectListDto fromEntityPage(Page<ProjectListDetailsDto> page) {
+        public static ProjectListDto fromEntityPage(Page<ProjectListDetailDto> page) {
 
             List<ProjectListDetailDto> projectDtos = page.getContent().stream()
-                    .map(ProjectResponse.ProjectListDetailDto::toDto)
                     .toList();
 
             PageMetaResponse meta = PageMetaResponse.fromPage(page);
