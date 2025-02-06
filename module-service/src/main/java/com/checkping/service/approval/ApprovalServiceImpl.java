@@ -141,6 +141,9 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Override
     public Response registerComment(Long projectId, Long approvalId, Request request) {
 
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
         // check project contain approval
         checkProjectContainApproval(projectId, approvalId);
 
@@ -149,7 +152,7 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Request -> Entity
-        ApprovalComment init = ApprovalCommentRegister.Request.toEntity(request, approval);
+        ApprovalComment init = ApprovalCommentRegister.Request.toEntity(request, approval, member);
 
         // Save comment
         ApprovalComment comment = approvalCommentStore.store(init);
@@ -162,6 +165,9 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Override
     public ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId,
         Long commentId, ApprovalReCommentRegister.Request request) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
 
         // Check project contain approval
         checkProjectContainApproval(projectId, approvalId);
@@ -179,7 +185,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Request -> Entity
         ApprovalComment init = ApprovalReCommentRegister.Request.toEntity(request, approval,
-            parentComment);
+            parentComment, member);
 
         // Save reComment
         ApprovalComment reComment = approvalCommentStore.store(init);
