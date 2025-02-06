@@ -1,14 +1,20 @@
 package com.checkping.dto.approval;
 
 import com.checkping.common.utils.DateTimeUtils;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
+import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.exception.approval.ApprovalContentParsingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,10 +36,61 @@ public class ApprovalUpdate {
         private List<ApprovalContent> content;
         private List<ApprovalFileGet.Response> fileInfoList;
         private List<ApprovalLinkGet.Response> linkList;
+
+        public String getContent() {
+            return jsonToString(this.content);
+        }
+
+        /**
+         * 결재 내용을 JSON 문자열로 변환하는 메서드
+         *
+         * @param content 결재 내용
+         * @return JSON 문자열
+         */
+        private String jsonToString(List<ApprovalContent> content) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(content);
+            } catch (JsonProcessingException e) {
+                throw new ApprovalContentParsingException();
+            }
+        }
+
+        /**
+         * 수정할 결재 첨부파일을 FileRequest 리스트로 변환하는 메서드
+         *
+         * @return List<FileRequest>
+         */
+        public List<FileRequest> getFileRequests() {
+            List<FileRequest> list = new ArrayList<>();
+            for (ApprovalFileGet.Response file : fileInfoList) {
+                FileRequest fileRequest = new FileRequest(file.getOriginalName(),
+                    file.getSaveName(), file.getUrl(), file.getSize());
+                list.add(fileRequest);
+            }
+            return list;
+        }
+
+        /**
+         * 수정할 결재 첨부링크를 ApprovalLinkRegister.Request 리스트로 변환하는 메서드
+         *
+         * @return List<ApprovalLinkRegister.Request>
+         */
+        public List<ApprovalLinkRegister.Request> getLinkRequests() {
+            List<ApprovalLinkRegister.Request> list = new ArrayList<>();
+            for (ApprovalLinkGet.Response link : linkList) {
+                ApprovalLinkRegister.Request request = new ApprovalLinkRegister.Request();
+                request.setName(link.getName());
+                request.setUrl(link.getUrl());
+                list.add(request);
+            }
+            return list;
+        }
     }
 
     @Getter
     public static class Response {
+
         /*
         id : 결재 ID
         projectId : 프로젝트 ID
