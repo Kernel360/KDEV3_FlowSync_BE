@@ -6,11 +6,13 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalLinkRegister {
 
     @Getter
+    @Setter
     public static class Request {
 
         /*
