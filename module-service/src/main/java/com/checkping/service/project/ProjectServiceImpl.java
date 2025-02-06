@@ -130,28 +130,51 @@ public class ProjectServiceImpl implements ProjectService {
         Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "id");
         Member member = currentMemberUtil.getCurrentMember();
 
-        Page<ProjectListDetailsDto> results = getProjectListByRoleAndType(member, keyword, status, pageable);
+        Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, keyword, status, pageable);
 
         return ProjectResponse.ProjectListDto.fromEntityPage(results);
     }
 
-    private Page<ProjectListDetailsDto> getProjectListByRoleAndType(Member member, String keyword, String status, Pageable pageable) {
+    private Page<ProjectResponse.ProjectListDetailDto> getProjectListByRoleAndType(Member member, String keyword, String status, Pageable pageable) {
         Member.Role role = member.getRole();
 
         if (role.equals(Member.Role.ADMIN)) {
-            return projectRepository.findAdminProjectsByKeywordAndStatus(keyword, status, pageable);
+            Page<Object[]> results = projectRepository.findAdminProjectsByKeywordAndStatus(keyword, status, pageable);
+            return toProjectListDetailDto(results);
         }
 
         Organization.Type type = member.getOrganization().getType();
         Long memberId = member.getId();
 
         if (type == Organization.Type.DEVELOPER) {
-            return projectRepository.findDeveloperProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            Page<Object[]> results = projectRepository.findDeveloperProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            return toProjectListDetailDto(results);
         } else if (type == Organization.Type.CUSTOMER) {
-            return projectRepository.findCustomerProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            Page<Object[]> results = projectRepository.findCustomerProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            return toProjectListDetailDto(results);
         }
 
         return Page.empty(pageable);
+    }
+
+    public Page<ProjectResponse.ProjectListDetailDto> toProjectListDetailDto(Page<Object[]> projectList) {
+        return projectList.map(row -> new ProjectResponse.ProjectListDetailDto(
+                ((Number) row[0]).longValue(), // id
+                (String) row[1], // name
+                (String) row[2], // description
+                (String) row[3], // detail
+                (String) row[4], // status
+                (String) row[5], // managementStep
+                (Date) row[6], // regAt
+                (Date) row[7], // updateAt
+                (Date) row[8], // startAt
+                (Date) row[9], // closeAt
+                (String) row[10], // deletedYn
+                ((Number) row[11]).longValue(), // devOwnerId
+                (String) row[12], // developerName
+                (String) row[13], // customerName
+                ((Number) row[14]).intValue() // clickable
+        ));
     }
 
     @Override
