@@ -1,4 +1,4 @@
-package com.checkping.exception.project.progressStep;
+package com.checkping.exception.project.progressstep;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
