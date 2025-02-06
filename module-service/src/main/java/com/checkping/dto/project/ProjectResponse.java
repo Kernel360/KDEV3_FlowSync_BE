@@ -2,6 +2,7 @@ package com.checkping.dto.project;
 
 
 import com.checkping.common.dto.PageMetaResponse;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.dto.ProjectListDetailsDto;
@@ -38,16 +39,16 @@ public class ProjectResponse {
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime regAt;
+        private String regAt;
         @Schema(description = "프로젝트 수정 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime updateAt;
+        private String updateAt;
         @Schema(description = "프로젝트 시작 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime startAt;
+        private String startAt;
         @Schema(description = "프로젝트 마감 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime closeAt;
+        private String closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
         @Schema(description = "개발사 대표자 아이디")
@@ -67,10 +68,10 @@ public class ProjectResponse {
                     .detail(project.getDetail())
                     .status(project.getStatus())
                     .managementStep(project.getManagementStep())
-                    .regAt(project.getRegAt())
-                    .updateAt(project.getUpdateAt())
-                    .startAt(project.getStartAt())
-                    .closeAt(project.getCloseAt())
+                    .regAt(DateTimeUtils.format(project.getRegAt()))
+                    .updateAt(DateTimeUtils.format(project.getUpdateAt()))
+                    .startAt(DateTimeUtils.format(project.getStartAt()))
+                    .closeAt(DateTimeUtils.format(project.getCloseAt()))
                     .deletedYn(project.getDeletedYn())
                     .devOwnerId(project.getDevOwner().getId())
                     .customerOwnerId(project.getCustomerOwner().getId())
