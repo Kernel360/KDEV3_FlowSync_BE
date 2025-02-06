@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
 public interface NoticeApi {
 
@@ -30,30 +32,16 @@ public interface NoticeApi {
     );
 
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
-    public BaseResponse<NoticeForAllResponse> getNotice(
-            @Parameter(description = "공지사항 아이디") Long noticeid
-    );
-
-    @Operation(summary = "관리자의 공지사항 조회", description = "삭제된 특정 공지사항까지 조회하는 기능입니다")
-    public BaseResponse<NoticeResponse> getAdminNotice(
+    public BaseResponse<Map<String, Object>> getNotice(
             @Parameter(description = "공지사항 아이디") Long noticeid
     );
 
     @Operation(summary = "공지사항 검색", description = "키워드와 카테고리로 공지사항을 검색하는 기능입니다.")
-    public BaseResponse<NoticeListForAllResponse> getNotices(
+    public BaseResponse<Map<String, Object>> getNotices(
             @Parameter(description = "검색할 키워드") String keyword,
             @Parameter(description = "검색할 카테고리") String category,
             @Parameter(description = "검색할 페이지") int currentPage,
             @Parameter(description = "한 페이지에 보이는 공지사항 갯수") int pageSize
         );
-
-    @Operation(summary = "관리자의 공지사항 검색", description = "키워드와 카테고리로 삭제된 공지사항까지 검색하는 기능입니다.")
-    public BaseResponse<NoticeListResponse> getAdminNotices(
-            @Parameter(description = "검색할 키워드") String keyword,
-            @Parameter(description = "검색할 카테고리") String category,
-            @Parameter(description = "검색할 페이지") int currentPage,
-            @Parameter(description = "한 페이지에 보이는 공지사항 갯수") int pageSize
-    );
-
 
 }

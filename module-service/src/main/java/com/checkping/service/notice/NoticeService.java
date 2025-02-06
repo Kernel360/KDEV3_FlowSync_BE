@@ -8,6 +8,8 @@ import com.checkping.dto.notice.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Map;
+
 public interface NoticeService {
 
     NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest);
@@ -16,12 +18,9 @@ public interface NoticeService {
 
     NoticeResponse deleteNotice(Long noticeid);
 
-    NoticeForAllResponse getNotice(Long noticeid);
+    Map<String, Object> getNotice(Long noticeid);
 
-    NoticeResponse getAdminNotice(Long noticeid);
-    NoticeListForAllResponse getNotices(NoticeSearchRequest noticeSearchRequest);
-
-    NoticeListResponse getAdminNotices(NoticeSearchRequest noticeSearchRequest);
+    Map<String, Object> getNotices(NoticeSearchRequest noticeSearchRequest);
 
 }
 
