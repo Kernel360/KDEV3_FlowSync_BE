@@ -2,12 +2,14 @@ package com.checkping.service.notice;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
 import com.checkping.infra.repository.notice.NoticeRepository;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
+
+    private final CurrentMemberUtil currentMemberUtil;
 
     private final NoticeRepository noticeRepository;
 
@@ -74,22 +78,26 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeForAllResponse getNotice(Long noticeid) {
-        Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+    public NoticeWithoutIsdeletedResponse getNotice(Long noticeid) {
+        Member currentMember = currentMemberUtil.getCurrentMember();
+        boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
 
-        return NoticeForAllResponse.toDto(notice);
+        Notice notice = isAdmin
+                ? noticeRepository.findById(noticeid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))  // 관리자: 삭제된 공지사항도 볼 수 있음
+                : noticeRepository.findByIdAndIsDeletedFalse(noticeid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));  // 비관리자: 삭제된 공지사항은 볼 수 없음
+
+        return isAdmin
+                ? NoticeResponse.toDto(notice)  // 관리자: isDeleted 포함
+                : NoticeWithoutIsdeletedResponse.toDto(notice);  // 비관리자: isDeleted 제외
     }
 
     @Override
-    public NoticeResponse getAdminNotice(Long noticeid) {
-        Notice notice = noticeRepository.findById(noticeid)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-        return NoticeResponse.toDto(notice);
-    }
+    public NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
+        Member currentMember = currentMemberUtil.getCurrentMember();
+        boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
 
-    @Override
-    public NoticeListForAllResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
         int pageSize = noticeSearchRequest.getPageSize() > 0 ? noticeSearchRequest.getPageSize() : 10;
 
@@ -109,30 +117,9 @@ public class NoticeServiceImpl implements NoticeService {
 
         Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
 
-        return NoticeListForAllResponse.fromEntityPage(result);
-    }
-
-    @Override
-    public NoticeListResponse getAdminNotices(NoticeSearchRequest noticeSearchRequest) {
-        int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
-        int pageSize = noticeSearchRequest.getPageSize() > 0 ? noticeSearchRequest.getPageSize() : 10;
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        String keyword = noticeSearchRequest.getKeyword();
-        Notice.Category category = null;
-
-        String categoryStr = noticeSearchRequest.getCategory();
-        if (categoryStr != null && !categoryStr.isBlank()) {
-            try {
-                category = Notice.Category.valueOf(categoryStr);
-            } catch (IllegalArgumentException e) {
-                throw new BaseException(ErrorCode.BAD_REQUEST);
-            }
-        }
-
-        Page<Notice> result = noticeRepository.findSortedNoticesForAdmin(keyword, category, pageable);
-        return NoticeListResponse.fromEntityPage(result);
+        return isAdmin
+                ? NoticeListResponse.fromEntityPage(result, true)  // 관리자: isDeleted 포함
+                : NoticeListResponse.fromEntityPage(result, false); // 비관리자: isDeleted 제외
     }
 
 }

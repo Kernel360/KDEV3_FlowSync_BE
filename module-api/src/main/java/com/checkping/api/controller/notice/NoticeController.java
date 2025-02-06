@@ -42,25 +42,16 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<NoticeForAllResponse> getNotice(
+    public BaseResponse<NoticeWithoutIsdeletedResponse> getNotice(
             @PathVariable Long noticeid
     ){
-        NoticeForAllResponse noticeGetResponse = noticeService.getNotice(noticeid);
-        return BaseResponse.success(noticeGetResponse);
-    }
-
-    @Override
-    @GetMapping("/admins/notices/{noticeid}")
-    public BaseResponse<NoticeResponse> getAdminNotice(
-            @PathVariable Long noticeid
-    ){
-        NoticeResponse noticeGetResponse = noticeService.getAdminNotice(noticeid);
+        NoticeWithoutIsdeletedResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<NoticeListForAllResponse> getNotices(
+    public BaseResponse<NoticeListResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int currentPage,
@@ -73,26 +64,7 @@ public class NoticeController implements NoticeApi {
                 .pageSize(pageSize)
                 .build();
 
-        NoticeListForAllResponse result = noticeService.getNotices(noticeSearchRequest);
-        return BaseResponse.success(result);
-    }
-
-    @Override
-    @GetMapping("/admins/notices")
-    public BaseResponse<NoticeListResponse> getAdminNotices(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
-
-        NoticeSearchRequest noticeSearchRequest = NoticeSearchRequest.builder()
-                .keyword(keyword)
-                .category(category)
-                .page(currentPage)
-                .pageSize(pageSize)
-                .build();
-
-        NoticeListResponse result = noticeService.getAdminNotices(noticeSearchRequest);
+        NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
         return BaseResponse.success(result);
     }
 }

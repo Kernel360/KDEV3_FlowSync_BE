@@ -11,16 +11,16 @@ import java.util.Map;
 @Getter
 public class NoticeListResponse {
 
-    private final List<NoticeGetListResponse> notices;
+    private final List<? extends NoticeGetListWithoutIsdeletedResponse> notices;
     private final Map<String, Object> meta;
 
-    public NoticeListResponse(List<NoticeGetListResponse> notices, Map<String, Object> meta){
+    public NoticeListResponse(List<? extends NoticeGetListWithoutIsdeletedResponse> notices, Map<String, Object> meta){
         this.notices = notices;
         this.meta = meta;
     }
 
-    public static NoticeListResponse fromEntityPage(Page<Notice> page){
-        List<NoticeGetListResponse> noticeListResponse = page.getContent()
+    public static NoticeListResponse fromEntityPage(Page<Notice> page, boolean isAdmin){
+        List<? extends NoticeGetListWithoutIsdeletedResponse> noticeListResponse = page.getContent()
                 .stream()
                 .map(NoticeGetListResponse::toDto)
                 .toList();

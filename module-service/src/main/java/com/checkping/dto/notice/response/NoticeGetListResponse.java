@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class NoticeGetListResponse {
+public class NoticeGetListResponse extends NoticeGetListWithoutIsdeletedResponse {
 
     @Schema(description = "공지사항 아이디", example = "1")
     private Long id;

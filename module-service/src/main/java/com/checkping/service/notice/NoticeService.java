@@ -16,12 +16,8 @@ public interface NoticeService {
 
     NoticeResponse deleteNotice(Long noticeid);
 
-    NoticeForAllResponse getNotice(Long noticeid);
-
-    NoticeResponse getAdminNotice(Long noticeid);
-    NoticeListForAllResponse getNotices(NoticeSearchRequest noticeSearchRequest);
-
-    NoticeListResponse getAdminNotices(NoticeSearchRequest noticeSearchRequest);
+    NoticeWithoutIsdeletedResponse getNotice(Long noticeid);
+    NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest);
 
 }
 
