@@ -51,7 +51,7 @@ public class ProgressStepGet {
             response.name = progressStep.getName();
             response.description = progressStep.getDescription();
             response.stepOrder = progressStep.getStepOrder();
-            response.status = progressStep.getStatus().name();
+            response.status = progressStep.getStatus() != null ? progressStep.getStatus().name() : null;
             response.startAt = DateTimeUtils.format(progressStep.getStartAt());
             response.closeAt = DateTimeUtils.format(progressStep.getCloseAt());
             response.projectId = progressStep.getProjectId();
