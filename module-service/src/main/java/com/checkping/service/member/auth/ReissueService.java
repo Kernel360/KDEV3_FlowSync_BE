@@ -120,7 +120,7 @@ public class ReissueService {
      * 새로운 Access Token 생성
      */
     public String generateAccessToken(String name, Long id,  String email, String role) {
-        return jwtUtil.createJwt("access",id, name, email, role, 1440);
+        return jwtUtil.createJwt("access",id, name, email, role, 1);
     }
 
     /**
