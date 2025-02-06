@@ -5,8 +5,10 @@ import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.service.member.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ReissueService {
 
@@ -24,7 +26,10 @@ public class ReissueService {
      * 쿠키에서 Refresh Token 추출 및 검증
      */
     public String validateAndExtractRefreshToken(Cookie[] cookies) {
+        log.error(cookies.toString());
+
         if (cookies == null || cookies.length == 0) {
+            log.error("cookies == null || cookies.length == 0");
             throw new RefreshTokenNotFoundException();
         }
 
@@ -33,6 +38,8 @@ public class ReissueService {
                 return cookie.getValue();
             }
         }
+
+        log.error("refresh token not found");
 
         throw new RefreshTokenNotFoundException();
     }
