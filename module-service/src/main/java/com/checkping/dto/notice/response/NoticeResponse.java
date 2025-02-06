@@ -47,7 +47,6 @@ public class NoticeResponse {
     public static NoticeResponse toDto(Notice notice){
         return NoticeResponse.builder()
                 .id(notice.getId())
-                .adminId(notice.getAdminId())
                 .title(notice.getTitle())
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
