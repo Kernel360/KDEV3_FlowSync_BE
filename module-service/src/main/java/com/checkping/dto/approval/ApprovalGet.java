@@ -81,7 +81,7 @@ public class ApprovalGet {
         public static Response toDto(Approval approval) {
             Response response = new Response();
             response.id = approval.getId();
-            response.projectId = approval.getProjectId();
+            response.projectId = approval.getProject().getId();
             response.progressStepId = approval.getProgressStepId();
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());

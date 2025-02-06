@@ -54,7 +54,7 @@ public class ApprovalSearch {
         public static ApprovalItem toDto(Approval approval) {
             ApprovalItem dto = new ApprovalItem();
             dto.id = approval.getId();
-            dto.projectId = approval.getProjectId();
+            dto.projectId = approval.getProject().getId();
             dto.progressStepId = approval.getProgressStepId();
             dto.title = approval.getTitle();
             dto.status = approval.getStatus().name();

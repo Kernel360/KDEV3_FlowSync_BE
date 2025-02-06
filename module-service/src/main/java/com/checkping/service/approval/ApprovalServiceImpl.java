@@ -4,6 +4,7 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
+import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -25,6 +26,7 @@ import com.checkping.infra.repository.approval.comment.ApprovalCommentReader;
 import com.checkping.infra.repository.approval.comment.ApprovalCommentStore;
 import com.checkping.infra.repository.approval.file.ApprovalFileStore;
 import com.checkping.infra.repository.approval.link.ApprovalLinkStore;
+import com.checkping.infra.repository.project.ProjectReader;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +43,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalReader approvalReader;
     private final ApprovalCommentStore approvalCommentStore;
     private final ApprovalCommentReader approvalCommentReader;
+    private final ProjectReader projectReader;
 
     @Transactional
     @Override
@@ -49,7 +52,9 @@ public class ApprovalServiceImpl implements ApprovalService {
         // TODO : registerId 는 시큐리티에서 가져오도록 변경 필요
         Long registerId = 123123L;
 
-        Approval init = ApprovalRegister.Request.toEntity(projectId,
+        Project project = projectReader.getById(projectId);
+
+        Approval init = ApprovalRegister.Request.toEntity(project,
             registerId, request);
 
         Approval approval = approvalStore.store(init);
@@ -94,8 +99,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     }
 
     /**
-     * 결재 상세 조회
-     * 부모 댓글과 자식 댓글도 같이 조회된다.
+     * 결재 상세 조회 부모 댓글과 자식 댓글도 같이 조회된다.
      *
      * @param projectId  프로젝트 아이디
      * @param approvalId 결재 아이디

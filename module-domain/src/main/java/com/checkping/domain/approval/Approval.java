@@ -1,6 +1,7 @@
 package com.checkping.domain.approval;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +10,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -46,8 +49,9 @@ public class Approval extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     // TODO : 연관 관계 맵핑 필요
     private Long progressStepId;
@@ -125,15 +129,14 @@ public class Approval extends BaseEntity {
     Generate
      */
 
-    public static Approval generate(Long projectId, Long progressStepId, Long registerId,
+    public static Approval generate(Project project, Long progressStepId, Long registerId,
         String registerName, String title, String content) {
 
         Approval approval = new Approval();
         approval.title = title;
         approval.content = content;
 
-        // TODO : 엔티티를 참조하도록 변경 필요
-        approval.projectId = projectId;
+        approval.project = project;
         approval.progressStepId = progressStepId;
         approval.registerId = registerId;
         approval.registerName = registerName;

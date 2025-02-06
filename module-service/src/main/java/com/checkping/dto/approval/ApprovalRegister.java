@@ -2,6 +2,7 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
+import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.exception.approval.ApprovalContentParsingException;
@@ -33,10 +34,10 @@ public class ApprovalRegister {
         private List<ApprovalLinkRegister.Request> linkList;
 
 
-        public static Approval toEntity(Long projectId, Long registerId, Request request) {
+        public static Approval toEntity(Project project, Long registerId, Request request) {
             // TODO: Member 에서 get 하도록 변경 필요
             String registerName = "TEST_NAME";
-            return Approval.generate(projectId, request.progressStepId, registerId, registerName,
+            return Approval.generate(project, request.progressStepId, registerId, registerName,
                 request.title, request.jsonToString());
         }
 
@@ -91,7 +92,7 @@ public class ApprovalRegister {
         public static Response toDto(Approval approval) {
             Response dto = new Response();
             dto.id = approval.getId();
-            dto.projectId = approval.getProjectId();
+            dto.projectId = approval.getProject().getId();
             dto.progressStepId = approval.getProgressStepId();
             dto.title = approval.getTitle();
             dto.content = ApprovalRegister.Response.stringToJson(approval.getContent());
