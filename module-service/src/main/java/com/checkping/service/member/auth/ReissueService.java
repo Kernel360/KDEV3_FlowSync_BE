@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ReissueService {
 
@@ -27,14 +28,18 @@ public class ReissueService {
     public String validateAndExtractRefreshToken(Cookie[] cookies) {
 
         if (cookies == null || cookies.length == 0) {
+            log.error("Cookie not found cookie================================================================");
             throw new RefreshTokenNotFoundException();
         }
 
         for (Cookie cookie : cookies) {
             if ("refresh".equals(cookie.getName())) {
+                log.info("Refresh Token found================================================================");
                 return cookie.getValue();
             }
         }
+
+        log.error("Refresh Token not found================================================================");
 
         throw new RefreshTokenNotFoundException();
     }
