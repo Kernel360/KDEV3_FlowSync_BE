@@ -3,6 +3,7 @@ package com.checkping.dto.approval;
 import com.checkping.common.response.PaginationProps;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
+import com.checkping.dto.project.ProgressStepGet;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class ApprovalSearch {
         private Long id;
         private Long projectId;
         //TODO : 엔티티를 참조하도록 변경 필요
-        private Long progressStepId;
+        private ProgressStepGet.Response progressStep;
         private String title;
         private String status;
         private Long registerId;
@@ -55,7 +56,7 @@ public class ApprovalSearch {
             ApprovalItem dto = new ApprovalItem();
             dto.id = approval.getId();
             dto.projectId = approval.getProject().getId();
-            dto.progressStepId = approval.getProgressStepId();
+            dto.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             dto.title = approval.getTitle();
             dto.status = approval.getStatus().name();
             dto.registerId = approval.getRegisterId();

@@ -2,9 +2,11 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
+import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.exception.approval.ApprovalContentParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,10 +36,10 @@ public class ApprovalRegister {
         private List<ApprovalLinkRegister.Request> linkList;
 
 
-        public static Approval toEntity(Project project, Long registerId, Request request) {
+        public static Approval toEntity(Project project, ProgressStep progressStep, Long registerId, Request request) {
             // TODO: Member 에서 get 하도록 변경 필요
             String registerName = "TEST_NAME";
-            return Approval.generate(project, request.progressStepId, registerId, registerName,
+            return Approval.generate(project, progressStep, registerId, registerName,
                 request.title, request.jsonToString());
         }
 
@@ -74,7 +76,7 @@ public class ApprovalRegister {
          */
         private Long id;
         private Long projectId;
-        private Long progressStepId;
+        private ProgressStepGet.Response progressStep;
         private String title;
         private List<ApprovalContent> content;
         private String status;
@@ -93,7 +95,7 @@ public class ApprovalRegister {
             Response dto = new Response();
             dto.id = approval.getId();
             dto.projectId = approval.getProject().getId();
-            dto.progressStepId = approval.getProgressStepId();
+            dto.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             dto.title = approval.getTitle();
             dto.content = ApprovalRegister.Response.stringToJson(approval.getContent());
             dto.status = approval.getStatus().name();

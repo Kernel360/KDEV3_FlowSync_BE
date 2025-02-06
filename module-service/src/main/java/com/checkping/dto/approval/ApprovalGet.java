@@ -6,6 +6,7 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
+import com.checkping.dto.project.ProgressStepGet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -41,8 +42,8 @@ public class ApprovalGet {
         private Long id;
         @Schema(description = "프로젝트 ID")
         private Long projectId;
-        @Schema(description = "프로젝트 진행 단계 ID")
-        private Long progressStepId;
+        @Schema(description = "프로젝트 진행 단계")
+        private ProgressStepGet.Response progressStep;
         @Schema(description = "결재 제목")
         private String title;
         @Schema(description = "결재 내용")
@@ -82,7 +83,7 @@ public class ApprovalGet {
             Response response = new Response();
             response.id = approval.getId();
             response.projectId = approval.getProject().getId();
-            response.progressStepId = approval.getProgressStepId();
+            response.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());
             response.status = approval.getStatus();
