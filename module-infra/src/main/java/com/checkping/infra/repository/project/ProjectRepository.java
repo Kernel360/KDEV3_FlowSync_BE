@@ -33,7 +33,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             ") AS org_info ON p.id = org_info.project_id " +
             "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
             "AND (NULLIF(:status, '') IS NULL OR p.status = :status)", nativeQuery = true)
-    Page<ProjectListDetailsDto> findAdminProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable);
+    Page<Object[]> findAdminProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable);
 
     @Query(value =
             "SELECT " +
@@ -56,8 +56,17 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             ") AS org_info ON p.id = org_info.project_id " +
             "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
             "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
-            "AND m.id = :memberId ", nativeQuery = true)
-    Page<ProjectListDetailsDto> findDeveloperProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
+            "AND m.id = :memberId ",
+            countQuery =
+                    "SELECT COUNT(p.id) " +
+                            "FROM project p " +
+                            "LEFT JOIN organization_by_project obp ON p.id = obp.project_id " +
+                            "LEFT JOIN organization o ON obp.org_id = o.id " +
+                            "LEFT JOIN member m ON o.id = m.org_id " +
+                            "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
+                            "AND (NULLIF(:status, '') IS NULL OR p.status = :status) " +
+                            "AND m.id = :memberId", nativeQuery = true)
+    Page<Object[]> findDeveloperProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
     @Query(value =
             "SELECT " +
@@ -79,7 +88,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "WHERE (NULLIF(:keyword, '') IS NULL OR p.name LIKE CONCAT('%', :keyword, '%')) " +
             "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
             "AND m.id = :memberId ", nativeQuery = true)
-    Page<ProjectListDetailsDto> findCustomerProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
+    Page<Object[]> findCustomerProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
 
     @Query("SELECT p.managementStep, COUNT(p) AS projectCount " +

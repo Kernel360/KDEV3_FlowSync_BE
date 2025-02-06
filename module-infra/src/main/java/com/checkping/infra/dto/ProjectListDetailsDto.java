@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@Deprecated
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
