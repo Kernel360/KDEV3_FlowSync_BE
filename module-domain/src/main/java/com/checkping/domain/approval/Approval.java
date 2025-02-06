@@ -1,6 +1,7 @@
 package com.checkping.domain.approval;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
@@ -67,10 +68,9 @@ public class Approval extends BaseEntity {
     private String content;
 
     // TODO : 연관 관계 맵핑 필요
-    private Long registerId;
-
-    @Column(name = "register_name")
-    private String registerName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id")
+    private Member register;
 
     @Column(name = "cancel_at")
     private LocalDateTime cancelAt;
@@ -131,8 +131,8 @@ public class Approval extends BaseEntity {
     Generate
      */
 
-    public static Approval generate(Project project, ProgressStep progressStep, Long registerId,
-        String registerName, String title, String content) {
+    public static Approval generate(Project project, ProgressStep progressStep, Member register,
+        String title, String content) {
 
         Approval approval = new Approval();
         approval.title = title;
@@ -140,8 +140,7 @@ public class Approval extends BaseEntity {
 
         approval.project = project;
         approval.progressStep = progressStep;
-        approval.registerId = registerId;
-        approval.registerName = registerName;
+        approval.register = register;
 
         // 생성 시 기본 값
         approval.status = ApprovalStatus.WAIT;
