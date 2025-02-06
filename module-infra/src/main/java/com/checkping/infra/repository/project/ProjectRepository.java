@@ -134,4 +134,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query(value = "select member_id from member_by_project where project_id= :projectId ", nativeQuery = true)
     List<Long> findProjectMemberListByProjectIdAndOrgId(Long projectId);
+
+    boolean existsByIdAndCustomerOwnerId(Long projectId, Long customerId);
 }

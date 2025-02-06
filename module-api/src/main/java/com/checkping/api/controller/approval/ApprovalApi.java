@@ -1,6 +1,7 @@
 package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
@@ -49,4 +50,10 @@ public interface ApprovalApi {
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 댓글 ID") @PathVariable Long commentId,
         @Parameter(description = "결재 대댓글 등록 정보") @RequestBody ApprovalReCommentRegister.Request request);
+
+    @Operation(summary = "결재 승인", description = "결재를 승인하는 기능입니다.")
+    BaseResponse<ApprovalConfirm.Response> confirm(
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
+        @Parameter(description = "결재 ID") @PathVariable Long approvalId,
+        @Parameter(description = "결재 승인 정보") @RequestBody ApprovalConfirm.Request request);
 }

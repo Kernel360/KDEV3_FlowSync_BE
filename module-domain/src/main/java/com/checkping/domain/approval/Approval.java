@@ -181,4 +181,18 @@ public class Approval extends BaseEntity {
 
         this.linkList.add(link);
     }
+
+    public void reject(Member rejector) {
+        this.status = ApprovalStatus.REJECTED;
+        this.approverId = rejector.getId();
+        this.approverName = rejector.getName();
+        this.cancelAt = LocalDateTime.now();
+    }
+
+    public void confirm(Member approver) {
+        this.status = ApprovalStatus.APPROVED;
+        this.approverId = approver.getId();
+        this.approverName = approver.getName();
+        this.approverAt = LocalDateTime.now();
+    }
 }
