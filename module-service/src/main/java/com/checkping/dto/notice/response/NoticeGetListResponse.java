@@ -1,13 +1,10 @@
 package com.checkping.dto.notice.response;
 
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.notice.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
@@ -29,10 +26,10 @@ public class NoticeGetListResponse {
     private Boolean isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
-    private LocalDateTime regAt;
+    private String regAt;
 
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     public static NoticeGetListResponse toDto(Notice notice){
         return NoticeGetListResponse.builder()
@@ -41,8 +38,8 @@ public class NoticeGetListResponse {
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted())
-                .regAt(notice.getUpdatedAt())
-                .updatedAt(notice.getUpdatedAt())
+                .regAt(DateTimeUtils.format(notice.getRegAt()))
+                .updatedAt(DateTimeUtils.format(notice.getUpdatedAt()))
                 .build();
     }
 }

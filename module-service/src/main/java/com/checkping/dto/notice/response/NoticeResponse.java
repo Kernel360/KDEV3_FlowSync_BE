@@ -1,6 +1,7 @@
 package com.checkping.dto.notice.response;
 
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -19,6 +20,9 @@ public class NoticeResponse {
     @Schema(description = "공지사항 아이디", example = "1")
     private Long id;
 
+    @Schema(description = "관리자 아이디", example = "1")
+    private Long adminId;
+
     @Schema(description = "공지사항 글 제목", example = "드릴말씀")
     private String title;
 
@@ -35,21 +39,22 @@ public class NoticeResponse {
     private Boolean isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
-    private LocalDateTime regAt;
+    private String regAt;
 
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     public static NoticeResponse toDto(Notice notice){
         return NoticeResponse.builder()
                 .id(notice.getId())
+                .adminId(notice.getAdminId())
                 .title(notice.getTitle())
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted())
-                .regAt(notice.getRegAt())
-                .updatedAt(notice.getUpdatedAt())
+                .regAt(DateTimeUtils.format(notice.getRegAt()))
+                .updatedAt(DateTimeUtils.format(notice.getUpdatedAt()))
                 .build();
     }
 
