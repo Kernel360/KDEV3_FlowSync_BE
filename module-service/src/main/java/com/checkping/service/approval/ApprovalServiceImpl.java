@@ -12,11 +12,14 @@ import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
+import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
+import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
+import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.exception.approval.ApprovalAuthorityException;
 import com.checkping.exception.approval.ApprovalMismatchException;
@@ -135,6 +138,76 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Entity -> Response
         return ApprovalGet.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalUpdate.Response update(Long projectId, Long approvalId,
+        ApprovalUpdate.Request request) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Check Member Authority
+        checkMemberAuthority(member, approval);
+
+        // update Approval
+        approval.update(request.getTitle(), request.getContent());
+
+        // 첨부 파일 처리
+        // request 와 비교해서 id 가 있는 것들을 제외하고 비활성화 처리
+        List<ApprovalFile> existFiles = approval.getFileList();
+        List<ApprovalFileGet.Response> requestFiles = request.getFileInfoList();
+
+        // PUT 으로 안오는 것들 비활성화 처리
+        for (ApprovalFile approvalFile : existFiles) {
+            boolean isExist = requestFiles.stream()
+                .anyMatch(file -> approvalFile.getId().equals(file.getId()));
+            if (!isExist) {
+                approvalFile.deactivate();
+            }
+        }
+
+        // request 에서 파일 추가된 것들은 추가
+        // FileRequest -> Entity
+        List<ApprovalFile> initFiles = ApprovalFileRegister.Request.toEntity(approval,
+            request.getFileRequests());
+        // Save approvalFiles
+        approvalFileStore.store(initFiles);
+        // Add approvalFiles to approval
+        approval.addFiles(initFiles);
+
+        // 첨부 링크 처리
+        // request 와 비교해서 id 가 있는 것들을 제외하고 비활성화 처리
+        List<ApprovalLink> existLinks = approval.getLinkList();
+        List<ApprovalLinkGet.Response> requestLinks = request.getLinkList();
+
+        // PUT 으로 안오는 것들 비활성화 처리
+        for (ApprovalLink approvalLink : existLinks) {
+            boolean isExist = requestLinks.stream()
+                .anyMatch(link -> approvalLink.getId().equals(link.getId()));
+            if (!isExist) {
+                approvalLink.deactivate();
+            }
+        }
+
+        // request 에서 링크 추가된 것들은 추가
+        // LinkRequest -> Entity
+        List<ApprovalLink> initLinks = ApprovalLinkRegister.Request.toEntity(approval,
+            request.getLinkRequests());
+        // Save approvalLinks
+        approvalLinkStore.store(initLinks);
+        // Add approvalLinks to approval
+        approval.addLinks(initLinks);
+
+        return ApprovalUpdate.Response.toDto(approval);
     }
 
     @Transactional
@@ -264,6 +337,28 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
+        }
+    }
+
+    /**
+     * 결재 작성자 권한 확인 ADMIN 권한이거나 결재 작성자와 같은 업체이면 통과 그 외에는 예외 발생
+     *
+     * @param member   현재 사용자
+     * @param approval 결재 Entity
+     * @throws ApprovalAuthorityException 결재 권한 예외
+     */
+    private void checkMemberAuthority(Member member, Approval approval) {
+
+        // Check Admin
+        if (member.isAdmin()) {
+            return;
+        }
+
+        Member register = approval.getRegister();
+        // Check Register Organization
+        if (!member.getOrganization().getId().equals(register.getOrganization().getId())) {
+            // throw exception
+            throw new ApprovalAuthorityException();
         }
     }
 }
