@@ -1,6 +1,7 @@
 package com.checkping.domain.approval;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,9 +31,8 @@ public class ApprovalComment extends BaseEntity {
     updated_at : 수정 일시
     deleted_yn : 삭제 여부
     parent : 부모 댓글
+    register : 댓글 작성자
      */
-
-    // TODO : 연관 관계 맵핑 필요 (ApprovalCommentGet 수정)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +61,10 @@ public class ApprovalComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private ApprovalComment parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id")
+    private Member register;
+
     @Getter
     @RequiredArgsConstructor
     public enum DeleteStatus {
@@ -75,10 +79,11 @@ public class ApprovalComment extends BaseEntity {
      * @param approval 결재 Entity
      * @return 댓글 Entity
      */
-    public static ApprovalComment generate(String content, Approval approval) {
+    public static ApprovalComment generate(String content, Approval approval, Member register) {
         ApprovalComment approvalComment = new ApprovalComment();
         approvalComment.content = content;
         approvalComment.approval = approval;
+        approvalComment.register = register;
 
         approvalComment.activate();
 
@@ -94,8 +99,8 @@ public class ApprovalComment extends BaseEntity {
      * @return 댓글 Entity
      */
     public static ApprovalComment generate(String content, Approval approval,
-        ApprovalComment parent) {
-        ApprovalComment approvalComment = generate(content, approval);
+        ApprovalComment parent, Member register) {
+        ApprovalComment approvalComment = generate(content, approval, register);
         approvalComment.parent = parent;
 
         return approvalComment;
