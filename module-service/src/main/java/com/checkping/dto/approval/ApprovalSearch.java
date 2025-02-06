@@ -59,7 +59,7 @@ public class ApprovalSearch {
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
+            dto.approver = approval.getApprover() == null ? null : MeResponseDto.fromEntity(approval.getApprover());
             dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             return dto;
         }
