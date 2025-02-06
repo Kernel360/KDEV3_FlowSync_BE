@@ -7,6 +7,7 @@ import com.checkping.common.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -19,27 +20,33 @@ import java.util.Enumeration;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public BaseResponse handlerCustomException(CustomException e, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> handlerCustomException(CustomException e, HttpServletRequest request) {
         logRequestDetails(request, MDC.get("requestId"));
         log.error("Response [{}] msg={}", MDC.get("requestId"), e.getMessage(), e);
 
-        return BaseResponse.fail(e.getErrorCode());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatusCode())
+                .body(BaseResponse.fail(e.getErrorCode()));
     }
 
     @ExceptionHandler(BaseException.class)
-    public BaseResponse handlerBaseException(BaseException e, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> handlerBaseException(BaseException e, HttpServletRequest request) {
         logRequestDetails(request, MDC.get("requestId"));
         log.error("Response [{}] msg={}", MDC.get("requestId"), e.getMessage(), e);
 
-        return BaseResponse.fail(e.getMessage(),e.getErrorCode());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatusCode())
+                .body(BaseResponse.fail(e.getMessage(), e.getErrorCode()));
     }
 
     @ExceptionHandler(Exception.class)
-    public BaseResponse handlerException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> handlerException(Exception e, HttpServletRequest request) {
         logRequestDetails(request, MDC.get("requestId"));
         log.error("Response [{}] msg={}", MDC.get("requestId"), e.getMessage(), e);
 
-        return BaseResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR);
+        return ResponseEntity
+                .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
+                .body(BaseResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 
     private void logRequestDetails(HttpServletRequest request, String requestId) {
