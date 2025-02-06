@@ -21,7 +21,7 @@ COPY ${ApplicationConfig} /app/module-api/src/main/resources/application.yaml
 RUN chmod +x ./gradlew
 
 # Gradle 빌드 명령어 실행
-RUN ./gradlew clean :module-api:buildNeeded --stacktrace --refresh-dependencies -x test -Dspring.profiles.active=prod
+RUN ./gradlew clean :module-api:buildNeeded --stacktrace --refresh-dependencies -x test -Dspring.profiles.active=prod -Duser.timezone=Asia/Seoul
 
 
 # Run stage
@@ -34,4 +34,4 @@ COPY --from=builder /app/module-api/build/libs/*.jar app.jar
 
 EXPOSE 80
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "-Duser.timezone=Asia/Seoul", "app.jar"]

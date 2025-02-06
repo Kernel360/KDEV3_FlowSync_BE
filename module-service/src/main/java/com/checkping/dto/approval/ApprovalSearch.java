@@ -3,6 +3,8 @@ package com.checkping.dto.approval;
 import com.checkping.common.response.PaginationProps;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
+import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
+import com.checkping.dto.project.ProgressStepGet;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,28 +23,23 @@ public class ApprovalSearch {
         progressStepId : 프로젝트 진행 단계 ID
         title : 결재 제목
         status : 결재 상태
-        registerId : 작성자 ID
-        registerName : 작성자 이름
+        register : 작성자
         regAt : 작성일
         updatedAt : 수정일
         approvalAt : 결재일
-        approvalId : 결재자 ID
-        approvalName : 결재자 이름
+        approval : 결재자
         cancelAt : 취소일
          */
         private Long id;
         private Long projectId;
-        //TODO : 엔티티를 참조하도록 변경 필요
-        private Long progressStepId;
+        private ProgressStepGet.Response progressStep;
         private String title;
         private String status;
-        private Long registerId;
-        private String registerName;
+        private MeResponseDto register;
         private String regAt;
         private String updatedAt;
         private String approverAt;
-        private Long approvalId;
-        private String approvalName;
+        private MeResponseDto approver;
         private String cancelAt;
 
         /**
@@ -54,17 +51,15 @@ public class ApprovalSearch {
         public static ApprovalItem toDto(Approval approval) {
             ApprovalItem dto = new ApprovalItem();
             dto.id = approval.getId();
-            dto.projectId = approval.getProjectId();
-            dto.progressStepId = approval.getProgressStepId();
+            dto.projectId = approval.getProject().getId();
+            dto.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             dto.title = approval.getTitle();
             dto.status = approval.getStatus().name();
-            dto.registerId = approval.getRegisterId();
-            dto.registerName = approval.getRegisterName();
+            dto.register = MeResponseDto.fromEntity(approval.getRegister());
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            dto.approvalId = approval.getApproverId();
-            dto.approvalName = approval.getApproverName();
+            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
             dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             return dto;
         }

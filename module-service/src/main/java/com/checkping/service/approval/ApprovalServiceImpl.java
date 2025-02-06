@@ -5,6 +5,8 @@ import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
 import com.checkping.domain.member.Member;
+import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -21,6 +23,8 @@ import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
 import com.checkping.exception.approval.comment.ApprovalCommentMismatchException;
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
+import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
+import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.info.approval.ApprovalSearchInfo;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
@@ -28,6 +32,7 @@ import com.checkping.infra.repository.approval.comment.ApprovalCommentReader;
 import com.checkping.infra.repository.approval.comment.ApprovalCommentStore;
 import com.checkping.infra.repository.approval.file.ApprovalFileStore;
 import com.checkping.infra.repository.approval.link.ApprovalLinkStore;
+import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.List;
@@ -46,18 +51,28 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalReader approvalReader;
     private final ApprovalCommentStore approvalCommentStore;
     private final ApprovalCommentReader approvalCommentReader;
-    private final CurrentMemberUtil currentMemberUtil;
     private final ProjectReader projectReader;
+    private final ProgressStepReader progressStepReader;
+    private final CurrentMemberUtil currentMemberUtil;
 
     @Transactional
     @Override
     public ApprovalRegister.Response register(Long projectId, ApprovalRegister.Request request) {
 
-        // TODO : registerId 는 시큐리티에서 가져오도록 변경 필요
-        Long registerId = 123123L;
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
 
-        Approval init = ApprovalRegister.Request.toEntity(projectId,
-            registerId, request);
+        // Find project
+        Project project = projectReader.getById(projectId);
+
+        // Find progressStep
+        ProgressStep progressStep = progressStepReader.getById(request.getProgressStepId())
+            .orElseThrow(ProgressStepNotFoundException::new);
+
+        // Check project match progressStep
+        checkProgressStepMatchProject(progressStep, project);
+
+        Approval init = ApprovalRegister.Request.toEntity(project, progressStep, member, request);
 
         Approval approval = approvalStore.store(init);
 
@@ -101,8 +116,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     }
 
     /**
-     * 결재 상세 조회
-     * 부모 댓글과 자식 댓글도 같이 조회된다.
+     * 결재 상세 조회 부모 댓글과 자식 댓글도 같이 조회된다.
      *
      * @param projectId  프로젝트 아이디
      * @param approvalId 결재 아이디
@@ -135,8 +149,7 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Request -> Entity
-        ApprovalComment init = ApprovalCommentRegister.Request.toEntity(request,
-            approval);
+        ApprovalComment init = ApprovalCommentRegister.Request.toEntity(request, approval);
 
         // Save comment
         ApprovalComment comment = approvalCommentStore.store(init);
@@ -165,8 +178,8 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ApprovalCommentNotFoundEntityException::new);
 
         // Request -> Entity
-        ApprovalComment init = ApprovalReCommentRegister.Request.toEntity(request,
-            approval, parentComment);
+        ApprovalComment init = ApprovalReCommentRegister.Request.toEntity(request, approval,
+            parentComment);
 
         // Save reComment
         ApprovalComment reComment = approvalCommentStore.store(init);
@@ -232,6 +245,19 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (!approvalCommentReader.isContainingComment(approval.getId(), commentId)) {
             // throw exception
             throw new ApprovalCommentMismatchException();
+        }
+    }
+
+    /**
+     * 진행 단계와 프로젝트 일치 여부 확인
+     *
+     * @param progressStep  진행 단계
+     * @param targetProject 프로젝트
+     */
+    private void checkProgressStepMatchProject(ProgressStep progressStep, Project targetProject) {
+        if (!progressStep.getProjectId().equals(targetProject.getId())) {
+            // throw exception
+            throw new ProgressStepMismatchProjectException();
         }
     }
 }
