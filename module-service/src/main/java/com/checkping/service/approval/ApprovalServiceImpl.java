@@ -4,6 +4,7 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalGet;
@@ -31,6 +32,7 @@ import com.checkping.infra.repository.approval.file.ApprovalFileStore;
 import com.checkping.infra.repository.approval.link.ApprovalLinkStore;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,13 +51,14 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalCommentReader approvalCommentReader;
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
+    private final CurrentMemberUtil currentMemberUtil;
 
     @Transactional
     @Override
     public ApprovalRegister.Response register(Long projectId, ApprovalRegister.Request request) {
 
-        // TODO : registerId 는 시큐리티에서 가져오도록 변경 필요
-        Long registerId = 123123L;
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
 
         // Find project
         Project project = projectReader.getById(projectId);
@@ -67,8 +70,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Check project match progressStep
         checkProgressStepMatchProject(progressStep, project);
 
-        Approval init = ApprovalRegister.Request.toEntity(project, progressStep, registerId,
-            request);
+        Approval init = ApprovalRegister.Request.toEntity(project, progressStep, member, request);
 
         Approval approval = approvalStore.store(init);
 
@@ -219,7 +221,7 @@ public class ApprovalServiceImpl implements ApprovalService {
      * @param targetProject 프로젝트
      */
     private void checkProgressStepMatchProject(ProgressStep progressStep, Project targetProject) {
-        if(!progressStep.getProjectId().equals(targetProject.getId())) {
+        if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
         }

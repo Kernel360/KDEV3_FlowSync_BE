@@ -6,6 +6,7 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
+import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -50,10 +51,8 @@ public class ApprovalGet {
         private List<ApprovalContent> content;
         @Schema(description = "결재 상태")
         private ApprovalStatus status;
-        @Schema(description = "작성자 id")
-        private Long registerId;
-        @Schema(description = "작성자 이름")
-        private String registerName;
+        @Schema(description = "작성자")
+        private MeResponseDto register;
         @Schema(description = "취소 일자")
         private String cancelAt;
         @Schema(description = "승인 일시")
@@ -87,8 +86,7 @@ public class ApprovalGet {
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());
             response.status = approval.getStatus();
-            response.registerId = approval.getRegisterId();
-            response.registerName = approval.getRegisterName();
+            response.register = MeResponseDto.fromEntity(approval.getRegister());
             response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             response.approverAt = DateTimeUtils.format(approval.getApproverAt());
             response.approverId = approval.getApproverId();

@@ -67,7 +67,6 @@ public class Approval extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT", length = 65536)
     private String content;
 
-    // TODO : 연관 관계 맵핑 필요
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_id")
     private Member register;
