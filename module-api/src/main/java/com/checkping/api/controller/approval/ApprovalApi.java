@@ -6,6 +6,7 @@ import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
+import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,12 @@ public interface ApprovalApi {
     BaseResponse<ApprovalGet.Response> get(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId);
+
+    @Operation(summary = "결재 수정", description = "결재를 수정하는 기능입니다.")
+    BaseResponse<ApprovalUpdate.Response> update(
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
+        @Parameter(description = "결재 ID") @PathVariable Long approvalId,
+        @Parameter(description = "결재 수정 정보") @RequestBody ApprovalUpdate.Request request);
 
     @Operation(summary = "결재 댓글 생성", description = "결재 댓글을 생성하는 기능입니다.")
     BaseResponse<ApprovalCommentRegister.Response> registerComment(
