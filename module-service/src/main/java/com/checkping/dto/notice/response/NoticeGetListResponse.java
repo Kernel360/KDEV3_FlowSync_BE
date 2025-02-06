@@ -2,15 +2,20 @@ package com.checkping.dto.notice.response;
 
 import com.checkping.domain.notice.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-@Builder
+@SuperBuilder
 public class NoticeGetListResponse extends NoticeGetListWithoutIsdeletedResponse {
 
     @Schema(description = "공지사항 아이디", example = "1")
