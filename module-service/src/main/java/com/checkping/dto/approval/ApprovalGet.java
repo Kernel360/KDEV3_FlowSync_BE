@@ -86,7 +86,7 @@ public class ApprovalGet {
             response.register = MeResponseDto.fromEntity(approval.getRegister());
             response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             response.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            response.approver = MeResponseDto.fromEntity(approval.getApprover());
+            response.approver = approval.getApprover() == null ? null : MeResponseDto.fromEntity(approval.getApprover());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             response.regAt = DateTimeUtils.format(approval.getRegAt());
             response.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
