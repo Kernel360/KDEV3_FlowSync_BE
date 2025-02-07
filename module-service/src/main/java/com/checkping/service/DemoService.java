@@ -3,6 +3,7 @@ package com.checkping.service;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.CustomException;
 import com.checkping.domain.member.Member;
+import com.checkping.infra.repository.file.FileReaderImpl;
 import com.checkping.infra.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class DemoService {
     private String name;
 
     private final MemberRepository memberRepository;
+    private final FileReaderImpl fileReader;
 
     public String save() {
         System.out.println("name : " + name);
@@ -44,5 +46,9 @@ public class DemoService {
         if (true)
             throw new CustomException(ErrorCode.BAD_REQUEST);
         return "exception";
+    }
+
+    public String getPresignedUrl(String filename){
+        return fileReader.getPresignedUrlToDownload(filename);
     }
 }
