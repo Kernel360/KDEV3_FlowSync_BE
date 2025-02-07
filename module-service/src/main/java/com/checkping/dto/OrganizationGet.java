@@ -1,5 +1,6 @@
 package com.checkping.dto;
 
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.member.Organization;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -42,6 +43,8 @@ public class OrganizationGet {
         private String status;
         @Schema(description = "삭제 사유")
         private String reasonForDeleteOrganization;
+        @Schema(description = "등록일시")
+        private String regAt;
 
         public static OrganizationGet.Response toDto(Organization organization) {
             return Response.builder()
@@ -55,6 +58,7 @@ public class OrganizationGet {
                     .phoneNumber(organization.getPhoneNumber())
                     .status(organization.getStatus().toString())
                     .reasonForDeleteOrganization(organization.getReasonForDeleteOrganization())
+                    .regAt(DateTimeUtils.format(organization.getRegAt()))
                     .build();
         }
     }
