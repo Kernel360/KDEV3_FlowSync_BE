@@ -154,7 +154,7 @@ public class Approval extends BaseEntity {
      *
      * @param approvalFiles 파일 리스트
      */
-    public void addFiles(List<ApprovalFile> approvalFiles) {
+    public void updateFiles(List<ApprovalFile> approvalFiles) {
         this.fileList = approvalFiles;
     }
 
