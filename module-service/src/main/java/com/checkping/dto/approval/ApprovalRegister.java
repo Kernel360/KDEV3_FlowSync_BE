@@ -98,9 +98,9 @@ public class ApprovalRegister {
             dto.content = ApprovalRegister.Response.stringToJson(approval.getContent());
             dto.status = approval.getStatus().name();
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
-            dto.cancelAt = approval.getCancelAt();
-            dto.approverAt = approval.getApproverAt();
-            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
+            dto.cancelAt = null;
+            dto.approverAt = null;
+            dto.approver = null;
             dto.updatedAt = approval.getUpdatedAt();
             dto.regAt = approval.getRegAt();
             dto.fileInfoList = ApprovalFileRegister.Response.toDto(approval.getFileList());
