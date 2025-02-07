@@ -91,6 +91,12 @@ public class LocalFileRepositoryImpl implements FileRepository {
             file.delete();
     }
 
+    @Override
+    @Deprecated
+    public String getPresignedUrl(String filename) {
+        return null;
+    }
+
     /**
      * 저장 파일명 생성
      * @param filename 원본 파일명
