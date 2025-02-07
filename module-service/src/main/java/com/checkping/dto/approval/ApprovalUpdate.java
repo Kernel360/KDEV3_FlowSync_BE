@@ -155,14 +155,24 @@ public class ApprovalUpdate {
             dto.content = ApprovalContent.toContentList(approval.getContent());
             dto.status = approval.getStatus();
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
-            dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
-            dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            dto.approver = MeResponseDto.fromEntity(approval.getApprover());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
             dto.linkList = ApprovalLinkGet.Response.toDto(approval.getLinkList());
             dto.fileList = ApprovalFileGet.Response.toDto(approval.getFileList());
+
+            // 결재 상태가 대기 상태인 경우 null 처리
+            dto.cancelAt = null;
+            dto.approverAt = null;
+            dto.approver = null;
+
+            // 결재 상태가 대기 상태가 아닌 경우
+            if (!approval.getStatus().equals(ApprovalStatus.WAIT)) {
+                dto.approver = MeResponseDto.fromEntity(approval.getApprover());
+                dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
+                dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
+            }
+
             return dto;
         }
     }
