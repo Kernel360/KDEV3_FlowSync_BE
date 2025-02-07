@@ -27,8 +27,8 @@ public class NoticeController implements NoticeApi {
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
             @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
-        NoticeResponse noticeResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
-        return BaseResponse.success(noticeResponse);
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
+        return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 
     @Override
@@ -42,10 +42,10 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<NoticeWithoutIsdeletedResponse> getNotice(
+    public BaseResponse<NoticeResponse> getNotice(
             @PathVariable Long noticeid
     ){
-        NoticeWithoutIsdeletedResponse noticeGetResponse = noticeService.getNotice(noticeid);
+        NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 

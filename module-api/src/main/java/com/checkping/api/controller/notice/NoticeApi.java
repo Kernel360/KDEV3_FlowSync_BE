@@ -2,16 +2,11 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
-import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
 public interface NoticeApi {
@@ -30,7 +25,7 @@ public interface NoticeApi {
     );
 
     @Operation(summary = "공지사항 조회", description = "특정 공지사항을 조회하는 기능입니다")
-    public BaseResponse<NoticeWithoutIsdeletedResponse> getNotice(
+    public BaseResponse<NoticeResponse> getNotice(
             @Parameter(description = "공지사항 아이디") Long noticeid
     );
 

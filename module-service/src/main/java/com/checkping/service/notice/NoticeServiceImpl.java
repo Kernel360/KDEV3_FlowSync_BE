@@ -57,7 +57,7 @@ public class NoticeServiceImpl implements NoticeService {
                 noticeUpdateRequest.getPriority()
         );
 
-        return NoticeResponse.toDto(notice);
+        return NoticeWithIsdeletedResponse.toDto(notice);
     }
 
     @Override
@@ -74,11 +74,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         noticeRepository.save(notice);
 
-        return NoticeResponse.toDto(notice);
+        return NoticeWithIsdeletedResponse.toDto(notice);
     }
 
     @Override
-    public NoticeWithoutIsdeletedResponse getNotice(Long noticeid) {
+    public NoticeResponse getNotice(Long noticeid) {
         Member currentMember = currentMemberUtil.getCurrentMember();
         boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
 
@@ -89,7 +89,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));  // 비관리자: 삭제된 공지사항은 볼 수 없음
 
         return isAdmin
-                ? NoticeResponse.toDto(notice)  // 관리자: isDeleted 포함
+                ? NoticeWithIsdeletedResponse.toDto(notice)  // 관리자: isDeleted 포함
                 : NoticeWithoutIsdeletedResponse.toDto(notice);  // 비관리자: isDeleted 제외
     }
 

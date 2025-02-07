@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
     @Getter
-    @SuperBuilder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class NoticeWithoutIsdeletedResponse {
+    @Builder
+    public class NoticeWithoutIsdeletedResponse implements NoticeResponse {
 
         @Schema(description = "공지사항 아이디", example = "1")
         private Long id;
@@ -42,7 +40,7 @@ import java.util.List;
         @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
         private LocalDateTime updatedAt;
 
-        public static NoticeWithoutIsdeletedResponse toDto(Notice notice) {
+        public static NoticeResponse toDto(Notice notice) {
             return NoticeWithoutIsdeletedResponse.builder()
                     .id(notice.getId())
                     .title(notice.getTitle())

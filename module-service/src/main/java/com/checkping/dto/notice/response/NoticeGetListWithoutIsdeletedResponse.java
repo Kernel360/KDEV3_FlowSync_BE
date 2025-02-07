@@ -11,12 +11,10 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 
 
-
 @Getter
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-public class NoticeGetListWithoutIsdeletedResponse {
+@Builder
+public class NoticeGetListWithoutIsdeletedResponse implements NoticeGetListResponse {
+
     @Schema(description = "공지사항 아이디", example = "1")
     private Long id;
 
@@ -35,7 +33,7 @@ public class NoticeGetListWithoutIsdeletedResponse {
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
     private LocalDateTime updatedAt;
 
-    public static NoticeGetListWithoutIsdeletedResponse toDto(Notice notice){
+    public static NoticeGetListResponse toDto(Notice notice){
         return NoticeGetListWithoutIsdeletedResponse.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
