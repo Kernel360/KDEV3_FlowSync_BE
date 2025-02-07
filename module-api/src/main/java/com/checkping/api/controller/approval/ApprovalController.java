@@ -2,6 +2,7 @@ package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Request;
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,6 +81,15 @@ public class ApprovalController implements ApprovalApi {
         @PathVariable Long approvalId, @RequestBody ApprovalUpdate.Request request) {
 
         ApprovalUpdate.Response response = approvalService.update(projectId, approvalId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @DeleteMapping("/{approvalId}")
+    @Override
+    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId, @PathVariable Long approvalId) {
+
+        ApprovalDelete.Response response = approvalService.delete(projectId, approvalId);
 
         return BaseResponse.success(response);
     }
