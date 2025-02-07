@@ -4,7 +4,7 @@ import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationListGet;
 import com.checkping.dto.OrganizationUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,10 +27,10 @@ public interface OrganizationApi {
     );
 
     @Operation(summary = "업체 상세 조회", description = "업체 상세 조회 기능입니다.")
-    BaseResponse<OrganizationGet.Response> getOrganization(@Parameter(description = "업체 ID") Long organizationId);
+    BaseResponse<OrganizationListGet.Response> getOrganization(@Parameter(description = "업체 ID") Long organizationId);
 
     @Operation(summary = "업체 전체 조회", description = "업체 조회 기능입니다.")
-    BaseResponse<PageInfo.Response<OrganizationGet.Response>> getListOrganization(
+    BaseResponse<PageInfo.Response<OrganizationListGet.Response>> getListOrganization(
             @Parameter(description = "업체 타입(CUSTOMER / DEVELOPER)") @RequestParam(required = false) String type,
             @Parameter(description = "업체 상태(ACTIVE / INACTIVE") @RequestParam(required = false) String status,
             @Parameter(description = "페이지 번호") @RequestParam int page,
