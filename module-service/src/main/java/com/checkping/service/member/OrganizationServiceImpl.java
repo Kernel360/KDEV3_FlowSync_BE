@@ -6,7 +6,7 @@ import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
 import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationListGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.exception.member.OrganizationAlreadyDeletedException;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
@@ -56,18 +56,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public OrganizationGet.Response getOrganization(Long id) {
+    public OrganizationListGet.Response getOrganization(Long id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        return OrganizationGet.Response.toDto(organization);
+        return OrganizationListGet.Response.toDto(organization);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
+    public PageInfo.Response<OrganizationListGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
         Pageable pageable = PageRequest.of(
                 pageRequest.getCurrentPage() - 1,
@@ -83,10 +83,10 @@ public class OrganizationServiceImpl implements OrganizationService {
                 pageRequest.getKeyword(),
                 pageable);
 
-        List<OrganizationGet.Response> dtoList = result.getContent().stream().map(OrganizationGet.Response::toDto).toList();
+        List<OrganizationListGet.Response> dtoList = result.getContent().stream().map(OrganizationListGet.Response::toDto).toList();
         PageMetaResponse meta = PageMetaResponse.fromPage(result);
 
-        return PageInfo.Response.<OrganizationGet.Response>builder()
+        return PageInfo.Response.<OrganizationListGet.Response>builder()
                 .dtoList(dtoList)
                 .meta(meta.toMap())
                 .build();
