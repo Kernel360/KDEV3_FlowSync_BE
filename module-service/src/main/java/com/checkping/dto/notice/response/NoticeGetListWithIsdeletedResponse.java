@@ -33,7 +33,7 @@ public class NoticeGetListWithIsdeletedResponse implements NoticeGetListResponse
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
     private LocalDateTime updatedAt;
 
-    public static NoticeGetListWithIsdeletedResponse toDto(Notice notice){
+    public static NoticeGetListResponse toDto(Notice notice){
         return NoticeGetListWithIsdeletedResponse.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
