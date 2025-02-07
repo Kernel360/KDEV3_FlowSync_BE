@@ -12,9 +12,11 @@ import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Approval API(ApprovalController)", description = "결재 API 입니다.")
 public interface ApprovalApi {
@@ -31,8 +33,8 @@ public interface ApprovalApi {
         @Parameter(description = "질문 게시글 유형") Long progressId,
         @Parameter(description = "질문 게시글 상태") String status,
         @Parameter(description = "질문 게시글 검색어") String keyword,
-        @Parameter(description = "현재 페이지") Integer currentPage,
-        @Parameter(description = "페이지 사이즈") Integer pageSize);
+        @Parameter(description = "현재 페이지") @Min(0) @RequestParam(defaultValue = "1") Integer currentPage,
+        @Parameter(description = "페이지 사이즈") @RequestParam(defaultValue = "10") Integer pageSize);
 
     @Operation(summary = "결재 상세 조회", description = "결재 상세를 조회하는 기능입니다.")
     BaseResponse<ApprovalGet.Response> get(
