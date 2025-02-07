@@ -3,6 +3,7 @@ package com.checkping.dto.project;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.project.ProgressStep;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class ProgressStepGet {
 
     @Getter
     public static class Response {
+
         /*
         id : 진행 단계 ID
         name : 단계명
@@ -42,8 +44,8 @@ public class ProgressStepGet {
         /**
          * ProgressStep Entity -> ProgressStepGet.Response Dto
          *
-         * @param progressStep  ProgressStep Entity
-         * @return  ProgressStepGet.Response Dto
+         * @param progressStep ProgressStep Entity
+         * @return ProgressStepGet.Response Dto
          */
         public static Response toDto(ProgressStep progressStep) {
             Response response = new Response();
@@ -51,11 +53,22 @@ public class ProgressStepGet {
             response.name = progressStep.getName();
             response.description = progressStep.getDescription();
             response.stepOrder = progressStep.getStepOrder();
-            response.status = progressStep.getStatus() != null ? progressStep.getStatus().name() : null;
+            response.status =
+                progressStep.getStatus() != null ? progressStep.getStatus().name() : null;
             response.startAt = DateTimeUtils.format(progressStep.getStartAt());
             response.closeAt = DateTimeUtils.format(progressStep.getCloseAt());
             response.projectId = progressStep.getProjectId();
             return response;
+        }
+
+        /**
+         * ProgressStep Entity List -> ProgressStepGet.Response Dto List
+         *
+         * @param progressSteps ProgressStep Entity List
+         * @return ProgressStepGet.Response Dto List
+         */
+        public static List<Response> toDto(List<ProgressStep> progressSteps) {
+            return progressSteps.stream().map(Response::toDto).toList();
         }
     }
 }
