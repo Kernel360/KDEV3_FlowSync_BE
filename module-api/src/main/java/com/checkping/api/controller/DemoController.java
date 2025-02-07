@@ -41,4 +41,9 @@ public class DemoController {
     public String check() {
         return "check";
     }
+
+    @GetMapping("/presigned")
+    public String getPresignedUrl(String filename) {
+        return demoService.getPresignedUrl(filename);
+    }
 }
