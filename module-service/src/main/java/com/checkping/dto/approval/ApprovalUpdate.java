@@ -6,6 +6,7 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
+import com.checkping.dto.approval.file.ApprovalFileUpdate;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
@@ -34,7 +35,7 @@ public class ApprovalUpdate {
 
         private String title;
         private List<ApprovalContent> content;
-        private List<ApprovalFileGet.Response> fileInfoList;
+        private List<ApprovalFileUpdate.Request> fileInfoList;
         private List<ApprovalLinkUpdate.Request> linkList;
 
         public String getContent() {
@@ -63,7 +64,7 @@ public class ApprovalUpdate {
          */
         public List<FileRequest> getFileRequests() {
             List<FileRequest> list = new ArrayList<>();
-            for (ApprovalFileGet.Response file : fileInfoList) {
+            for (ApprovalFileUpdate.Request file : fileInfoList) {
                 FileRequest fileRequest = new FileRequest(file.getOriginalName(),
                     file.getSaveName(), file.getUrl(), file.getSize());
                 list.add(fileRequest);
