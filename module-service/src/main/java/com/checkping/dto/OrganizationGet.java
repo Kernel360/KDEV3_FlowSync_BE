@@ -5,8 +5,6 @@ import com.checkping.domain.member.Organization;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.util.List;
-
 public class OrganizationGet {
     /*
    id : 업체 ID
@@ -26,7 +24,7 @@ public class OrganizationGet {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Response<T, U> {
+    public static class Response {
 
         @Schema(description = "업체 ID", example = "1")
         private String id;
@@ -50,13 +48,9 @@ public class OrganizationGet {
         private String reasonForDeleteOrganization;
         @Schema(description = "등록일시")
         private String regAt;
-        @Schema(description = "회원 목록")
-        private List<T> memberList;
-        @Schema(description = "프로젝트 목록")
-        private List<U> projectList;
 
-        public static <T, U> OrganizationGet.Response<T, U> toDto(Organization organization, List<T> memberList, List<U> projectList) {
-            return Response.<T, U>builder()
+        public static OrganizationGet.Response toDto(Organization organization) {
+            return Response.builder()
                     .id(organization.getId().toString())
                     .type(organization.getType().toString())
                     .brNumber(organization.getBrNumber())
@@ -68,8 +62,6 @@ public class OrganizationGet {
                     .status(organization.getStatus().toString())
                     .reasonForDeleteOrganization(organization.getReasonForDeleteOrganization())
                     .regAt(DateTimeUtils.format(organization.getRegAt()))
-                    .memberList(memberList)
-                    .projectList(projectList)
                     .build();
         }
     }

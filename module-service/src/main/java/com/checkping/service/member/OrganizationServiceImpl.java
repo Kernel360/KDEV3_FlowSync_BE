@@ -32,7 +32,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     private final S3FileRepositoryImpl s3FileRepository;
-    private final S3FileRepositoryImpl s3FileRepositoryImpl;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -107,7 +106,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             // 저장 파일명
             String saveName = organization.getBrCertificateUrl().split("\\|")[0];
             // 기존 파일 삭제
-            s3FileRepositoryImpl.deleteFile(saveName);
+            s3FileRepository.deleteFile(saveName);
         }
 
         // 수정 파일 등록
