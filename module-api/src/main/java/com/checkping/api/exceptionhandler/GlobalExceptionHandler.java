@@ -7,13 +7,16 @@ import com.checkping.common.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -37,6 +40,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getErrorCode().getStatusCode())
                 .body(BaseResponse.fail(e.getMessage(), e.getErrorCode()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<BaseResponse> handlerValidationException(MethodArgumentNotValidException e, HttpServletRequest request) {
+        logRequestDetails(request, MDC.get("requestId"));
+        log.error("Response [{}] msg={}", MDC.get("requestId"), e.getMessage(), e);
+
+        List<String> errorMessages = e.getBindingResult().getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .toList();
+
+        return ResponseEntity
+                .status(ErrorCode.BAD_REQUEST.getStatus())
+                .body(BaseResponse.fail(errorMessages.toString(), ErrorCode.BAD_REQUEST));
     }
 
     @ExceptionHandler(Exception.class)
