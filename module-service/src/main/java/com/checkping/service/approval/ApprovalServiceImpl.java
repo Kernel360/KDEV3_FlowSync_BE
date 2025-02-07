@@ -19,8 +19,8 @@ import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
-import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
+import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalAuthorityException;
 import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
@@ -39,6 +39,7 @@ import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Save approvalLinks
         approvalLinkStore.store(approvalLinks);
         // Add approvalLinks to approval
-        approval.addLinks(approvalLinks);
+        approval.updateLinks(approvalLinks);
 
         return ApprovalRegister.Response.toDto(approval);
     }
@@ -185,27 +186,28 @@ public class ApprovalServiceImpl implements ApprovalService {
         approval.addFiles(initFiles);
 
         // 첨부 링크 처리
-        // request 와 비교해서 id 가 있는 것들을 제외하고 비활성화 처리
-        List<ApprovalLink> existLinks = approval.getLinkList();
-        List<ApprovalLinkGet.Response> requestLinks = request.getLinkList();
+        // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
+        List<ApprovalLink> currentLinks = approval.getLinkList();
+        List<ApprovalLinkUpdate.Request> requestLinks = request.getLinkList();
 
-        // PUT 으로 안오는 것들 비활성화 처리
-        for (ApprovalLink approvalLink : existLinks) {
+        for (ApprovalLink currentLink : currentLinks) {
             boolean isExist = requestLinks.stream()
-                .anyMatch(link -> approvalLink.getId().equals(link.getId()));
+                .anyMatch(requestLink -> Objects.equals(currentLink.getId(), requestLink.getId()));
             if (!isExist) {
-                approvalLink.deactivate();
+                currentLink.deactivate();
             }
         }
 
-        // request 에서 링크 추가된 것들은 추가
-        // LinkRequest -> Entity
-        List<ApprovalLink> initLinks = ApprovalLinkRegister.Request.toEntity(approval,
-            request.getLinkRequests());
+        // 2. request 에서 id 가 없는 것들은 생성한다.
+        List<ApprovalLink> newLinks = requestLinks.stream()
+            .filter(requestLink -> requestLink.getId() == null)
+            .map(requestLink -> ApprovalLinkUpdate.Request.toEntity(approval, requestLink))
+            .toList();
+
         // Save approvalLinks
-        approvalLinkStore.store(initLinks);
+        approvalLinkStore.store(newLinks);
         // Add approvalLinks to approval
-        approval.addLinks(initLinks);
+        approval.updateLinks(newLinks);
 
         return ApprovalUpdate.Response.toDto(approval);
     }
