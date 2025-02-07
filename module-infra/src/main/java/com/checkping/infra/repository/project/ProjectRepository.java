@@ -2,10 +2,9 @@ package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
-import com.checkping.infra.dto.ProjectListDetailsDto;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
-import jakarta.persistence.Tuple;
+import com.checkping.infra.repository.project.querydsl.ProjectRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom {
 
     @Query(value =
             "SELECT " +
@@ -89,12 +88,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "AND (NULLIF(:status, '') IS NULL OR p.status = :status)" +
             "AND m.id = :memberId ", nativeQuery = true)
     Page<Object[]> findCustomerProjectsByKeywordAndStatus(@Param("keyword") String keyword, @Param("status") String status, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
-
-
-    @Query("SELECT p.managementStep, COUNT(p) AS projectCount " +
-            "FROM Project p " +
-            "GROUP BY p.managementStep")
-    List<Tuple> countProjectsByManagementStep();
 
     @Query(value = "SELECT " +
             "    p.id, " +

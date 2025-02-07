@@ -67,10 +67,10 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @GetMapping("/admins/projects/management-steps")
-    public BaseResponse<Map<String, Long>> countProjectsByManagementStep() {
-        Map<String, Long> managementCountMap = projectService.countProjectsByManagementStep();
-        return BaseResponse.success(managementCountMap);
+    @GetMapping(value={"/admins/projects/management-steps", "/projects/management-steps"})
+    public BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep() {
+        ProjectResponse.ProjectManagementStepCountDto projectCount = projectService.countProjectsByManagementStep();
+        return BaseResponse.success(projectCount);
     }
 
     @Override

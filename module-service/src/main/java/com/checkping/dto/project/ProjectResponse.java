@@ -133,18 +133,6 @@ public class ProjectResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ProjectInfoDto {
-        @Schema(description = "프로젝트 아이디")
-        private Long id;
-        @Schema(description = "프로젝트 이름")
-        private String projectName;
-    }
-
-    @Getter
-    @ToString
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ProjectListDetailDto {
         @Schema(description = "프로젝트 아이디")
         private Long id;
@@ -221,6 +209,18 @@ public class ProjectResponse {
     }
 
     @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoDto {
+        @Schema(description = "프로젝트 아이디")
+        private Long id;
+        @Schema(description = "프로젝트 이름")
+        private String projectName;
+    }
+
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ProjectInfoListDto {
@@ -228,6 +228,17 @@ public class ProjectResponse {
 
         public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
             return new ProjectInfoListDto(projectInfoMap);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectManagementStepCountDto {
+        private Map<String, Long> managementStepCountMap;
+
+        public static ProjectManagementStepCountDto toDto(Map<String, Long> managementStepCountMap) {
+            return new ProjectManagementStepCountDto(managementStepCountMap);
         }
     }
 
