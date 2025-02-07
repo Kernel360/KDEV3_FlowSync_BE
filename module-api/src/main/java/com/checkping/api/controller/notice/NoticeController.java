@@ -9,8 +9,6 @@ import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequiredArgsConstructor
 public class NoticeController implements NoticeApi {
@@ -29,8 +27,8 @@ public class NoticeController implements NoticeApi {
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
             @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
-        NoticeResponse noticeResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
-        return BaseResponse.success(noticeResponse);
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
+        return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 
     @Override
@@ -44,16 +42,16 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @GetMapping("/notices/{noticeid}")
-    public BaseResponse<Map<String, Object>> getNotice(
+    public BaseResponse<NoticeResponse> getNotice(
             @PathVariable Long noticeid
     ){
-        Map<String, Object> noticeGetResponse = noticeService.getNotice(noticeid);
+        NoticeResponse noticeGetResponse = noticeService.getNotice(noticeid);
         return BaseResponse.success(noticeGetResponse);
     }
 
     @Override
     @GetMapping("/notices")
-    public BaseResponse<Map<String, Object>> getNotices(
+    public BaseResponse<NoticeListResponse> getNotices(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int currentPage,
@@ -66,8 +64,7 @@ public class NoticeController implements NoticeApi {
                 .pageSize(pageSize)
                 .build();
 
-        Map<String, Object> result = noticeService.getNotices(noticeSearchRequest);
+        NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
         return BaseResponse.success(result);
     }
-
 }
