@@ -2,6 +2,7 @@ package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
@@ -46,6 +47,11 @@ public interface ApprovalApi {
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 수정 정보") @RequestBody ApprovalUpdate.Request request);
+
+    @Operation(summary = "결재 삭제", description = "결재를 삭제하는 기능입니다.")
+    BaseResponse<ApprovalDelete.Response> delete(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "결재 ID") Long approvalId);
 
     @Operation(summary = "결재 댓글 생성", description = "결재 댓글을 생성하는 기능입니다.")
     BaseResponse<ApprovalCommentRegister.Response> registerComment(
