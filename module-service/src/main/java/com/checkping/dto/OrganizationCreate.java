@@ -28,18 +28,18 @@ public class OrganizationCreate {
          */
 
         @Schema(description = "업체 유형", example = "DEVELOPER")
-        @NotEmpty
+        @NotEmpty(message = "업체 유형은 필수 입력 값입니다.")
         private String type;
         @Schema(description = "사업자 등록번호", example = "123-45-67890")
-        @NotEmpty
+        @NotEmpty(message = "사업자 등록번호는 필수 입력 값입니다.")
         private String brNumber;
         @Schema(description = "업체명", example = "커널360")
-        @NotEmpty
+        @NotEmpty(message = "업체명은 필수 입력 값입니다.")
         private String name;
         @Schema(description = "사업자 등록증 이미지 링크")
         private String brCertificateUrl;
         @Schema(description = "도로명 주소", example = "서울시 강남구")
-        @NotEmpty
+        @NotEmpty(message = "도로명 주소는 필수 입력 값입니다.")
         private String streetAddress;
         @Schema(description = "상세 주소", example = "역삼동")
         private String detailAddress;
