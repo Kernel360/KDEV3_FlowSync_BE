@@ -183,8 +183,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Save approvalLinks
         approvalLinkStore.store(newLinks);
-        // Add approvalLinks to approval
-        approval.updateLinks(newLinks);
 
         // 첨부 파일 처리
         // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
@@ -207,8 +205,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Save approvalFiles
         approvalFileStore.store(newFiles);
-        // Update approvalFiles to approval
-        approval.updateFiles(newFiles);
 
         return ApprovalUpdate.Response.toDto(approval);
     }
