@@ -7,7 +7,7 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
-import com.checkping.dto.approval.link.ApprovalLinkRegister;
+import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.exception.approval.ApprovalContentParsingException;
@@ -35,7 +35,7 @@ public class ApprovalUpdate {
         private String title;
         private List<ApprovalContent> content;
         private List<ApprovalFileGet.Response> fileInfoList;
-        private List<ApprovalLinkGet.Response> linkList;
+        private List<ApprovalLinkUpdate.Request> linkList;
 
         public String getContent() {
             return jsonToString(this.content);
@@ -67,22 +67,6 @@ public class ApprovalUpdate {
                 FileRequest fileRequest = new FileRequest(file.getOriginalName(),
                     file.getSaveName(), file.getUrl(), file.getSize());
                 list.add(fileRequest);
-            }
-            return list;
-        }
-
-        /**
-         * 수정할 결재 첨부링크를 ApprovalLinkRegister.Request 리스트로 변환하는 메서드
-         *
-         * @return List<ApprovalLinkRegister.Request>
-         */
-        public List<ApprovalLinkRegister.Request> getLinkRequests() {
-            List<ApprovalLinkRegister.Request> list = new ArrayList<>();
-            for (ApprovalLinkGet.Response link : linkList) {
-                ApprovalLinkRegister.Request request = new ApprovalLinkRegister.Request();
-                request.setName(link.getName());
-                request.setUrl(link.getUrl());
-                list.add(request);
             }
             return list;
         }
