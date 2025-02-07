@@ -1,14 +1,15 @@
 package com.checkping.common.utils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTimeUtils {
 
-    private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm";
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern(
         DEFAULT_PATTERN);
 
