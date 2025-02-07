@@ -44,7 +44,7 @@ public interface ProjectApi {
     );
 
     @Operation(summary = "프로젝트 관리단계 별 개수 조회", description = "프로젝트 관리단계 별 개수를 조회하는 기능입니다.")
-    BaseResponse<Map<String, Long>> countProjectsByManagementStep();
+    BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep();
 
     @Operation(summary = "프로젝트 별 정보 조회", description = "프로젝트의 기본 정보를 조회하는 기능입니다.")
     BaseResponse<ProjectResponse.ProjectDetailDto> getProject(
