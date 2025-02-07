@@ -24,7 +24,7 @@ public class ApprovalLinkUpdate {
 
 
         /**
-         * 결재 첨부 링크 엔티티로 변환하는 메서드
+         * 결재 첨부 링크 엔티티 생성 메서드 (변환 아님)
          *
          * @param approval 결재 엔티티
          * @param request  요청 정보
@@ -70,6 +70,10 @@ public class ApprovalLinkUpdate {
          * @return 결재 첨부 파일 응답 정보 리스트
          */
         public static List<Response> toDto(List<ApprovalLink> approvalLinkList) {
+            // null check
+            if (approvalLinkList == null) {
+                return List.of();
+            }
             return approvalLinkList.stream().map(Response::toDto).toList();
         }
     }
