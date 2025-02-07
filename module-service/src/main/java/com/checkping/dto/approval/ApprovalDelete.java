@@ -1,5 +1,6 @@
 package com.checkping.dto.approval;
 
+import com.checkping.domain.approval.Approval;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,11 @@ public class ApprovalDelete {
         id : 삭제된 결재 ID
          */
         private Long id;
+
+        public static Response toDto(Approval approval) {
+            Response dto = new Response();
+            dto.id = approval.getId();
+            return dto;
+        }
     }
 }
