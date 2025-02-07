@@ -41,6 +41,10 @@ public class ApprovalLinkRegister {
          * @return ApprovalLink Entity List
          */
         public static List<ApprovalLink> toEntity(Approval approval, List<Request> requests) {
+            // Check null
+            if (requests == null) {
+                return List.of();
+            }
             return requests.stream().map(request -> toEntity(approval, request)).toList();
         }
     }
