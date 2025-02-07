@@ -17,8 +17,8 @@ import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
-import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
+import com.checkping.dto.approval.file.ApprovalFileUpdate;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalAuthorityException;
@@ -86,7 +86,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Save approvalFiles
         approvalFileStore.store(approvalFiles);
         // Add approvalFiles to approval
-        approval.addFiles(approvalFiles);
+        approval.updateFiles(approvalFiles);
 
         // LinkRequest -> Entity
         List<ApprovalLink> approvalLinks = ApprovalLinkRegister.Request.toEntity(approval,
@@ -162,29 +162,6 @@ public class ApprovalServiceImpl implements ApprovalService {
         // update Approval
         approval.update(request.getTitle(), request.getContent());
 
-        // 첨부 파일 처리
-        // request 와 비교해서 id 가 있는 것들을 제외하고 비활성화 처리
-        List<ApprovalFile> existFiles = approval.getFileList();
-        List<ApprovalFileGet.Response> requestFiles = request.getFileInfoList();
-
-        // PUT 으로 안오는 것들 비활성화 처리
-        for (ApprovalFile approvalFile : existFiles) {
-            boolean isExist = requestFiles.stream()
-                .anyMatch(file -> approvalFile.getId().equals(file.getId()));
-            if (!isExist) {
-                approvalFile.deactivate();
-            }
-        }
-
-        // request 에서 파일 추가된 것들은 추가
-        // FileRequest -> Entity
-        List<ApprovalFile> initFiles = ApprovalFileRegister.Request.toEntity(approval,
-            request.getFileRequests());
-        // Save approvalFiles
-        approvalFileStore.store(initFiles);
-        // Add approvalFiles to approval
-        approval.addFiles(initFiles);
-
         // 첨부 링크 처리
         // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
         List<ApprovalLink> currentLinks = approval.getLinkList();
@@ -208,6 +185,30 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalLinkStore.store(newLinks);
         // Add approvalLinks to approval
         approval.updateLinks(newLinks);
+
+        // 첨부 파일 처리
+        // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
+        List<ApprovalFile> currentFiles = approval.getFileList();
+        List<ApprovalFileUpdate.Request> requestFiles = request.getFileInfoList();
+
+        for (ApprovalFile currentFile : currentFiles) {
+            boolean isExist = requestFiles.stream()
+                .anyMatch(requestFile -> Objects.equals(currentFile.getId(), requestFile.getId()));
+            if (!isExist) {
+                currentFile.deactivate();
+            }
+        }
+
+        // 2. request 에서 id 가 없는 것들은 생성한다.
+        List<ApprovalFile> newFiles = requestFiles.stream()
+            .filter(requestFile -> requestFile.getId() == null)
+            .map(requestFile -> ApprovalFileUpdate.Request.toEntity(approval, requestFile))
+            .toList();
+
+        // Save approvalFiles
+        approvalFileStore.store(newFiles);
+        // Update approvalFiles to approval
+        approval.updateFiles(newFiles);
 
         return ApprovalUpdate.Response.toDto(approval);
     }
