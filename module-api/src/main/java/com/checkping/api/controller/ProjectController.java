@@ -1,9 +1,12 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.dto.project.ProjectRequest;
+import com.checkping.service.project.progressstep.ProgressStepService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.util.Map;
 public class ProjectController implements ProjectApi {
 
     private final ProjectServiceImpl projectService;
+    private final ProgressStepService progressStepService;
 
     @Override
     @PostMapping("/admins/projects")
@@ -85,5 +89,14 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
         ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
         return BaseResponse.success(projectList);
+    }
+
+    @Override
+    @GetMapping("/projects/{projectId}/progress-steps")
+    public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
+
+        List<ProgressStepGet.Response> response = progressStepService.getProgressStep(projectId);
+
+        return BaseResponse.success(response);
     }
 }
