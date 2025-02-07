@@ -1,6 +1,7 @@
 package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -88,6 +89,17 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,
             approvalId, commentId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{approvalId}/confirm")
+    @Override
+    public BaseResponse<ApprovalConfirm.Response> confirm(@PathVariable Long projectId,
+        @PathVariable Long approvalId, ApprovalConfirm.Request request) {
+
+        // Confirm Approval
+        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
 
         return BaseResponse.success(response);
     }
