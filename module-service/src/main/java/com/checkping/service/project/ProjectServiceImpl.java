@@ -80,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse.ProjectDto deleteProject(Long projectId) {
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         project.deleteProject();
 
@@ -89,20 +89,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDto updateProject(Long projectId,
-        ProjectRequest.UpdateDto request) {
+                                                    ProjectRequest.UpdateDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-            request.getCustomerOrgId());
+                request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         project = projectRepository.save(
-            ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
+                ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
@@ -261,68 +261,6 @@ public class ProjectServiceImpl implements ProjectService {
         });
 
         return ProjectResponse.ProjectListByManagementStepDto.toDto(results);
-    }
-
-    private Page<ProjectResponse.ProjectListDetailDto> getProjectListByRoleAndType(Member member, String keyword, String status, Pageable pageable) {
-        Member.Role role = member.getRole();
-
-        if (role.equals(Member.Role.ADMIN)) {
-            Page<Object[]> results = projectRepository.findAdminProjectsByKeywordAndStatus(keyword, status, pageable);
-            return toProjectListDetailDto(results);
-        }
-
-        Organization.Type type = member.getOrganization().getType();
-        Long memberId = member.getId();
-
-        if (type == Organization.Type.DEVELOPER) {
-            Page<Object[]> results = projectRepository.findDeveloperProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
-            return toProjectListDetailDto(results);
-        } else if (type == Organization.Type.CUSTOMER) {
-            Page<Object[]> results = projectRepository.findCustomerProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
-            return toProjectListDetailDto(results);
-        }
-
-        return Page.empty(pageable);
-    }
-
-    public Page<ProjectResponse.ProjectListDetailDto> toProjectListDetailDto(Page<Object[]> projectList) {
-        return projectList.map(row -> new ProjectResponse.ProjectListDetailDto(
-                ((Number) row[0]).longValue(), // id
-                (String) row[1], // name
-                (String) row[2], // description
-                (String) row[3], // detail
-                (String) row[4], // status
-                (String) row[5], // managementStep
-                (Date) row[6], // regAt
-                (Date) row[7], // updateAt
-                (Date) row[8], // startAt
-                (Date) row[9], // closeAt
-                (String) row[10], // deletedYn
-                ((Number) row[11]).longValue(), // devOwnerId
-                (String) row[12], // developerName
-                (String) row[13], // customerName
-                ((Number) row[14]).intValue() // clickable
-        ));
-    }
-
-    private List<ProjectCountByManagementStep> getProjectCountByRoleAndType(Member.Role role, Member member) {
-        if (role == Member.Role.ADMIN) {
-            return projectRepository.countProjectsByManagementStep(null, null);
-        }
-
-        Organization.Type type = Optional.ofNullable(member.getOrganization())
-                .map(Organization::getType)
-                .orElse(null);
-
-        if (role == Member.Role.MEMBER) {
-            return switch (type) {
-                case DEVELOPER ->
-                        projectRepository.countProjectsByManagementStep(member.getOrganization().getId(), null);
-                case CUSTOMER -> projectRepository.countProjectsByManagementStep(null, member.getId());
-            };
-        }
-
-        return Collections.emptyList();
     }
 
 }
