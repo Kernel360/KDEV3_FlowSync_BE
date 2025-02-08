@@ -7,6 +7,7 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
+import com.checkping.dto.approval.file.ApprovalFileUpdate.Request;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
@@ -38,6 +39,15 @@ public class ApprovalUpdate {
         private List<ApprovalContent> content;
         private List<ApprovalFileUpdate.Request> fileInfoList;
         private List<ApprovalLinkUpdate.Request> linkList;
+
+        public Request(String title, List<ApprovalContent> content,
+            List<ApprovalFileUpdate.Request> fileInfoList,
+            List<ApprovalLinkUpdate.Request> linkList) {
+            this.title = title;
+            this.content = content;
+            this.fileInfoList = fileInfoList == null ? new ArrayList<>() : fileInfoList;
+            this.linkList = linkList == null ? new ArrayList<>() : linkList;
+        }
 
         public String getContent() {
             return jsonToString(this.content);
