@@ -7,6 +7,7 @@ import com.checkping.dto.OrganizationDelete;
 import com.checkping.dto.OrganizationGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.service.member.OrganizationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class OrganizationController implements OrganizationApi {
     @PostMapping(value = "/admins/organizations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public BaseResponse<OrganizationCreate.Response> createOrganization(
-            @RequestPart(value = "content") OrganizationCreate.Request request,
+            @Valid @RequestPart(value = "content") OrganizationCreate.Request request,
             @RequestPart(required = false, value = "file") MultipartFile file
     ) {
 
@@ -59,7 +60,7 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public BaseResponse<OrganizationUpdate.Response> modifyOrganization(
             @PathVariable Long organizationId,
-            @RequestPart(value = "content") OrganizationUpdate.Request request,
+            @Valid @RequestPart(value = "content") OrganizationUpdate.Request request,
             @RequestPart(required = false, value = "file") MultipartFile file) {
 
         OrganizationUpdate.Response response = organizationService.modifyOrganization(
@@ -79,6 +80,18 @@ public class OrganizationController implements OrganizationApi {
         organizationService.removeOrganization(organizationId, request);
 
         return BaseResponse.success("업체 삭제 완료");
+    }
+
+    @PostMapping("/admins/organizations/{organizationId}/changeStatus")
+    @Override
+    public BaseResponse<String> changeStatusOrganization(
+            @PathVariable Long organizationId,
+            @RequestBody OrganizationDelete.Request request
+    ) {
+
+        organizationService.changeStatusOrganization(organizationId, request);
+
+        return BaseResponse.success("업체 상태 전환 완료");
     }
 
 }

@@ -1,14 +1,27 @@
 package com.checkping.service.notice;
 
-import com.checkping.dto.notice.request.NoticeCreateRequestDto;
-import com.checkping.dto.notice.request.NoticeUpdateRequestDto;
-import com.checkping.dto.notice.response.NoticeCreateResponseDto;
-import com.checkping.dto.notice.response.NoticeUpdateResponseDto;
+import com.checkping.domain.notice.Notice;
+import com.checkping.dto.notice.request.NoticeCreateRequest;
+import com.checkping.dto.notice.request.NoticeSearchRequest;
+import com.checkping.dto.notice.request.NoticeUpdateRequest;
+import com.checkping.dto.notice.response.NoticeCreateResponse;
+import com.checkping.dto.notice.response.NoticeGetListResponse;
+import com.checkping.dto.notice.response.NoticeListResponse;
+import com.checkping.dto.notice.response.NoticeResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface NoticeService {
 
-    NoticeCreateResponseDto registerNotice(NoticeCreateRequestDto noticeCreateRequestDto);
+    NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest);
 
-    NoticeUpdateResponseDto updateNotice(Long noticeid, NoticeUpdateRequestDto noticeUpdateRequestDto);
+    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest);
+
+    NoticeResponse deleteNotice(Long noticeid);
+
+    NoticeResponse getNotice(Long noticeid);
+    NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest);
 
 }
+
+

@@ -51,4 +51,10 @@ public interface OrganizationApi {
             @Parameter(description = "삭제 사유") @RequestBody OrganizationDelete.Request request
             );
 
+    @Operation(summary = "업체 상태 변경", description = "업체 활성화 상태 전환 기능입니다.")
+    BaseResponse<String> changeStatusOrganization(
+            @Parameter(description = "업체 ID") @PathVariable Long organizationId,
+            @Parameter(description = "전환 사유") @RequestBody OrganizationDelete.Request request
+    );
+
 }

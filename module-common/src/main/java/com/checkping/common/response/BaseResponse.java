@@ -52,9 +52,13 @@ public class BaseResponse<T> {
                 .build();
     }
 
-    // 실패 응답 (기본 에러 코드 사용)
-    public static BaseResponse fail() {
-        return fail(ErrorCode.BAD_REQUEST);
+    // 실패 응답 (ErrorCode로 생성)
+    public static BaseResponse fail(String errorMessage, ErrorCode errorCode) {
+        return BaseResponse.builder()
+                .code(errorCode.getStatusCode())
+                .result(Result.FAIL)
+                .message(errorMessage)
+                .build();
     }
 
     // 응답 결과 타입

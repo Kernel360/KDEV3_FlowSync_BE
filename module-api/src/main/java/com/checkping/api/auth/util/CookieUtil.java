@@ -8,9 +8,10 @@ public class CookieUtil {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setDomain("flowssync.com");
 
         return cookie;
     }
@@ -21,6 +22,7 @@ public class CookieUtil {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setDomain("flowssync.com");
 
         return cookie;
     }

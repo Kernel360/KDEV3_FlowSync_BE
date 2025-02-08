@@ -8,8 +8,11 @@
     <springProperty scope="context" name="LOG_FILE_NAME" source="log.config.filename"/>
     <property name="ERR_LOG_FILE_NAME" value="err_log"/>
 
-    <!-- Log Pattern -->
-    <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss} [requestId:%X{requestId}] [%thread] [%logger{0}:%line] - %msg%n"/>
+    <!-- 타임존 설정 (Asia/Seoul) -->
+    <timestamp key="BY_SECOND" datePattern="yyyy-MM-dd HH:mm:ss" timeZone="Asia/Seoul"/>
+
+    <!-- 로그 패턴 (KST 적용) -->
+    <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss, Asia/Seoul} [requestId:%X{requestId}] [%thread] [%logger{0}:%line] - %msg%n"/>
 
     <!-- Console Appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -34,7 +37,7 @@
             <!-- 파일당 최대 용량 설정 -->
             <maxFileSize>10MB</maxFileSize>
             <!-- 최대 보관 일수 -->
-            <maxHistory>5</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -56,7 +59,7 @@
             <!-- 파일당 최대 크기 -->
             <maxFileSize>10MB</maxFileSize>
             <!-- 최대 보관 일수 -->
-            <maxHistory>10</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
     </appender>
 

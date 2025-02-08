@@ -32,7 +32,7 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "admin_id", nullable = false)
+    @Column(name = "admin_id")
     private Long adminId;
 
     @Column(name = "title", nullable = false)
@@ -40,6 +40,9 @@ public class Notice extends BaseEntity {
 
     @Column(name = "content", nullable = false)
     private String content;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
@@ -82,5 +85,9 @@ public class Notice extends BaseEntity {
         if (content != null) this.content = content;
         if (category != null) this.category = Category.valueOf(category);
         if (priority != null) this.priority = Priority.valueOf(priority);
+    }
+
+    public void markAsDeleted() {
+        this.isDeleted = true;
     }
 }

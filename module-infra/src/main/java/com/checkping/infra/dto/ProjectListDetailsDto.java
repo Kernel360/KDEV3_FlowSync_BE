@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@Deprecated
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +25,5 @@ public class ProjectListDetailsDto {
     private Long devOwnerId;
     private String developerName;
     private String customerName;
-    private Long clickable;
+    private Integer clickable;
 }
