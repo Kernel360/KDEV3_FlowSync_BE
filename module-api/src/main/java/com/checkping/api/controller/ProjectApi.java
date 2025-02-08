@@ -51,8 +51,6 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 ID") Long projectId
     );
 
-    @Operation(summary = "프로젝트 상태별 리스트", description = "프로젝트 상태별 리스트를 조회하는 기능입니다.")
-    BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus();
 
     @Operation(summary = "프로젝트 진행 상태 정보 조회", description = "프로젝트 진행 상태 정보를 조회하는 기능입니다.")
     BaseResponse<List<ProgressStepGet.Response>> getProgressStep(

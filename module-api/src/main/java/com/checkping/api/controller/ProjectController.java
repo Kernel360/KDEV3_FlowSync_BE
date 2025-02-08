@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -95,7 +97,7 @@ public class ProjectController implements ProjectApi {
     @GetMapping("/projects/{projectId}/progress-steps")
     public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
 
-        List<ProgressStepGet.Response> response = progressStepService.getProgressStep(projectId);
+        List<Response> response = progressStepService.getProgressStep(projectId);
 
         return BaseResponse.success(response);
     }
