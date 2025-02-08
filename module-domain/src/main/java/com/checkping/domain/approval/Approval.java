@@ -185,6 +185,7 @@ public class Approval extends BaseEntity {
         this.approverId = rejector.getId();
         this.approverName = rejector.getName();
         this.cancelAt = LocalDateTime.now();
+        this.approverAt = LocalDateTime.now();
     }
 
     public void confirm(Member approver) {
