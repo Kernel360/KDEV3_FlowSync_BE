@@ -299,4 +299,35 @@ public class ProjectResponse {
                     .build();
         }
     }
+
+    @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectByManagementStepDto {
+        @Schema(description = "프로젝트 아이디")
+        private Long id;
+        @Schema(description = "프로젝트 이름")
+        private String name;
+        @Schema(description = "프로젝트 클릭 가능 여부")
+        private Integer clickable;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectListByManagementStepDto {
+        private List<ProjectByManagementStepDto> projects;
+        private Map<String, Object> meta;
+
+        public static ProjectListByManagementStepDto toDto(Page<ProjectByManagementStepDto> projects) {
+            List<ProjectByManagementStepDto> projectDtos = projects.getContent().stream().toList();
+
+            PageMetaResponse meta = PageMetaResponse.fromPage(projects);
+            Map<String, Object> result = meta.toMap();
+
+            return new ProjectListByManagementStepDto(projectDtos, result);
+        }
+    }
 }

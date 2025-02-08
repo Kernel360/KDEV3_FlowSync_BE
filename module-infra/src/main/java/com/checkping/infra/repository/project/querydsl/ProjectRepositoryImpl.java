@@ -6,11 +6,16 @@ import com.checkping.domain.project.Project;
 
 import com.checkping.domain.project.QProject;
 import com.checkping.domain.project.projection.ProjectCountByManagementStep;
-//import com.checkping.domain.project.projection.QProjectCount;
+import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
 import com.checkping.domain.project.projection.QProjectCountByManagementStep;
+import com.checkping.domain.project.projection.QProjectListInfoByManagementStep;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -48,4 +53,53 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         return query.where(builder).groupBy(project.managementStep).fetch();
     }
+
+    @Override
+    public Page<ProjectListInfoByManagementStep> findProjectsByManagementSteps(Long orgId, Long memberId, String manageStep, Pageable pageable) {
+        QProject project = QProject.project;
+        QMemberByProject mbp = QMemberByProject.memberByProject;
+        QOrganizationByProject obp = QOrganizationByProject.organizationByProject;
+
+        BooleanBuilder builder = new BooleanBuilder()
+                .and(project.managementStep.eq(Project.ManagementStep.valueOf(manageStep)))
+                .and(project.deletedYn.eq("N"));
+
+        JPAQuery<ProjectListInfoByManagementStep> query = queryFactory
+                .select(new QProjectListInfoByManagementStep(project.id, project.name))
+                .from(project);
+
+        if (orgId != null) {
+            query.leftJoin(obp).on(obp.id.projectId.eq(project.id));
+            builder.and(obp.id.orgId.eq(orgId));
+        } else if (memberId != null) {
+            query.leftJoin(mbp).on(mbp.id.projectId.eq(project.id));
+            builder.and(mbp.id.memberId.eq(memberId));
+        }
+
+        query.where(builder)
+                .orderBy(project.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        QueryResults<ProjectListInfoByManagementStep> results = query.fetchResults();
+
+        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
+    }
+
+    public List<Long> memberByProject(Long memberId, Pageable pageable) {
+        QProject project = QProject.project;
+        QMemberByProject mbp = QMemberByProject.memberByProject;
+
+        JPAQuery<Long> query = queryFactory
+                .select(project.id)
+                .from(project)
+                .leftJoin(mbp).on(mbp.id.projectId.eq(project.id))
+                .where(project.managementStep.eq(Project.ManagementStep.valueOf("IN_PROGRESS"))
+                        .and(project.deletedYn.eq("N").and(mbp.id.memberId.eq(memberId))))
+                .orderBy(project.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+        return query.fetch();
+    }
+
 }
