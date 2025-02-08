@@ -197,10 +197,10 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Confirm or Reject
-        if (approval.getStatus() == Approval.ApprovalStatus.REJECTED) {
+        if (request.getStatus() == Approval.ApprovalStatus.REJECTED) {
             approval.reject(member);
         }
-        if (approval.getStatus() == Approval.ApprovalStatus.APPROVED) {
+        if (request.getStatus() == Approval.ApprovalStatus.APPROVED) {
             approval.confirm(member);
         }
 
