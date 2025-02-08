@@ -8,9 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -67,23 +64,26 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @GetMapping(value={"/admins/projects/management-steps", "/projects/management-steps"})
+    @GetMapping(value={"/admins/projects/management-steps/count", "/projects/management-steps/count"})
     public BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep() {
         ProjectResponse.ProjectManagementStepCountDto projectCount = projectService.countProjectsByManagementStep();
         return BaseResponse.success(projectCount);
     }
 
     @Override
-    @GetMapping(value = {"/admins/projects/{projectId}/projectInfo", "/projects/{projectId}/projectInfo"})
+    @GetMapping(value = {"/admins/projects/{projectId}/project-info", "/projects/{projectId}/project-info"})
     public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
         ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
     }
 
     @Override
-    @GetMapping(value ={"/admins/projects/status", "/projects/status"})
-    public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
-        ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
+    @GetMapping(value = {"/admins/projects/management-steps", "/projects/management-steps"})
+    public BaseResponse<ProjectResponse.ProjectListByManagementStepDto> findProjectsByManagementSteps(
+            @RequestParam String managementStep,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        ProjectResponse.ProjectListByManagementStepDto projectList = projectService.findProjectsByManagementSteps(managementStep, currentPage, pageSize);
         return BaseResponse.success(projectList);
     }
 }
