@@ -1,6 +1,7 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,5 +56,10 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 관리단계") String managementStep,
             @Parameter(description = "페이지 번호") int currentPage,
             @Parameter(description = "페이지 사이즈") int pageSize
+    );
+
+    @Operation(summary = "프로젝트 진행 상태 정보 조회", description = "프로젝트 진행 상태 정보를 조회하는 기능입니다.")
+    BaseResponse<List<ProgressStepGet.Response>> getProgressStep(
+            @Parameter(description = "프로젝트 ID") Long projectId
     );
 }
