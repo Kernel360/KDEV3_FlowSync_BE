@@ -86,8 +86,6 @@ public class MemberResponseDto {
     @Getter
     @Builder
     public static class MeWithSignatureResponseDto{
-        @Schema(description = "회원 ID", example = "37")
-        private Long id;
         @Schema(description = "역할", example = "ADMIN") // ADMIN, USER
         private Member.Role role;
         @Schema (description = "회원 이름", example = "홍길동")
