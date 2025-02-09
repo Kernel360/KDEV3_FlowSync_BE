@@ -6,8 +6,6 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
-import com.checkping.dto.approval.ApprovalRegister.Request;
-import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -135,7 +133,7 @@ public class ApprovalController implements ApprovalApi {
     @Override
     public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(@PathVariable Long projectId) {
 
-        List<ApprovalCount.Response> response = approvalService.count(projectId);
+        List<ApprovalCount.Response> response = approvalService.countByProgressStep(projectId);
 
         return BaseResponse.success(response);
     }
