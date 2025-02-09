@@ -111,7 +111,7 @@ public class Member extends BaseEntity {
     }
 
     public enum Status {
-        ACTIVE, INACTIVE
+        ACTIVE, INACTIVE, DELETED
     }
 
     // 비밀번호 변경
