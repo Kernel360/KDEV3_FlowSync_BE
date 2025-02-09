@@ -1,6 +1,7 @@
 package com.checkping.service.approval;
 
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -9,6 +10,7 @@ import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
+import java.util.List;
 
 public interface ApprovalService {
 
@@ -30,4 +32,6 @@ public interface ApprovalService {
 
     ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
         ApprovalConfirm.Request request);
+
+    List<ApprovalCount.Response> countByProgressStep(Long projectId);
 }

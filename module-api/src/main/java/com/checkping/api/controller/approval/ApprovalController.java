@@ -2,11 +2,10 @@ package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
-import com.checkping.dto.approval.ApprovalRegister.Request;
-import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -14,6 +13,7 @@ import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -125,6 +125,15 @@ public class ApprovalController implements ApprovalApi {
 
         // Confirm Approval
         ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @GetMapping("/counts")
+    @Override
+    public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(@PathVariable Long projectId) {
+
+        List<ApprovalCount.Response> response = approvalService.countByProgressStep(projectId);
 
         return BaseResponse.success(response);
     }

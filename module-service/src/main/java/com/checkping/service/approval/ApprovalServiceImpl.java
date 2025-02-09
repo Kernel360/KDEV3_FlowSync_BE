@@ -8,6 +8,7 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -30,6 +31,7 @@ import com.checkping.exception.approval.comment.ApprovalCommentMismatchException
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
+import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
@@ -333,6 +335,17 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
 
         return ApprovalConfirm.Response.toDto(approval);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ApprovalCount.Response> countByProgressStep(Long projectId) {
+
+        // Approval count by progress step
+        List<ApprovalCountProjection> queryResult = approvalReader.countByProgressStep(projectId);
+
+        // Entity -> Response
+        return ApprovalCount.Response.toDto(queryResult);
     }
 
     /**

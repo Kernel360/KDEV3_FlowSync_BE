@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ApprovalRepository extends JpaRepository<Approval, Long> {
+public interface ApprovalRepository extends JpaRepository<Approval, Long>, ApprovalCustomRepository {
 
     @Query("SELECT a FROM Approval a "
         + "LEFT JOIN FETCH a.commentList c "
