@@ -1,33 +1,27 @@
 package com.checkping.service.member.auth;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import com.checkping.service.member.util.JwtUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import com.checkping.dto.member.response.MemberResponseDto;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CurrentMemberUtil currentMemberUtil;
-
-    public AuthService(AuthenticationManager authenticationManager,
-                       JwtUtil jwtUtil,
-                       CurrentMemberUtil currentMemberUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.currentMemberUtil = currentMemberUtil;
-    }
+    private final TokenBlacklistService tokenBlacklistService;
 
     public BaseResponse getCurrentMember() {
         return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
@@ -70,30 +64,27 @@ public class AuthService {
      * - refresh 쿠키가 없거나 유효하지 않으면 예외 던지기
      */
     public void logout(HttpServletRequest request) {
-        // 1) 쿠키에서 refresh 추출
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            throw new LoginFailureException();
-        }
-
-        String refresh = null;
-        for (Cookie cookie : cookies) {
-            if ("refresh".equals(cookie.getName())) {
-                refresh = cookie.getValue();
-                break;
-            }
-        }
-
+        // Refresh Token 가져오기
+        String refresh = JwtUtil.extractToken(request, "refresh");
         if (refresh == null) {
             throw new RefreshTokenNotFoundException();
         }
 
-        // 2) refresh 토큰인지 확인
-        String category = jwtUtil.getCategory(refresh); // 파싱 실패 시 예외 발생 가능
-        if (!"refresh".equals(category)) {
+        // Access Token 가져오기
+        String accessToken = JwtUtil.extractToken(request, "access");
+
+        // 토큰 유효성 검증
+        if (!"refresh".equals(jwtUtil.getCategory(refresh))) {
             throw new InvalidTokenException();
         }
 
-        // TODO:  refresh 토큰을 블랙리스트 처리
+        // 블랙리스트 추가
+        if (accessToken != null) {
+            long accessTokenExpiration = jwtUtil.getExpiration(accessToken);
+            tokenBlacklistService.blacklistAccessToken(accessToken, accessTokenExpiration);
+        }
+
+        long refreshTokenExpiration = jwtUtil.getExpiration(refresh);
+        tokenBlacklistService.blacklistRefreshToken(refresh, refreshTokenExpiration);
     }
 }

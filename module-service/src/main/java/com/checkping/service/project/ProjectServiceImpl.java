@@ -7,6 +7,7 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.domain.project.projection.ProjectCountByManagementStep;
+import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.infra.dto.ProjectListDetailsDto;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
@@ -23,10 +24,7 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -82,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse.ProjectDto deleteProject(Long projectId) {
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         project.deleteProject();
 
@@ -91,28 +89,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDto updateProject(Long projectId,
-        ProjectRequest.UpdateDto request) {
+                                                    ProjectRequest.UpdateDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-            request.getCustomerOrgId());
+                request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         project = projectRepository.save(
-            ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
+                ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
 
 
     @Override
-    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "id");
+    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int currentPage, int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize, Sort.Direction.DESC, "id");
         Member member = currentMemberUtil.getCurrentMember();
 
         Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, keyword, status, pageable);
@@ -141,35 +139,6 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
         return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
-    }
-
-    @Override
-    public ProjectResponse.ProjectInfoListDto getProjectInfoListByStatus(){
-
-        List<ProjectInfoProjection> inProgressList = projectRepository.findByStatus(Project.Status.IN_PROGRESS);
-        List<ProjectInfoProjection> completedList =projectRepository.findByStatus(Project.Status.COMPLETED);
-
-        List<ProjectResponse.ProjectInfoDto> inProgressDTOList = new ArrayList<>();
-        inProgressList.forEach(project ->
-                inProgressDTOList.add(ProjectResponse.ProjectInfoDto.builder()
-                        .id(project.getId())
-                        .projectName(project.getName())
-                        .build())
-        );
-
-        List<ProjectResponse.ProjectInfoDto> completedDTOList = new ArrayList<>();
-        completedList.forEach(project ->
-                completedDTOList.add(ProjectResponse.ProjectInfoDto.builder()
-                        .id(project.getId())
-                        .projectName(project.getName())
-                        .build())
-        );
-
-        Map<String, List<ProjectResponse.ProjectInfoDto>> result = new HashMap<>();
-        result.put("inProgressList", inProgressDTOList);
-        result.put("completedList", completedDTOList);
-
-        return ProjectResponse.ProjectInfoListDto.infoListDto(result);
     }
 
     public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
@@ -252,11 +221,46 @@ public class ProjectServiceImpl implements ProjectService {
             return switch (type) {
                 case DEVELOPER ->
                         projectRepository.countProjectsByManagementStep(member.getOrganization().getId(), null);
-                case CUSTOMER -> projectRepository.countProjectsByManagementStep(null, member.getId());
+                case CUSTOMER ->
+                        projectRepository.countProjectsByManagementStep(null, member.getId());
             };
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public ProjectResponse.ProjectListByManagementStepDto findProjectsByManagementSteps(String managementStep, int currentPage, int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage-1, pageSize, Sort.Direction.DESC, "id");
+        Member member = currentMemberUtil.getCurrentMember();
+        Page<ProjectListInfoByManagementStep> projectList = null;
+        List<Long> clickableList = null;
+
+        switch (member.getRole()) {
+            case ADMIN:
+                projectList = projectRepository.findProjectsByManagementSteps(null, null, managementStep, pageable);
+                break;
+            case MEMBER:
+                Organization.Type orgType = member.getOrganization().getType();
+                if (Organization.Type.DEVELOPER.equals(orgType)) {
+                    projectList = projectRepository.findProjectsByManagementSteps(member.getOrganization().getId(), null, managementStep, pageable);
+                    clickableList = projectRepository.memberByProject(member.getId(), pageable);
+                } else if (Organization.Type.CUSTOMER.equals(orgType)) {
+                    projectList = projectRepository.findProjectsByManagementSteps(null, member.getId(), managementStep, pageable);
+                }
+                break;
+        }
+
+        return createProjectManagementStepDtos(projectList, clickableList);
+    }
+
+    private ProjectResponse.ProjectListByManagementStepDto createProjectManagementStepDtos(Page<ProjectListInfoByManagementStep> projectList, List<Long> clickableList){
+        Page<ProjectResponse.ProjectByManagementStepDto> results = projectList.map(project -> {
+            int clickable = (clickableList == null || clickableList.contains(project.getId())) ? 1 : 0;
+            return new ProjectResponse.ProjectByManagementStepDto(project.getId(), project.getName(), clickable);
+        });
+
+        return ProjectResponse.ProjectListByManagementStepDto.toDto(results);
     }
 
 }

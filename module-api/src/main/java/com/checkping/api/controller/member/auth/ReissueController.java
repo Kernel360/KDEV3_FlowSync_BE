@@ -2,11 +2,13 @@ package com.checkping.api.controller.member.auth;
 
 import com.checkping.api.auth.util.CookieUtil;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.exception.auth.BlacklistedTokenException;
 import com.checkping.service.member.auth.AuthTokens;
 import com.checkping.service.member.auth.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -20,10 +22,18 @@ public class ReissueController implements ReissueApi {
     }
 
     @Override
+    @GetMapping("/reissue")
     public BaseResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        // Get refresh token
+        // Refresh Token 추출
         String refresh = reissueService.validateAndExtractRefreshToken(request.getCookies());
+
+        // Refresh Token 블랙리스트 여부 확인
+        if (reissueService.isRefreshTokenBlacklisted(refresh)) {
+            throw new BlacklistedTokenException();
+        }
+
+        // Refresh Token 유효성 검사
         reissueService.checkTokenValidity(refresh);
 
         // Extract email and role
@@ -33,11 +43,11 @@ public class ReissueController implements ReissueApi {
         Long id = reissueService.getIdFromToken(refresh);
 
 
-        // Generate new tokens
+        // 새 토큰 발급
         String newAccess = reissueService.generateAccessToken(name, id, email, role);
         String newRefresh = reissueService.generateRefreshToken(name, id, email, role);
 
-        // Set response
+        // 쿠키에 토큰 저장
         response.addCookie(CookieUtil.createCookie("access", newAccess));
         response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
 

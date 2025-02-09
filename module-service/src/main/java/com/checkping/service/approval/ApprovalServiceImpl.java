@@ -8,6 +8,7 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
@@ -24,6 +25,7 @@ import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalAuthorityException;
 import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
+import com.checkping.exception.approval.ApprovalRegisterAuthorityException;
 import com.checkping.exception.approval.comment.ApprovalCommentMismatchException;
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
@@ -211,6 +213,41 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     @Transactional
     @Override
+    public ApprovalDelete.Response delete(Long projectId, Long approvalId) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Check Member Authority - Register
+        checkRegisterAuthority(member, approval);
+
+        // delete approval
+        approval.deactivate();
+
+        // Approval Link deactivate
+        List<ApprovalLink> approvalLinks = approval.getLinkList();
+        for (ApprovalLink approvalLink : approvalLinks) {
+            approvalLink.deactivate();
+        }
+
+        // Approval File deactivate
+        List<ApprovalFile> approvalFiles = approval.getFileList();
+        for (ApprovalFile approvalFile : approvalFiles) {
+            approvalFile.deactivate();
+        }
+
+        return ApprovalDelete.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
     public Response registerComment(Long projectId, Long approvalId, Request request) {
 
         // Get Member From SecurityContext
@@ -358,6 +395,19 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (!member.getOrganization().getId().equals(register.getOrganization().getId())) {
             // throw exception
             throw new ApprovalAuthorityException();
+        }
+    }
+
+    /**
+     * 결재 작성자와 현재 사용자가 같은지 확인
+     *
+     * @param member    현재 사용자
+     * @param approval  결재 Entity
+     * @throws ApprovalRegisterAuthorityException 결재 작성자 권한 예외
+     */
+    private void checkRegisterAuthority(Member member, Approval approval) {
+        if (!member.getId().equals(approval.getRegister().getId())) {
+            throw new ApprovalRegisterAuthorityException();
         }
     }
 }

@@ -201,4 +201,14 @@ public class Approval extends BaseEntity {
         this.title = title;
         this.content = content;
     }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deleteYn = Approval.DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deleteYn = Approval.DeleteStatus.N;
+    }
 }
