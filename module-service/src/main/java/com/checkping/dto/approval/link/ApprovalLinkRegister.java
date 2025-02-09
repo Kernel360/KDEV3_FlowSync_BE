@@ -6,11 +6,13 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalLinkRegister {
 
     @Getter
+    @Setter
     public static class Request {
 
         /*
@@ -39,6 +41,10 @@ public class ApprovalLinkRegister {
          * @return ApprovalLink Entity List
          */
         public static List<ApprovalLink> toEntity(Approval approval, List<Request> requests) {
+            // Check null
+            if (requests == null) {
+                return List.of();
+            }
             return requests.stream().map(request -> toEntity(approval, request)).toList();
         }
     }
