@@ -42,7 +42,7 @@ public class MemberService {
         this.currentMemberUtil = currentMemberUtil;
     }
 
-    // 이메일로 회원 조회
+    // 아이디로 회원 조회
     public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -269,5 +269,12 @@ public class MemberService {
         }
         member.deactivateAccount();
         memberRepository.save(member);
+    }
+
+    public String getMemberStatus(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+        return member.getStatus().name();
     }
 }

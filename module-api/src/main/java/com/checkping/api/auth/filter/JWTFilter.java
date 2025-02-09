@@ -1,9 +1,9 @@
 package com.checkping.api.auth.filter;
 
-
 import com.checkping.api.auth.util.ResponseUtil;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.service.member.MemberService;
 import com.checkping.service.member.auth.CustomUserDetails;
 import com.checkping.service.member.auth.TokenBlacklistService;
 import com.checkping.service.member.util.JwtUtil;
@@ -28,6 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
+    private final MemberService memberService;
 
     // TODO 필터 거치지 않을 경로 설정
     @Override
@@ -72,7 +73,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 }
             } else {
                 // Redis 연결 불가능 시 로그만 남기고 스킵
-                // (또는 필요하다면 별도 처리)
                 System.out.println("[JWTFilter] Redis not available -> Skip blacklist check");
             }
 
@@ -82,6 +82,12 @@ public class JWTFilter extends OncePerRequestFilter {
             String role = jwtUtil.getRole(accessToken);
             Long id = jwtUtil.getMemberId(accessToken);
 
+            String memberStatus = memberService.getMemberStatus(id);
+            if (!memberStatus.equals("ACTIVE")) {
+                BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_OR_DELETED_MEMBER);
+                ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
+                return;
+            }
 
             CustomUserDetails customUserDetails = new CustomUserDetails(id, name, email, role, "PASSWORDFORTOKEN");
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
