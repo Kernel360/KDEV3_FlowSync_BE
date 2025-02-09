@@ -1,7 +1,10 @@
 package com.checkping.dto.approval;
 
 import com.checkping.domain.project.ProgressStep;
+import com.checkping.info.approval.ApprovalCountProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,23 +34,6 @@ public class ApprovalCount {
         private String status;
 
         /**
-         * ProgressStep Entity -> ApprovalCount.Response Dto
-         *
-         * @param progressStep ProgressStep Entity
-         * @param count        progressStep 에 해당하는 결재 글의 개수
-         * @return ApprovalCount.Response Dto
-         */
-        public static Response toDto(ProgressStep progressStep, Long count) {
-            Response dto = new Response();
-            dto.id = progressStep.getId();
-            dto.title = progressStep.getName();
-            dto.value = progressStep.getDescription();
-            dto.count = count;
-            dto.status = progressStep.getStatus() != null ? progressStep.getStatus().name() : null;
-            return dto;
-        }
-
-        /**
          * 전체 카운트 생성
          *
          * @param count 전체 카운트
@@ -61,6 +47,43 @@ public class ApprovalCount {
             dto.count = count;
             dto.status = "ALL";
             return dto;
+        }
+
+        /**
+         * 도메인 모듈 - ApprovalCountProjection -> ApprovalCount.Response Dto
+         *
+         * @param approvalCountProjection ApprovalCountProjection
+         * @return ApprovalCount.Response Dto
+         */
+        public static Response toDto(ApprovalCountProjection approvalCountProjection) {
+            Response dto = new Response();
+            dto.id = approvalCountProjection.getId();
+            dto.title = approvalCountProjection.getTitle();
+            dto.value = approvalCountProjection.getValue();
+            dto.count = approvalCountProjection.getCount();
+            dto.status = approvalCountProjection.getStatus();
+            return dto;
+        }
+
+        /**
+         * 도메인 모듈 - ApprovalCountProjection List -> ApprovalCount.Response List Dto
+         * 전체 카운트를 추가하여 반환
+         *
+         * @param approvalCountProjections  ApprovalCountProjection List
+         * @return  ApprovalCount.Response List Dto
+         */
+        public static List<Response> toDto(List<ApprovalCountProjection> approvalCountProjections) {
+
+            // ApprovalCountProjection -> ApprovalCount.Response Dto
+            List<Response> responseList = approvalCountProjections.stream()
+                .map(ApprovalCount.Response::toDto)
+                .collect(Collectors.toList());
+
+            // 전체 카운트 추가
+            Long totalCount = responseList.stream().mapToLong(Response::getCount).sum();
+            responseList.add(makeEntireCount(totalCount));
+
+            return responseList;
         }
     }
 
