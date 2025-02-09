@@ -27,7 +27,6 @@ public class ProjectRequest {
         name : 프로젝트 이름
         description : 프로젝트 설명
         detail : 프로젝트 세부 설명
-        status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
         managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
         progressStepId : 프로젝트 현재 진행단계 아이디
         startAt : 프로젝트 시작 일시
@@ -45,8 +44,6 @@ public class ProjectRequest {
         private String description;
         @Schema(description = "프로젝트 긴 설명")
         private String detail;
-        @Schema(description = "프로젝트 상태", example = "IN_PROGRESS")
-        private String status;
         @Schema(description = "프로젝트 관리단계", example = "IN_PROGRESS")
         private String managementStep;
         @Schema(description = "프로젝트 현재 진행단계 아이디", example = "1")
@@ -80,7 +77,6 @@ public class ProjectRequest {
                 .name(resisterDto.getName())
                 .description(resisterDto.getDescription())
                 .detail(resisterDto.getDetail())
-                .status(Project.Status.valueOf(resisterDto.getStatus()))
                 .managementStep(Project.ManagementStep.valueOf(resisterDto.getManagementStep()))
                 .regAt(LocalDateTime.now())
                 .startAt(resisterDto.getStartAt())
@@ -102,7 +98,6 @@ public class ProjectRequest {
        name : 프로젝트 이름
        description : 프로젝트 설명
        detail : 프로젝트 세부 설명
-       status : 프로젝트 상태 * IN_PROGRESS(진행중), PAUSED(일시 중단), COMPLETED(완료)
        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
        progressStepId : 프로젝트 현재 진행단계 아이디
        startAt : 프로젝트 시작 일시
@@ -119,8 +114,6 @@ public class ProjectRequest {
         private String description;
         @Schema(description = "프로젝트 긴 설명")
         private String detail;
-        @Schema(description = "프로젝트 상태", example = "PAUSED")
-        private String status;
         @Schema(description = "프로젝트 관리단계", example = "COMPLETED")
         private String managementStep;
         @Schema(description = "프로젝트 현재 진행단계 아이디", example = "2")
@@ -155,7 +148,6 @@ public class ProjectRequest {
                 .name(updateDto.getName())
                 .description(updateDto.getDescription())
                 .detail(updateDto.getDetail())
-                .status(Project.Status.valueOf(updateDto.getStatus()))
                 .managementStep(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
                 .progressStepId(updateDto.getProgressStepId())
                 .devOwner(devOwnerMember)

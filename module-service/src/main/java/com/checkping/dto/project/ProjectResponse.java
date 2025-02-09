@@ -32,8 +32,6 @@ public class ProjectResponse {
         private String description;
         @Schema(description = "프로젝트 긴 설명")
         private String detail;
-        @Schema(description = "프로젝트 상태")
-        private Project.Status status;
         @Schema(description = "프로젝트 관리 단계")
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
@@ -65,7 +63,6 @@ public class ProjectResponse {
                     .name(project.getName())
                     .description(project.getDescription())
                     .detail(project.getDetail())
-                    .status(project.getStatus())
                     .managementStep(project.getManagementStep())
                     .regAt(project.getRegAt())
                     .updateAt(project.getUpdateAt())
@@ -142,8 +139,6 @@ public class ProjectResponse {
         private String description;
         @Schema(description = "프로젝트 긴 설명")
         private String detail;
-        @Schema(description = "프로젝트 상태")
-        private Project.Status status;
         @Schema(description = "프로젝트 관리 단계")
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
@@ -169,12 +164,11 @@ public class ProjectResponse {
         @Schema(description = "프로젝트 클릭 가능 여부")
         private Integer clickable;
 
-        public ProjectListDetailDto(long id, String name, String description, String detail, String status, String managementStep, Date regAt, Date updateAt, Date startAt, Date closeAt, String deletedYn, long devOwnerId, String developerName, String customerName, int clickable) {
+        public ProjectListDetailDto(long id, String name, String description, String detail, String managementStep, Date regAt, Date updateAt, Date startAt, Date closeAt, String deletedYn, long devOwnerId, String developerName, String customerName, int clickable) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.detail = detail;
-            this.status = Project.Status.valueOf(status);
             this.managementStep = Project.ManagementStep.valueOf(managementStep);
             this.regAt = regAt;
             this.updateAt = updateAt;
@@ -256,8 +250,6 @@ public class ProjectResponse {
         private String description;
         @Schema(description = "프로젝트 긴 설명")
         private String detail;
-        @Schema(description = "프로젝트 상태")
-        private Project.Status status;
         @Schema(description = "프로젝트 관리 단계")
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 현재 진행단계 아이디")
@@ -285,7 +277,6 @@ public class ProjectResponse {
                     .name(detailsDto.getName())
                     .description(detailsDto.getDescription())
                     .detail(detailsDto.getDetail())
-                    .status(Project.Status.valueOf(detailsDto.getStatus()))
                     .managementStep(Project.ManagementStep.valueOf(detailsDto.getManagementStep()))
                     .progressStepId(detailsDto.getProgressStepId())
                     .startAt(detailsDto.getStartAt())
