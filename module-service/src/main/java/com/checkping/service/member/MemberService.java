@@ -42,7 +42,7 @@ public class MemberService {
         this.currentMemberUtil = currentMemberUtil;
     }
 
-    // 이메일로 회원 조회
+    // 아이디로 회원 조회
     public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -247,7 +247,35 @@ public class MemberService {
         if(member.isActive()){
             throw new BaseException("이미 활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
         }
-        member.activeAccount();
+        member.activateAccount();
         memberRepository.save(member);
+    }
+
+    /*
+    * 회원 비활성화
+    * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
+    * */
+
+    public void deactivateMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+
+        if(member.isDeleted()){
+            throw new BaseException("삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+        }
+
+        if(!member.isActive()){
+            throw new BaseException("이미 비활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+        }
+        member.deactivateAccount();
+        memberRepository.save(member);
+    }
+
+    public String getMemberStatus(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+        return member.getStatus().name();
     }
 }

@@ -70,4 +70,9 @@ public interface AdminMemberApi {
     BaseResponse<String> activateMember(
         @Schema(description = "회원 ID", example = "1")
         @Parameter(description = "회원 ID", required = true) Long memberId);
+
+    @Operation(summary = "회원 비활성화 처리", description = "활성화된 회원을 비활성화 처리하는 기능입니다.")
+    BaseResponse<String> deactivateMember(
+        @Schema(description = "회원 ID", example = "1")
+        @Parameter(description = "회원 ID", required = true) Long memberId);
 }

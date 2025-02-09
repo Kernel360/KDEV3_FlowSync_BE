@@ -97,9 +97,18 @@ public class AdminMemberController implements AdminMemberApi {
     }
 
     //회원 활성화
+    @Override
     @PostMapping("/activate")
     public BaseResponse<String> activateMember(@RequestParam Long memberId) {
         memberService.activateMember(memberId);
         return BaseResponse.success("회원이 성공적으로 활성화되었습니다.");
+    }
+
+    //회원 비활성화
+    @Override
+    @PostMapping("/deactivate")
+    public BaseResponse<String> deactivateMember(@RequestParam Long memberId) {
+        memberService.deactivateMember(memberId);
+        return BaseResponse.success("회원이 성공적으로 비활성화되었습니다.");
     }
 }

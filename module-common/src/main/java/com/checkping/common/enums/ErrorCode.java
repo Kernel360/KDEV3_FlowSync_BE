@@ -34,7 +34,7 @@ public enum ErrorCode {
     /*
         403 Forbidden
     */
-    FORBIDDEN(HttpStatus.FORBIDDEN, "요청 권한이 부족합니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
 
     /*
         404 Not Found
@@ -52,6 +52,7 @@ public enum ErrorCode {
     INSUFFICIENT_PERMISSIONS(HttpStatus.CONFLICT, "권한이 부족합니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
     INACTIVE_MEMBER(HttpStatus.CONFLICT, "비활성화된 회원입니다."),
+    INACTIVE_OR_DELETED_MEMBER(HttpStatus.CONFLICT, "비활성화 또는 삭제된 회원입니다."),
 
     /*
         500 Internal Server Error
