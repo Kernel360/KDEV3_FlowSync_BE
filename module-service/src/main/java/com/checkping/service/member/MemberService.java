@@ -170,7 +170,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
                 () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
-        if (!member.isActive()) {
+        if (member.isDeleted()) {
             throw new BaseException("이미 삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
         }
         // 회원 삭제 처리
@@ -235,5 +235,18 @@ public class MemberService {
         Member member = currentMemberUtil.getCurrentMember();
 
         return MemberSignatureExistResponseDto.toDto(member);
+    }
+
+    //회원 활성화
+    public void activateMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+
+        if(member.isActive()){
+            throw new BaseException("이미 활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+        }
+        member.activeAccount();
+        memberRepository.save(member);
     }
 }

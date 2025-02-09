@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -135,15 +136,30 @@ public class Member extends BaseEntity {
         this.loginFailCount = 0;
     }
 
+    // 회원 비활성화 처리
+    public void inactiveAccount() {
+        this.status = Status.INACTIVE;
+    }
+
     // 회원 삭제(탈퇴) 처리
     public void deleteAccount(String reason) {
         this.deleteAccountAt = LocalDateTime.now();
         this.reasonForDeleteAccount = reason;
-        this.status = Status.INACTIVE;
+        this.status = Status.DELETED;
+    }
+
+    //회원 활성화
+    public void activeAccount() {
+        this.reasonForDeleteAccount = "회원 재활성화 : " + LocalDate.now();
+        this.status = Status.ACTIVE;
     }
 
     public boolean isActive() {
         return this.status == Status.ACTIVE;
+    }
+
+    public boolean isDeleted() {
+        return this.status == Status.DELETED;
     }
 
     /** 회원 정보를 DTO 기반으로 업데이트*/
