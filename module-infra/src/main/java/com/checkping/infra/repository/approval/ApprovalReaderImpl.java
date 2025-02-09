@@ -90,4 +90,9 @@ public class ApprovalReaderImpl implements ApprovalReader {
     public boolean isContainingApproval(Long projectId, Long approvalId) {
         return approvalRepository.existsByProjectIdAndId(projectId, approvalId);
     }
+
+    @Override
+    public Long countByProgressStep(Long projectId, Long progressStepId) {
+        return approvalRepository.countByProgressStep(projectId, progressStepId);
+    }
 }
