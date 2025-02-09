@@ -66,8 +66,7 @@ public class ApprovalLinkRegister {
         public static Response toDto(ApprovalLink approvalLink) {
             Response response = new Response();
             response.id = approvalLink.getId();
-            // TODO : approvalLink.getApproval().getProjectId() 로 변경 필요
-            response.projectId = approvalLink.getApproval().getProjectId();
+            response.projectId = approvalLink.getApproval().getProject().getId();
             response.name = approvalLink.getLinkName();
             response.url = approvalLink.getLinkUrl();
             return response;

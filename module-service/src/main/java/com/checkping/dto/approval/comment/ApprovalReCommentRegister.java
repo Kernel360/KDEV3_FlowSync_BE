@@ -3,6 +3,7 @@ package com.checkping.dto.approval.comment;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
+import com.checkping.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,11 +27,12 @@ public class ApprovalReCommentRegister {
          * @param request       요청
          * @param approval      결재 Entity
          * @param parentComment 부모 댓글 Entity
+         * @param register
          * @return 대댓글 Entity
          */
         public static ApprovalComment toEntity(Request request, Approval approval,
-            ApprovalComment parentComment) {
-            return ApprovalComment.generate(request.getContent(), approval, parentComment);
+            ApprovalComment parentComment, Member register) {
+            return ApprovalComment.generate(request.getContent(), approval, parentComment, register);
         }
     }
 
