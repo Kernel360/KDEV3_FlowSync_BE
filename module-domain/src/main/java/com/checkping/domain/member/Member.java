@@ -137,7 +137,8 @@ public class Member extends BaseEntity {
     }
 
     // 회원 비활성화 처리
-    public void inactiveAccount() {
+    public void deactivateAccount() {
+        this.remark = "회원 비활성화됨 : " + LocalDate.now();
         this.status = Status.INACTIVE;
     }
 
@@ -149,8 +150,8 @@ public class Member extends BaseEntity {
     }
 
     //회원 활성화
-    public void activeAccount() {
-        this.reasonForDeleteAccount = "회원 재활성화 : " + LocalDate.now();
+    public void activateAccount() {
+        this.reasonForDeleteAccount = "회원 재활성화됨 : " + LocalDate.now();
         this.status = Status.ACTIVE;
     }
 
