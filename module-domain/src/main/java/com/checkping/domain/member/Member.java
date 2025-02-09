@@ -34,6 +34,7 @@ public class Member extends BaseEntity {
       reason_for_delete_account : 탈퇴 사유
       pw_change_at : 비밀번호 변경일시
       profile_image_link : 프로필 이미지 링크
+      signatureUrl : 서명 파일 링크
       remark : 비고
      */
 
