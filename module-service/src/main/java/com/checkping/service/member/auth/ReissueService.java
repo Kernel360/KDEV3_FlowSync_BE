@@ -25,7 +25,6 @@ public class ReissueService {
      * 쿠키에서 Refresh Token 추출 및 검증
      */
     public String validateAndExtractRefreshToken(Cookie[] cookies) {
-
         if (cookies == null || cookies.length == 0) {
             throw new RefreshTokenNotFoundException();
         }
@@ -122,7 +121,7 @@ public class ReissueService {
      * 새로운 Access Token 생성
      */
     public String generateAccessToken(String name, Long id,  String email, String role) {
-        return jwtUtil.createJwt("access",id, name, email, role, 1);
+        return jwtUtil.createJwt("access",id, name, email, role, 15);
     }
 
     /**

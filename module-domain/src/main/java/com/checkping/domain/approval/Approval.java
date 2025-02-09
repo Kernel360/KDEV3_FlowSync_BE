@@ -188,6 +188,7 @@ public class Approval extends BaseEntity {
         this.approver = rejector;
         this.approverName = rejector.getName();
         this.cancelAt = LocalDateTime.now();
+        this.approverAt = LocalDateTime.now();
     }
 
     public void confirm(Member approver) {
@@ -210,5 +211,14 @@ public class Approval extends BaseEntity {
     // soft delete 해제 = 게시글 활성화
     public void activate() {
         this.deleteYn = Approval.DeleteStatus.N;
+    }
+
+    /**
+     * 결재가 대기 상태인지 확인
+     *
+     * @return 대기 상태 여부
+     */
+    public boolean isWaitStatus() {
+        return this.status == ApprovalStatus.WAIT;
     }
 }

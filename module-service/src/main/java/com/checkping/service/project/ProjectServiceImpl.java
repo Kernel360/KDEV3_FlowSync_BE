@@ -80,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse.ProjectDto deleteProject(Long projectId) {
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         project.deleteProject();
 
@@ -89,20 +89,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse.ProjectDto updateProject(Long projectId,
-        ProjectRequest.UpdateDto request) {
+                                                    ProjectRequest.UpdateDto request) {
         if (StringUtils.isBlank(request.getName())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-            request.getCustomerOrgId());
+                request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         project = projectRepository.save(
-            ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
+                ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
