@@ -33,5 +33,5 @@ public interface ApprovalService {
     ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
         ApprovalConfirm.Request request);
 
-    List<ApprovalCount.Response> count(Long projectId);
+    List<ApprovalCount.Response> countByProgressStep(Long projectId);
 }

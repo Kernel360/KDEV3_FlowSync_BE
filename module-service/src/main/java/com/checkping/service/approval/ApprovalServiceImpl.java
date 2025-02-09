@@ -31,6 +31,7 @@ import com.checkping.exception.approval.comment.ApprovalCommentMismatchException
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
+import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
@@ -336,18 +337,15 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalConfirm.Response.toDto(approval);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<ApprovalCount.Response> count(Long projectId) {
+    public List<ApprovalCount.Response> countByProgressStep(Long projectId) {
 
-        // Find Member
+        // Approval count by progress step
+        List<ApprovalCountProjection> queryResult = approvalReader.countByProgressStep(projectId);
 
-        // Find project
-
-        // Find progressSteps
-
-
-
-        return List.of();
+        // Entity -> Response
+        return ApprovalCount.Response.toDto(queryResult);
     }
 
     /**
