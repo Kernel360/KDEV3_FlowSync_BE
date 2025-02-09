@@ -2,6 +2,7 @@ package com.checkping.dto.project;
 
 
 import com.checkping.common.dto.PageMetaResponse;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.project.Project;
 import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.dto.ProjectListDetailsDto;
@@ -38,16 +39,16 @@ public class ProjectResponse {
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime regAt;
+        private String regAt;
         @Schema(description = "프로젝트 수정 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime updateAt;
+        private String updateAt;
         @Schema(description = "프로젝트 시작 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime startAt;
+        private String startAt;
         @Schema(description = "프로젝트 마감 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime closeAt;
+        private String closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
         @Schema(description = "개발사 대표자 아이디")
@@ -67,10 +68,10 @@ public class ProjectResponse {
                     .detail(project.getDetail())
                     .status(project.getStatus())
                     .managementStep(project.getManagementStep())
-                    .regAt(project.getRegAt())
-                    .updateAt(project.getUpdateAt())
-                    .startAt(project.getStartAt())
-                    .closeAt(project.getCloseAt())
+                    .regAt(DateTimeUtils.format(project.getRegAt()))
+                    .updateAt(DateTimeUtils.format(project.getUpdateAt()))
+                    .startAt(DateTimeUtils.format(project.getStartAt()))
+                    .closeAt(DateTimeUtils.format(project.getCloseAt()))
                     .deletedYn(project.getDeletedYn())
                     .devOwnerId(project.getDevOwner().getId())
                     .customerOwnerId(project.getCustomerOwner().getId())
@@ -126,18 +127,6 @@ public class ProjectResponse {
                     .closeAt(detailsDto.getCloseAt())
                     .build();
         }
-    }
-
-    @Getter
-    @ToString
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProjectInfoDto {
-        @Schema(description = "프로젝트 아이디")
-        private Long id;
-        @Schema(description = "프로젝트 이름")
-        private String projectName;
     }
 
     @Getter
@@ -221,6 +210,18 @@ public class ProjectResponse {
     }
 
     @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectInfoDto {
+        @Schema(description = "프로젝트 아이디")
+        private Long id;
+        @Schema(description = "프로젝트 이름")
+        private String projectName;
+    }
+
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ProjectInfoListDto {
@@ -228,6 +229,17 @@ public class ProjectResponse {
 
         public static ProjectInfoListDto infoListDto(Map<String, List<ProjectInfoDto>> projectInfoMap) {
             return new ProjectInfoListDto(projectInfoMap);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectManagementStepCountDto {
+        private Map<String, Long> managementStepCountMap;
+
+        public static ProjectManagementStepCountDto toDto(Map<String, Long> managementStepCountMap) {
+            return new ProjectManagementStepCountDto(managementStepCountMap);
         }
     }
 
@@ -285,6 +297,37 @@ public class ProjectResponse {
                     .customerOrgId(detailsDto.getCustomerOrgId())
                     .members(members)
                     .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectByManagementStepDto {
+        @Schema(description = "프로젝트 아이디")
+        private Long id;
+        @Schema(description = "프로젝트 이름")
+        private String name;
+        @Schema(description = "프로젝트 클릭 가능 여부")
+        private Integer clickable;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectListByManagementStepDto {
+        private List<ProjectByManagementStepDto> projects;
+        private Map<String, Object> meta;
+
+        public static ProjectListByManagementStepDto toDto(Page<ProjectByManagementStepDto> projects) {
+            List<ProjectByManagementStepDto> projectDtos = projects.getContent().stream().toList();
+
+            PageMetaResponse meta = PageMetaResponse.fromPage(projects);
+            Map<String, Object> result = meta.toMap();
+
+            return new ProjectListByManagementStepDto(projectDtos, result);
         }
     }
 }
