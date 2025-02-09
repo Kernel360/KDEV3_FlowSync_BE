@@ -50,6 +50,10 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 ID") Long projectId
     );
 
-    @Operation(summary = "프로젝트 상태별 리스트", description = "프로젝트 상태별 리스트를 조회하는 기능입니다.")
-    BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus();
+    @Operation(summary = "프로젝트 관리단계 별 리스트", description = "특정 관리단계 별 프로젝트 리스트를 조회하는 기능입니다.")
+    BaseResponse<ProjectResponse.ProjectListByManagementStepDto> findProjectsByManagementSteps(
+            @Parameter(description = "프로젝트 관리단계") String managementStep,
+            @Parameter(description = "페이지 번호") int currentPage,
+            @Parameter(description = "페이지 사이즈") int pageSize
+    );
 }

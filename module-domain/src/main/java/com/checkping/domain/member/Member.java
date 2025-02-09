@@ -164,4 +164,9 @@ public class Member extends BaseEntity {
     public void uploadSignature(String signatureUrl) {
         this.signatureUrl = signatureUrl;
     }
+
+    // 회원 ADMIN 여부 확인
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
 }
