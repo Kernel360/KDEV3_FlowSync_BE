@@ -23,11 +23,12 @@ public class ApprovalSearchCondition {
     private Integer pageSize;
 
     public static ApprovalSearchInfo.SearchCondition toInfo(
-        ApprovalSearchCondition searchCondition) {
+        ApprovalSearchCondition searchCondition, boolean adminSearch) {
         return new ApprovalSearchInfo.SearchCondition(
             searchCondition.getProgressId(),
             ApprovalSearchCondition.convertStatus(searchCondition.getStatus()),
             searchCondition.getKeyword(),
+            adminSearch,
             searchCondition.getCurrentPage(), searchCondition.getPageSize());
     }
 
