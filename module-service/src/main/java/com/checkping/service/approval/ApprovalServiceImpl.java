@@ -8,19 +8,24 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
+import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
+import com.checkping.dto.approval.file.ApprovalFileUpdate;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
+import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalAuthorityException;
 import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
+import com.checkping.exception.approval.ApprovalRegisterAuthorityException;
 import com.checkping.exception.approval.comment.ApprovalCommentMismatchException;
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
@@ -36,6 +41,7 @@ import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -82,7 +88,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Save approvalFiles
         approvalFileStore.store(approvalFiles);
         // Add approvalFiles to approval
-        approval.addFiles(approvalFiles);
+        approval.updateFiles(approvalFiles);
 
         // LinkRequest -> Entity
         List<ApprovalLink> approvalLinks = ApprovalLinkRegister.Request.toEntity(approval,
@@ -90,7 +96,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Save approvalLinks
         approvalLinkStore.store(approvalLinks);
         // Add approvalLinks to approval
-        approval.addLinks(approvalLinks);
+        approval.updateLinks(approvalLinks);
 
         return ApprovalRegister.Response.toDto(approval);
     }
@@ -135,6 +141,113 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Entity -> Response
         return ApprovalGet.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalUpdate.Response update(Long projectId, Long approvalId,
+        ApprovalUpdate.Request request) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Check Member Authority
+        checkMemberAuthority(member, approval);
+
+        // update Approval
+        approval.update(request.getTitle(), request.getContent());
+
+        // 첨부 링크 처리
+        // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
+        List<ApprovalLink> currentLinks = approval.getLinkList();
+        List<ApprovalLinkUpdate.Request> requestLinks = request.getLinkList();
+
+        for (ApprovalLink currentLink : currentLinks) {
+            boolean isExist = requestLinks.stream()
+                .anyMatch(requestLink -> Objects.equals(currentLink.getId(), requestLink.getId()));
+            if (!isExist) {
+                currentLink.deactivate();
+            }
+        }
+
+        // 2. request 에서 id 가 없는 것들은 생성한다.
+        List<ApprovalLink> newLinks = requestLinks.stream()
+            .filter(requestLink -> requestLink.getId() == null)
+            .map(requestLink -> ApprovalLinkUpdate.Request.toEntity(approval, requestLink))
+            .toList();
+
+        // Save approvalLinks
+        approvalLinkStore.store(newLinks);
+        // Add approvalLinks to approval
+        approval.updateLinks(newLinks);
+
+        // 첨부 파일 처리
+        // 1. approval 에 속한 파일 중에서 request 에 없는 것은 삭제 처리 한다.
+        List<ApprovalFile> currentFiles = approval.getFileList();
+        List<ApprovalFileUpdate.Request> requestFiles = request.getFileInfoList();
+
+        for (ApprovalFile currentFile : currentFiles) {
+            boolean isExist = requestFiles.stream()
+                .anyMatch(requestFile -> Objects.equals(currentFile.getId(), requestFile.getId()));
+            if (!isExist) {
+                currentFile.deactivate();
+            }
+        }
+
+        // 2. request 에서 id 가 없는 것들은 생성한다.
+        List<ApprovalFile> newFiles = requestFiles.stream()
+            .filter(requestFile -> requestFile.getId() == null)
+            .map(requestFile -> ApprovalFileUpdate.Request.toEntity(approval, requestFile))
+            .toList();
+
+        // Save approvalFiles
+        approvalFileStore.store(newFiles);
+        // Update approvalFiles to approval
+        approval.updateFiles(newFiles);
+
+        return ApprovalUpdate.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalDelete.Response delete(Long projectId, Long approvalId) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Check Member Authority - Register
+        checkRegisterAuthority(member, approval);
+
+        // delete approval
+        approval.deactivate();
+
+        // Approval Link deactivate
+        List<ApprovalLink> approvalLinks = approval.getLinkList();
+        for (ApprovalLink approvalLink : approvalLinks) {
+            approvalLink.deactivate();
+        }
+
+        // Approval File deactivate
+        List<ApprovalFile> approvalFiles = approval.getFileList();
+        for (ApprovalFile approvalFile : approvalFiles) {
+            approvalFile.deactivate();
+        }
+
+        return ApprovalDelete.Response.toDto(approval);
     }
 
     @Transactional
@@ -264,6 +377,41 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
+        }
+    }
+
+    /**
+     * 결재 작성자 권한 확인 ADMIN 권한이거나 결재 작성자와 같은 업체이면 통과 그 외에는 예외 발생
+     *
+     * @param member   현재 사용자
+     * @param approval 결재 Entity
+     * @throws ApprovalAuthorityException 결재 권한 예외
+     */
+    private void checkMemberAuthority(Member member, Approval approval) {
+
+        // Check Admin
+        if (member.isAdmin()) {
+            return;
+        }
+
+        Member register = approval.getRegister();
+        // Check Register Organization
+        if (!member.getOrganization().getId().equals(register.getOrganization().getId())) {
+            // throw exception
+            throw new ApprovalAuthorityException();
+        }
+    }
+
+    /**
+     * 결재 작성자와 현재 사용자가 같은지 확인
+     *
+     * @param member    현재 사용자
+     * @param approval  결재 Entity
+     * @throws ApprovalRegisterAuthorityException 결재 작성자 권한 예외
+     */
+    private void checkRegisterAuthority(Member member, Approval approval) {
+        if (!member.getId().equals(approval.getRegister().getId())) {
+            throw new ApprovalRegisterAuthorityException();
         }
     }
 }
