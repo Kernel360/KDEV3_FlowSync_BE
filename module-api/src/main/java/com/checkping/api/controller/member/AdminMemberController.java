@@ -1,25 +1,14 @@
 package com.checkping.api.controller.member;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.common.utils.FileResponse;
 import com.checkping.dto.member.request.ChangePasswordDto;
 import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
-import com.checkping.dto.member.response.MemberSignatureResponseDto;
-import com.checkping.service.file.FileService;
 import com.checkping.service.member.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "어드민 회원 관리 API(AdminMemberApi)", description = "어드민 권한으로 회원을 관리할 수 있도록 하는 API입니다.")
 @RestController
@@ -105,5 +94,12 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestParam(defaultValue = "10") int pageSize) {
         MemberListResponseDto response = memberService.getMembersByOrganizationId(organizationId, currentPage-1, pageSize);
         return BaseResponse.success(response);
+    }
+
+    //회원 활성화
+    @PostMapping("/activate")
+    public BaseResponse<String> activateMember(@RequestParam Long memberId) {
+        memberService.activateMember(memberId);
+        return BaseResponse.success("회원이 성공적으로 활성화되었습니다.");
     }
 }
