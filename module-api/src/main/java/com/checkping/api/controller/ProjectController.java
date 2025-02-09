@@ -3,13 +3,21 @@ package com.checkping.api.controller;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepGet.Response;
+import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
-import com.checkping.dto.project.ProjectRequest;
 import com.checkping.service.project.progressstep.ProgressStepService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -95,7 +103,7 @@ public class ProjectController implements ProjectApi {
     @GetMapping("/projects/{projectId}/progress-steps")
     public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
 
-        List<ProgressStepGet.Response> response = progressStepService.getProgressStep(projectId);
+        List<Response> response = progressStepService.getProgressStep(projectId);
 
         return BaseResponse.success(response);
     }
