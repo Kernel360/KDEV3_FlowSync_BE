@@ -46,7 +46,6 @@ public class AuthService {
             String name = userDetails.getName();
 
             // 3) JWT 생성
-            //TODO 엑세스 토큰 유효시간 개발 기간동안 24시간으로 연장, 추후 15분으로 변경
             String accessToken = jwtUtil.createJwt("access", id, name, email, role, 15);
             String refreshToken = jwtUtil.createJwt("refresh", id, name, email, role, 1440);
 
@@ -79,17 +78,15 @@ public class AuthService {
             throw new InvalidTokenException();
         }
 
-        // 블랙리스트 추가
+        // 레디스 연결 여부 먼저 확인
         // Redis 연결 가능 시에만 블랙리스트 추가
         // Redis연결이 안되어있다면(로컬 환경 등) 블랙리스트 등록을 스킵하고 바로 로그아웃 처리
-        if (tokenBlacklistService.isRedisAvailable()) {
+        if(tokenBlacklistService.isRedisAvailable()) {
+            // 블랙리스트 추가
+            tokenBlacklistService.blacklistRefreshToken(refresh, jwtUtil.getExpiration(refresh));
             if (accessToken != null) {
-                long accessTokenExpiration = jwtUtil.getExpiration(accessToken);
-                tokenBlacklistService.blacklistAccessToken(accessToken, accessTokenExpiration);
+                tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
             }
-
-            long refreshTokenExpiration = jwtUtil.getExpiration(refresh);
-            tokenBlacklistService.blacklistRefreshToken(refresh, refreshTokenExpiration);
         }
     }
 }
