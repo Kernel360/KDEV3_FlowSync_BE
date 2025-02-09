@@ -8,6 +8,7 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -333,6 +334,20 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
 
         return ApprovalConfirm.Response.toDto(approval);
+    }
+
+    @Override
+    public List<ApprovalCount.Response> count(Long projectId) {
+
+        // Find Member
+
+        // Find project
+
+        // Find progressSteps
+
+
+
+        return List.of();
     }
 
     /**

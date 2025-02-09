@@ -2,6 +2,7 @@ package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,4 +73,8 @@ public interface ApprovalApi {
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 승인 정보") @RequestBody ApprovalConfirm.Request request);
+
+    @Operation(summary="프로젝트 진행 단계 별 결재 글 개수 조회", description="프로젝트 진행 단계 별 결재 글 개수를 조회하는 기능입니다.")
+    BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
+        @Parameter(description="프로젝트 ID") @PathVariable Long projectId);
 }
