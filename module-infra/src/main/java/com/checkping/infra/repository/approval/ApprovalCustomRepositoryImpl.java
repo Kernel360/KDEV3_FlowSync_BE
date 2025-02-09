@@ -56,8 +56,10 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
         // ✅ 필수 조건: 프로젝트 ID
         builder.and(approval.project.id.eq(projectId));
 
-        // ✅ 필수 조건: 삭제되지 않은 데이터만 조회
-        builder.and(approval.deleteYn.eq(Approval.DeleteStatus.N));
+        // ✅ 삭제상태 조건: 삭제되지 않은 데이터만 조회 (
+        if(!searchCondition.adminSearch()) {
+            builder.and(approval.deleteYn.eq(Approval.DeleteStatus.N));
+        }
 
         // ✅ 검색어 조건 (title에 포함된 검색어)
         if (StringUtils.hasText(searchCondition.keyword())) {
