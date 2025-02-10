@@ -311,8 +311,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     @Transactional
     @Override
-    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request) {
+    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId) {
 
         // Get Current Member Info
         Member member = currentMemberUtil.getCurrentMember();
@@ -330,13 +329,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
-        // Confirm or Reject
-        if (request.getStatus() == Approval.ApprovalStatus.REJECTED) {
-            approval.reject(member);
-        }
-        if (request.getStatus() == Approval.ApprovalStatus.APPROVED) {
-            approval.confirm(member);
-        }
+        // Confirm
+        approval.confirm(member);
 
         return ApprovalConfirm.Response.toDto(approval);
     }

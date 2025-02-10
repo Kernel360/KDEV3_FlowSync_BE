@@ -31,8 +31,7 @@ public interface ApprovalService {
     ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId,
         Long commentId, ApprovalReCommentRegister.Request request);
 
-    ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request);
+    ApprovalConfirm.Response confirm(Long projectId, Long approvalId);
 
     ApprovalReject.Response reject(Long projectId, Long approvalId);
 

@@ -123,10 +123,10 @@ public class ApprovalController implements ApprovalApi {
     @PostMapping("/{approvalId}/confirm")
     @Override
     public BaseResponse<ApprovalConfirm.Response> confirm(@PathVariable Long projectId,
-        @PathVariable Long approvalId, ApprovalConfirm.Request request) {
+        @PathVariable Long approvalId) {
 
         // Confirm Approval
-        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
+        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId);
 
         return BaseResponse.success(response);
     }
