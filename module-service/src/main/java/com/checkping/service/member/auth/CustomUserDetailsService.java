@@ -28,7 +28,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = result.orElseThrow(() -> new UsernameNotFoundException(email));
 
         if (member.getStatus() == Member.Status.INACTIVE) {
-            throw new InactiveMemberException("삭제된 회원입니다", ErrorCode.USER_NOT_FOUND);
+            throw new InactiveMemberException("비활성화된 회원입니다", ErrorCode.INACTIVE_MEMBER);
+        }
+
+        if (member.getStatus() == Member.Status.DELETED) {
+            throw new InactiveMemberException("삭제된 회원입니다", ErrorCode.DELETED_MEMBER);
         }
 
         if (member != null) {

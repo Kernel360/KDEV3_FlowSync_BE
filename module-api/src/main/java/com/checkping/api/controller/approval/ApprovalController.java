@@ -1,10 +1,15 @@
 package com.checkping.api.controller.approval;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalRegister.Request;
+import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
+import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
@@ -12,9 +17,11 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,6 +75,25 @@ public class ApprovalController implements ApprovalApi {
         return BaseResponse.success(response);
     }
 
+    @PutMapping("/{approvalId}")
+    @Override
+    public BaseResponse<ApprovalUpdate.Response> update(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @RequestBody ApprovalUpdate.Request request) {
+
+        ApprovalUpdate.Response response = approvalService.update(projectId, approvalId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @DeleteMapping("/{approvalId}")
+    @Override
+    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId, @PathVariable Long approvalId) {
+
+        ApprovalDelete.Response response = approvalService.delete(projectId, approvalId);
+
+        return BaseResponse.success(response);
+    }
+
     @PostMapping("/{approvalId}/comments")
     @Override
     public BaseResponse<ApprovalCommentRegister.Response> registerComment(
@@ -88,6 +114,17 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,
             approvalId, commentId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{approvalId}/confirm")
+    @Override
+    public BaseResponse<ApprovalConfirm.Response> confirm(@PathVariable Long projectId,
+        @PathVariable Long approvalId, ApprovalConfirm.Request request) {
+
+        // Confirm Approval
+        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
 
         return BaseResponse.success(response);
     }

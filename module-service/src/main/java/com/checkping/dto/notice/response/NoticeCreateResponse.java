@@ -2,6 +2,7 @@ package com.checkping.dto.notice.response;
 
 
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -39,7 +40,7 @@ public class NoticeCreateResponse {
     private Boolean isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
-    private LocalDateTime regAt;
+    private String regAt;
 
     public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
@@ -50,7 +51,7 @@ public class NoticeCreateResponse {
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted())
-                .regAt(notice.getRegAt())
+                .regAt(DateTimeUtils.format(notice.getRegAt()))
                 .build();
     }
 

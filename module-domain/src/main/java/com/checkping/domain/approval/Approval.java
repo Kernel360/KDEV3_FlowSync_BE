@@ -1,6 +1,9 @@
 package com.checkping.domain.approval;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
+import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +12,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -46,11 +51,13 @@ public class Approval extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long progressStepId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "progress_step_id")
+    private ProgressStep progressStep;
 
 
     @Column(name = "title", nullable = false, length = 100)
@@ -60,11 +67,9 @@ public class Approval extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT", length = 65536)
     private String content;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long registerId;
-
-    @Column(name = "register_name")
-    private String registerName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id")
+    private Member register;
 
     @Column(name = "cancel_at")
     private LocalDateTime cancelAt;
@@ -72,8 +77,9 @@ public class Approval extends BaseEntity {
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
 
-    // TODO : 연관 관계 맵핑 필요
-    private Long approverId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approver_id")
+    private Member approver;
 
     @Column(name = "approver_name")
     private String approverName;
@@ -125,18 +131,16 @@ public class Approval extends BaseEntity {
     Generate
      */
 
-    public static Approval generate(Long projectId, Long progressStepId, Long registerId,
-        String registerName, String title, String content) {
+    public static Approval generate(Project project, ProgressStep progressStep, Member register,
+        String title, String content) {
 
         Approval approval = new Approval();
         approval.title = title;
         approval.content = content;
 
-        // TODO : 엔티티를 참조하도록 변경 필요
-        approval.projectId = projectId;
-        approval.progressStepId = progressStepId;
-        approval.registerId = registerId;
-        approval.registerName = registerName;
+        approval.project = project;
+        approval.progressStep = progressStep;
+        approval.register = register;
 
         // 생성 시 기본 값
         approval.status = ApprovalStatus.WAIT;
@@ -150,7 +154,7 @@ public class Approval extends BaseEntity {
      *
      * @param approvalFiles 파일 리스트
      */
-    public void addFiles(List<ApprovalFile> approvalFiles) {
+    public void updateFiles(List<ApprovalFile> approvalFiles) {
         this.fileList = approvalFiles;
     }
 
@@ -159,7 +163,7 @@ public class Approval extends BaseEntity {
      *
      * @param links 링크 리스트
      */
-    public void addLinks(List<ApprovalLink> links) {
+    public void updateLinks(List<ApprovalLink> links) {
         this.linkList = links;
     }
 
@@ -177,5 +181,35 @@ public class Approval extends BaseEntity {
         }
 
         this.linkList.add(link);
+    }
+
+    public void reject(Member rejector) {
+        this.status = ApprovalStatus.REJECTED;
+        this.approver = rejector;
+        this.approverName = rejector.getName();
+        this.cancelAt = LocalDateTime.now();
+        this.approverAt = LocalDateTime.now();
+    }
+
+    public void confirm(Member approver) {
+        this.status = ApprovalStatus.APPROVED;
+        this.approver = approver;
+        this.approverName = approver.getName();
+        this.approverAt = LocalDateTime.now();
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    // soft delete 적용 = 게시글 비활성화
+    public void deactivate() {
+        this.deleteYn = Approval.DeleteStatus.Y;
+    }
+
+    // soft delete 해제 = 게시글 활성화
+    public void activate() {
+        this.deleteYn = Approval.DeleteStatus.N;
     }
 }

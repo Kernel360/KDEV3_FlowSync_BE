@@ -1,7 +1,12 @@
 spring:
   config:
+    import: application-s3.yaml, application-jwt.yaml
     activate:
       on-profile: local
+  data:
+    redis:
+      host: localhost
+      port: 6379
   h2:
     console:
       enabled: true

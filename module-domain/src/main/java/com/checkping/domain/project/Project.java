@@ -51,10 +51,6 @@ public class Project extends BaseEntity {
     private String detail;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 100)
-    private Status status;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "management_step", length = 100)
     private ManagementStep managementStep;
 
@@ -126,13 +122,19 @@ public class Project extends BaseEntity {
         IN_PROGRESS("진행중"),
         COMPLETED("납품완료"),
         MAINTENANCE("하자보수"),
-        PAUSED("일시중단");
+        PAUSED("일시중단"),
+        DELETED("삭제");
 
         private final String description;
     }
 
     public void updateProgressStep(Long id){
         this.progressStepId = id;
+    }
+
+    public void deleteProject(){
+        this.deletedYn = "Y";
+        this.managementStep = ManagementStep.DELETED;
     }
 
 }

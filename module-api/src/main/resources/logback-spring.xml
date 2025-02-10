@@ -37,7 +37,7 @@
             <!-- 파일당 최대 용량 설정 -->
             <maxFileSize>10MB</maxFileSize>
             <!-- 최대 보관 일수 -->
-            <maxHistory>5</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -59,7 +59,7 @@
             <!-- 파일당 최대 크기 -->
             <maxFileSize>10MB</maxFileSize>
             <!-- 최대 보관 일수 -->
-            <maxHistory>10</maxHistory>
+            <maxHistory>2</maxHistory>
         </rollingPolicy>
     </appender>
 

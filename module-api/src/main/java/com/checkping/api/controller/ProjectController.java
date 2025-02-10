@@ -1,15 +1,23 @@
 package com.checkping.api.controller;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.ProgressStepGet.Response;
+import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
-import com.checkping.dto.project.ProjectRequest;
+import com.checkping.service.project.progressstep.ProgressStepService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -17,6 +25,7 @@ import java.util.Map;
 public class ProjectController implements ProjectApi {
 
     private final ProjectServiceImpl projectService;
+    private final ProgressStepService progressStepService;
 
     @Override
     @PostMapping("/admins/projects")
@@ -56,34 +65,46 @@ public class ProjectController implements ProjectApi {
     @GetMapping(value = {"/admins/projects", "/projects"})
     public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, currentPage, pageSize);
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, managementStep, currentPage, pageSize);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
     }
 
     @Override
-    @GetMapping("/admins/projects/management-steps")
-    public BaseResponse<Map<String, Long>> countProjectsByManagementStep() {
-        Map<String, Long> managementCountMap = projectService.countProjectsByManagementStep();
-        return BaseResponse.success(managementCountMap);
+    @GetMapping(value={"/admins/projects/management-steps/count", "/projects/management-steps/count"})
+    public BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep() {
+        ProjectResponse.ProjectManagementStepCountDto projectCount = projectService.countProjectsByManagementStep();
+        return BaseResponse.success(projectCount);
     }
 
     @Override
-    @GetMapping(value = {"/admins/projects/{projectId}/projectInfo", "/projects/{projectId}/projectInfo"})
+    @GetMapping(value = {"/admins/projects/{projectId}/project-info", "/projects/{projectId}/project-info"})
     public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
         ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
     }
 
     @Override
-    @GetMapping(value ={"/admins/projects/status", "/projects/status"})
-    public BaseResponse<ProjectResponse.ProjectInfoListDto> listProjectInfoByStatus() {
-        ProjectResponse.ProjectInfoListDto projectList = projectService.getProjectInfoListByStatus();
+    @GetMapping(value = {"/admins/projects/management-steps", "/projects/management-steps"})
+    public BaseResponse<ProjectResponse.ProjectListByManagementStepDto> findProjectsByManagementSteps(
+            @RequestParam String managementStep,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        ProjectResponse.ProjectListByManagementStepDto projectList = projectService.findProjectsByManagementSteps(managementStep, currentPage, pageSize);
         return BaseResponse.success(projectList);
+    }
+
+    @Override
+    @GetMapping("/projects/{projectId}/progress-steps")
+    public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
+
+        List<Response> response = progressStepService.getProgressStep(projectId);
+
+        return BaseResponse.success(response);
     }
 }

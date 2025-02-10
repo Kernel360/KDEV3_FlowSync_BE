@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MemberRegisterDto {
 
-    @Schema(description = "조직 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+    @Schema(description = "조직 ID", example = "1")
     private Long organizationId;
     @Schema(description = "이메일", example = "example@example.com")
     private String email;
