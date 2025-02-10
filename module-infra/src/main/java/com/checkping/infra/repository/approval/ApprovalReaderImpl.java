@@ -1,7 +1,9 @@
 package com.checkping.infra.repository.approval;
 
 import com.checkping.domain.approval.Approval;
+import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -89,5 +91,10 @@ public class ApprovalReaderImpl implements ApprovalReader {
     @Override
     public boolean isContainingApproval(Long projectId, Long approvalId) {
         return approvalRepository.existsByProjectIdAndId(projectId, approvalId);
+    }
+
+    @Override
+    public List<ApprovalCountProjection> countByProgressStep(Long projectId) {
+        return approvalRepository.countByProgressStep(projectId);
     }
 }
