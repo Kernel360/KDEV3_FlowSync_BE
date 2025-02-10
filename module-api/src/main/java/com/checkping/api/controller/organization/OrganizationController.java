@@ -94,4 +94,16 @@ public class OrganizationController implements OrganizationApi {
         return BaseResponse.success("업체 상태 전환 완료");
     }
 
+    @GetMapping({"/admins/organizations/{organizationId}/projects","/organizations/{organizationId}/projects"})
+    @Override
+    public BaseResponse<String> getProjectsByOrganization(
+            @PathVariable Long organizationId,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String managementStep,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String keyword) {
+
+        return null;
+    }
 }
