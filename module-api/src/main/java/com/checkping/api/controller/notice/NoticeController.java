@@ -63,7 +63,7 @@ public class NoticeController implements NoticeApi {
                 .category(category)
                 .page(currentPage)
                 .pageSize(pageSize)
-                .isDeleted(Boolean.valueOf(isDeleted))
+                .isDeleted(isDeleted)
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
