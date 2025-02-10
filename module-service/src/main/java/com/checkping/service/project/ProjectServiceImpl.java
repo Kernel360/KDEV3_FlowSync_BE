@@ -145,10 +145,9 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse.ProjectInfoDto findProjectByProjectId(Long projectId) {
         ProjectInfo projectInfo = projectRepository.findProjectInfoById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-        OwnerInfo developerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getDeveloperOwnerId())
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-        OwnerInfo customerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getCustomerOwnerId())
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        OwnerInfo developerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getDeveloperOwnerId()).orElse(null);
+        OwnerInfo customerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getCustomerOwnerId()).orElse(null);
+        // 추후 업체, 멤버가 완전 삭제될 시에도 프로젝트 정보를 가져올 수 있어야 하기 때문에 업체, 멤버에 한해 exception 처리를 제거
 
         return ProjectResponse.ProjectInfoDto.toDto(projectInfo, developerOwnerInfo, customerOwnerInfo);
     }
@@ -210,12 +209,13 @@ public class ProjectServiceImpl implements ProjectService {
                 (Date) row[5], // regAt
                 (Date) row[6], // updateAt
                 (Date) row[7], // startAt
-                (Date) row[8], // closeAt
-                (String) row[9], // deletedYn
-                ((Number) row[10]).longValue(), // devOwnerId
-                (String) row[11], // developerName
-                (String) row[12], // customerName
-                ((Number) row[13]).intValue() // clickable
+                (Date) row[8], // deadlineAt
+                (Date) row[9], // closeAt
+                (String) row[10], // deletedYn
+                ((Number) row[11]).longValue(), // devOwnerId
+                (String) row[12], // developerName
+                (String) row[13], // customerName
+                ((Number) row[14]).intValue() // clickable
         ));
     }
 

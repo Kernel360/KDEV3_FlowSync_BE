@@ -145,9 +145,9 @@ public class ProjectRequest {
                 .managementStep(Project.ManagementStep.valueOf(updateDto.getManagementStep()))
                 .devOwner(devOwnerMember)
                 .customerOwner(customerOwnerMember)
+                .updateAt(LocalDateTime.now())
                 .startAt(updateDto.getStartAt())
                 .deadlineAt(updateDto.getDeadlineAt())
-                .updateAt(LocalDateTime.now())
                 .organizations(organizations)
                 .members(members)
                 .build();
