@@ -8,7 +8,7 @@ import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.service.project.progressstep.ProgressStepService;
-import com.fasterxml.jackson.databind.ser.Serializers.Base;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -115,7 +115,7 @@ public class ProjectController implements ProjectApi {
     @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
     public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
         @PathVariable Long progressStepId,
-        @RequestBody ProgressStepPlanUpdate.Request request) {
+        @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
 
         ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
 
