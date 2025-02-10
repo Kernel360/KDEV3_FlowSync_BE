@@ -84,8 +84,8 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping(value = {"/admins/projects/{projectId}/project-info", "/projects/{projectId}/project-info"})
-    public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
-        ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
+    public BaseResponse<ProjectResponse.ProjectInfoDto> getProject(@PathVariable Long projectId) {
+        ProjectResponse.ProjectInfoDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
     }
 

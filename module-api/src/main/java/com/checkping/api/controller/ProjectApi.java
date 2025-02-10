@@ -47,7 +47,7 @@ public interface ProjectApi {
     BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep();
 
     @Operation(summary = "프로젝트 별 정보 조회", description = "프로젝트의 기본 정보를 조회하는 기능입니다.")
-    BaseResponse<ProjectResponse.ProjectDetailDto> getProject(
+    BaseResponse<ProjectResponse.ProjectInfoDto> getProject(
             @Parameter(description = "프로젝트 ID") Long projectId
     );
 

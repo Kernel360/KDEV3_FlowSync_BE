@@ -17,7 +17,7 @@ public interface ProjectService {
 
     ProjectResponse.ProjectManagementStepCountDto countProjectsByManagementStep();
 
-    ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId);
+    ProjectResponse.ProjectInfoDto findProjectByProjectId(Long projectId);
 
     ProjectResponse.ProjectListByManagementStepDto findProjectsByManagementSteps(String managementStep, int currentPage, int pageSize);
 }
