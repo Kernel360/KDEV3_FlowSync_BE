@@ -5,9 +5,10 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
-import com.checkping.dto.project.ProgressStepPlanUpdate.Response;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
+import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
@@ -44,10 +45,21 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         return ProgressStepGet.Response.toDto(progressSteps);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public Response updateProgressStepPlan(Long projectId, Long progressStepId, Request request) {
-        return null;
+    public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId, Long progressStepId, Request request) {
+        // TODO : 권한 처리를 인터셉터에서 하도록 하며, 개발사 오너 담당자만 수정 가능 처리해야 한다.
+
+        // Find ProgressStep by Id and ProjectId - 프로젝트에 속한 단계인지 확인과 동시에 단계 정보를 가져옴
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
+            projectId).orElseThrow(
+            ProgressStepNotFoundException::new);
+
+        // Update ProgressStep Plan
+        progressStep.updatePlan(request.getStartAt(), request.getDeadlineAt());
+
+        // Entity -> Dto
+        return ProgressStepPlanUpdate.Response.toDto(progressStep);
     }
 
     /**
