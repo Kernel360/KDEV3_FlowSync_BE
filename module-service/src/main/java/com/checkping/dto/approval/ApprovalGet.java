@@ -2,6 +2,7 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
+import com.checkping.domain.approval.Approval.ApprovalCategory;
 import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
@@ -27,9 +28,9 @@ public class ApprovalGet {
         title : 결재 제목
         content : 결재 내용
         status : 결재 상태
+        category : 결재 카테고리
         registerId : 작성자 id
         registerName : 작성자 이름
-        cancleAt : 취소 일자
         approverAt : 승인 일시
         approver : 승인자
         updatedAt : 수정 일시
@@ -50,6 +51,8 @@ public class ApprovalGet {
         private List<ApprovalContent> content;
         @Schema(description = "결재 상태")
         private ApprovalStatus status;
+        @Schema(description = "결재 카테고리", example = "NORMAL_REQUEST, COMPLETE_REQUEST")
+        private ApprovalCategory category;
         @Schema(description = "작성자 (서명 포함)")
         private MemberResponseDto.MeWithSignatureResponseDto register;
         @Schema(description = "승인 일시")
@@ -81,6 +84,7 @@ public class ApprovalGet {
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());
             response.status = approval.getStatus();
+            response.category = approval.getCategory();
             response.register = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
                 approval.getRegister());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
