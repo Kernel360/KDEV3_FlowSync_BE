@@ -112,9 +112,12 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Transactional(readOnly = true)
     public ApprovalSearch.Response search(Long projectId, ApprovalSearchCondition request) {
 
+        // 어드민일 때 조회 권한 추가
+        boolean adminSearch = false;
+
         // ApprovalSearchCondition -> ApprovalSearchInfo.SearchCondition
-        ApprovalSearchInfo.SearchCondition searchCondition = ApprovalSearchCondition.toInfo(
-            request);
+        ApprovalSearchInfo.SearchCondition searchCondition = ApprovalSearchCondition.toInfo(request,
+            adminSearch);
 
         // Search Approval
         Page<Approval> approvals = approvalReader.getApprovals(projectId, searchCondition);
@@ -414,8 +417,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     /**
      * 결재 작성자와 현재 사용자가 같은지 확인
      *
-     * @param member    현재 사용자
-     * @param approval  결재 Entity
+     * @param member   현재 사용자
+     * @param approval 결재 Entity
      * @throws ApprovalRegisterAuthorityException 결재 작성자 권한 예외
      */
     private void checkRegisterAuthority(Member member, Approval approval) {

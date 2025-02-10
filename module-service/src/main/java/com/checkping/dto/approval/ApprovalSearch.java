@@ -26,9 +26,10 @@ public class ApprovalSearch {
         register : 작성자
         regAt : 작성일
         updatedAt : 수정일
-        approvalAt : 결재일
+        approvedAt : 결재일
         approval : 결재자
         cancelAt : 취소일
+        isDeleted : 삭제 여부
          */
         private Long id;
         private Long projectId;
@@ -38,9 +39,11 @@ public class ApprovalSearch {
         private MeResponseDto register;
         private String regAt;
         private String updatedAt;
-        private String approverAt;
+        private String approvedAt;
         private MeResponseDto approver;
         private String cancelAt;
+        private boolean isDeleted;
+
 
         /**
          * Approval Entity -> ApprovalItem Dto
@@ -58,9 +61,10 @@ public class ApprovalSearch {
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
-            dto.approverAt = DateTimeUtils.format(approval.getApproverAt());
+            dto.approvedAt = DateTimeUtils.format(approval.getApproverAt());
             dto.approver = approval.getApprover() == null ? null : MeResponseDto.fromEntity(approval.getApprover());
             dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
+            dto.isDeleted = approval.getDeleteYn() == Approval.DeleteStatus.Y;
             return dto;
         }
 
