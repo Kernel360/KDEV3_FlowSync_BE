@@ -252,8 +252,6 @@ public class ProjectResponse {
         private String detail;
         @Schema(description = "프로젝트 관리 단계")
         private Project.ManagementStep managementStep;
-        @Schema(description = "프로젝트 현재 진행단계 아이디")
-        private Long progressStepId;
         @Schema(description = "프로젝트 시작 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startAt;
