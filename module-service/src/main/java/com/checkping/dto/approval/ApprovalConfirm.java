@@ -14,25 +14,6 @@ import lombok.NoArgsConstructor;
 public class ApprovalConfirm {
 
     @Getter
-    public static class Request {
-
-        /*
-        status : 변경할 결재 상태
-         */
-        @Schema(description = "변경할 결재 상태", example = "REJECTED, APPROVED")
-        private String status;
-
-        /**
-         * Approval.ApprovalStatus 로 변환
-         *
-         * @return Approval.ApprovalStatus
-         */
-        public Approval.ApprovalStatus getStatus() {
-            return convertStatus(this.status);
-        }
-    }
-
-    @Getter
     public static class Response {
 
         /*
