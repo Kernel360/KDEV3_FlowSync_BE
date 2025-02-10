@@ -115,7 +115,10 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
+        // 관리자인 경우 삭제된 공지도 포함해서 조회
+        Page<Notice> result = isAdmin
+                ? noticeRepository.findSortedNoticesWithoutIsDeleted(keyword, category, pageable)
+                : noticeRepository.findSortedNotices(keyword, category, pageable);
 
         return isAdmin
                 ? NoticeListResponse.fromEntityPage(result, true)  // 관리자: isDeleted 포함
