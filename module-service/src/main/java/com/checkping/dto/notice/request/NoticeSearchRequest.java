@@ -20,4 +20,13 @@ public class NoticeSearchRequest {
 
     @Schema(description = "한 페이지에 보이는 공지사항 갯수", example = "10")
     private int pageSize;
+
+    @Schema(description = "삭제 여부", example = "true")
+    private Boolean isDeleted;
+
+    public void setIsDeleted(String isDeleted) {
+        if (isDeleted != null) {
+            this.isDeleted = Boolean.parseBoolean(isDeleted); // String을 Boolean으로 변환
+        }
+    }
 }

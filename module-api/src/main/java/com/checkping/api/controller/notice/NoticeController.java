@@ -55,13 +55,15 @@ public class NoticeController implements NoticeApi {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String isDeleted){
 
         NoticeSearchRequest noticeSearchRequest = NoticeSearchRequest.builder()
                 .keyword(keyword)
                 .category(category)
                 .page(currentPage)
                 .pageSize(pageSize)
+                .isDeleted(Boolean.valueOf(isDeleted))
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);
