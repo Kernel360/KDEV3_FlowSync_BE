@@ -6,14 +6,12 @@ import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
 import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
-import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
 public interface AdminMemberApi {
@@ -58,7 +56,7 @@ public interface AdminMemberApi {
         @Schema(description = "회원 ID", example = "1")
         @Parameter(description = "회원 ID", required = true) Long memberId,
         //이유 예외처리 예시
-        @Schema(description = "탈퇴 사유", example = "{reason : '퇴사로 인한 탈퇴'}")
+        @Schema(description = "탈퇴 사유", example = "퇴사로 인한 탈퇴")
         @Parameter(description = "탈퇴 사유", required = true) String reason);
 
     @Operation(summary = "소속 업체별 회원 조회", description = "특정 소속 업체의 회원 목록을 조회하는 기능입니다.")
@@ -67,4 +65,14 @@ public interface AdminMemberApi {
         @Parameter(description = "소속 업체 ID", required = true) Long organizationId,
         @Parameter(description = "페이지 번호 (1부터 시작)", example = "1", required = true) int page,
         @Parameter(description = "페이지 크기", example = "10", required = true) int size);
+
+    @Operation(summary = "회원 활성화 처리", description = "비활성화되거나 삭제된 회원을 활성화 처리하는 기능입니다.")
+    BaseResponse<String> activateMember(
+        @Schema(description = "회원 ID", example = "1")
+        @Parameter(description = "회원 ID", required = true) Long memberId);
+
+    @Operation(summary = "회원 비활성화 처리", description = "활성화된 회원을 비활성화 처리하는 기능입니다.")
+    BaseResponse<String> deactivateMember(
+        @Schema(description = "회원 ID", example = "1")
+        @Parameter(description = "회원 ID", required = true) Long memberId);
 }

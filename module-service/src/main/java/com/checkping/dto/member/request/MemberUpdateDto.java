@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MemberUpdateDto {
-    @Schema(description = "이름", example = "Optimus Prime")
+    @Schema(description = "이름", example = "홍길동")
     private String name;
     @Schema(description = "전화번호", example = "010-1234-5678")
     private String phoneNum;
@@ -18,9 +18,9 @@ public class MemberUpdateDto {
     private String jobRole;
     @Schema(description = "직책", example = "팀장")
     private String jobTitle;
-    @Schema(description = "소개", example = "안녕하세요. 저는 옵티머스프라임입니다.")
+    @Schema(description = "소개", example = "홍길동입니다")
     private String introduction;
-    @Schema(description = "비고", example = "곧 퇴사함")
+    @Schema(description = "비고", example = "비고입니다")
     private String remark;
 
     public static Member toEntity(Member member, MemberUpdateDto dto) {

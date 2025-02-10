@@ -78,13 +78,13 @@ public class AuthService {
             throw new InvalidTokenException();
         }
 
-        // 블랙리스트 추가
-        if (accessToken != null) {
-            long accessTokenExpiration = jwtUtil.getExpiration(accessToken);
-            tokenBlacklistService.blacklistAccessToken(accessToken, accessTokenExpiration);
+        // 레디스 연결 여부 먼저 확인
+        if(tokenBlacklistService.isRedisAvailable()) {
+            // 블랙리스트 추가
+            tokenBlacklistService.blacklistRefreshToken(refresh, jwtUtil.getExpiration(refresh));
+            if (accessToken != null) {
+                tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
+            }
         }
-
-        long refreshTokenExpiration = jwtUtil.getExpiration(refresh);
-        tokenBlacklistService.blacklistRefreshToken(refresh, refreshTokenExpiration);
     }
 }
