@@ -33,7 +33,7 @@ public class NoticeCreateResponse {
     private Notice.Priority priority;
 
     @Schema(description = "삭제 여부", example = "False")
-    private Boolean isDeleted;
+    private String isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
     private LocalDateTime regAt;
@@ -45,7 +45,7 @@ public class NoticeCreateResponse {
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .isDeleted(notice.getIsDeleted())
+                .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .build();
     }
