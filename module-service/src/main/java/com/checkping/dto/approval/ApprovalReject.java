@@ -2,7 +2,6 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
-import com.checkping.dto.approval.ApprovalConfirm.Response;
 import com.checkping.dto.member.response.MemberResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
