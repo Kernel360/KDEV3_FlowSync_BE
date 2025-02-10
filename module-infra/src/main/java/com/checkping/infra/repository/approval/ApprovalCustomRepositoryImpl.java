@@ -29,7 +29,8 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
                 progressStep.name,                   // ✅ 진행 단계 이름
                 progressStep.description,            // ✅ 진행 단계 설명
                 approval.count().coalesce(0L),       // ✅ 개수가 없으면 0 반환
-                progressStep.status.stringValue() // ✅ 진행 단계 상태
+                progressStep.status.stringValue(), // ✅ 진행 단계 상태
+                progressStep.stepOrder                // ✅ 진행 단계 순서
             ))
             .from(progressStep) // ✅ 진행 단계 테이블을 기준으로 조회
             .leftJoin(approval).on(
