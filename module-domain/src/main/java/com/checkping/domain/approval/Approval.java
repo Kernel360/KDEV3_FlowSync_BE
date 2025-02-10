@@ -35,6 +35,7 @@ public class Approval extends BaseEntity {
     title : 제목
     content : 내용
     status : 결재 상태
+    category : 결재 카테고리
     register : 작성자 (FK : register_id)
     register_name : 작성자 이름
     approver_at : 승인 일시
@@ -57,7 +58,6 @@ public class Approval extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "progress_step_id")
     private ProgressStep progressStep;
-
 
     @Column(name = "title", nullable = false, length = 100)
     private String title;
@@ -106,6 +106,10 @@ public class Approval extends BaseEntity {
     private ApprovalStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private ApprovalCategory category;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
     private DeleteStatus deleteYn;
 
@@ -120,6 +124,14 @@ public class Approval extends BaseEntity {
     @RequiredArgsConstructor
     public enum DeleteStatus {
         Y("비활성화"), N("활성화");
+        private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum ApprovalCategory {
+        NORMAL_REQUEST("일반 요청"), COMPLETE_REQUEST("완료 요청");
+
         private final String description;
     }
 
