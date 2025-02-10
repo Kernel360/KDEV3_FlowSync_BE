@@ -139,7 +139,8 @@ public class Approval extends BaseEntity {
     Generate
      */
 
-    public static Approval generate(Project project, ProgressStep progressStep, Member register,
+    public static Approval generate(Project project, ProgressStep progressStep,
+        ApprovalCategory category, Member register,
         String title, String content) {
 
         Approval approval = new Approval();
@@ -149,6 +150,8 @@ public class Approval extends BaseEntity {
         approval.project = project;
         approval.progressStep = progressStep;
         approval.register = register;
+
+        approval.category = category;
 
         // 생성 시 기본 값
         approval.status = ApprovalStatus.WAIT;
