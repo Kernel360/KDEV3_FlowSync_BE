@@ -18,6 +18,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+// TODO : AuthInterceptor 와 코드 따로 분리할 지 합칠 지 결정해서 수정
 public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
 
     private final MemberByProjectService memberByProjectService;
