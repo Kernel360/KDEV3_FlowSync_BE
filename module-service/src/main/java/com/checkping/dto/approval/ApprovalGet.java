@@ -6,7 +6,7 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
-import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -50,14 +50,14 @@ public class ApprovalGet {
         private List<ApprovalContent> content;
         @Schema(description = "결재 상태")
         private ApprovalStatus status;
-        @Schema(description = "작성자")
-        private MeResponseDto register;
+        @Schema(description = "작성자 (서명 포함)")
+        private MemberResponseDto.MeWithSignatureResponseDto register;
         @Schema(description = "취소 일자")
         private String cancelAt;
         @Schema(description = "승인 일시")
         private String approverAt;
-        @Schema(description = "승인자")
-        private MeResponseDto approver;
+        @Schema(description = "승인자 (서명 포함)")
+        private MemberResponseDto.MeWithSignatureResponseDto approver;
         @Schema(description = "수정 일시")
         private String updatedAt;
         @Schema(description = "작성 일시")
@@ -83,15 +83,25 @@ public class ApprovalGet {
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());
             response.status = approval.getStatus();
-            response.register = MeResponseDto.fromEntity(approval.getRegister());
-            response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
-            response.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            response.approver = approval.getApprover() == null ? null : MeResponseDto.fromEntity(approval.getApprover());
+            response.register = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
+                approval.getRegister());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             response.regAt = DateTimeUtils.format(approval.getRegAt());
             response.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
             response.linkList = ApprovalLinkGet.Response.toDto(approval.getLinkList());
             response.fileList = ApprovalFileGet.Response.toDto(approval.getFileList());
+
+            response.approverAt = null;
+            response.approver = null;
+            response.cancelAt = null;
+            // 대기상태가 아니면 승인 일시, 승인자 정보를 추가
+            if (!approval.isWaitStatus()) {
+                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
+                response.approverAt = DateTimeUtils.format(approval.getApproverAt());
+                response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
+                    approval.getApprover());
+            }
+
             return response;
         }
     }
