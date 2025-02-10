@@ -51,10 +51,6 @@ public class Project extends BaseEntity {
     private String detail;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 100)
-    private Status status;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "management_step", length = 100)
     private ManagementStep managementStep;
 
