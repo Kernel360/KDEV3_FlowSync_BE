@@ -5,6 +5,8 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
+import com.checkping.dto.project.ProgressStepPlanUpdate.Response;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
@@ -40,6 +42,12 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepGet.Response.toDto(progressSteps);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Response updateProgressStepPlan(Long projectId, Long progressStepId, Request request) {
+        return null;
     }
 
     /**
