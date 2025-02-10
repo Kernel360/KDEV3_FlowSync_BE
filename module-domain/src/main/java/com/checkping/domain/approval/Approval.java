@@ -37,7 +37,6 @@ public class Approval extends BaseEntity {
     status : 결재 상태
     register : 작성자 (FK : register_id)
     register_name : 작성자 이름
-    cancle_at : 취소 일자
     approver_at : 승인 일시
     approver_id : 승인자 id
     approver_name : 승인자 이름
@@ -70,9 +69,6 @@ public class Approval extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_id")
     private Member register;
-
-    @Column(name = "cancel_at")
-    private LocalDateTime cancelAt;
 
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
@@ -187,7 +183,6 @@ public class Approval extends BaseEntity {
         this.status = ApprovalStatus.REJECTED;
         this.approver = rejector;
         this.approverName = rejector.getName();
-        this.cancelAt = LocalDateTime.now();
         this.approverAt = LocalDateTime.now();
     }
 

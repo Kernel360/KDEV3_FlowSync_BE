@@ -39,7 +39,6 @@ public class ApprovalConfirm {
         projectId : 프로젝트 ID
         approvalId : 결재 ID
         status : 변경된 결재 상태
-        cancelAt : 취소 일시
         approverAt : 승인 일시
         approver : 승인자
          */
@@ -49,8 +48,6 @@ public class ApprovalConfirm {
         private Long approvalId;
         @Schema(description = "변경된 결재 상태", example = "REJECTED, APPROVED")
         private String status;
-        @Schema(description = "취소 일시", example = "2021-07-01T00:00:00")
-        private String cancelAt;
         @Schema(description = "승인 일시", example = "2021-07-01T00:00:00")
         private String approverAt;
         @Schema(description = "승인자")
@@ -68,12 +65,10 @@ public class ApprovalConfirm {
             response.approvalId = approval.getId();
             response.status = approval.getStatus().name();
 
-            response.cancelAt = null;
             response.approverAt = null;
             response.approver = null;
 
             if (!approval.isWaitStatus()) {
-                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
                 response.approverAt = DateTimeUtils.format(approval.getApproverAt());
                 response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(approval.getApprover());
             }

@@ -52,8 +52,6 @@ public class ApprovalGet {
         private ApprovalStatus status;
         @Schema(description = "작성자 (서명 포함)")
         private MemberResponseDto.MeWithSignatureResponseDto register;
-        @Schema(description = "취소 일자")
-        private String cancelAt;
         @Schema(description = "승인 일시")
         private String approverAt;
         @Schema(description = "승인자 (서명 포함)")
@@ -93,10 +91,9 @@ public class ApprovalGet {
 
             response.approverAt = null;
             response.approver = null;
-            response.cancelAt = null;
+
             // 대기상태가 아니면 승인 일시, 승인자 정보를 추가
             if (!approval.isWaitStatus()) {
-                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
                 response.approverAt = DateTimeUtils.format(approval.getApproverAt());
                 response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
                     approval.getApprover());
