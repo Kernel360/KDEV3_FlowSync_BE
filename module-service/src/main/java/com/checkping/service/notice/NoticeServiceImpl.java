@@ -109,7 +109,7 @@ public class NoticeServiceImpl implements NoticeService {
         String categoryStr = noticeSearchRequest.getCategory();
         if (categoryStr != null && !categoryStr.isBlank()) {
             try {
-                category = Notice.Category.valueOf(categoryStr);
+                category = Notice.Category.valueOf(categoryStr.toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new BaseException(ErrorCode.BAD_REQUEST);
             }
