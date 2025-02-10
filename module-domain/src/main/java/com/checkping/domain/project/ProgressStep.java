@@ -107,4 +107,28 @@ public class ProgressStep extends BaseEntity {
         return ProgressStep.builder().projectId(projectId).name(name).description(description)
             .stepOrder(stepOrder).status(Status.WAIT).build();
     }
+
+    /**
+     * 프로젝트 진행 단계 일정 업데이트 프로젝트 일정을 업데이트하면 일정의 시작일 시와는 관계없이 진행중으로 변경
+     *
+     * @param startAt    시작 일시
+     * @param deadlineAt 마감 일시
+     */
+    public void updatePlan(LocalDateTime startAt, LocalDateTime deadlineAt) {
+        this.startAt = startAt;
+        this.deadlineAt = deadlineAt;
+
+        if (this.isWait()) {
+            this.status = Status.IN_PROGRESS;
+        }
+    }
+
+    /**
+     * 프로젝트 진행 단계 - 대기중 상태 여부
+     *
+     * @return  대기중 상태 여부
+     */
+    public boolean isWait() {
+        return this.status == Status.WAIT;
+    }
 }
