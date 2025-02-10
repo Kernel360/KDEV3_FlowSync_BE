@@ -62,4 +62,10 @@ public interface ProjectApi {
     BaseResponse<List<ProgressStepGet.Response>> getProgressStep(
             @Parameter(description = "프로젝트 ID") Long projectId
     );
+
+    @Operation(summary = "프로젝트 관리단계 수정", description = "프로젝트 관리단계를 수정하는 기능입니다.")
+    BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 관리단계") String managementStep
+    );
 }

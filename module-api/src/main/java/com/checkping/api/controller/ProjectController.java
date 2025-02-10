@@ -10,14 +10,7 @@ import com.checkping.service.project.progressstep.ProgressStepService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -97,6 +90,14 @@ public class ProjectController implements ProjectApi {
             @RequestParam(defaultValue = "10") int pageSize) {
         ProjectResponse.ProjectListByManagementStepDto projectList = projectService.findProjectsByManagementSteps(managementStep, currentPage, pageSize);
         return BaseResponse.success(projectList);
+    }
+
+    @PutMapping("/projects/{projectId}/management-steps")
+    public BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
+            @PathVariable Long projectId,
+            @RequestParam String managementStep) {
+        ProjectResponse.ProjectDto project = projectService.updateManagementStep(projectId, managementStep);
+        return BaseResponse.success(project);
     }
 
     @Override
