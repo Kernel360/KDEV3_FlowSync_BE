@@ -81,25 +81,30 @@ public class ProgressStep extends BaseEntity {
     @Getter
     @RequiredArgsConstructor
     public enum CurrentStep {
-        REQUIREMENTS("요구사항 정의"), SCREEN_DESIGN("화면설계"), DESIGN("디자인"), PUBLISHING(
-            "퍼블리싱"), DEVELOPMENT("개발"), REVIEW("검수");
+        REQUIREMENTS(1, "요구사항 정의", "요구사항을 수집하고 문서화하는 단계"),
+        SCREEN_DESIGN(2, "화면설계", "화면의 구조와 흐름을 정의하는 단계"),
+        DESIGN(3, "디자인", "UI/UX 디자인을 수행하는 단계"),
+        PUBLISHING(4, "퍼블리싱", "디자인을 웹 표준에 맞춰 적용하는 단계"),
+        DEVELOPMENT(5, "개발", "기능을 구현하고 시스템을 개발하는 단계"),
+        REVIEW(6, "검수", "완성된 결과물을 테스트하고 검수하는 단계");
 
+        private final Integer order;
+        private final String name;
         private final String description;
     }
 
     /**
      * 생성 팩토리 메서드
      *
-     * @param projectId         프로젝트 아이디
-     * @param relatedApprovalId 관련 결재 아이디
-     * @param name              단계명
-     * @param description       단계 설명
-     * @param stepOrder         순서
+     * @param projectId   프로젝트 아이디
+     * @param name        단계명
+     * @param description 단계 설명
+     * @param stepOrder   순서
      * @return ProgressStep Entity
      */
-    public static ProgressStep generate(Long projectId, Long relatedApprovalId, String name,
-        String description, Integer stepOrder) {
-        return ProgressStep.builder().projectId(projectId).relatedApprovalId(relatedApprovalId)
-            .name(name).description(description).stepOrder(stepOrder).status(Status.WAIT).build();
+    public static ProgressStep generate(Long projectId, String name, String description,
+        Integer stepOrder) {
+        return ProgressStep.builder().projectId(projectId).name(name).description(description)
+            .stepOrder(stepOrder).status(Status.WAIT).build();
     }
 }
