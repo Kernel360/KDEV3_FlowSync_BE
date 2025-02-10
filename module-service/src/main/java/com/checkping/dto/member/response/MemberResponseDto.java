@@ -1,5 +1,6 @@
 package com.checkping.dto.member.response;
 
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class MemberResponseDto {
     private Member.Status status;
     @Schema(description = "이메일", example = "example@example.com")
     private String email;
-    @Schema(description = "이름", example = "Optimus Prime")
+    @Schema(description = "이름", example = "홍길동")
     private String name;
     @Schema(description = "전화번호", example = "010-1234-5678")
     private String phoneNum;
@@ -31,9 +32,9 @@ public class MemberResponseDto {
     private String jobTitle;
     @Schema(description = "등록 일시", example = "2021-07-01 12:00:00")
     private String regAt;
-    @Schema(description = "소개", example = "안녕하세요. 저는 옵티머스프라임입니다.")
+    @Schema(description = "소개", example = "안녕하세요.")
     private String introduction;
-    @Schema(description = "비고", example = "곧 퇴사함")
+    @Schema(description = "비고", example = "비고입니다.")
     private String remark;
 
     public static MemberResponseDto fromEntity(Member member) {
@@ -49,7 +50,7 @@ public class MemberResponseDto {
                 .jobRole(member.getJobRole())
                 .jobTitle(member.getJobTitle())
                 .jobRole(member.getJobRole())
-                .regAt(member.getRegAt().toString())
+                .regAt(DateTimeUtils.format(member.getRegAt()))
                 .introduction(member.getIntroduction())
                 .remark(member.getRemark())
                 .build();
