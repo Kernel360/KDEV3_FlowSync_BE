@@ -278,7 +278,6 @@ public class ProjectResponse {
                     .description(detailsDto.getDescription())
                     .detail(detailsDto.getDetail())
                     .managementStep(Project.ManagementStep.valueOf(detailsDto.getManagementStep()))
-                    .progressStepId(detailsDto.getProgressStepId())
                     .startAt(detailsDto.getStartAt())
                     .closeAt(detailsDto.getCloseAt())
                     .devOwnerId(detailsDto.getDevOwnerId())

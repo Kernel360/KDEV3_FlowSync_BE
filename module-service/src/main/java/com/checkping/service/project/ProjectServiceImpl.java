@@ -68,6 +68,10 @@ public class ProjectServiceImpl implements ProjectService {
 
         progressStepRepository.saveAll(steps);
 
+        Long firstStepId = steps.get(0).getId();
+
+        project.updateProgressStep(firstStepId);
+
         return ProjectResponse.ProjectDto.toDto(project);
     }
 

@@ -106,7 +106,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             "WHERE p.id = :projectId", nativeQuery = true)
     Optional<ProjectDetailsDto> findProjectById(@Param("projectId") Long projectId);
 
-    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.progress_step_id, p.start_at, p.close_at, p.dev_owner_id, " +
+    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.start_at, p.close_at, p.dev_owner_id, " +
             "org_info.developer_org_id, " +
             "org_info.customer_org_id " +
             "FROM project p " +

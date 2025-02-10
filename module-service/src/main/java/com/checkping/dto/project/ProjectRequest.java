@@ -28,7 +28,6 @@ public class ProjectRequest {
         description : 프로젝트 설명
         detail : 프로젝트 세부 설명
         managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
-        progressStepId : 프로젝트 현재 진행단계 아이디
         startAt : 프로젝트 시작 일시
         closeAt : 프로젝트 종료 일시
         resisterId : 등록자 아이디
@@ -46,8 +45,6 @@ public class ProjectRequest {
         private String detail;
         @Schema(description = "프로젝트 관리단계", example = "IN_PROGRESS")
         private String managementStep;
-        @Schema(description = "프로젝트 현재 진행단계 아이디", example = "1")
-        private Long progressStepId;
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
@@ -99,7 +96,6 @@ public class ProjectRequest {
        description : 프로젝트 설명
        detail : 프로젝트 세부 설명
        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
-       progressStepId : 프로젝트 현재 진행단계 아이디
        startAt : 프로젝트 시작 일시
        closeAt : 프로젝트 종료 일시
        devOwnerId : 개발사 대표자 아이디
