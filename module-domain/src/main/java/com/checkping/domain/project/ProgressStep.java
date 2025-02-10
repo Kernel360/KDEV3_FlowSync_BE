@@ -2,10 +2,20 @@ package com.checkping.domain.project;
 
 
 import com.checkping.domain.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @Builder
@@ -18,11 +28,13 @@ public class ProgressStep extends BaseEntity {
     id : id
     name : 단계명
     description : 단계 설명
-    order : 순서
-    status : 단계 상태
+    stepOrder : 순서
+    status : 진행 단계 상태
     start_at : 시작 일시
     close_at : 마감 일시
+    deadline_at : 예상 마감 일시
     project : 프로젝트 (FK : project_id)
+    related_approval : 관련 결재 (FK : approval_id)
      */
 
     @Id
@@ -41,7 +53,7 @@ public class ProgressStep extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Project.Status status;
+    private Status status;
 
     @Column(name = "start_at")
     private LocalDateTime startAt;
@@ -49,29 +61,45 @@ public class ProgressStep extends BaseEntity {
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
+    @Column(name = "deadline_at")
+    private LocalDateTime deadlineAt;
+
     @Column(name = "project_id")
     private Long projectId;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;*/
+    @Column(name = "related_approval_id")
+    private Long relatedApprovalId;
 
     @Getter
     @RequiredArgsConstructor
-    public enum ProgressStatus {
-        NOT_STARTED, IN_PROGRESS, COMPLETED, CANCELED
+    public enum Status {
+        WAIT("대기"), IN_PROGRESS("진행중"), PAUSED("일시 중단"), COMPLETED("완료");
+
+        private final String description;
     }
 
     @Getter
     @RequiredArgsConstructor
     public enum CurrentStep {
-        REQUIREMENTS("요구사항 정의"),
-        SCREEN_DESIGN("화면설계"),
-        DESIGN( "디자인" ),
-        PUBLISHING("퍼블리싱"),
-        DEVELOPMENT("개발"),
-        REVIEW("검수");
+        REQUIREMENTS("요구사항 정의"), SCREEN_DESIGN("화면설계"), DESIGN("디자인"), PUBLISHING(
+            "퍼블리싱"), DEVELOPMENT("개발"), REVIEW("검수");
 
         private final String description;
+    }
+
+    /**
+     * 생성 팩토리 메서드
+     *
+     * @param projectId         프로젝트 아이디
+     * @param relatedApprovalId 관련 결재 아이디
+     * @param name              단계명
+     * @param description       단계 설명
+     * @param stepOrder         순서
+     * @return ProgressStep Entity
+     */
+    public static ProgressStep generate(Long projectId, Long relatedApprovalId, String name,
+        String description, Integer stepOrder) {
+        return ProgressStep.builder().projectId(projectId).relatedApprovalId(relatedApprovalId)
+            .name(name).description(description).stepOrder(stepOrder).status(Status.WAIT).build();
     }
 }
