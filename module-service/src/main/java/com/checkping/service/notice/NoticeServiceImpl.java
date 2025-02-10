@@ -123,6 +123,3 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
 }
-
-//TODO : 모든 DTO, 엔티티에서 관리자아이디 제거 (DB에서도 해당 컬럼 전부 제거)
-//TODO : 모든 컬럼을 동일하게 수정 시 수정 불가 예외처리
