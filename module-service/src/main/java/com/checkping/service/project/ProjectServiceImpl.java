@@ -68,6 +68,10 @@ public class ProjectServiceImpl implements ProjectService {
 
         progressStepRepository.saveAll(steps);
 
+        if(project.getManagementStep().equals(Project.ManagementStep.COMPLETED)){
+            project.updateCloseAt();
+        }
+
         Long firstStepId = steps.get(0).getId();
 
         project.updateProgressStep(firstStepId);
@@ -99,6 +103,10 @@ public class ProjectServiceImpl implements ProjectService {
         List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
                 request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
+
+        if(project.getManagementStep().equals(Project.ManagementStep.COMPLETED)){
+            project.updateCloseAt();
+        }
 
         project = projectRepository.save(
                 ProjectRequest.UpdateDto.toEntity(request, project, organizations, members));
@@ -264,6 +272,20 @@ public class ProjectServiceImpl implements ProjectService {
         });
 
         return ProjectResponse.ProjectListByManagementStepDto.toDto(results);
+    }
+
+    public ProjectResponse.ProjectDto updateManagementStep(Long projectId, String managementStep) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        if(Project.ManagementStep.valueOf(managementStep).equals(Project.ManagementStep.COMPLETED)){
+            project.updateCloseAt();
+        }
+
+        project.updateManagementStep(Project.ManagementStep.valueOf(managementStep));
+        projectRepository.save(project);
+
+        return ProjectResponse.ProjectDto.toDto(project);
     }
 
 }

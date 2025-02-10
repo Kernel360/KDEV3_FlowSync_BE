@@ -29,7 +29,7 @@ public class ProjectRequest {
         detail : 프로젝트 세부 설명
         managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
         startAt : 프로젝트 시작 일시
-        closeAt : 프로젝트 종료 일시
+        deadlineAt : 프로젝트 예상 종료 일시
         resisterId : 등록자 아이디
         devOwnerId : 개발사 대표자 아이디
         customerOwnerId : 고객사 결재자 아이디
@@ -48,9 +48,9 @@ public class ProjectRequest {
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
-        @Schema(description = "프로젝트 마감 일시", example = "2025-12-28 11:17:15", type = "string")
+        @Schema(description = "프로젝트 예상 종료 일시", example = "2025-12-28 10:10:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime closeAt;
+        private LocalDateTime deadlineAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
         @Schema(description = "고객사 결재자 아이디", example = "1")
@@ -77,7 +77,7 @@ public class ProjectRequest {
                 .managementStep(Project.ManagementStep.valueOf(resisterDto.getManagementStep()))
                 .regAt(LocalDateTime.now())
                 .startAt(resisterDto.getStartAt())
-                .closeAt(resisterDto.getCloseAt())
+                .deadlineAt(resisterDto.getDeadlineAt())
                 .devOwner(devOwnerMember)
                 .customerOwner(customerOwnerMember)
                 .organizations(organizations)
@@ -97,7 +97,7 @@ public class ProjectRequest {
        detail : 프로젝트 세부 설명
        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
        startAt : 프로젝트 시작 일시
-       closeAt : 프로젝트 종료 일시
+       deadlineAt : 프로젝트 예상 종료 일시
        devOwnerId : 개발사 대표자 아이디
        developerOrgId : 개발사 아이디
        customerOwnerId : 고객사 결재자 아이디
@@ -115,9 +115,9 @@ public class ProjectRequest {
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startAt;
-        @Schema(description = "프로젝트 마감 일시", examples = "2025-12-28 11:17:15", type = "string")
+        @Schema(description = "프로젝트 예상 종료 일시", examples = "2025-12-28 10:10:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime closeAt;
+        private LocalDateTime deadlineAt;
         @Schema(description = "개발사 대표자 아이디", example = "1")
         private Long devOwnerId;
         @Schema(description = "고객사 결재자 아이디", example = "1")
@@ -146,7 +146,7 @@ public class ProjectRequest {
                 .devOwner(devOwnerMember)
                 .customerOwner(customerOwnerMember)
                 .startAt(updateDto.getStartAt())
-                .closeAt(updateDto.getCloseAt())
+                .deadlineAt(updateDto.getDeadlineAt())
                 .updateAt(LocalDateTime.now())
                 .organizations(organizations)
                 .members(members)
