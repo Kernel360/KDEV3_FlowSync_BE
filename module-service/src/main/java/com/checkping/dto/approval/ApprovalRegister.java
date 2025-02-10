@@ -73,7 +73,6 @@ public class ApprovalRegister {
         category : 결재 유형
         registerId : 작성자 id
         registerName : 작성자 이름
-        cancleAt : 취소 일자
         approverAt : 승인 일시
         approver : 승인자
         updatedAt : 수정 일시
@@ -89,7 +88,6 @@ public class ApprovalRegister {
         private String status;
         private String category;
         private MeResponseDto register;
-        private LocalDateTime cancelAt;
         private LocalDateTime approverAt;
         private MeResponseDto approver;
         private LocalDateTime updatedAt;
@@ -107,7 +105,6 @@ public class ApprovalRegister {
             dto.status = approval.getStatus().name();
             dto.category = approval.getCategory().name();
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
-            dto.cancelAt = null;
             dto.approverAt = null;
             dto.approver = null;
             dto.updatedAt = approval.getUpdatedAt();
