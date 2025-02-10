@@ -58,11 +58,8 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProgressStep> steps = new ArrayList<>();
 
         for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
-            ProgressStep progressStep = ProgressStep.builder()
-                    .projectId(project.getId())
-                    .name(step.getDescription())
-                    .build();
-
+            // generate progress step
+            ProgressStep progressStep = ProgressStep.generate(project.getId(),step.getName(),step.getDescription(), step.getOrder());
             steps.add(progressStep);
         }
 
