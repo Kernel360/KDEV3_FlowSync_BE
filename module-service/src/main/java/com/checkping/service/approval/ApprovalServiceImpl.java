@@ -12,6 +12,7 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -338,6 +339,11 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
 
         return ApprovalConfirm.Response.toDto(approval);
+    }
+
+    @Override
+    public ApprovalReject.Response reject(Long projectId, Long approvalId) {
+        return null;
     }
 
     @Transactional(readOnly = true)

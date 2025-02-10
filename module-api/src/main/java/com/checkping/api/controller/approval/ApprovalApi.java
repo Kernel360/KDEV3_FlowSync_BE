@@ -7,6 +7,7 @@ import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
 import com.checkping.dto.approval.ApprovalRegister.Response;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
@@ -73,6 +74,11 @@ public interface ApprovalApi {
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 승인 정보") @RequestBody ApprovalConfirm.Request request);
+
+    @Operation(summary = "결재 반려", description = "결재를 반려하는 기능입니다.")
+    BaseResponse<ApprovalReject.Response> reject(
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
+        @Parameter(description = "결재 ID") @PathVariable Long approvalId);
 
     @Operation(summary="프로젝트 진행 단계 별 결재 글 개수 조회", description="프로젝트 진행 단계 별 결재 글 개수를 조회하는 기능입니다.")
     BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
