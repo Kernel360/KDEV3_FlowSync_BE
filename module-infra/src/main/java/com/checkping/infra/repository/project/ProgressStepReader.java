@@ -9,4 +9,6 @@ public interface ProgressStepReader {
     List<ProgressStep> getByProjectId(Long projectId);
 
     Optional<ProgressStep> getById(Long progressStepId);
+
+    Optional<ProgressStep> getByIdAndProjectId(Long progressStepId, Long projectId);
 }
