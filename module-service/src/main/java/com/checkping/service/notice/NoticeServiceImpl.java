@@ -31,7 +31,7 @@ public class NoticeServiceImpl implements NoticeService {
         if (priority == Notice.Priority.EMERGENCY) {
             long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
             if (emergencyNoticeCount >= 3) {
-                throw new BaseException(ErrorCode.BAD_REQUEST);
+                throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
             }
         }
 
