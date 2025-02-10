@@ -39,7 +39,7 @@ public class NoticeGetListWithIsdeletedResponse implements NoticeGetListResponse
                 .title(notice.getTitle())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .isDeleted(notice.getIsDeleted() ? "Y" : "N")
+                .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getUpdatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
