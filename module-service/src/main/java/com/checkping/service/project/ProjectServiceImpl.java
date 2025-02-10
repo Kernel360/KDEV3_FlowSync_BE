@@ -15,7 +15,6 @@ import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
 import com.checkping.infra.dto.ProjectDetailsDto;
-import com.checkping.infra.repository.project.projection.ProjectInfoProjection;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.project.ProjectRequest;
 
@@ -109,11 +108,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int currentPage, int pageSize) {
+    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String managementStep, int currentPage, int pageSize) {
         Pageable pageable = PageRequest.of(currentPage-1, pageSize, Sort.Direction.DESC, "id");
         Member member = currentMemberUtil.getCurrentMember();
 
-        Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, keyword, status, pageable);
+        Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, keyword, managementStep, pageable);
 
         return ProjectResponse.ProjectListDto.fromEntityPage(results);
     }
@@ -166,11 +165,11 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
-    private Page<ProjectResponse.ProjectListDetailDto> getProjectListByRoleAndType(Member member, String keyword, String status, Pageable pageable) {
+    private Page<ProjectResponse.ProjectListDetailDto> getProjectListByRoleAndType(Member member, String keyword, String managementStep, Pageable pageable) {
         Member.Role role = member.getRole();
 
         if (role.equals(Member.Role.ADMIN)) {
-            Page<Object[]> results = projectRepository.findAdminProjectsByKeywordAndStatus(keyword, status, pageable);
+            Page<Object[]> results = projectRepository.findAdminProjectsByKeywordAndManagementStep(keyword, managementStep, pageable);
             return toProjectListDetailDto(results);
         }
 
@@ -178,10 +177,10 @@ public class ProjectServiceImpl implements ProjectService {
         Long memberId = member.getId();
 
         if (type == Organization.Type.DEVELOPER) {
-            Page<Object[]> results = projectRepository.findDeveloperProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            Page<Object[]> results = projectRepository.findDeveloperProjectsByKeywordAndManagementStep(keyword, managementStep, pageable, memberId);
             return toProjectListDetailDto(results);
         } else if (type == Organization.Type.CUSTOMER) {
-            Page<Object[]> results = projectRepository.findCustomerProjectsByKeywordAndStatus(keyword, status, pageable, memberId);
+            Page<Object[]> results = projectRepository.findCustomerProjectsByKeywordAndManagementStep(keyword, managementStep, pageable, memberId);
             return toProjectListDetailDto(results);
         }
 
@@ -194,17 +193,16 @@ public class ProjectServiceImpl implements ProjectService {
                 (String) row[1], // name
                 (String) row[2], // description
                 (String) row[3], // detail
-                (String) row[4], // status
-                (String) row[5], // managementStep
-                (Date) row[6], // regAt
-                (Date) row[7], // updateAt
-                (Date) row[8], // startAt
-                (Date) row[9], // closeAt
-                (String) row[10], // deletedYn
-                ((Number) row[11]).longValue(), // devOwnerId
-                (String) row[12], // developerName
-                (String) row[13], // customerName
-                ((Number) row[14]).intValue() // clickable
+                (String) row[4], // managementStep
+                (Date) row[5], // regAt
+                (Date) row[6], // updateAt
+                (Date) row[7], // startAt
+                (Date) row[8], // closeAt
+                (String) row[9], // deletedYn
+                ((Number) row[10]).longValue(), // devOwnerId
+                (String) row[11], // developerName
+                (String) row[12], // customerName
+                ((Number) row[13]).intValue() // clickable
         ));
     }
 

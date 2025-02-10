@@ -67,12 +67,12 @@ public class ProjectController implements ProjectApi {
     @GetMapping(value = {"/admins/projects", "/projects"})
     public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, status, currentPage, pageSize);
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, managementStep, currentPage, pageSize);
         //log.info("FlowSync - getProjectlist : ");
         return BaseResponse.success(projects);
     }

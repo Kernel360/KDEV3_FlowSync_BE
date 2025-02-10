@@ -14,9 +14,7 @@ public class ProjectUpdateDetailsDto {
     private final String name;
     private final String description;
     private final String detail;
-    private final String status;
     private final String managementStep;
-    private final Long progressStepId;
     private final Date startAt;
     private final Date closeAt;
     private final Long devOwnerId;
