@@ -1,16 +1,16 @@
 package com.checkping.infra.repository.project.querydsl;
 
+import com.checkping.domain.member.QMember;
+import com.checkping.domain.member.QOrganization;
 import com.checkping.domain.permission.QMemberByProject;
 import com.checkping.domain.permission.QOrganizationByProject;
 import com.checkping.domain.project.Project;
 
 import com.checkping.domain.project.QProject;
-import com.checkping.domain.project.projection.ProjectCountByManagementStep;
-import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
-import com.checkping.domain.project.projection.QProjectCountByManagementStep;
-import com.checkping.domain.project.projection.QProjectListInfoByManagementStep;
+import com.checkping.domain.project.projection.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
@@ -100,6 +101,47 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
         return query.fetch();
+    }
+
+    @Override
+    public Optional<ProjectInfo> findProjectInfoById(Long projectId) {
+        QProject project = QProject.project;
+
+        ProjectInfo projectInfo = queryFactory
+                .select(Projections.constructor(ProjectInfo.class,
+                        project.id,
+                        project.name.as("projectName"),
+                        project.description,
+                        project.managementStep,
+                        project.devOwner.id.as("developerOwnerId"),
+                        project.customerOwner.id.as("customerOwnerId"),
+                        project.startAt,
+                        project.closeAt))
+                .from(project)
+                .where(project.id.eq(projectId))
+                .fetchOne();
+
+        return Optional.ofNullable(projectInfo);
+    }
+
+    public Optional<OwnerInfo> findOwnerMemberInfoById(Long memberId) {
+        QMember member = QMember.member;
+        QOrganization organization = QOrganization.organization;
+
+        OwnerInfo ownerInfo = queryFactory
+                .select(Projections.constructor(OwnerInfo.class,
+                        organization.name.as("ownerOrgName"),
+                        member.name.as("ownerName"),
+                        member.profileImageUrl,
+                        member.jobRole,
+                        member.jobTitle,
+                        member.phoneNum))
+                .from(member)
+                .leftJoin(organization).on(member.organization.id.eq(organization.id))
+                .where(member.id.eq(memberId))
+                .fetchOne();
+
+        return Optional.ofNullable(ownerInfo);
     }
 
 }
