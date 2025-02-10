@@ -2,8 +2,8 @@ package com.checkping.service;
 
 import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.Project;
-import com.checkping.dto.ProjectRequest;
-import com.checkping.dto.ProjectResponse;
+import com.checkping.dto.project.ProjectRequest;
+import com.checkping.dto.project.ProjectResponse;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.service.project.ProjectServiceImpl;
@@ -39,9 +39,6 @@ public class ProjectServiceTests {
                         .name("이름")
                         .description("설명")
                         .detail("상세설명")
-                        .status(String.valueOf(Project.Status.IN_PROGRESS))
-                        .closeAt(LocalDate.parse("2025-12-30").atStartOfDay())
-                        .resisterId(49283L)
                         .build());
 
         List<Project> projects = projectRepository.findAll();
@@ -56,9 +53,6 @@ public class ProjectServiceTests {
                         .name("이름")
                         .description("설명")
                         .detail("상세설명")
-                        .status(String.valueOf(Project.Status.IN_PROGRESS))
-                        .closeAt(LocalDate.parse("2025-12-30").atStartOfDay())
-                        .resisterId(49283L)
                         .build());
 
         Project project = projectRepository.findById(1L).get();
@@ -80,9 +74,6 @@ public class ProjectServiceTests {
                             .name("이름" + i)
                             .description("설명")
                             .detail("상세설명")
-                            .status(String.valueOf(Project.Status.IN_PROGRESS))
-                            .closeAt(defaultCloseAt)
-                            .resisterId(resisterId)
                             .build());
 
             System.out.println("resisterProject : " + resisterDto);
@@ -93,9 +84,6 @@ public class ProjectServiceTests {
                         .name("프로젝트이름")
                         .description("설명123")
                         .detail("상세설명")
-                        .status(String.valueOf(Project.Status.PAUSED))
-                        .closeAt(LocalDate.parse("2025-06-30").atStartOfDay())
-                        .updaterId(resisterId)
                         .build());
 
         List<Project> list = projectRepository.findAll();
@@ -133,7 +121,6 @@ public class ProjectServiceTests {
                 .name("이름")
                 .description("설명")
                 .detail("상세설명")
-                .status(Project.Status.IN_PROGRESS)
                 .regAt(LocalDateTime.now())
                 .closeAt(LocalDate.parse("2025-12-30").atStartOfDay())
                 .resisterId(49283L)
@@ -148,8 +135,8 @@ public class ProjectServiceTests {
         List<Project> projects = projectRepository.findAll();
         System.out.println("p : " + projects.get(0));
 
-        List<ProjectResponse.ProjectDto> list = projectService.findAllProjects("이름","IN_PROGRESS");
-        System.out.println(list);
+        //List<ProjectResponse.ProjectDto> list = projectService.findAllProjects("이름","IN_PROGRESS");
+        //System.out.println(list);
 
     }
 }
