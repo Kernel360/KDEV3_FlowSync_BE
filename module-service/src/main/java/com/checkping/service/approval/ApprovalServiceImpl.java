@@ -341,9 +341,32 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalConfirm.Response.toDto(approval);
     }
 
+    @Transactional
     @Override
     public ApprovalReject.Response reject(Long projectId, Long approvalId) {
-        return null;
+        // 권한 처리 : 프로젝트의 고객사 오너 회원만 가능하다.
+
+        // Get Current Member Info
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // Check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // Check Member Authority
+        if (!projectReader.isCustomerOwner(projectId, member.getId())) {
+            // throw exception
+            throw new ApprovalAuthorityException();
+        }
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Reject
+        approval.reject(member);
+
+        // Entity -> Response
+        return ApprovalReject.Response.toDto(approval);
     }
 
     @Transactional(readOnly = true)
