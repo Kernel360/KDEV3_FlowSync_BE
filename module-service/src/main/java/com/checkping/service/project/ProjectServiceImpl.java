@@ -278,6 +278,16 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 관리자 및 개발사 대표자만 수정 가능
+        if (member.getRole() != Member.Role.ADMIN) {
+            if (!member.getOrganization().getType().equals(Organization.Type.DEVELOPER) ||
+                    !member.getId().equals(project.getDevOwner().getId())) {
+                throw new BaseException(ErrorCode.BAD_REQUEST);
+            }
+        }
+
         if(Project.ManagementStep.valueOf(managementStep).equals(Project.ManagementStep.COMPLETED)){
             project.updateCloseAt();
         }
