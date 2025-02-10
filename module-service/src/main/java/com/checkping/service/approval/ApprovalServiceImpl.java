@@ -8,6 +8,7 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.approval.ApprovalConfirm;
+import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
@@ -30,6 +31,7 @@ import com.checkping.exception.approval.comment.ApprovalCommentMismatchException
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
+import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
@@ -110,9 +112,12 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Transactional(readOnly = true)
     public ApprovalSearch.Response search(Long projectId, ApprovalSearchCondition request) {
 
+        // 어드민일 때 조회 권한 추가
+        boolean adminSearch = false;
+
         // ApprovalSearchCondition -> ApprovalSearchInfo.SearchCondition
-        ApprovalSearchInfo.SearchCondition searchCondition = ApprovalSearchCondition.toInfo(
-            request);
+        ApprovalSearchInfo.SearchCondition searchCondition = ApprovalSearchCondition.toInfo(request,
+            adminSearch);
 
         // Search Approval
         Page<Approval> approvals = approvalReader.getApprovals(projectId, searchCondition);
@@ -335,6 +340,17 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalConfirm.Response.toDto(approval);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<ApprovalCount.Response> countByProgressStep(Long projectId) {
+
+        // Approval count by progress step
+        List<ApprovalCountProjection> queryResult = approvalReader.countByProgressStep(projectId);
+
+        // Entity -> Response
+        return ApprovalCount.Response.toDto(queryResult);
+    }
+
     /**
      * 해당 프로젝트에 결재가 포함되어 있는지 확인
      *
@@ -401,8 +417,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     /**
      * 결재 작성자와 현재 사용자가 같은지 확인
      *
-     * @param member    현재 사용자
-     * @param approval  결재 Entity
+     * @param member   현재 사용자
+     * @param approval 결재 Entity
      * @throws ApprovalRegisterAuthorityException 결재 작성자 권한 예외
      */
     private void checkRegisterAuthority(Member member, Approval approval) {

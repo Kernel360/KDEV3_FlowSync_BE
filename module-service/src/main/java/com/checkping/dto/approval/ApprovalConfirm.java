@@ -3,7 +3,7 @@ package com.checkping.dto.approval;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.Approval.ApprovalStatus;
-import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.exception.approval.ApprovalStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -54,7 +54,7 @@ public class ApprovalConfirm {
         @Schema(description = "승인 일시", example = "2021-07-01T00:00:00")
         private String approverAt;
         @Schema(description = "승인자")
-        private MeResponseDto approver;
+        private MemberResponseDto.MeWithSignatureResponseDto approver;
 
         /**
          * Approval 엔티티를 Response DTO로 변환
@@ -67,11 +67,17 @@ public class ApprovalConfirm {
             response.projectId = approval.getProject().getId();
             response.approvalId = approval.getId();
             response.status = approval.getStatus().name();
-            response.cancelAt = approval.getCancelAt() == null ? null
-                : DateTimeUtils.format(approval.getCancelAt());
-            response.approverAt = approval.getApproverAt() == null ? null
-                : DateTimeUtils.format(approval.getApproverAt());
-            response.approver = MeResponseDto.fromEntity(approval.getApprover());
+
+            response.cancelAt = null;
+            response.approverAt = null;
+            response.approver = null;
+
+            if (!approval.isWaitStatus()) {
+                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
+                response.approverAt = DateTimeUtils.format(approval.getApproverAt());
+                response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(approval.getApprover());
+            }
+
             return response;
         }
     }

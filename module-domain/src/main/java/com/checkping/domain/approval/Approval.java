@@ -212,4 +212,13 @@ public class Approval extends BaseEntity {
     public void activate() {
         this.deleteYn = Approval.DeleteStatus.N;
     }
+
+    /**
+     * 결재가 대기 상태인지 확인
+     *
+     * @return 대기 상태 여부
+     */
+    public boolean isWaitStatus() {
+        return this.status == ApprovalStatus.WAIT;
+    }
 }
