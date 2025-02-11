@@ -35,9 +35,9 @@ public class Approval extends BaseEntity {
     title : 제목
     content : 내용
     status : 결재 상태
+    category : 결재 카테고리
     register : 작성자 (FK : register_id)
     register_name : 작성자 이름
-    cancle_at : 취소 일자
     approver_at : 승인 일시
     approver_id : 승인자 id
     approver_name : 승인자 이름
@@ -59,7 +59,6 @@ public class Approval extends BaseEntity {
     @JoinColumn(name = "progress_step_id")
     private ProgressStep progressStep;
 
-
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
@@ -70,9 +69,6 @@ public class Approval extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_id")
     private Member register;
-
-    @Column(name = "cancel_at")
-    private LocalDateTime cancelAt;
 
     @Column(name = "approver_at")
     private LocalDateTime approverAt;
@@ -110,6 +106,10 @@ public class Approval extends BaseEntity {
     private ApprovalStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private ApprovalCategory category;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "deleted_yn", nullable = false)
     private DeleteStatus deleteYn;
 
@@ -127,11 +127,20 @@ public class Approval extends BaseEntity {
         private final String description;
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum ApprovalCategory {
+        NORMAL_REQUEST("일반 요청"), COMPLETE_REQUEST("완료 요청");
+
+        private final String description;
+    }
+
     /*
     Generate
      */
 
-    public static Approval generate(Project project, ProgressStep progressStep, Member register,
+    public static Approval generate(Project project, ProgressStep progressStep,
+        ApprovalCategory category, Member register,
         String title, String content) {
 
         Approval approval = new Approval();
@@ -141,6 +150,8 @@ public class Approval extends BaseEntity {
         approval.project = project;
         approval.progressStep = progressStep;
         approval.register = register;
+
+        approval.category = category;
 
         // 생성 시 기본 값
         approval.status = ApprovalStatus.WAIT;
@@ -187,7 +198,6 @@ public class Approval extends BaseEntity {
         this.status = ApprovalStatus.REJECTED;
         this.approver = rejector;
         this.approverName = rejector.getName();
-        this.cancelAt = LocalDateTime.now();
         this.approverAt = LocalDateTime.now();
     }
 
