@@ -82,15 +82,16 @@ public class NoticeServiceImpl implements NoticeService {
         Member currentMember = currentMemberUtil.getCurrentMember();
         boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
 
-        Notice notice = isAdmin
-                ? noticeRepository.findById(noticeid)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))  // 관리자: 삭제된 공지사항도 볼 수 있음
-                : noticeRepository.findByIdAndIsDeletedFalse(noticeid)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));  // 비관리자: 삭제된 공지사항은 볼 수 없음
-
-        return isAdmin
-                ? NoticeWithIsdeletedResponse.toDto(notice)  // 관리자: isDeleted 포함
-                : NoticeWithoutIsdeletedResponse.toDto(notice);  // 비관리자: isDeleted 제외
+        Notice notice;
+        if (isAdmin) {
+            notice = noticeRepository.findById(noticeid)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 관리자: 삭제된 공지사항도 볼 수 있음
+            return NoticeWithIsdeletedResponse.toDto(notice); // 관리자: isDeleted 포함
+        } else {
+            notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 비관리자: 삭제된 공지사항은 볼 수 없음
+            return NoticeWithoutIsdeletedResponse.toDto(notice); // 비관리자: isDeleted 제외
+        }
     }
 
     @Override
