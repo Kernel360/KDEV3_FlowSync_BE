@@ -102,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
                 request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        if(project.getManagementStep().equals(Project.ManagementStep.COMPLETED)){
+        if(Project.ManagementStep.valueOf(request.getManagementStep()).equals(Project.ManagementStep.COMPLETED)){
             project.updateCloseAt();
         }
 
