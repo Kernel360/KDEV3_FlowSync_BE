@@ -98,7 +98,6 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public BaseResponse<String> getProjectsByOrganization(
             @PathVariable Long organizationId,
-            @RequestParam(required = false) String status,
             @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
