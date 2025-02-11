@@ -69,6 +69,7 @@ public interface ProjectApi {
     BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
             @Parameter(description = "프로젝트 ID") Long projectId,
             @Parameter(description = "프로젝트 관리단계") String managementStep
+    );
 
     @Operation(summary = "프로젝트 진행 상태 일정 수정", description = "프로젝트 진행 상태의 일정을 수정하는 기능입니다.")
     BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(
