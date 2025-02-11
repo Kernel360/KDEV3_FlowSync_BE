@@ -94,8 +94,9 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "register_id", nullable = false)
     private Member register;
 
-    // TODO  : Member updater 로 변경할 것
-    private Long updaterId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater_id", nullable = false)
+    private Member updater;
 
     // TODO : Project project 로 변경할 것
     private Long projectId;
@@ -180,15 +181,10 @@ public class Question extends BaseEntity {
     }
 
     // update
-    public void update(String title, String content) {
-
-        if (!this.title.equals(title)) {
-            this.title = title;
-        }
-
-        if (!this.content.equals(content)) {
-            this.content = content;
-        }
+    public void update(String title, String content, Member updater) {
+        this.title = title;
+        this.content = content;
+        this.updater = updater;
     }
 
     // ADD QuestionLink

@@ -191,6 +191,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
         // find Question Entity
         Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
@@ -198,7 +201,7 @@ public class QuestionServiceImpl implements QuestionService {
         // update
         String title = request.getTitle();
         String content = request.getContent();
-        initQuestion.update(title, content);
+        initQuestion.update(title, content, member);
 
         // save
         Question updatedQuestion = questionStore.store(initQuestion);
