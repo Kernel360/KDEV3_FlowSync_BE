@@ -1,9 +1,12 @@
 package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileRequest;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
+import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
@@ -20,7 +23,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.QueryException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuestionRegister {
@@ -52,13 +54,14 @@ public class QuestionRegister {
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
          *
          * @param registerDto 엄무 관리 게시글 등록 요청 정보
+         * @param register    업무 관리 게시글 작성자
          * @return Question Entity
          */
         public static Question toEntity(Long projectId,
-            QuestionRegister.Request registerDto) {
+            Request registerDto, Member register) {
             return Question.generate(projectId, registerDto.getProgressStepId(),
                 registerDto.getTitle(), registerDto.toContentString(),
-                Category.QUESTION);
+                Category.QUESTION, register);
         }
 
         /**
@@ -89,6 +92,7 @@ public class QuestionRegister {
         editAt : 게시글 마지막 수정 일시
         category : 게시글 카테고리 (enum, String)
         status : 게시글 상태 (enum, String)
+        register : 게시글 작성자
         commentList : 게시글 댓글 리스트
         linkList : 게시글 첨부 링크 리스트
         fileList : 게시글 첨부 파일 리스트
@@ -111,6 +115,8 @@ public class QuestionRegister {
         private Category category;
         @Schema(description = "게시글 상태")
         private Status status;
+        @Schema(description = "게시글 작성자")
+        private MemberResponseDto.MeResponseDto register;
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentDto> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
@@ -128,6 +134,7 @@ public class QuestionRegister {
             questionDto.setEditAt(question.getEditAt());
             questionDto.setCategory(question.getCategory());
             questionDto.setStatus(question.getStatus());
+            questionDto.setRegister(MeResponseDto.fromEntity(question.getRegister()));
             questionDto.setFileList(
                 QuestionFileRegister.Response.toDto(question.getQuestionFileList()));
             questionDto.setLinkList(
@@ -145,7 +152,8 @@ public class QuestionRegister {
         private static List<QuestionContent> toContentList(String content) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                return objectMapper.readValue(content, new TypeReference<List<QuestionContent>>() {});
+                return objectMapper.readValue(content, new TypeReference<List<QuestionContent>>() {
+                });
             } catch (Exception e) {
                 throw new QuestionContentParsingException();
             }

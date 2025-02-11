@@ -3,6 +3,7 @@ package com.checkping.dto.question;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
@@ -32,6 +33,7 @@ public class QuestionGet {
         editAt : 게시글 마지막 수정 일시
         category : 게시글 카테고리 (enum, String)
         status : 게시글 상태 (enum, String)
+        register : 게시글 작성자
         commentList : 게시글 댓글 리스트
         linkList : 게시글 첨부 링크 리스트
         fileList : 게시글 첨부 파일 리스트
@@ -54,6 +56,8 @@ public class QuestionGet {
         private Category category;
         @Schema(description = "게시글 상태")
         private Status status;
+        @Schema(description = "게시글 작성자")
+        private MemberResponseDto.MeResponseDto register;
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentGet.Response> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
@@ -71,6 +75,7 @@ public class QuestionGet {
             response.editAt = question.getEditAt();
             response.category = question.getCategory();
             response.status = question.getStatus();
+            response.register = MemberResponseDto.MeResponseDto.fromEntity(question.getRegister());
             response.commentList = QuestionCommentGet.Response.toDto(question.getCommentList());
             response.linkList = QuestionLinkRegister.Response.toDto(question.getQuestionLinkList());
             response.fileList = QuestionFileRegister.Response.toDto(question.getQuestionFileList());

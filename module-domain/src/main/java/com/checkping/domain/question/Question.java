@@ -1,6 +1,7 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -89,8 +90,9 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Question parent;
 
-    // TODO : Member register 로 변경할 것
-    private Long registerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id", nullable = false)
+    private Member register;
 
     // TODO  : Member updater 로 변경할 것
     private Long updaterId;
@@ -139,7 +141,7 @@ public class Question extends BaseEntity {
      */
 
     public static Question generate(Long projectId, Long progressStepId, String title,
-        String content, Category category) {
+        String content, Category category, Member register) {
 
         Question question = new Question();
         // TODO : 연관관계 맵핑하는 것들 변경할 것
@@ -147,6 +149,7 @@ public class Question extends BaseEntity {
         question.progressStepId = progressStepId;
         question.title = title;
         question.content = content;
+        question.register = register;
 
         question.updateCategory(category);
         question.updateStatus(Question.Status.WAIT);

@@ -3,6 +3,7 @@ package com.checkping.dto.question;
 import com.checkping.common.response.PaginationProps;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.question.Question;
+import com.checkping.dto.member.response.MemberResponseDto;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.AccessLevel;
@@ -23,6 +24,7 @@ public class QuestionSearch {
         category : 게시글 유형
         status : 게시글 상태
         createdDate : 게시글 생성일
+        register : 게시글 작성자
          */
         private Long id;
         private String title;
@@ -31,6 +33,7 @@ public class QuestionSearch {
         private String category;
         private String status;
         private String createdDate;
+        private MemberResponseDto.MeResponseDto register;
 
         public static QuestionItem toDto(Question question) {
             QuestionItem dto = new QuestionItem();
@@ -40,6 +43,7 @@ public class QuestionSearch {
             dto.category = question.getCategory().name();
             dto.status = question.getStatus().name();
             dto.createdDate = DateTimeUtils.format(question.getCreatedAt());
+            dto.register = MemberResponseDto.MeResponseDto.fromEntity(question.getRegister());
             return dto;
         }
 

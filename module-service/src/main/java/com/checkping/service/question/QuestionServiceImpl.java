@@ -1,5 +1,6 @@
 package com.checkping.service.question;
 
+import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
@@ -26,6 +27,7 @@ import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionFileStore questionFileStore;
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
+    private final CurrentMemberUtil currentMemberUtil;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -56,8 +59,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionRegister.Response register(Long projectId, Request request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request);
+        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request, member);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
