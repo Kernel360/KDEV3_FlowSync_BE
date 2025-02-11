@@ -1,5 +1,8 @@
 package com.checkping.dto.approval.comment;
 
+import com.checkping.common.utils.DateTimeUtils;
+import com.checkping.domain.approval.ApprovalComment;
+import com.checkping.dto.member.response.MemberResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +36,19 @@ public class ApprovalCommentUpdate {
         private String regAt;
         private String updatedAt;
         private String deletedYn;
-        private String register;
+        private MemberResponseDto.MeResponseDto register;
+
+        public static Response toDto(ApprovalComment approvalComment) {
+            Response dto = new Response();
+            dto.id = approvalComment.getId();
+            dto.approvalId = approvalComment.getApproval().getId();
+            dto.content = approvalComment.getContent();
+            dto.regAt = DateTimeUtils.format(approvalComment.getRegAt());
+            dto.updatedAt = DateTimeUtils.format(approvalComment.getUpdatedAt());
+            dto.deletedYn = null;
+            dto.register = MemberResponseDto.MeResponseDto.fromEntity(approvalComment.getRegister());
+            return dto;
+        }
     }
 
 }
