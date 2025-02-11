@@ -1,6 +1,7 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,6 +41,7 @@ public class QuestionComment extends BaseEntity {
     deletedYn : 삭제 여부
     question : 업무 관리 게시글 (join)
     parent : 부모 댓글 (join)
+    register : 작성자 (join)
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +71,10 @@ public class QuestionComment extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private QuestionComment parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id", nullable = false)
+    private Member register;
+
     @Getter
     @RequiredArgsConstructor
     public enum DeleteStatus {
@@ -81,12 +87,14 @@ public class QuestionComment extends BaseEntity {
      *
      * @param content  댓글 내용
      * @param question question (조회한 Entity)
+     * @param register 작성자
      * @return QuestionComment 엔티티
      */
-    public static QuestionComment generate(String content, Question question) {
+    public static QuestionComment generate(String content, Question question, Member register) {
         QuestionComment questionComment = new QuestionComment();
         questionComment.content = content;
         questionComment.question = question;
+        questionComment.register = register;
         questionComment.activate();
         return questionComment;
     }
@@ -96,12 +104,13 @@ public class QuestionComment extends BaseEntity {
      *
      * @param content  댓글 내용
      * @param question question (조회한 Entity)
+     * @param register 작성자
      * @param parent   부모 댓글
      * @return QuestionComment 엔티티
      */
     public static QuestionComment generate(String content, Question question,
-        QuestionComment parent) {
-        QuestionComment questionComment = generate(content, question);
+        Member register, QuestionComment parent) {
+        QuestionComment questionComment = generate(content, question, register);
         // 부모 댓글 추가
         questionComment.parent = parent;
         return questionComment;

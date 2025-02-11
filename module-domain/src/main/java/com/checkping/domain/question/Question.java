@@ -1,6 +1,9 @@
 package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.member.Member;
+import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -89,17 +92,21 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Question parent;
 
-    // TODO : Member register 로 변경할 것
-    private Long registerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "register_id", nullable = false)
+    private Member register;
 
-    // TODO  : Member updater 로 변경할 것
-    private Long updaterId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater_id", nullable = false)
+    private Member updater;
 
-    // TODO : Project project 로 변경할 것
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
-    // TODO : ProgressStep progressStep 로 변경할 것
-    private Long progressStepId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "progress_step_id", nullable = false)
+    private ProgressStep progressStep;
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
@@ -138,15 +145,15 @@ public class Question extends BaseEntity {
     GENERATE
      */
 
-    public static Question generate(Long projectId, Long progressStepId, String title,
-        String content, Category category) {
+    public static Question generate(Project project, ProgressStep progressStep, String title,
+        String content, Category category, Member register) {
 
         Question question = new Question();
-        // TODO : 연관관계 맵핑하는 것들 변경할 것
-        question.projectId = projectId;
-        question.progressStepId = progressStepId;
+        question.project = project;
+        question.progressStep = progressStep;
         question.title = title;
         question.content = content;
+        question.register = register;
 
         question.updateCategory(category);
         question.updateStatus(Question.Status.WAIT);
@@ -177,15 +184,10 @@ public class Question extends BaseEntity {
     }
 
     // update
-    public void update(String title, String content) {
-
-        if (!this.title.equals(title)) {
-            this.title = title;
-        }
-
-        if (!this.content.equals(content)) {
-            this.content = content;
-        }
+    public void update(String title, String content, Member updater) {
+        this.title = title;
+        this.content = content;
+        this.updater = updater;
     }
 
     // ADD QuestionLink
@@ -224,10 +226,5 @@ public class Question extends BaseEntity {
             // Add QuestionFile
             addFile(file);
         }
-    }
-
-    // Contained Project
-    public void containedProject(Long projectId) {
-        this.projectId = projectId;
     }
 }

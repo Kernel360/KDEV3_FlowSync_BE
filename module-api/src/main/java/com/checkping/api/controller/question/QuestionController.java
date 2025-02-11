@@ -60,7 +60,7 @@ public class QuestionController implements QuestionApi {
         @RequestParam(required = false) Long progressId,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String keyword,
-        @Min(0) @RequestParam(defaultValue = "1") Integer currentPage,
+        @RequestParam(defaultValue = "1") @Min(1) Integer currentPage,
         @RequestParam(defaultValue = "10") Integer pageSize) {
 
         // Create QuestionSearchCondition

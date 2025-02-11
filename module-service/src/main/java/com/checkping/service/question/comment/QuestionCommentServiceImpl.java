@@ -1,5 +1,6 @@
 package com.checkping.service.question.comment;
 
+import com.checkping.domain.member.Member;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
@@ -13,6 +14,7 @@ import com.checkping.exception.question.comment.QuestionCommentNotFoundEntityExc
 import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     private final QuestionReader questionReader;
     private final QuestionCommentStore questionCommentStore;
     private final QuestionCommentReader questionCommentReader;
+    private final CurrentMemberUtil currentMemberUtil;
 
     /**
      * 업무 관리 게시글 서비스 - 등록 기능
@@ -36,12 +39,15 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     public QuestionCommentRegister.Response register(
         Long projectId, QuestionCommentRegister.Request request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
         // find Question Entity
         Question question = questionReader.getById(projectId).orElseThrow(
             QuestionNotFoundEntityException::new);
 
         // Dto -> Entity
-        QuestionComment initComment = QuestionCommentRegister.Request.toEntity(request, question);
+        QuestionComment initComment = QuestionCommentRegister.Request.toEntity(request, question, member);
 
         // save
         QuestionComment comment = questionCommentStore.store(initComment);
@@ -64,6 +70,9 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
     public QuestionReCommentRegister.Response registerReComment(Long projectId, Long questionId,
         Long commentId, Request request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
         // Check Project contain Question
         containingProject(projectId, questionId);
 
@@ -80,7 +89,7 @@ public class QuestionCommentServiceImpl implements QuestionCommentService {
 
         // Dto -> Entity
         QuestionComment initReComment = QuestionReCommentRegister.Request.toEntity(request,
-            question, parentComment);
+            question, member, parentComment);
 
         // Save Entity
         QuestionComment reComment = questionCommentStore.store(initReComment);
