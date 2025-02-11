@@ -2,6 +2,7 @@ package com.checkping.dto.question;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Member;
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
@@ -54,16 +55,16 @@ public class QuestionRegister {
         /**
          * 업무 관리 게시글 등록 요청 정보로 업무 관리 게시글 엔티티를 만드는 메서드
          *
-         * @param project   업무 관리 게시글이 속한 프로젝트
-         * @param registerDto 엄무 관리 게시글 등록 요청 정보
-         * @param register    업무 관리 게시글 작성자
+         * @param project      업무 관리 게시글이 속한 프로젝트
+         * @param progressStep 업무 관리 게시글이 속한 진행 단계
+         * @param registerDto  엄무 관리 게시글 등록 요청 정보
+         * @param register     업무 관리 게시글 작성자
          * @return Question Entity
          */
-        public static Question toEntity(Project project,
+        public static Question toEntity(Project project, ProgressStep progressStep,
             Request registerDto, Member register) {
-            return Question.generate(project, registerDto.getProgressStepId(),
-                registerDto.getTitle(), registerDto.toContentString(),
-                Category.QUESTION, register);
+            return Question.generate(project, progressStep, registerDto.getTitle(),
+                registerDto.toContentString(), Category.QUESTION, register);
         }
 
         /**

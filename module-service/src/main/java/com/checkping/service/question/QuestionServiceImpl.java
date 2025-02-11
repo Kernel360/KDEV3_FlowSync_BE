@@ -18,6 +18,7 @@ import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
+import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.info.question.QuestionSearchInfo;
 import com.checkping.infra.repository.project.ProgressStepReader;
@@ -66,8 +67,12 @@ public class QuestionServiceImpl implements QuestionService {
         // find Project Entity
         Project project = projectReader.getById(projectId);
 
+        // find ProgressStep Entity
+        ProgressStep progressStep = progressStepReader.getById(request.getProgressStepId()).orElseThrow(
+            ProgressStepNotFoundException::new);
+
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(project, request, member);
+        Question initQuestion = QuestionRegister.Request.toEntity(project, progressStep, request, member);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);

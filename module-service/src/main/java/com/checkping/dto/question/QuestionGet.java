@@ -1,9 +1,11 @@
 package com.checkping.dto.question;
 
+import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
 import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
@@ -35,6 +37,7 @@ public class QuestionGet {
         status : 게시글 상태 (enum, String)
         register : 게시글 작성자
         projectId : 게시글이 속한 프로젝트 ID
+        progressStep : 게시글이 속한 진행 단계
         commentList : 게시글 댓글 리스트
         linkList : 게시글 첨부 링크 리스트
         fileList : 게시글 첨부 파일 리스트
@@ -61,6 +64,8 @@ public class QuestionGet {
         private MemberResponseDto.MeResponseDto register;
         @Schema(description = "프로젝트 ID")
         private Long projectId;
+        @Schema(description = "프로젝트 진행 단계")
+        private ProgressStepGet.Response progressStep;
         @Schema(description = "게시글 댓글 목록")
         private List<QuestionCommentGet.Response> commentList;
         @Schema(description = "게시글 첨부 링크 목록")
@@ -80,6 +85,7 @@ public class QuestionGet {
             response.status = question.getStatus();
             response.register = MemberResponseDto.MeResponseDto.fromEntity(question.getRegister());
             response.projectId = question.getProject().getId();
+            response.progressStep = ProgressStepGet.Response.toDto(question.getProgressStep());
             response.commentList = QuestionCommentGet.Response.toDto(question.getCommentList());
             response.linkList = QuestionLinkRegister.Response.toDto(question.getQuestionLinkList());
             response.fileList = QuestionFileRegister.Response.toDto(question.getQuestionFileList());
