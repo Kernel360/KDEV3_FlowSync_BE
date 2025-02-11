@@ -323,7 +323,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // 진행 단계 완료 요청 결재 승인 시 진행 단계 완료 처리
         if (approval.isCompleteRequest()) {
             ProgressStep progressStep = approval.getProgressStep();
-            progressStep.completeStep();
+            progressStep.completeStep(approval);
         }
 
         return ApprovalConfirm.Response.toDto(approval);
@@ -350,7 +350,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // 진행 단계 완료 요청 결재 반려 시 진행 단계 완료 처리
         if (approval.isCompleteRequest()) {
             ProgressStep progressStep = approval.getProgressStep();
-            progressStep.rejectStep();
+            progressStep.rejectStep(approval);
         }
 
         // Entity -> Response
