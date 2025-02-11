@@ -19,6 +19,7 @@ public class ProjectUpdateDetailsDto {
     private final Date deadlineAt;
     private final Date closeAt;
     private final Long devOwnerId;
+    private final Long customerOwnerId;
     private final Long developerOrgId;
     private final Long customerOrgId;
 }

@@ -11,6 +11,7 @@ import com.checkping.domain.project.projection.ProjectCountByManagementStep;
 import com.checkping.domain.project.projection.ProjectInfo;
 import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
 import com.checkping.dto.project.ProjectResponse;
+import com.checkping.dto.project.ProjectSearchRequest;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
@@ -113,11 +114,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public ProjectResponse.ProjectListDto findAllProjects(String keyword, String managementStep, int currentPage, int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage-1, pageSize, Sort.Direction.DESC, "id");
+    public ProjectResponse.ProjectListDto findAllProjects(ProjectSearchRequest searchRequest) {
+        Pageable pageable = PageRequest.of(
+                searchRequest.getCurrentPage(),
+                searchRequest.getPageSize(),
+                Sort.Direction.valueOf(searchRequest.getOrder()),
+                searchRequest.getSort());
         Member member = currentMemberUtil.getCurrentMember();
 
-        Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, keyword, managementStep, pageable);
+        Page<ProjectResponse.ProjectListDetailDto> results = getProjectListByRoleAndType(member, searchRequest.getKeyword(), searchRequest.getManagementStep(), pageable);
 
         return ProjectResponse.ProjectListDto.fromEntityPage(results);
     }
