@@ -83,9 +83,9 @@ public class ApprovalAuthorizationValidator {
     /**
      * 결재 삭제 권한 확인 - 프로젝트에 속한 회원, 프로젝트에 속한 결재 글, 고객사 최고 담당자
      *
-     * @param projectId
-     * @param approvalId
-     * @param member
+     * @param projectId  프로젝트 id
+     * @param approvalId 결재 id
+     * @param member     멤버 엔티티
      */
     public void validateApprovableApproval(Long projectId, Long approvalId, Member member) {
         // 관리자는 모든 행동 가능
