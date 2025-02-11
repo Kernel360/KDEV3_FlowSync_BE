@@ -148,7 +148,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalAuthorizationValidator.validateAccessibleApproval(projectId, approvalId, member);
 
         // find approval
-        Approval approval = approvalReader.getByIdWithComments(approvalId)
+        Approval approval = approvalReader.getByIdWithComments(projectId, approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Entity -> Response
@@ -440,10 +440,13 @@ public class ApprovalServiceImpl implements ApprovalService {
      * @param approvalComment   댓글
      */
     private void checkCommentRegister(Member member, ApprovalComment approvalComment) {
+        if (member.isAdmin()) {
+            return;
+        }
+
         if (approvalComment.getRegister().getId().equals(member.getId())) {
             // throw exception
             throw new ApprovalCommentNotRegisterException();
-
         }
     }
 }

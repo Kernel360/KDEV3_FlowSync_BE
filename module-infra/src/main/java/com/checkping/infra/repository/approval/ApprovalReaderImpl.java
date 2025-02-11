@@ -23,8 +23,8 @@ public class ApprovalReaderImpl implements ApprovalReader {
     }
 
     @Override
-    public Optional<Approval> getByIdWithComments(Long approvalId) {
-        return approvalRepository.getByIdWithComments(approvalId);
+    public Optional<Approval> getByIdWithComments(Long projectId, Long approvalId) {
+        return approvalRepository.getApprovalWithComment(projectId, approvalId, false);
     }
 
     @Override
