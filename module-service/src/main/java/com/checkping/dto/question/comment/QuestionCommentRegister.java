@@ -2,6 +2,7 @@ package com.checkping.dto.question.comment;
 
 
 import com.checkping.common.utils.DateTimeUtils;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,8 +28,8 @@ public class QuestionCommentRegister {
          * @param request   등록 정보
          * @return  QuestionComment 엔티티
          */
-        public static QuestionComment toEntity(Request request, Question question) {
-            return QuestionComment.generate(request.getContent(), question);
+        public static QuestionComment toEntity(Request request, Question question, Member register) {
+            return QuestionComment.generate(request.getContent(), question, register);
         }
     }
 
