@@ -6,15 +6,15 @@ import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
+import com.checkping.domain.project.projection.OwnerInfo;
 import com.checkping.domain.project.projection.ProjectCountByManagementStep;
+import com.checkping.domain.project.projection.ProjectInfo;
 import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
 import com.checkping.dto.project.ProjectResponse;
-import com.checkping.infra.dto.ProjectListDetailsDto;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.project.ProgressStepRepository;
-import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.repository.project.ProjectRepository;
 import com.checkping.dto.project.ProjectRequest;
 
@@ -58,11 +58,8 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProgressStep> steps = new ArrayList<>();
 
         for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
-            ProgressStep progressStep = ProgressStep.builder()
-                    .projectId(project.getId())
-                    .name(step.getDescription())
-                    .build();
-
+            // generate progress step
+            ProgressStep progressStep = ProgressStep.generate(project.getId(),step.getName(),step.getDescription(), step.getOrder());
             steps.add(progressStep);
         }
 
@@ -134,10 +131,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId) {
-        ProjectDetailsDto detailsDto = projectRepository.findProjectById(projectId)
+    public ProjectResponse.ProjectInfoDto findProjectByProjectId(Long projectId) {
+        ProjectInfo projectInfo = projectRepository.findProjectInfoById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
-        return ProjectResponse.ProjectDetailDto.toDetailDto(detailsDto);
+        OwnerInfo developerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getDeveloperOwnerId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        OwnerInfo customerOwnerInfo = projectRepository.findOwnerMemberInfoById(projectInfo.getCustomerOwnerId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+
+        return ProjectResponse.ProjectInfoDto.toDto(projectInfo, developerOwnerInfo, customerOwnerInfo);
     }
 
     public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
