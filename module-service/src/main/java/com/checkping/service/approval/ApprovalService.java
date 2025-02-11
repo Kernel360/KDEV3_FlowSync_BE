@@ -5,6 +5,7 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -30,8 +31,9 @@ public interface ApprovalService {
     ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId,
         Long commentId, ApprovalReCommentRegister.Request request);
 
-    ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request);
+    ApprovalConfirm.Response confirm(Long projectId, Long approvalId);
+
+    ApprovalReject.Response reject(Long projectId, Long approvalId);
 
     List<ApprovalCount.Response> countByProgressStep(Long projectId);
 }

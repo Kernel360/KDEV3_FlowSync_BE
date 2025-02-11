@@ -23,12 +23,12 @@ public class ApprovalSearch {
         progressStepId : 프로젝트 진행 단계 ID
         title : 결재 제목
         status : 결재 상태
+        category : 결재 카테고리
         register : 작성자
         regAt : 작성일
         updatedAt : 수정일
         approvedAt : 결재일
         approval : 결재자
-        cancelAt : 취소일
         isDeleted : 삭제 여부
          */
         private Long id;
@@ -36,12 +36,12 @@ public class ApprovalSearch {
         private ProgressStepGet.Response progressStep;
         private String title;
         private String status;
+        private String category;
         private MeResponseDto register;
         private String regAt;
         private String updatedAt;
         private String approvedAt;
         private MeResponseDto approver;
-        private String cancelAt;
         private boolean isDeleted;
 
 
@@ -58,12 +58,12 @@ public class ApprovalSearch {
             dto.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             dto.title = approval.getTitle();
             dto.status = approval.getStatus().name();
+            dto.category = approval.getCategory().name();
             dto.register = MeResponseDto.fromEntity(approval.getRegister());
             dto.regAt = DateTimeUtils.format(approval.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             dto.approvedAt = DateTimeUtils.format(approval.getApproverAt());
             dto.approver = approval.getApprover() == null ? null : MeResponseDto.fromEntity(approval.getApprover());
-            dto.cancelAt = DateTimeUtils.format(approval.getCancelAt());
             dto.isDeleted = approval.getDeleteYn() == Approval.DeleteStatus.Y;
             return dto;
         }

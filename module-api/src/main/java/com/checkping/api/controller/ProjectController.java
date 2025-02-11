@@ -3,10 +3,12 @@ package com.checkping.api.controller;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepGet.Response;
+import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.service.project.progressstep.ProgressStepService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,6 +107,17 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
 
         List<Response> response = progressStepService.getProgressStep(projectId);
+
+        return BaseResponse.success(response);
+    }
+
+    @Override
+    @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
+    public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
+        @PathVariable Long progressStepId,
+        @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
+
+        ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
 
         return BaseResponse.success(response);
     }

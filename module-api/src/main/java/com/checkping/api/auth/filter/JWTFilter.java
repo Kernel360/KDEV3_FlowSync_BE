@@ -71,9 +71,6 @@ public class JWTFilter extends OncePerRequestFilter {
                     ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
                     return;
                 }
-            } else {
-                // Redis 연결 불가능 시 로그만 남기고 스킵
-                System.out.println("[JWTFilter] Redis not available -> Skip blacklist check");
             }
 
             // 사용자 정보 추출
@@ -98,8 +95,8 @@ public class JWTFilter extends OncePerRequestFilter {
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Invalid token");
+            BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
+            ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         }
 
