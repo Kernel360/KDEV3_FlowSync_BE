@@ -2,6 +2,7 @@ package com.checkping.domain.project;
 
 
 import com.checkping.domain.BaseEntity;
+import com.checkping.domain.approval.Approval;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -130,5 +131,19 @@ public class ProgressStep extends BaseEntity {
      */
     public boolean isWait() {
         return this.status == Status.WAIT;
+    }
+
+    // 프로젝트 진행 단계 완료 처리
+    public void completeStep(Approval approval) {
+        this.status = Status.COMPLETED;
+        this.closeAt = LocalDateTime.now();
+        this.relatedApprovalId = approval.getId();
+    }
+
+    // 프로젝트 진행 단계 반려 처리
+    public void rejectStep(Approval approval) {
+        this.status = Status.IN_PROGRESS;
+        this.closeAt = null;
+        this.relatedApprovalId = approval.getId();
     }
 }

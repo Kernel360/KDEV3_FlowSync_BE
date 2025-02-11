@@ -20,4 +20,6 @@ public interface ProjectRepositoryCustom {
     Optional<ProjectInfo> findProjectInfoById(Long id);
 
     Optional<OwnerInfo> findOwnerMemberInfoById(Long memberId);
+
+    boolean matchProjectAndOrganization(Long projectId, Long organizationId);
 }
