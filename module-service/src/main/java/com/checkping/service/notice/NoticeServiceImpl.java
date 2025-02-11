@@ -2,15 +2,14 @@ package com.checkping.service.notice;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
-import com.checkping.dto.notice.response.NoticeCreateResponse;
-import com.checkping.dto.notice.response.NoticeGetListResponse;
-import com.checkping.dto.notice.response.NoticeListResponse;
-import com.checkping.dto.notice.response.NoticeResponse;
+import com.checkping.dto.notice.response.*;
 import com.checkping.infra.repository.notice.NoticeRepository;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
 
+    private final CurrentMemberUtil currentMemberUtil;
+
     private final NoticeRepository noticeRepository;
 
     @Override
     public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
+
+        Notice.Priority priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
+
+        if (priority == Notice.Priority.EMERGENCY) {
+            long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
+            if (emergencyNoticeCount >= 3) {
+                throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
+            }
+        }
 
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
             return NoticeCreateResponse.toDto(notice);
@@ -42,19 +52,18 @@ public class NoticeServiceImpl implements NoticeService {
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
-                noticeUpdateRequest.getContent(),
+                noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority()
         );
 
-        return NoticeResponse.toDto(notice);
-
+        return NoticeWithIsdeletedResponse.toDto(notice);
     }
 
     @Override
     public NoticeResponse deleteNotice(Long noticeid) {
 
-        Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
+        Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
@@ -65,19 +74,31 @@ public class NoticeServiceImpl implements NoticeService {
 
         noticeRepository.save(notice);
 
-        return NoticeResponse.toDto(notice);
+        return NoticeWithIsdeletedResponse.toDto(notice);
     }
 
     @Override
     public NoticeResponse getNotice(Long noticeid) {
-        Notice notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+        Member currentMember = currentMemberUtil.getCurrentMember();
+        boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
 
-        return NoticeResponse.toDto(notice);
+        Notice notice;
+        if (isAdmin) {
+            notice = noticeRepository.findById(noticeid)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 관리자: 삭제된 공지사항도 볼 수 있음
+            return NoticeWithIsdeletedResponse.toDto(notice); // 관리자: isDeleted 포함
+        } else {
+            notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 비관리자: 삭제된 공지사항은 볼 수 없음
+            return NoticeWithoutIsdeletedResponse.toDto(notice); // 비관리자: isDeleted 제외
+        }
     }
 
     @Override
     public NoticeListResponse getNotices(NoticeSearchRequest noticeSearchRequest) {
+        Member currentMember = currentMemberUtil.getCurrentMember();
+        boolean isAdmin = currentMember.getRole() == Member.Role.ADMIN;
+
         int pageNumber = noticeSearchRequest.getPage() > 0 ? noticeSearchRequest.getPage() - 1 : 0;
         int pageSize = noticeSearchRequest.getPageSize() > 0 ? noticeSearchRequest.getPageSize() : 10;
 
@@ -89,19 +110,27 @@ public class NoticeServiceImpl implements NoticeService {
         String categoryStr = noticeSearchRequest.getCategory();
         if (categoryStr != null && !categoryStr.isBlank()) {
             try {
-                category = Notice.Category.valueOf(categoryStr);
+                category = Notice.Category.valueOf(categoryStr.toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new BaseException(ErrorCode.BAD_REQUEST);
             }
         }
 
-        Page<Notice> result = noticeRepository.findSortedNotices(keyword, category, pageable);
+        Boolean isDeleted = noticeSearchRequest.getIsDeletedAsBoolean();
 
-        return NoticeListResponse.fromEntityPage(result);
+        // 관리자인 경우 삭제된 공지도 포함해서 조회
+        Page<Notice> result;
+        if (isAdmin) {
+            // 🔹 관리자는 삭제 여부(isDeleted) 필터 적용
+            result = noticeRepository.findSortedNotices(keyword, category, isDeleted, pageable);
+        } else {
+            // 🔹 일반 사용자는 기존 로직 유지 (삭제된 공지사항 제외)
+            result = noticeRepository.findSortedNoticesWithoutIsDeleted(keyword, category, pageable);
+        }
+
+        return isAdmin
+                ? NoticeListResponse.fromEntityPage(result, true)  // 관리자: isDeleted 포함
+                : NoticeListResponse.fromEntityPage(result, false); // 비관리자: isDeleted 제외
     }
 
 }
-
-//TODO : 모든 DTO, 엔티티에서 관리자아이디 제거 (DB에서도 해당 컬럼 전부 제거)
-//TODO : 예외처리를 포함한 리팩토링
-//TODO : 모든 컬럼을 동일하게 수정 시 수정 불가 예외처리
