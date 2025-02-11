@@ -320,6 +320,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Confirm
         approval.confirm(member);
 
+        // 진행 단계 완료 요청 결재 승인 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ProgressStep progressStep = approval.getProgressStep();
+            progressStep.completeStep();
+        }
+
         return ApprovalConfirm.Response.toDto(approval);
     }
 
@@ -340,6 +346,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Reject
         approval.reject(member);
+
+        // 진행 단계 완료 요청 결재 반려 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ProgressStep progressStep = approval.getProgressStep();
+            progressStep.rejectStep();
+        }
 
         // Entity -> Response
         return ApprovalReject.Response.toDto(approval);
