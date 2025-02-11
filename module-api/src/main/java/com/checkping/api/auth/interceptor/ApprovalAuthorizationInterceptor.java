@@ -42,7 +42,12 @@ public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
             }
         }
 
-        // 결재 조회(GET)기능 인가 검증 수행 - 어드민/ 프로젝트 고객사 회원/ 프로젝트 개발자만 가능
+        /**
+         *결재 조회(GET)기능 인가 검증 수행
+         * 어드민
+         * 프로젝트 고객사 회원
+         * 프로젝트 개발사 회원
+         */
         if (method.equalsIgnoreCase("GET") && (
                 requestURI.matches("^/projects/\\d+/approvals$") ||
                 requestURI.matches("^/projects/\\d+/approvals/\\d+$")
@@ -52,15 +57,8 @@ public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
 
             // projectId 추출
             String[] uriParts = requestURI.split("/");
-            Long projectId;
 
-            if (requestURI.matches("^/projects/\\d+/approvals$")) {
-                projectId = Long.parseLong(uriParts[uriParts.length - 2]);
-            }
-
-            else {
-                projectId = Long.parseLong(uriParts[uriParts.length - 3]);
-            }
+            Long projectId = Long.parseLong(uriParts[2]); // 세 번째 요소가 projectId
 
             // 프로젝트에 대한 멤버인지 확인
             boolean exist = memberByProjectService.existsByMemberIdAndProjectId(authenticatedUser.getId(), projectId);
@@ -71,8 +69,12 @@ public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 결재 생성, 수정, 삭제 권한 검사
-        if ((method.equalsIgnoreCase("POST") && requestURI.matches("^/projects/\\d+/approvals$")) ||
+        /**
+         * 결재 생성, 수정, 삭제 권한 검사
+         *어드민
+         *프로젝트 소속 개발사 회원
+         */
+        else if ((method.equalsIgnoreCase("POST") && requestURI.matches("^/projects/\\d+/approvals$")) ||
                 (method.equalsIgnoreCase("PUT") && requestURI.matches("^/projects/\\d+/approvals/\\d+$")) ||
                 (method.equalsIgnoreCase("DELETE") && requestURI.matches("^/projects/\\d+/approvals/\\d+$"))) {
 
@@ -80,16 +82,7 @@ public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
 
             String[] uriParts = requestURI.split("/");
 
-            Long projectId;
-
-            if(method.equalsIgnoreCase("POST")){
-                projectId = Long.parseLong(uriParts[uriParts.length - 2]); // 두 번째 마지막 값이 projectId
-            }
-
-            else {
-                projectId = Long.parseLong(uriParts[uriParts.length - 3]); // 두 번째 마지막 값이 projectId
-            }
-
+            Long projectId = Long.parseLong(uriParts[2]); // 세 번째 요소가 projectId
 
             Long devOrgID = memberService.getMemberById(authenticatedUser.getId()).getOrganizationId();
             // 프로젝트의 개발사 소속 회원인지 확인
@@ -108,17 +101,25 @@ public class ApprovalAuthorizationInterceptor implements HandlerInterceptor {
         }
 
 
-        //ㅇㅇㅇ
-        if (requestURI.matches("^/projects/\\d+/approvals$") ||
+        /**
+        *결재 승인/반려 권한 검사
+        * 어드민
+        * 프로젝트 소속 고객사 오너
+        * */
+        else if (requestURI.matches("^/projects/\\d+/approvals/\\d+/reject$") ||
                 requestURI.matches("^/projects/\\d+/approvals/\\d+/confirm$")) {
 
-            log.info("인가 검사 대상 API: {}", requestURI);
+            log.info("결재 승인/반려 인가 검사 대상 API: {}", requestURI);
 
             // projectId 추출
             String[] uriParts = requestURI.split("/");
             Long projectId = Long.parseLong(uriParts[2]); // 세 번째 요소가 projectId
 
-            boolean hasPermission = projectServiceImpl.getUpdateProjectInfo(projectId).getDevOwnerId().equals(authenticatedUser.getId());
+            log.info("projectId: {}", projectId);
+            log.info("요청자 ID: {}", authenticatedUser.getId());
+            log.info("프로젝트 소속 고객사 오너 ID: {}", projectServiceImpl.getUpdateProjectInfo(projectId).getCustomerOwnerId());
+
+            boolean hasPermission = projectServiceImpl.getUpdateProjectInfo(projectId).getCustomerOwnerId().equals(authenticatedUser.getId());
 
             if (!hasPermission) {
                 throw new BaseException("이 프로젝트에 대한 권한이 없습니다.", ErrorCode.FORBIDDEN);
