@@ -107,4 +107,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     List<Long> findProjectMemberListByProjectIdAndOrgId(Long projectId);
 
     boolean existsByIdAndCustomerOwnerId(Long projectId, Long customerId);
+
+    boolean existsByIdAndDevOwnerId(Long projectId, Long devOwnerId);
 }

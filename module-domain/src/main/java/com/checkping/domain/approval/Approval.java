@@ -231,4 +231,13 @@ public class Approval extends BaseEntity {
     public boolean isWaitStatus() {
         return this.status == ApprovalStatus.WAIT;
     }
+
+    /**
+     * 완료 요청 결재인지 확인
+     *
+     * @return  완료 요청 여부
+     */
+    public boolean isCompleteRequest() {
+        return this.category == ApprovalCategory.COMPLETE_REQUEST;
+    }
 }

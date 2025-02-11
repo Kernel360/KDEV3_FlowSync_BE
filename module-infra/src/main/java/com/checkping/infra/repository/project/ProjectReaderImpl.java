@@ -35,4 +35,28 @@ public class ProjectReaderImpl implements ProjectReader {
     public boolean isCustomerOwner(Long projectId, Long customerId) {
         return projectRepository.existsByIdAndCustomerOwnerId(projectId, customerId);
     }
+
+    /**
+     * 프로젝트 ID와 멤버 ID로 멤버가 개발자 최고 담당자인지 확인
+     *
+     * @param projectId 프로젝트 ID
+     * @param memberId  멤버 ID
+     * @return 멤버가 개발자 최고 담당자인지 여부
+     */
+    @Override
+    public boolean isDevOwner(Long projectId, Long memberId) {
+        return projectRepository.existsByIdAndDevOwnerId(projectId, memberId);
+    }
+
+    /**
+     * 프로젝트 ID와 조직 ID가 일치하는지 확인
+     *
+     * @param projectId      프로젝트 ID
+     * @param organizationId 조직 ID
+     * @return 프로젝트 ID와 조직 ID가 일치하는지 여부
+     */
+    @Override
+    public boolean matchProjectAndOrganization(Long projectId, Long organizationId) {
+        return projectRepository.matchProjectAndOrganization(projectId, organizationId);
+    }
 }

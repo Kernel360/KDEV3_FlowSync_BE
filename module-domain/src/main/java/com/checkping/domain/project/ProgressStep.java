@@ -131,4 +131,16 @@ public class ProgressStep extends BaseEntity {
     public boolean isWait() {
         return this.status == Status.WAIT;
     }
+
+    // 프로젝트 진행 단계 완료 처리
+    public void completeStep() {
+        this.status = Status.COMPLETED;
+        this.closeAt = LocalDateTime.now();
+    }
+
+    // 프로젝트 진행 단계 반려 처리
+    public void rejectStep() {
+        this.status = Status.IN_PROGRESS;
+        this.closeAt = null;
+    }
 }
