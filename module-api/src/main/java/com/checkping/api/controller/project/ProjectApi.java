@@ -1,4 +1,4 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.ProgressStepGet;
@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
-import java.util.Map;
 
 @Tag(name = "Project API(ProjectController)", description = "프로젝트 API 입니다.")
 public interface ProjectApi {
@@ -41,7 +40,9 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 상태") String status,
             @Parameter(description = "프로젝트 검색어") String keyword,
             @Parameter(description = "페이지 번호") int currentPage,
-            @Parameter(description = "페이지 사이즈") int pageSize
+            @Parameter(description = "페이지 사이즈") int pageSize,
+            @Parameter(description = "페이지 정렬 필드") String sort,
+            @Parameter(description = "페이지 순서") String order
     );
 
     @Operation(summary = "프로젝트 관리단계 별 개수 조회", description = "프로젝트 관리단계 별 개수를 조회하는 기능입니다.")
