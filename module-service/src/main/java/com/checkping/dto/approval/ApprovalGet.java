@@ -6,6 +6,8 @@ import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.approval.comment.ApprovalCommentGet;
 import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.link.ApprovalLinkGet;
+import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.project.ProgressStepGet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -29,8 +31,7 @@ public class ApprovalGet {
         registerName : 작성자 이름
         cancleAt : 취소 일자
         approverAt : 승인 일시
-        approverId : 승인자 id
-        approverName : 승인자 이름
+        approver : 승인자
         updatedAt : 수정 일시
         regAt : 작성 일시
         commentList : 결재 댓글 목록
@@ -41,26 +42,22 @@ public class ApprovalGet {
         private Long id;
         @Schema(description = "프로젝트 ID")
         private Long projectId;
-        @Schema(description = "프로젝트 진행 단계 ID")
-        private Long progressStepId;
+        @Schema(description = "프로젝트 진행 단계")
+        private ProgressStepGet.Response progressStep;
         @Schema(description = "결재 제목")
         private String title;
         @Schema(description = "결재 내용")
         private List<ApprovalContent> content;
         @Schema(description = "결재 상태")
         private ApprovalStatus status;
-        @Schema(description = "작성자 id")
-        private Long registerId;
-        @Schema(description = "작성자 이름")
-        private String registerName;
+        @Schema(description = "작성자 (서명 포함)")
+        private MemberResponseDto.MeWithSignatureResponseDto register;
         @Schema(description = "취소 일자")
         private String cancelAt;
         @Schema(description = "승인 일시")
         private String approverAt;
-        @Schema(description = "승인자 id")
-        private Long approverId;
-        @Schema(description = "승인자 이름")
-        private String approverName;
+        @Schema(description = "승인자 (서명 포함)")
+        private MemberResponseDto.MeWithSignatureResponseDto approver;
         @Schema(description = "수정 일시")
         private String updatedAt;
         @Schema(description = "작성 일시")
@@ -81,22 +78,30 @@ public class ApprovalGet {
         public static Response toDto(Approval approval) {
             Response response = new Response();
             response.id = approval.getId();
-            response.projectId = approval.getProjectId();
-            response.progressStepId = approval.getProgressStepId();
+            response.projectId = approval.getProject().getId();
+            response.progressStep = ProgressStepGet.Response.toDto(approval.getProgressStep());
             response.title = approval.getTitle();
             response.content = ApprovalContent.toContentList(approval.getContent());
             response.status = approval.getStatus();
-            response.registerId = approval.getRegisterId();
-            response.registerName = approval.getRegisterName();
-            response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
-            response.approverAt = DateTimeUtils.format(approval.getApproverAt());
-            response.approverId = approval.getApproverId();
-            response.approverName = approval.getApproverName();
+            response.register = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
+                approval.getRegister());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             response.regAt = DateTimeUtils.format(approval.getRegAt());
             response.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
             response.linkList = ApprovalLinkGet.Response.toDto(approval.getLinkList());
             response.fileList = ApprovalFileGet.Response.toDto(approval.getFileList());
+
+            response.approverAt = null;
+            response.approver = null;
+            response.cancelAt = null;
+            // 대기상태가 아니면 승인 일시, 승인자 정보를 추가
+            if (!approval.isWaitStatus()) {
+                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
+                response.approverAt = DateTimeUtils.format(approval.getApproverAt());
+                response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
+                    approval.getApprover());
+            }
+
             return response;
         }
     }

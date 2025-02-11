@@ -13,11 +13,11 @@ public interface ProjectService {
 
     ProjectResponse.ProjectDto updateProject(Long projectId, ProjectRequest.UpdateDto request);
 
-    ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int page, int size);
+    ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int currentPage, int pageSize);
 
-    Map<String, Long> countProjectsByManagementStep();
+    ProjectResponse.ProjectManagementStepCountDto countProjectsByManagementStep();
 
-    ProjectResponse.ProjectDetailDto findProjectByProjectId(Long projectId);
+    ProjectResponse.ProjectInfoDto findProjectByProjectId(Long projectId);
 
-    ProjectResponse.ProjectInfoListDto getProjectInfoListByStatus();
+    ProjectResponse.ProjectListByManagementStepDto findProjectsByManagementSteps(String managementStep, int currentPage, int pageSize);
 }

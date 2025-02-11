@@ -2,6 +2,7 @@ package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.ProgressStep;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,4 +17,8 @@ public class ProgressStepReaderImpl implements ProgressStepReader {
         return progressStepRepository.findByProjectId(projectId);
     }
 
+    @Override
+    public Optional<ProgressStep> getById(Long progressStepId) {
+        return progressStepRepository.findById(progressStepId);
+    }
 }

@@ -15,14 +15,15 @@ public class ApprovalSearchInfo {
     pageSize: 페이지 사이즈
      */
 
-    public record SearchCondition(Long progressId, ApprovalStatus status, String keyword,
+    public record SearchCondition(Long progressId, ApprovalStatus status, String keyword, boolean adminSearch,
                                   Integer currentPage, Integer pageSize) {
 
-        public SearchCondition(Long progressId, ApprovalStatus status, String keyword,
+        public SearchCondition(Long progressId, ApprovalStatus status, String keyword, boolean adminSearch,
             Integer currentPage, Integer pageSize) {
             this.progressId = progressId;
             this.status = status;
             this.keyword = keyword;
+            this.adminSearch = adminSearch;
 
             // currentPage 와 pageSize 가 null 이거나 0 이하일 경우 기본값으로 1, 10 으로 설정
             if (currentPage == null || currentPage < 0) {

@@ -1,12 +1,16 @@
 package com.checkping.api.auth.config;
 
 import com.checkping.api.auth.filter.JWTFilter;
+import com.checkping.api.exceptionhandler.CustomAccessDeniedHandler;
+import com.checkping.service.member.MemberService;
+import com.checkping.service.member.auth.TokenBlacklistService;
 import com.checkping.service.member.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -24,24 +28,20 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@RequiredArgsConstructor
 public class CustomSecurityConfig {
 
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
-
-    public CustomSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-        JwtUtil jwtUtil) {
-
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-    }
+    private final TokenBlacklistService tokenBlacklistService;
+    private final MemberService memberService;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-        throws Exception {
+            throws Exception {
 
         return configuration.getAuthenticationManager();
     }
@@ -63,25 +63,24 @@ public class CustomSecurityConfig {
         http.logout(logout->logout.disable());
 
         http.headers(
-            headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+                headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/reissue").permitAll()
-                .requestMatchers("/check").permitAll()
                 .requestMatchers("/admins/**").hasRole("ADMIN")
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated());
-//                .anyRequest().permitAll()); // TODO MVP에서는 일단 모든 경로 권한 필요 없음, 추후 경로 별 권한 설정
 
-        //기능 테스트 위해서 일시적인 주석처리 2025/01/15
-        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling((exception) -> exception.accessDeniedHandler(customAccessDeniedHandler));
+
+        http.addFilterBefore(new JWTFilter(jwtUtil,tokenBlacklistService,memberService), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http.sessionManagement(
-            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -92,15 +91,21 @@ public class CustomSecurityConfig {
         configuration.setAllowedMethods(Collections.singletonList("*"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedOrigins(
-            List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
-                "https://dev.flowssync.com", "https://api.flowssync.com",
-                "https://test.flowssync.com", "https://prod.flowssync.com"));
+                List.of("https://www.flowssync.com", "http://localhost:3000", "http://localhost:8080",
+                        "https://dev.flowssync.com", "https://api.flowssync.com",
+                        "https://test.flowssync.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setExposedHeaders(
-            Arrays.asList("Authorization", "Content-Type", "Content-Disposition"));
+                Arrays.asList("Authorization", "Content-Type", "Content-Disposition", "Set-Cookie"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public CookieSameSiteSupplier cookieSameSiteSupplier() {
+        return CookieSameSiteSupplier.ofNone();
+    }
+
 }

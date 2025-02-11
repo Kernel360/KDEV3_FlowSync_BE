@@ -72,8 +72,7 @@ public class ApprovalFileRegister {
         public static ApprovalFileRegister.Response toDto(ApprovalFile approvalFile) {
             ApprovalFileRegister.Response response = new ApprovalFileRegister.Response();
             response.id = approvalFile.getId();
-            // TODO : project Entity 에서 가져오도록 변경 필요
-            response.projectId = approvalFile.getApproval().getProjectId();
+            response.projectId = approvalFile.getApproval().getProject().getId();
             response.name = approvalFile.getSaveName();
             response.url = approvalFile.getUrl();
 

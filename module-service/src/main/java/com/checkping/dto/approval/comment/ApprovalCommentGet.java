@@ -2,6 +2,7 @@ package com.checkping.dto.approval.comment;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.ApprovalComment;
+import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -18,8 +19,7 @@ public class ApprovalCommentGet {
         id : 결재 댓글 ID
         approvalId : 결재 ID
         content : 결재 댓글 내용
-        registerId : 작성자 ID
-        registerName : 작성자 이름
+        register : 작성자
         regAt : 작성 일시
         parentId : 부모 댓글 Id
         isParent : 부모 댓글 여부
@@ -30,10 +30,8 @@ public class ApprovalCommentGet {
         private Long approvalId;
         @Schema(description = "결재 댓글 내용")
         private String content;
-        @Schema(description = "작성자 ID")
-        private Long registerId;
-        @Schema(description = "작성자 이름")
-        private String registerName;
+        @Schema(description = "작성자")
+        private MeResponseDto register;
         @Schema(description = "작성 일시")
         private String regAt;
         @Schema(description = "부모 댓글 Id")
@@ -57,12 +55,12 @@ public class ApprovalCommentGet {
          * @return 결재 댓글 응답 정보
          */
         public static Response toDto(ApprovalComment comment) {
-            // TODO : 작성자 ID, 이름 가져오기(연관관계 맵핑)
             Response response = new Response();
             response.id = comment.getId();
             response.approvalId = comment.getApproval().getId();
             response.content = comment.getContent();
             response.regAt = DateTimeUtils.format(comment.getRegAt());
+            response.register = MeResponseDto.fromEntity(comment.getRegister());
 
             response.parentId = null;
             response.isParent = true;

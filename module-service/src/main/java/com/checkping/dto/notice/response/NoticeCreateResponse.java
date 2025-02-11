@@ -2,6 +2,7 @@ package com.checkping.dto.notice.response;
 
 
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -45,7 +46,7 @@ public class NoticeCreateResponse {
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
+                .isDeleted(notice.getIsDeleted())
                 .regAt(notice.getRegAt())
                 .build();
     }

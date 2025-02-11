@@ -2,6 +2,7 @@ package com.checkping.dto;
 
 import com.checkping.domain.member.Organization;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 public class OrganizationUpdate {
@@ -21,10 +22,12 @@ public class OrganizationUpdate {
         phoneNumber : 전화번호
          */
         @Schema(description = "사업자 등록번호", example = "123-45-67890")
+        @NotEmpty(message = "사업자 등록번호는 필수 입력 값입니다.")
         private String brNumber;
         @Schema(description = "사업자 등록증 이미지 링크")
         private String brCertificateUrl;
         @Schema(description = "도로명 주소", example = "서울시 강남구")
+        @NotEmpty(message = "도로명 주소는 필수 입력 값입니다.")
         private String streetAddress;
         @Schema(description = "상세 주소", example = "역삼동")
         private String detailAddress;
