@@ -416,6 +416,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         // delete comment
         approvalComment.deactivate();
 
+        // Entity -> Response
         return ApprovalCommentDelete.Response.toDto(approvalComment);
     }
 
