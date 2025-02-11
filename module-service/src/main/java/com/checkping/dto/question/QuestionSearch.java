@@ -25,6 +25,7 @@ public class QuestionSearch {
         status : 게시글 상태
         createdDate : 게시글 생성일
         register : 게시글 작성자
+        projectId : 게시글이 속한 프로젝트 ID
          */
         private Long id;
         private String title;
@@ -34,6 +35,7 @@ public class QuestionSearch {
         private String status;
         private String createdDate;
         private MemberResponseDto.MeResponseDto register;
+        private Long projectId;
 
         public static QuestionItem toDto(Question question) {
             QuestionItem dto = new QuestionItem();
@@ -44,6 +46,7 @@ public class QuestionSearch {
             dto.status = question.getStatus().name();
             dto.createdDate = DateTimeUtils.format(question.getCreatedAt());
             dto.register = MemberResponseDto.MeResponseDto.fromEntity(question.getRegister());
+            dto.projectId = question.getProject().getId();
             return dto;
         }
 

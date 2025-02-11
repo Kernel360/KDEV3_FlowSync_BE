@@ -2,6 +2,7 @@ package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
 import com.checkping.domain.member.Member;
+import com.checkping.domain.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -98,8 +99,9 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "updater_id", nullable = false)
     private Member updater;
 
-    // TODO : Project project 로 변경할 것
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     // TODO : ProgressStep progressStep 로 변경할 것
     private Long progressStepId;
@@ -141,12 +143,12 @@ public class Question extends BaseEntity {
     GENERATE
      */
 
-    public static Question generate(Long projectId, Long progressStepId, String title,
+    public static Question generate(Project project, Long progressStepId, String title,
         String content, Category category, Member register) {
 
         Question question = new Question();
         // TODO : 연관관계 맵핑하는 것들 변경할 것
-        question.projectId = projectId;
+        question.project = project;
         question.progressStepId = progressStepId;
         question.title = title;
         question.content = content;
@@ -223,10 +225,5 @@ public class Question extends BaseEntity {
             // Add QuestionFile
             addFile(file);
         }
-    }
-
-    // Contained Project
-    public void containedProject(Long projectId) {
-        this.projectId = projectId;
     }
 }

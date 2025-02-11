@@ -2,6 +2,7 @@ package com.checkping.service.question;
 
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
@@ -62,8 +63,11 @@ public class QuestionServiceImpl implements QuestionService {
         // Member by CurrentMemberUtil
         Member member = currentMemberUtil.getCurrentMember();
 
+        // find Project Entity
+        Project project = projectReader.getById(projectId);
+
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request, member);
+        Question initQuestion = QuestionRegister.Request.toEntity(project, request, member);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
