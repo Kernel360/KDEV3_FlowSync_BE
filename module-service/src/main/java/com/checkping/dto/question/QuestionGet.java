@@ -1,6 +1,5 @@
 package com.checkping.dto.question;
 
-import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;

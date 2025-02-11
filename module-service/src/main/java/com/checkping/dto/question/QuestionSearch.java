@@ -5,7 +5,6 @@ import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.question.Question;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;

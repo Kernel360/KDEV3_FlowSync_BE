@@ -149,7 +149,6 @@ public class Question extends BaseEntity {
         String content, Category category, Member register) {
 
         Question question = new Question();
-        // TODO : 연관관계 맵핑하는 것들 변경할 것
         question.project = project;
         question.progressStep = progressStep;
         question.title = title;
