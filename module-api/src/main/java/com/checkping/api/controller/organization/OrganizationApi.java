@@ -60,7 +60,6 @@ public interface OrganizationApi {
     @Operation(summary = "업체가 참여중인 프로젝트 목록", description = "업체가 속한 프로젝트 목록을 조회합니다.")
     BaseResponse<String> getProjectsByOrganization(
             @Parameter(description = "업체 ID") @PathVariable Long organizationId,
-            @Parameter(description = "프로젝트 상태(IN_PROGRESS / PAUSED / COMPLETED") @RequestParam(required = false) String status,
             @Parameter(description = "프로젝트 관리단계(CONTRACT / IN_PROGRESS / COMPLETED / MAINTENANCE / PAUSED / DELETED)") @RequestParam(required = false) String managementStep,
             @Parameter(description = "페이지 번호") @RequestParam int currentPage,
             @Parameter(description = "게시글 수") @RequestParam int pageSize,
