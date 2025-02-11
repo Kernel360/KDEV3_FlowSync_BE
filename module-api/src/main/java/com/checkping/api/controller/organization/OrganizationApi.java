@@ -2,10 +2,7 @@ package com.checkping.api.controller.organization;
 
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationListGet;
-import com.checkping.dto.OrganizationUpdate;
+import com.checkping.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,7 +55,7 @@ public interface OrganizationApi {
     );
 
     @Operation(summary = "업체가 참여중인 프로젝트 목록", description = "업체가 속한 프로젝트 목록을 조회합니다.")
-    BaseResponse<String> getProjectsByOrganization(
+    BaseResponse<PageInfo.Response<MemberOrganizationProjectListGet.Response>> getProjectsByOrganization(
             @Parameter(description = "업체 ID") @PathVariable Long organizationId,
             @Parameter(description = "프로젝트 관리단계(CONTRACT / IN_PROGRESS / COMPLETED / MAINTENANCE / PAUSED / DELETED)") @RequestParam(required = false) String managementStep,
             @Parameter(description = "페이지 번호") @RequestParam int currentPage,
