@@ -4,15 +4,16 @@ import com.checkping.common.dto.PageInfo;
 import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationListGet;
-import com.checkping.dto.OrganizationUpdate;
+import com.checkping.domain.member.projection.ProjectListGet;
+import com.checkping.domain.project.Project;
+import com.checkping.dto.*;
 import com.checkping.exception.member.OrganizationAlreadyDeletedException;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
 import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
+import com.checkping.infra.repository.member.MemberOrganizationQueryRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
+    private final MemberOrganizationQueryRepository memberOrganizationQueryRepository;
+
     private final S3FileRepositoryImpl s3FileRepository;
+
+    private final CurrentMemberUtil currentMemberUtil;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -164,6 +169,32 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationDelete.Response.toDto(changedOrganization);
     }
 
+    @Override
+    public PageInfo.Response<MemberOrganizationProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequest.getCurrentPage() - 1,
+                pageRequest.getPageSize(),
+                Sort.by("id").descending());
+
+        Project.ManagementStep validManagementStep = checkManagementStep(managementStep);
+
+        Page<ProjectListGet> result = memberOrganizationQueryRepository.getProjectsByMemberAndOrganization(
+                id,
+                null,
+                validManagementStep,
+                pageRequest.getKeyword(),
+                pageable);
+
+        List<MemberOrganizationProjectListGet.Response> dtoList = result.getContent().stream().map(MemberOrganizationProjectListGet.Response::toDto).toList();
+        PageMetaResponse meta = PageMetaResponse.fromPage(result);
+
+        return PageInfo.Response.<MemberOrganizationProjectListGet.Response>builder()
+                .dtoList(dtoList)
+                .meta(meta.toMap())
+                .build();
+    }
+
 
     private Organization.Type checkType(String type) {
         if (type == null || type.trim().isEmpty()) {
@@ -177,6 +208,13 @@ public class OrganizationServiceImpl implements OrganizationService {
             return null;
         }
         return Organization.Status.valueOf(status.toUpperCase());
+    }
+
+    private Project.ManagementStep checkManagementStep(String managementStep) {
+        if (managementStep == null || managementStep.trim().isEmpty()) {
+            return null;
+        }
+        return Project.ManagementStep.valueOf(managementStep.toUpperCase());
     }
 
 

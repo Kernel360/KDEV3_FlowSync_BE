@@ -2,10 +2,7 @@ package com.checkping.api.controller.organization;
 
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationListGet;
-import com.checkping.dto.OrganizationUpdate;
+import com.checkping.dto.*;
 import com.checkping.service.member.OrganizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -96,13 +93,17 @@ public class OrganizationController implements OrganizationApi {
 
     @GetMapping({"/admins/organizations/{organizationId}/projects","/organizations/{organizationId}/projects"})
     @Override
-    public BaseResponse<String> getProjectsByOrganization(
+    public BaseResponse<PageInfo.Response<MemberOrganizationProjectListGet.Response>> getProjectsByOrganization(
             @PathVariable Long organizationId,
             @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String keyword) {
 
-        return null;
+        PageInfo.Request request = new PageInfo.Request(currentPage, pageSize, keyword);
+
+        PageInfo.Response<MemberOrganizationProjectListGet.Response> list = organizationService.getListProjectByOrganization(organizationId, managementStep, request);
+
+        return BaseResponse.success(list, "업체가 속한 프로젝트 목록 조회 성공");
     }
 }

@@ -1,5 +1,6 @@
 package com.checkping.domain.member.projection;
 
+import com.checkping.domain.project.Project;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
@@ -20,16 +21,18 @@ public class ProjectListGet {
     private String name;
     private String customerName;
     private String developerName;
+    private Project.ManagementStep managementStep;
     private LocalDateTime startAt;
     private LocalDateTime closeAt;
     private LocalDateTime updateAt;
 
     @QueryProjection
-    public ProjectListGet(Long id, String name, String developerName, String customerName, LocalDateTime startAt, LocalDateTime closeAt, LocalDateTime updateAt) {
+    public ProjectListGet(Long id, String name, String developerName, String customerName, Project.ManagementStep managementStep, LocalDateTime startAt, LocalDateTime closeAt, LocalDateTime updateAt) {
         this.id = id;
         this.name = name;
         this.developerName = developerName;
         this.customerName = customerName;
+        this.managementStep = managementStep;
         this.startAt = startAt;
         this.closeAt = closeAt;
         this.updateAt = updateAt;

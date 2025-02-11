@@ -1,10 +1,7 @@
 package com.checkping.service.member;
 
 import com.checkping.common.dto.PageInfo;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationListGet;
-import com.checkping.dto.OrganizationUpdate;
+import com.checkping.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface OrganizationService {
@@ -20,4 +17,7 @@ public interface OrganizationService {
     OrganizationDelete.Response removeOrganization(Long id, OrganizationDelete.Request request);
 
     OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request);
+
+    PageInfo.Response<MemberOrganizationProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest);
+
 }
