@@ -9,6 +9,7 @@ import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
@@ -40,4 +41,6 @@ public interface ApprovalService {
 
     ApprovalCommentUpdate.Response updateComment(Long projectId, Long approvalId, Long commentId,
         ApprovalCommentUpdate.Request request);
+
+    ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId, Long commentId);
 }

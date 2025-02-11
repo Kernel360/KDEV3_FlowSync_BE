@@ -10,12 +10,14 @@ import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
+import com.fasterxml.jackson.databind.ser.Serializers.Base;
 import jakarta.validation.constraints.Min;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -156,10 +158,23 @@ public class ApprovalController implements ApprovalApi {
 
     @PutMapping("/{approvalId}/comments/{commentId}")
     @Override
-    public BaseResponse<ApprovalCommentUpdate.Response> updateComment(@PathVariable Long projectId, @PathVariable Long approvalId, @PathVariable Long commentId,
+    public BaseResponse<ApprovalCommentUpdate.Response> updateComment(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @PathVariable Long commentId,
         @RequestBody ApprovalCommentUpdate.Request request) {
 
-        ApprovalCommentUpdate.Response response = approvalService.updateComment(projectId, approvalId, commentId, request);
+        ApprovalCommentUpdate.Response response = approvalService.updateComment(projectId,
+            approvalId, commentId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @DeleteMapping("/{approvalId}/comments/{commentId}")
+    @Override
+    public BaseResponse<ApprovalCommentDelete.Response> deleteComment(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @PathVariable Long commentId) {
+
+        ApprovalCommentDelete.Response response = approvalService.deleteComment(projectId,
+            approvalId, commentId);
 
         return BaseResponse.success(response);
     }

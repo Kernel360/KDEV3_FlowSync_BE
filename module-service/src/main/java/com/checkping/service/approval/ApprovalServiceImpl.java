@@ -16,6 +16,7 @@ import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
@@ -392,6 +393,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalComment.updateContent(request.getContent());
 
         return ApprovalCommentUpdate.Response.toDto(approvalComment);
+    }
+
+    @Override
+    public ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId,
+        Long commentId) {
+        return null;
     }
 
     /**

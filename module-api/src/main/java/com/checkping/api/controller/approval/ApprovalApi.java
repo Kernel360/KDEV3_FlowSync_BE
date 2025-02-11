@@ -10,6 +10,7 @@ import com.checkping.dto.approval.ApprovalRegister.Response;
 import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
@@ -90,5 +91,12 @@ public interface ApprovalApi {
         @Parameter(description = "결재 ID") Long approvalId,
         @Parameter(description = "결재 댓글 ID") Long commentId,
         @Parameter(description = "결재 댓글 수정 정보") ApprovalCommentUpdate.Request request
+    );
+
+    @Operation(summary = "결재 댓글 삭제", description = "결재 댓글을 삭제하는 기능입니다.")
+    BaseResponse<ApprovalCommentDelete.Response> deleteComment(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "결재 ID") Long approvalId,
+        @Parameter(description = "결재 댓글 ID") Long commentId
     );
 }
