@@ -4,16 +4,9 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
-import com.checkping.dto.notice.response.NoticeCreateResponse;
-import com.checkping.dto.notice.response.NoticeGetListResponse;
-import com.checkping.dto.notice.response.NoticeListResponse;
-import com.checkping.dto.notice.response.NoticeResponse;
+import com.checkping.dto.notice.response.*;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,8 +27,8 @@ public class NoticeController implements NoticeApi {
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
             @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
-        NoticeResponse noticeResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
-        return BaseResponse.success(noticeResponse);
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
+        return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 
     @Override
@@ -62,13 +55,15 @@ public class NoticeController implements NoticeApi {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String isDeleted){
 
         NoticeSearchRequest noticeSearchRequest = NoticeSearchRequest.builder()
                 .keyword(keyword)
                 .category(category)
                 .page(currentPage)
                 .pageSize(pageSize)
+                .isDeleted(isDeleted)
                 .build();
 
         NoticeListResponse result = noticeService.getNotices(noticeSearchRequest);

@@ -16,6 +16,7 @@ public class ProjectUpdateDetailsDto {
     private final String detail;
     private final String managementStep;
     private final Date startAt;
+    private final Date deadlineAt;
     private final Date closeAt;
     private final Long devOwnerId;
     private final Long developerOrgId;

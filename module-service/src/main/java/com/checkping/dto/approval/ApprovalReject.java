@@ -2,16 +2,14 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.Approval;
-import com.checkping.domain.approval.Approval.ApprovalStatus;
 import com.checkping.dto.member.response.MemberResponseDto;
-import com.checkping.exception.approval.ApprovalStatusException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ApprovalConfirm {
+public class ApprovalReject {
 
     @Getter
     public static class Response {
@@ -43,8 +41,8 @@ public class ApprovalConfirm {
          * @param approval Approval 엔티티
          * @return Response DTO
          */
-        public static Response toDto(Approval approval) {
-            Response response = new Response();
+        public static ApprovalReject.Response toDto(Approval approval) {
+            ApprovalReject.Response response = new ApprovalReject.Response();
             response.projectId = approval.getProject().getId();
             response.approvalId = approval.getId();
             response.status = approval.getStatus().name();
@@ -55,29 +53,13 @@ public class ApprovalConfirm {
 
             if (!approval.isWaitStatus()) {
                 response.approverAt = DateTimeUtils.format(approval.getApproverAt());
-                response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(approval.getApprover());
+                response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(
+                    approval.getApprover());
             }
 
             return response;
         }
-    }
 
-    /**
-     * Enum : ApprovalStatus 변환 함수
-     *
-     * @param value ApprovalStatus 로 변환할 문자열
-     * @return ApprovalStatus
-     */
-    public static ApprovalStatus convertStatus(String value) {
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return ApprovalStatus.valueOf(value.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ApprovalStatusException(value);
-        }
     }
 
 }

@@ -2,17 +2,11 @@ package com.checkping.api.controller.notice;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
-import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
-import com.checkping.dto.notice.response.NoticeCreateResponse;
-import com.checkping.dto.notice.response.NoticeGetListResponse;
-import com.checkping.dto.notice.response.NoticeListResponse;
-import com.checkping.dto.notice.response.NoticeResponse;
+import com.checkping.dto.notice.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
@@ -41,7 +35,8 @@ public interface NoticeApi {
             @Parameter(description = "검색할 키워드") String keyword,
             @Parameter(description = "검색할 카테고리") String category,
             @Parameter(description = "검색할 페이지") int currentPage,
-            @Parameter(description = "한 페이지에 보이는 공지사항 갯수") int pageSize
+            @Parameter(description = "한 페이지에 보이는 공지사항 갯수") int pageSize,
+            @Parameter(description = "검색할 삭제여부") String isDeleted
         );
 
 }

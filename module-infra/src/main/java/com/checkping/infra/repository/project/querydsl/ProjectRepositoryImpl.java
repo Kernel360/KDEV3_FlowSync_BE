@@ -116,6 +116,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                         project.devOwner.id.as("developerOwnerId"),
                         project.customerOwner.id.as("customerOwnerId"),
                         project.startAt,
+                        project.deadlineAt,
                         project.closeAt))
                 .from(project)
                 .where(project.id.eq(projectId))
@@ -142,6 +143,30 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 .fetchOne();
 
         return Optional.ofNullable(ownerInfo);
+    }
+
+    /**
+     * 프로젝트와 조직이 매칭되는지 확인
+     *
+     * @param projectId 프로젝트 ID
+     * @param organizationId    조직 ID
+     * @return  프로젝트 ID와 조직 ID가 일치하는지 여부
+     */
+    public boolean matchProjectAndOrganization(Long projectId, Long organizationId) {
+        QProject project = QProject.project;
+        QOrganization organization = QOrganization.organization;
+
+        Integer existCount = queryFactory
+            .selectOne()
+            .from(project)
+            .join(project.organizations, organization)
+            .where(
+                project.id.eq(projectId),
+                organization.id.eq(organizationId)
+            )
+            .fetchFirst();  // 하나라도 찾으면 즉시 반환
+
+        return existCount != null;
     }
 
 }

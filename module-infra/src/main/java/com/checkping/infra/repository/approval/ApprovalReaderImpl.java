@@ -39,12 +39,17 @@ public class ApprovalReaderImpl implements ApprovalReader {
     }
 
     @Override
-    public boolean isContainingApproval(Long projectId, Long approvalId) {
+    public boolean existsByProjectIdAndId(Long projectId, Long approvalId) {
         return approvalRepository.existsByProjectIdAndId(projectId, approvalId);
     }
 
     @Override
     public List<ApprovalCountProjection> countByProgressStep(Long projectId) {
         return approvalRepository.countByProgressStep(projectId);
+    }
+
+    @Override
+    public boolean isApprovalRegister(Long approvalId, Long registerId) {
+        return approvalRepository.existsByIdAndRegisterId(approvalId, registerId);
     }
 }

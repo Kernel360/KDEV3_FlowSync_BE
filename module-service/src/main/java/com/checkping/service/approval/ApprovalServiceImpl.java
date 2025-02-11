@@ -12,6 +12,7 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -23,11 +24,7 @@ import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
-import com.checkping.exception.approval.ApprovalAuthorityException;
-import com.checkping.exception.approval.ApprovalMismatchException;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
-import com.checkping.exception.approval.ApprovalRegisterAuthorityException;
-import com.checkping.exception.approval.comment.ApprovalCommentMismatchException;
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
@@ -62,6 +59,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
     private final CurrentMemberUtil currentMemberUtil;
+    private final ApprovalAuthorizationValidator approvalAuthorizationValidator;
 
     @Transactional
     @Override
@@ -69,6 +67,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // Get Member From SecurityContext
         Member member = currentMemberUtil.getCurrentMember();
+
+        // 등록 권한 확인
+        approvalAuthorizationValidator.validateAllowedRegisterApproval(projectId, member);
 
         // Find project
         Project project = projectReader.getById(projectId);
@@ -78,7 +79,7 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ProgressStepNotFoundException::new);
 
         // Check project match progressStep
-        checkProgressStepMatchProject(progressStep, project);
+        checkProjectContainsProgressStep(progressStep, project);
 
         Approval init = ApprovalRegister.Request.toEntity(project, progressStep, member, request);
 
@@ -137,8 +138,11 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Override
     public ApprovalGet.Response get(Long projectId, Long approvalId) {
 
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
         // check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
+        approvalAuthorizationValidator.validateAccessibleApproval(projectId, approvalId, member);
 
         // find approval
         Approval approval = approvalReader.getByIdWithComments(approvalId)
@@ -156,15 +160,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Get Member From SecurityContext
         Member member = currentMemberUtil.getCurrentMember();
 
-        // check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
+        // update 권한 확인
+        approvalAuthorizationValidator.validateModifiableApproval(projectId, approvalId, member);
 
         // find approval
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
-
-        // Check Member Authority
-        checkMemberAuthority(member, approval);
 
         // update Approval
         approval.update(request.getTitle(), request.getContent());
@@ -223,15 +224,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Get Member From SecurityContext
         Member member = currentMemberUtil.getCurrentMember();
 
-        // check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
+        // delete 권한 확인
+        approvalAuthorizationValidator.validateModifiableApproval(projectId, approvalId, member);
 
         // find approval
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
-
-        // Check Member Authority - Register
-        checkRegisterAuthority(member, approval);
 
         // delete approval
         approval.deactivate();
@@ -258,8 +256,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Get Member From SecurityContext
         Member member = currentMemberUtil.getCurrentMember();
 
-        // check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
+        // 권한 검사
+        approvalAuthorizationValidator.validateAccessibleApproval(projectId, approvalId, member);
 
         // find approval
         Approval approval = approvalReader.getById(approvalId)
@@ -283,15 +281,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Get Member From SecurityContext
         Member member = currentMemberUtil.getCurrentMember();
 
-        // Check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
+        // 권한 확인
+        approvalAuthorizationValidator.validateModifiableApprovalComment(projectId, approvalId, member);
 
         // Find approval
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
-
-        // Check approval contain comment
-        checkApprovalContainComment(approval, commentId);
 
         // Find parent comment
         ApprovalComment parentComment = approvalCommentReader.getById(commentId)
@@ -310,34 +305,56 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     @Transactional
     @Override
-    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request) {
+    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId) {
 
         // Get Current Member Info
         Member member = currentMemberUtil.getCurrentMember();
 
-        // Check project contain approval
-        checkProjectContainApproval(projectId, approvalId);
-
-        // Check Member Authority
-        if (!projectReader.isCustomerOwner(projectId, member.getId())) {
-            // throw exception
-            throw new ApprovalAuthorityException();
-        }
+        // confirm 권한 확인
+        approvalAuthorizationValidator.validateApprovableApproval(projectId, approvalId, member);
 
         // find approval
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
-        // Confirm or Reject
-        if (request.getStatus() == Approval.ApprovalStatus.REJECTED) {
-            approval.reject(member);
-        }
-        if (request.getStatus() == Approval.ApprovalStatus.APPROVED) {
-            approval.confirm(member);
+        // Confirm
+        approval.confirm(member);
+
+        // 진행 단계 완료 요청 결재 승인 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ProgressStep progressStep = approval.getProgressStep();
+            progressStep.completeStep(approval);
         }
 
         return ApprovalConfirm.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalReject.Response reject(Long projectId, Long approvalId) {
+        // 권한 처리 : 프로젝트의 고객사 오너 회원만 가능하다.
+
+        // Get Current Member Info
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // reject 권한 확인
+        approvalAuthorizationValidator.validateApprovableApproval(projectId, approvalId, member);
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Reject
+        approval.reject(member);
+
+        // 진행 단계 완료 요청 결재 반려 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ProgressStep progressStep = approval.getProgressStep();
+            progressStep.rejectStep(approval);
+        }
+
+        // Entity -> Response
+        return ApprovalReject.Response.toDto(approval);
     }
 
     @Transactional(readOnly = true)
@@ -351,33 +368,6 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalCount.Response.toDto(queryResult);
     }
 
-    /**
-     * 해당 프로젝트에 결재가 포함되어 있는지 확인
-     *
-     * @param projectId  프로젝트 아이디
-     * @param approvalId 결재 아이디
-     * @throws ApprovalMismatchException 결재 불일치 예외
-     */
-    private void checkProjectContainApproval(Long projectId, Long approvalId) {
-        if (!approvalReader.isContainingApproval(projectId, approvalId)) {
-            // throw exception
-            throw new ApprovalMismatchException();
-        }
-    }
-
-    /**
-     * 해당 결재에 댓글이 포함되어 있는지 확인
-     *
-     * @param approval  결재
-     * @param commentId 댓글 아이디
-     * @throws ApprovalMismatchException 결재 불일치 예외
-     */
-    private void checkApprovalContainComment(Approval approval, Long commentId) {
-        if (!approvalCommentReader.isContainingComment(approval.getId(), commentId)) {
-            // throw exception
-            throw new ApprovalCommentMismatchException();
-        }
-    }
 
     /**
      * 진행 단계와 프로젝트 일치 여부 확인
@@ -385,45 +375,10 @@ public class ApprovalServiceImpl implements ApprovalService {
      * @param progressStep  진행 단계
      * @param targetProject 프로젝트
      */
-    private void checkProgressStepMatchProject(ProgressStep progressStep, Project targetProject) {
+    private void checkProjectContainsProgressStep(ProgressStep progressStep, Project targetProject) {
         if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
-        }
-    }
-
-    /**
-     * 결재 작성자 권한 확인 ADMIN 권한이거나 결재 작성자와 같은 업체이면 통과 그 외에는 예외 발생
-     *
-     * @param member   현재 사용자
-     * @param approval 결재 Entity
-     * @throws ApprovalAuthorityException 결재 권한 예외
-     */
-    private void checkMemberAuthority(Member member, Approval approval) {
-
-        // Check Admin
-        if (member.isAdmin()) {
-            return;
-        }
-
-        Member register = approval.getRegister();
-        // Check Register Organization
-        if (!member.getOrganization().getId().equals(register.getOrganization().getId())) {
-            // throw exception
-            throw new ApprovalAuthorityException();
-        }
-    }
-
-    /**
-     * 결재 작성자와 현재 사용자가 같은지 확인
-     *
-     * @param member   현재 사용자
-     * @param approval 결재 Entity
-     * @throws ApprovalRegisterAuthorityException 결재 작성자 권한 예외
-     */
-    private void checkRegisterAuthority(Member member, Approval approval) {
-        if (!member.getId().equals(approval.getRegister().getId())) {
-            throw new ApprovalRegisterAuthorityException();
         }
     }
 }
