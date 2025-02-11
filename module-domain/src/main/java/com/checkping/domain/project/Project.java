@@ -111,16 +111,6 @@ public class Project extends BaseEntity {
 
     @Getter
     @RequiredArgsConstructor
-    public enum Status {
-        IN_PROGRESS("진행중"),
-        PAUSED("일시 중단"),
-        COMPLETED("완료");
-
-        private final String description;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
     public enum ManagementStep {
         CONTRACT("계약"),
         IN_PROGRESS("진행중"),
