@@ -221,8 +221,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     public List<QuestionCounter.Response> countByProgressStep(Long projectId) {
 
-        // TODO: project id 로 project 조회
-
         // project 에 해당하는 progressStep 조회
         List<ProgressStep> steps = progressStepReader.getByProjectId(projectId);
 
