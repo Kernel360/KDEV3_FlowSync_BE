@@ -11,6 +11,7 @@ import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -82,4 +83,12 @@ public interface ApprovalApi {
     @Operation(summary="프로젝트 진행 단계 별 결재 글 개수 조회", description="프로젝트 진행 단계 별 결재 글 개수를 조회하는 기능입니다.")
     BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
         @Parameter(description="프로젝트 ID") @PathVariable Long projectId);
+
+    @Operation(summary = "결재 댓글 수정", description = "결재 댓글을 수정하는 기능입니다.")
+    BaseResponse<ApprovalCommentUpdate.Response> updateComment(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "결재 ID") Long approvalId,
+        @Parameter(description = "결재 댓글 ID") Long commentId,
+        @Parameter(description = "결재 댓글 수정 정보") ApprovalCommentUpdate.Request request
+    );
 }

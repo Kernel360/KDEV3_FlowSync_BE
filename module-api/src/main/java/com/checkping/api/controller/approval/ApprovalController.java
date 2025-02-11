@@ -11,6 +11,9 @@ import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Request;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
 import jakarta.validation.constraints.Min;
@@ -147,6 +150,16 @@ public class ApprovalController implements ApprovalApi {
         @PathVariable Long projectId) {
 
         List<ApprovalCount.Response> response = approvalService.countByProgressStep(projectId);
+
+        return BaseResponse.success(response);
+    }
+
+    @PutMapping("/{approvalId}/comments/{commentId}")
+    @Override
+    public BaseResponse<ApprovalCommentUpdate.Response> updateComment(@PathVariable Long projectId, @PathVariable Long approvalId, @PathVariable Long commentId,
+        @RequestBody ApprovalCommentUpdate.Request request) {
+
+        ApprovalCommentUpdate.Response response = approvalService.updateComment(projectId, approvalId, commentId, request);
 
         return BaseResponse.success(response);
     }

@@ -19,6 +19,7 @@ import com.checkping.dto.approval.ApprovalUpdate;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
@@ -368,6 +369,11 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalCount.Response.toDto(queryResult);
     }
 
+    @Override
+    public ApprovalCommentUpdate.Response updateComment(Long projectId, Long approvalId,
+        Long commentId, ApprovalCommentUpdate.Request request) {
+        return null;
+    }
 
     /**
      * 진행 단계와 프로젝트 일치 여부 확인
