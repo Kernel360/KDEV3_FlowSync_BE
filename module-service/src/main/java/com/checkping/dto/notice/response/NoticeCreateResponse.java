@@ -46,7 +46,7 @@ public class NoticeCreateResponse {
                 .content(convertJsonToContentList(notice.getContent()))
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .isDeleted(String.valueOf(notice.getIsDeleted()))
+                .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .build();
     }
