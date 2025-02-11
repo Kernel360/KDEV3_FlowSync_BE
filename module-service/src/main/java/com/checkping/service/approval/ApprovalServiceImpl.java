@@ -12,6 +12,7 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -310,8 +311,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     @Transactional
     @Override
-    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request) {
+    public ApprovalConfirm.Response confirm(Long projectId, Long approvalId) {
 
         // Get Current Member Info
         Member member = currentMemberUtil.getCurrentMember();
@@ -329,15 +329,38 @@ public class ApprovalServiceImpl implements ApprovalService {
         Approval approval = approvalReader.getById(approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
-        // Confirm or Reject
-        if (request.getStatus() == Approval.ApprovalStatus.REJECTED) {
-            approval.reject(member);
-        }
-        if (request.getStatus() == Approval.ApprovalStatus.APPROVED) {
-            approval.confirm(member);
-        }
+        // Confirm
+        approval.confirm(member);
 
         return ApprovalConfirm.Response.toDto(approval);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalReject.Response reject(Long projectId, Long approvalId) {
+        // 권한 처리 : 프로젝트의 고객사 오너 회원만 가능하다.
+
+        // Get Current Member Info
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // Check project contain approval
+        checkProjectContainApproval(projectId, approvalId);
+
+        // Check Member Authority
+        if (!projectReader.isCustomerOwner(projectId, member.getId())) {
+            // throw exception
+            throw new ApprovalAuthorityException();
+        }
+
+        // find approval
+        Approval approval = approvalReader.getById(approvalId)
+            .orElseThrow(ApprovalNotFoundEntityException::new);
+
+        // Reject
+        approval.reject(member);
+
+        // Entity -> Response
+        return ApprovalReject.Response.toDto(approval);
     }
 
     @Transactional(readOnly = true)

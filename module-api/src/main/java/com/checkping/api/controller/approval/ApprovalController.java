@@ -6,6 +6,7 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
@@ -87,7 +88,8 @@ public class ApprovalController implements ApprovalApi {
 
     @DeleteMapping("/{approvalId}")
     @Override
-    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId, @PathVariable Long approvalId) {
+    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId,
+        @PathVariable Long approvalId) {
 
         ApprovalDelete.Response response = approvalService.delete(projectId, approvalId);
 
@@ -121,17 +123,28 @@ public class ApprovalController implements ApprovalApi {
     @PostMapping("/{approvalId}/confirm")
     @Override
     public BaseResponse<ApprovalConfirm.Response> confirm(@PathVariable Long projectId,
-        @PathVariable Long approvalId, ApprovalConfirm.Request request) {
+        @PathVariable Long approvalId) {
 
         // Confirm Approval
-        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
+        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{approvalId}/reject")
+    @Override
+    public BaseResponse<ApprovalReject.Response> reject(@PathVariable Long projectId,
+        @PathVariable Long approvalId) {
+
+        ApprovalReject.Response response = approvalService.reject(projectId, approvalId);
 
         return BaseResponse.success(response);
     }
 
     @GetMapping("/counts")
     @Override
-    public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(@PathVariable Long projectId) {
+    public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
+        @PathVariable Long projectId) {
 
         List<ApprovalCount.Response> response = approvalService.countByProgressStep(projectId);
 
