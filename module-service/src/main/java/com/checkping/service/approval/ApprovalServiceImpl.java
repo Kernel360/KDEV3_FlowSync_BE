@@ -395,10 +395,28 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalCommentUpdate.Response.toDto(approvalComment);
     }
 
+    @Transactional
     @Override
     public ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId,
         Long commentId) {
-        return null;
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 체크
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+
+        // find approval comment
+        ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
+            .orElseThrow(ApprovalCommentNotFoundEntityException::new);
+
+        // 댓글 작성자 확인
+        checkCommentRegister(member, approvalComment);
+
+        // delete comment
+        approvalComment.deactivate();
+
+        return ApprovalCommentDelete.Response.toDto(approvalComment);
     }
 
     /**

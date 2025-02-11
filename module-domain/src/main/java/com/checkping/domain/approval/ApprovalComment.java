@@ -109,7 +109,7 @@ public class ApprovalComment extends BaseEntity {
     /**
      * 댓글 비활성화
      */
-    public void inactivate() {
+    public void deactivate() {
         this.deleteYn = DeleteStatus.Y;
     }
 
