@@ -87,7 +87,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             "AND m.id = :memberId ", nativeQuery = true)
     Page<Object[]> findCustomerProjectsByKeywordAndManagementStep(@Param("keyword") String keyword, @Param("managementStep") String managementStep, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
-    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.start_at, p.deadline_at, p.close_at, p.dev_owner_id, " +
+    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.start_at, p.deadline_at, p.close_at, p.dev_owner_id, p.customer_owner_id " +
             "org_info.developer_org_id, " +
             "org_info.customer_org_id " +
             "FROM project p " +
