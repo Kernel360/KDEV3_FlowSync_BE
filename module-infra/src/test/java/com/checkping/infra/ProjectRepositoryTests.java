@@ -23,7 +23,6 @@ public class ProjectRepositoryTests {
                     .name("이름" + Integer.toString(i))
                     .description("설명")
                     .detail("상세설명")
-                    .status(Project.Status.IN_PROGRESS)
                     .regAt(LocalDateTime.now())
                     .closeAt(LocalDate.parse("2025-12-30").atStartOfDay())
                     .resisterId(49283L)

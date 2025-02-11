@@ -31,6 +31,7 @@ public class Project extends BaseEntity {
     reg_at : 프로젝트 등록 일시
     update_at : 프로젝트 수정 일시
     start_at : 프로젝트 시작 일시
+    deadline_at : 프로젝트 예상 종료(마감) 일시
     close_at : 프로젝트 종료(마감) 일시
     resister_id : 등록자 아이디
     updater_id : 수정자 아이디
@@ -74,6 +75,9 @@ public class Project extends BaseEntity {
 
     @Column(name = "start_at")
     private LocalDateTime startAt;
+
+    @Column(name = "deadline_at")
+    private LocalDateTime deadlineAt;
 
     @Column(name = "close_at")
     private LocalDateTime closeAt;
@@ -137,4 +141,11 @@ public class Project extends BaseEntity {
         this.managementStep = ManagementStep.DELETED;
     }
 
+    public void updateManagementStep(Project.ManagementStep managementStep){
+        this.managementStep = managementStep;
+    }
+
+    public void updateCloseAt(){
+        this.closeAt = LocalDateTime.now();
+    }
 }
