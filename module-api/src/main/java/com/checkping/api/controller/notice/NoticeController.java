@@ -19,7 +19,7 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @PostMapping(value = "/admins/notices", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest,
+    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestPart NoticeCreateRequest noticeCreateRequest,
                                                              @RequestPart MultipartFile file) {
         NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, file);
         return BaseResponse.success(noticeCreateResponse);
