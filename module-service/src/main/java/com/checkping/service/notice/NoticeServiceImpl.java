@@ -42,8 +42,11 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        NoticeCreateRequest newNoticeCreateRequest = null;
+
         if (file != null) {
+
+            NoticeCreateRequest newNoticeCreateRequest = null;
+
             FileRequest fileRequest = s3FileRepository.uploadFile(file);
 
             newNoticeCreateRequest = NoticeCreateRequest.builder()
@@ -55,6 +58,8 @@ public class NoticeServiceImpl implements NoticeService {
                     .build();
 
             Notice notice = noticeRepository.save(newNoticeCreateRequest.toEntity());
+
+            return NoticeCreateResponse.toDto(notice);
         }
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
 
