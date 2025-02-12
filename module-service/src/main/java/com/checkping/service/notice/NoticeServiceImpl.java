@@ -42,14 +42,11 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-
         if (file != null) {
-
-            NoticeCreateRequest newNoticeCreateRequest = null;
 
             FileRequest fileRequest = s3FileRepository.uploadFile(file);
 
-            newNoticeCreateRequest = NoticeCreateRequest.builder()
+            NoticeCreateRequest newNoticeCreateRequest = NoticeCreateRequest.builder()
                     .title(noticeCreateRequest.getTitle())
                     .content(noticeCreateRequest.getContent())
                     .category(noticeCreateRequest.getCategory())
