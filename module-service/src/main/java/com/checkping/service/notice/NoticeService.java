@@ -6,11 +6,13 @@ import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface NoticeService {
 
-    NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, MultipartFile file);
+    NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, List<MultipartFile> files);
 
-    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, MultipartFile file);
+    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, List<MultipartFile> files);
 
     NoticeResponse deleteNotice(Long noticeid);
 

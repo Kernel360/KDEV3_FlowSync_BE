@@ -41,7 +41,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
     private LocalDateTime updatedAt;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private String noticeFileUrl;
+    private List<String> noticeFileUrls;
 
     public static NoticeResponse toDto(Notice notice){
         return NoticeWithIsdeletedResponse.builder()
@@ -53,7 +53,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
-                .noticeFileUrl(notice.getNoticeFileUrl())
+                .noticeFileUrls(notice.getNoticeFileUrls())
                 .build();
     }
 

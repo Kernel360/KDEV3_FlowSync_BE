@@ -12,18 +12,20 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
 public interface NoticeApi {
 
     @Operation(summary = "공지사항 생성", description = "공지사항을 생성하는 기능입니다.")
     public BaseResponse<NoticeCreateResponse> registerNotice(@Parameter(description = "생성할 공지사항 정보 Dto") NoticeCreateRequest noticeCreateRequest,
-                                                             @Parameter(description = "생성할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) MultipartFile file);
+                                                             @Parameter(description = "생성할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) List<MultipartFile> files);
 
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 기능입니다.")
     public BaseResponse<NoticeResponse> updateNotice(
             @Parameter(description = "수정할 공지사항 아이디") Long noticeid,
             @Parameter(description = "수정할 공지사항 정보") NoticeUpdateRequest noticeUpdateRequest,
-            @Parameter(description = "수정할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))MultipartFile file);
+            @Parameter(description = "수정할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) List<MultipartFile> files);
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제하는 기능입니다.")
     public BaseResponse<NoticeResponse> deleteNotice(

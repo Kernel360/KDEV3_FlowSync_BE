@@ -8,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "notice")
@@ -57,8 +59,10 @@ public class Notice extends BaseEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name ="notice_file_url", nullable = true)
-    private String noticeFileUrl;
+    @ElementCollection
+    @CollectionTable(name = "notice_file_urls", joinColumns = @JoinColumn(name = "notice_id"))
+    @Column(name = "notice_file_url")
+    private List<String> noticeFileUrls = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
@@ -80,12 +84,12 @@ public class Notice extends BaseEntity {
         private final String descrption;
     }
 
-    public void updateNotice(String title, String content,String category, String priority, String noticeFileUrl){
+    public void updateNotice(String title, String content,String category, String priority, List<String> noticeFileUrls){
         if (title != null) this.title = title;
         if (content != null) this.content = content;
         if (category != null) this.category = Category.valueOf(category);
         if (priority != null) this.priority = Priority.valueOf(priority);
-        if (noticeFileUrl != null) this.noticeFileUrl = noticeFileUrl;
+        if (noticeFileUrls != null) this.noticeFileUrls = noticeFileUrls;
     }
 
     public void markAsDeleted() {

@@ -30,7 +30,7 @@ public class NoticeUpdateRequest {
     private String priority;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private String noticeFileUrl;
+    private List<String> noticeFileUrls;
 
     public String convertContentToJson() {
         ObjectMapper objectMapper = new ObjectMapper();
