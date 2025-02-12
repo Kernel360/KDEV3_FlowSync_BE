@@ -1,6 +1,8 @@
 package com.checkping.api.controller.member;
 
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.ProjectListGet;
 import com.checkping.dto.member.request.ChangePasswordDto;
 import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
@@ -12,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
 public interface AdminMemberApi {
@@ -29,7 +33,7 @@ public interface AdminMemberApi {
         int size,
         @Parameter(description = "role(예: ADMIN, MEMBER)", example = "ADMIN")
         String role,
-        @Parameter(description = "status(예: ACTIVE, INACTIVE)", example = "ACTIVE")
+        @Parameter(description = "status(예: ACTIVE, INACTIVE, DELETED)", example = "ACTIVE")
         String status,
         @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동")
         String keyword);
@@ -75,4 +79,13 @@ public interface AdminMemberApi {
     BaseResponse<String> deactivateMember(
         @Schema(description = "회원 ID", example = "1")
         @Parameter(description = "회원 ID", required = true) Long memberId);
+
+    @Operation(summary = "회원 참여중인 프로젝트 목록", description = "회원이 속한 프로젝트 목록을 조회합니다.")
+    BaseResponse<PageInfo.Response<ProjectListGet.Response>> getProjectsByMember(
+            @Parameter(description = "회원 ID") @PathVariable Long memberId,
+            @Parameter(description = "프로젝트 관리단계(CONTRACT / IN_PROGRESS / COMPLETED / MAINTENANCE / PAUSED / DELETED)") @RequestParam(required = false) String managementStep,
+            @Parameter(description = "페이지 번호") @RequestParam int currentPage,
+            @Parameter(description = "게시글 수") @RequestParam int pageSize,
+            @Parameter(description = "검색어") @RequestParam String keyword
+    );
 }
