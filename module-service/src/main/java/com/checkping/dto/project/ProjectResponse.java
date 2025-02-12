@@ -294,7 +294,7 @@ public class ProjectResponse {
                     .deadlineAt(detailsDto.getDeadlineAt())
                     .closeAt(detailsDto.getCloseAt())
                     .devOwnerId(detailsDto.getDevOwnerId())
-                    .customerOwnerId(detailsDto.getCustomerOrgId())
+                    .customerOwnerId(detailsDto.getCustomerOwnerId())
                     .developerOrgId(detailsDto.getDeveloperOrgId())
                     .customerOrgId(detailsDto.getCustomerOrgId())
                     .members(members)

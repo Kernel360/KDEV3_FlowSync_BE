@@ -1,11 +1,8 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.*;
 import com.checkping.dto.project.ProgressStepGet.Response;
-import com.checkping.dto.project.ProgressStepPlanUpdate;
-import com.checkping.dto.project.ProjectRequest;
-import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.service.project.progressstep.ProgressStepService;
 import jakarta.validation.Valid;
@@ -62,11 +59,21 @@ public class ProjectController implements ProjectApi {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "desc") String order
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, managementStep, currentPage, pageSize);
-        //log.info("FlowSync - getProjectlist : ");
+        ProjectSearchRequest searchRequest = ProjectSearchRequest.builder()
+                .keyword(keyword)
+                .managementStep(managementStep)
+                .currentPage(currentPage)
+                .pageSize(pageSize)
+                .sort(sort)
+                .order(order)
+                .build();
+
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(searchRequest);
         return BaseResponse.success(projects);
     }
 

@@ -2,6 +2,7 @@ package com.checkping.service.project;
 
 import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
+import com.checkping.dto.project.ProjectSearchRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public interface ProjectService {
 
     ProjectResponse.ProjectDto updateProject(Long projectId, ProjectRequest.UpdateDto request);
 
-    ProjectResponse.ProjectListDto findAllProjects(String keyword, String status, int currentPage, int pageSize);
+    ProjectResponse.ProjectListDto findAllProjects(ProjectSearchRequest searchRequest);
 
     ProjectResponse.ProjectManagementStepCountDto countProjectsByManagementStep();
 
