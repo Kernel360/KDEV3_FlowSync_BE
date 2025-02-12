@@ -69,7 +69,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
+    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, MultipartFile file) {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -78,12 +78,33 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
-        notice.updateNotice(
-                noticeUpdateRequest.getTitle(),
-                noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
-                noticeUpdateRequest.getCategory(),
-                noticeUpdateRequest.getPriority()
-        );
+        if (noticeUpdateRequest.getPriority() != null) {
+            Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
+            if (priority == Notice.Priority.EMERGENCY) {
+                long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
+                if (emergencyNoticeCount >= 3) {
+                    throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
+                }
+            }
+        }
+
+        if (file != null) {
+            FileRequest fileRequest = s3FileRepository.uploadFile(file);
+            notice.updateNotice(
+                    noticeUpdateRequest.getTitle(),
+                    noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
+                    noticeUpdateRequest.getCategory(),
+                    noticeUpdateRequest.getPriority(),
+                    fileRequest.saveName() + "|" + fileRequest.url()
+            );
+        } else {
+            notice.updateNotice(
+                    noticeUpdateRequest.getTitle(),
+                    noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
+                    noticeUpdateRequest.getCategory(),
+                    noticeUpdateRequest.getPriority(),
+                    null);
+        }
 
         return NoticeWithIsdeletedResponse.toDto(notice);
     }

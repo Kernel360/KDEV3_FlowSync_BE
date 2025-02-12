@@ -10,7 +10,7 @@ public interface NoticeService {
 
     NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, MultipartFile file);
 
-    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest);
+    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, MultipartFile file);
 
     NoticeResponse deleteNotice(Long noticeid);
 
