@@ -2,13 +2,14 @@ package com.checkping.api.auth.config;
 
 import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.exceptionhandler.CustomAccessDeniedHandler;
-import com.checkping.service.member.MemberService;
+import com.checkping.service.member.auth.RedisConnectionCheckService;
 import com.checkping.service.member.auth.TokenBlacklistService;
 import com.checkping.service.member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,8 +36,9 @@ public class CustomSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
-    private final MemberService memberService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final StringRedisTemplate redisTemplateForInactiveMembers;
+    private final RedisConnectionCheckService redisConnectionCheckService;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -76,7 +78,7 @@ public class CustomSecurityConfig {
 
         http.exceptionHandling((exception) -> exception.accessDeniedHandler(customAccessDeniedHandler));
 
-        http.addFilterBefore(new JWTFilter(jwtUtil,tokenBlacklistService,memberService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil,tokenBlacklistService, redisTemplateForInactiveMembers, redisConnectionCheckService), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http.sessionManagement(
