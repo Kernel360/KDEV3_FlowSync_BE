@@ -5,20 +5,17 @@ import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.service.member.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReissueService {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final TokenBlacklistService tokenBlacklistService; // 추가
-
-    public ReissueService(JwtUtil jwtUtil, MemberRepository memberRepository, TokenBlacklistService tokenBlacklistService) {
-        this.jwtUtil = jwtUtil;
-        this.memberRepository = memberRepository;
-        this.tokenBlacklistService = tokenBlacklistService; // 추가
-    }
+    private final RedisConnectionCheckService redisConnectionCheckService;
 
     /**
      * 쿠키에서 Refresh Token 추출 및 검증
@@ -42,7 +39,7 @@ public class ReissueService {
      */
     public boolean isRefreshTokenBlacklisted(String refreshToken) {
         // 1) Redis 연결 여부 확인
-        if (!tokenBlacklistService.isRedisAvailable()) {
+        if (!redisConnectionCheckService.isRedisAvailable()) {
             // Redis가 연결 안 되어 있으면 블랙리스트 검증 스킵
             return false;
         }
@@ -57,7 +54,7 @@ public class ReissueService {
     public void checkTokenValidity(String refreshToken) {
         try {
             // 블랙리스트에 있는지 확인
-            if (tokenBlacklistService.isRedisAvailable()) {
+            if (redisConnectionCheckService.isRedisAvailable()) {
                 if (tokenBlacklistService.isRefreshTokenBlacklisted(refreshToken)) { // 수정
                     throw new BlacklistedTokenException();
                 }

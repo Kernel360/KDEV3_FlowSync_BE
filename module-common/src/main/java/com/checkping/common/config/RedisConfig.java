@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -17,17 +18,31 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    // 0번 저장소 사용 - 토큰 블랙리스트
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost,redisPort);
+        return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
+    // 1번 저장소 사용 - 비활성화 회원 목록
     @Bean
+    public RedisConnectionFactory redisConnectionFactoryForInactiveMembers() {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisHost, redisPort);
+        factory.setDatabase(1);
+        return factory;
+    }
+
+    @Bean // 0번 저장소 사용
     public RedisTemplate<String, String> redisTemplate() {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean // 1번 저장소 사용
+    public StringRedisTemplate redisTemplateForInactiveMembers() {
+        return new StringRedisTemplate(redisConnectionFactoryForInactiveMembers());
     }
 }
