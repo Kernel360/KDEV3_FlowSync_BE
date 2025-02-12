@@ -87,6 +87,8 @@ public class ProjectQueryRepository {
 
         query.where(builder);
 
+        query.orderBy(p.id.desc());
+
         List<ProjectList> results = query
                 .offset(pageable.getOffset())  // 시작 위치 설정
                 .limit(pageable.getPageSize())  // 페이지 크기 설정
