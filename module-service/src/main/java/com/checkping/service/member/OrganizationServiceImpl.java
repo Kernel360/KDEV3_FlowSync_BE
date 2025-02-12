@@ -177,8 +177,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Pageable pageable = PageRequest.of(
                 pageRequest.getCurrentPage() - 1,
-                pageRequest.getPageSize(),
-                Sort.by("id").descending());
+                pageRequest.getPageSize());
 
         Project.ManagementStep validManagementStep = checkManagementStep(managementStep);
 
