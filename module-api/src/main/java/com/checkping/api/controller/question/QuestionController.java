@@ -11,7 +11,6 @@ import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
-import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -79,7 +78,7 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<QuestionGet.Response> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionGet.Response response = questionService.getById(questionId);
+        QuestionGet.Response response = questionService.getById(projectId, questionId);
 
         return BaseResponse.success(response);
     }
@@ -90,8 +89,8 @@ public class QuestionController implements QuestionApi {
         @PathVariable Long questionId,
         @RequestBody UpdateDto request) {
 
-        QuestionItemDto updatedBoardDto = questionService.update(questionId,
-            request);
+        QuestionItemDto updatedBoardDto = questionService.update(projectId,
+            questionId, request);
 
         return BaseResponse.success(updatedBoardDto);
     }
@@ -101,7 +100,7 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<QuestionListDto> deleteSoftQuestion(
         @PathVariable Long projectId, @PathVariable Long questionId) {
 
-        QuestionListDto deletedBoardDto = questionService.deleteSoft(questionId);
+        QuestionListDto deletedBoardDto = questionService.deleteSoft(projectId, questionId);
 
         return BaseResponse.success(deletedBoardDto);
     }
