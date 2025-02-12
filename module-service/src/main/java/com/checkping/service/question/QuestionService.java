@@ -18,13 +18,13 @@ public interface QuestionService {
     QuestionSearch.Response searchQuestions(Long projectId,
         QuestionSearchCondition searchCondition);
 
-    QuestionGet.Response getById(Long questionId);
+    QuestionGet.Response getById(Long projectId, Long questionId);
 
-    QuestionListDto deleteSoft(Long taskBoardId);
+    QuestionListDto deleteSoft(Long projectId, Long questionId);
 
     QuestionListDto deleteHard(Long taskBoardId);
 
-    QuestionItemDto update(Long taskBoardId, UpdateDto request);
+    QuestionItemDto update(Long projectId, Long questionId, UpdateDto request);
 
     List<QuestionCounter.Response> countByProgressStep(Long projectId);
 }
