@@ -22,6 +22,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final CurrentMemberUtil currentMemberUtil;
     private final TokenBlacklistService tokenBlacklistService;
+    private final RedisConnectionCheckService redisConnectionCheckService;
 
     public BaseResponse getCurrentMember() {
         return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
@@ -79,7 +80,7 @@ public class AuthService {
         }
 
         // 레디스 연결 여부 먼저 확인
-        if(tokenBlacklistService.isRedisAvailable()) {
+        if(redisConnectionCheckService.isRedisAvailable()) {
             // 블랙리스트 추가
             tokenBlacklistService.blacklistRefreshToken(refresh, jwtUtil.getExpiration(refresh));
             if (accessToken != null) {
