@@ -82,7 +82,7 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
 
         // ✅ 총 개수 조회
         long total = ofNullable(
-                queryFactory.select(approval.count()).from(approval).where(builder).fetchOne())
+            queryFactory.select(approval.count()).from(approval).where(builder).fetchOne())
             .orElse(0L);
 
         // ✅ 페이징된 데이터 조회
@@ -110,16 +110,19 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
         // ✅ 삭제상태 조건: 삭제된 데이터도 조회
         if (!isDeleted) {
             builder.and(approval.deleteYn.eq(Approval.DeleteStatus.N));
+            // 댓글이 없거나 삭제되지 않은 상태만 조회
+            builder.and(
+                approvalComment.isNull()
+                    .or(approvalComment.deleteYn.eq(
+                        ApprovalComment.DeleteStatus.N))); // ✅ 삭제된 데이터는 조회하지 않음
         }
 
         // ✅ 결재 데이터 조회
         Approval result = queryFactory
             .selectFrom(approval)
-            .leftJoin(approval.commentList, approvalComment).fetchJoin() // ✅ 댓글 리스트 조회
-            .where(
-                builder,
-                isDeleted ? null : approvalComment.deleteYn.eq(ApprovalComment.DeleteStatus.N) // ✅ 삭제된 데이터는 조회하지 않음
-            ).fetchOne();
+            .leftJoin(approval.commentList, approvalComment)
+            .where(builder)
+            .fetchOne();
 
         return Optional.ofNullable(result); // ✅ 결과를 Optional로 감싸서 반환
     }
