@@ -57,7 +57,7 @@ public class Notice extends BaseEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name ="notice_file_url")
+    @Column(name ="notice_file_url", nullable = true)
     private String noticeFileUrl;
 
     @Getter

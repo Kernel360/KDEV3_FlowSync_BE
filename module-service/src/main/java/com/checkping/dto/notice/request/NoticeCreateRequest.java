@@ -41,7 +41,7 @@ public class NoticeCreateRequest {
                 .content(convertContentToJson())
                 .category(Notice.Category.valueOf(category))
                 .priority(Notice.Priority.valueOf(priority))
-                .noticeFileUrl(noticeFileUrl)
+                .noticeFileUrl(noticeFileUrl != null ? noticeFileUrl : "")
                 .isDeleted(false)
                 .build();
     }
