@@ -27,7 +27,7 @@ public class RedisConfig {
     // 1번 저장소 사용 - 비활성화 회원 목록
     @Bean
     public RedisConnectionFactory redisConnectionFactoryForInactiveMembers() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory("localhost", 6379);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisHost, redisPort);
         factory.setDatabase(1);
         return factory;
     }

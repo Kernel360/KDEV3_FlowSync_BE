@@ -15,7 +15,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +26,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -65,13 +63,15 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
+        // 엑세스 토큰에서 사용자 ID 추출
+        Long id = jwtUtil.getMemberId(accessToken);
+
         try {
             // 토큰 만료 여부 확인
             jwtUtil.isExpired(accessToken);
 
             // 3) Redis 블랙리스트, 회원 활성화 여부 검증 (연결 여부 먼저 확인)
             if (redisConnectionCheckService.isRedisAvailable()) {
-                log.info("Redis 연결 성공");
 
                 // 1. 요청한 토큰 블랙리스트에 있는지 확인
                 if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
@@ -79,37 +79,33 @@ public class JWTFilter extends OncePerRequestFilter {
                     ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
                     return;
                 }
-                log.info("블랙리스트 확인 완료");
+
+                // 2. 비활성화 회원인지 확인
+                Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
+
+                if (Boolean.TRUE.equals(isInactive)) {
+                    // 비활성화된 회원이 보낸 토큰을 블랙리스트에 추가
+                    tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
+                    // 리프레시 토큰도 블랙리스트에 추가
+                    String refreshToken = jwtUtil.extractToken(request, "refresh");
+                    tokenBlacklistService.blacklistRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
+
+                    // 쿠키 삭제
+                    Cookie delAccess = CookieUtil.deleteCookie("access");
+                    Cookie delRefresh = CookieUtil.deleteCookie("refresh");
+                    response.addCookie(delAccess);
+                    response.addCookie(delRefresh);
+
+                    BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_MEMBER);
+                    ResponseUtil.sendErrorResponse(response, HttpStatus.FORBIDDEN, errorResponse);
+                    return;
+                }
             }
 
             // 사용자 정보 추출
-            Long id = jwtUtil.getMemberId(accessToken);
             String name = jwtUtil.getName(accessToken);
             String email = jwtUtil.getEmail(accessToken);
             String role = jwtUtil.getRole(accessToken);
-
-            // 2. 비활성화 회원인지 확인
-//            if(redisConnectionCheckService.isRedisAvailable()){
-//                Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
-//
-//                if (Boolean.TRUE.equals(isInactive)) {
-//                    // 비활성화된 회원이 보낸 토큰을 블랙리스트에 추가
-//                    tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
-//                    // 리프레시 토큰도 블랙리스트에 추가
-//                    String refreshToken = jwtUtil.extractToken(request, "refresh");
-//                    tokenBlacklistService.blacklistRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
-//
-//                    // 쿠키 삭제
-//                    Cookie delAccess = CookieUtil.deleteCookie("access");
-//                    Cookie delRefresh = CookieUtil.deleteCookie("refresh");
-//                    response.addCookie(delAccess);
-//                    response.addCookie(delRefresh);
-//
-//                    BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_MEMBER);
-//                    ResponseUtil.sendErrorResponse(response, HttpStatus.FORBIDDEN, errorResponse);
-//                    return;
-//                }
-//            }
 
             CustomUserDetails customUserDetails = new CustomUserDetails(id, name, email, role, "PASSWORDFORTOKEN");
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
@@ -120,7 +116,6 @@ public class JWTFilter extends OncePerRequestFilter {
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         } catch (Exception e) {
-            log.info("JWT 검증 실패: {}", e.getMessage());
             BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
