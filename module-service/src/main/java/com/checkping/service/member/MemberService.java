@@ -1,10 +1,15 @@
 package com.checkping.service.member;
 
+import com.checkping.common.dto.PageInfo;
+import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
+import com.checkping.domain.member.projection.ProjectList;
+import com.checkping.domain.project.Project;
+import com.checkping.dto.ProjectListGet;
 import com.checkping.dto.member.request.ChangePasswordDto;
 import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
@@ -15,6 +20,7 @@ import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import com.checkping.exception.member.InvalidInputValueException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.infra.repository.member.ProjectQueryRepository;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +28,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 // TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
@@ -32,14 +40,16 @@ public class MemberService {
     private final OrganizationRepository organizationRepository; // 조직 레포지토리(예: JPA)
     private final BCryptPasswordEncoder passwordEncoder;
     private final CurrentMemberUtil currentMemberUtil;
+    private final ProjectQueryRepository projectQueryRepository;
 
     public MemberService(MemberRepository memberRepository,
         OrganizationRepository organizationRepository, BCryptPasswordEncoder passwordEncoder,
-        CurrentMemberUtil currentMemberUtil) {
+        CurrentMemberUtil currentMemberUtil, ProjectQueryRepository projectQueryRepository) {
         this.memberRepository = memberRepository;
         this.organizationRepository = organizationRepository;
         this.passwordEncoder = passwordEncoder;
         this.currentMemberUtil = currentMemberUtil;
+        this.projectQueryRepository = projectQueryRepository;
     }
 
     // 아이디로 회원 조회
@@ -276,5 +286,36 @@ public class MemberService {
             .orElseThrow(
                 () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
         return member.getStatus().name();
+    }
+
+    public PageInfo.Response<ProjectListGet.Response> getProjectsByMember(Long memberId, String managementStep, PageInfo.Request pageRequest) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequest.getCurrentPage() - 1,
+                pageRequest.getPageSize());
+
+        Project.ManagementStep validManagementStep = checkManagementStep(managementStep);
+
+        Page<ProjectList> result = projectQueryRepository.getProjectsByMemberAndOrganization(
+                null,
+                memberId,
+                validManagementStep,
+                pageRequest.getKeyword(),
+                pageable);
+
+        List<ProjectListGet.Response> dtoList = result.getContent().stream().map(ProjectListGet.Response::toDto).toList();
+        PageMetaResponse meta = PageMetaResponse.fromPage(result);
+
+        return PageInfo.Response.<ProjectListGet.Response>builder()
+                .dtoList(dtoList)
+                .meta(meta.toMap())
+                .build();
+    }
+
+    private Project.ManagementStep checkManagementStep(String managementStep) {
+        if (managementStep == null || managementStep.trim().isEmpty()) {
+            return null;
+        }
+        return Project.ManagementStep.valueOf(managementStep.toUpperCase());
     }
 }
