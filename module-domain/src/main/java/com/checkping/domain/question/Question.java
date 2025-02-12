@@ -227,4 +227,12 @@ public class Question extends BaseEntity {
             addFile(file);
         }
     }
+
+    /**
+     * 부모 게시글 설정
+     * @param parent    부모 게시글
+     */
+    public void setParentQuestion(Question parent) {
+        this.parent = parent;
+    }
 }

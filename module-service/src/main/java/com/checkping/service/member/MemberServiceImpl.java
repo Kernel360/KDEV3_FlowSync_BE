@@ -273,9 +273,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-    * 회원 비활성화
-    * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
-    * */
+     * 회원 비활성화
+     * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
+     * */
     @Override
     public void deactivateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
