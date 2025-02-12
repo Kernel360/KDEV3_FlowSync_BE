@@ -40,6 +40,9 @@ import java.util.List;
         @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
         private LocalDateTime updatedAt;
 
+        @Schema(description = "공지사항 첨부파일 링크")
+        private String noticeFileUrl;
+
         public static NoticeResponse toDto(Notice notice) {
             return NoticeWithoutIsdeletedResponse.builder()
                     .id(notice.getId())
@@ -49,6 +52,7 @@ import java.util.List;
                     .priority(notice.getPriority())
                     .regAt(notice.getRegAt())
                     .updatedAt(notice.getUpdatedAt())
+                    .noticeFileUrl(notice.getNoticeFileUrl())
                     .build();
         }
 
