@@ -2,8 +2,8 @@ package com.checkping.infra.repository.member;
 
 import com.checkping.domain.member.Organization;
 import com.checkping.domain.member.QOrganization;
-import com.checkping.domain.member.projection.ProjectListGet;
-import com.checkping.domain.member.projection.QProjectListGet;
+import com.checkping.domain.member.projection.ProjectList;
+import com.checkping.domain.member.projection.QProjectList;
 import com.checkping.domain.permission.QMemberByProject;
 import com.checkping.domain.permission.QOrganizationByProject;
 import com.checkping.domain.project.Project;
@@ -22,11 +22,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class MemberOrganizationQueryRepository {
+public class ProjectQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Page<ProjectListGet> getProjectsByMemberAndOrganization(Long organizationId, Long memberId, Project.ManagementStep managementStep, String keyword, Pageable pageable) {
+    public Page<ProjectList> getProjectsByMemberAndOrganization(Long organizationId, Long memberId, Project.ManagementStep managementStep, String keyword, Pageable pageable) {
 
         QProject p = QProject.project;
         QOrganizationByProject obp = QOrganizationByProject.organizationByProject;
@@ -38,18 +38,18 @@ public class MemberOrganizationQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        JPAQuery<ProjectListGet> query = jpaQueryFactory
-                .selectDistinct(new QProjectListGet(
-                                p.id,
-                                p.name,
-                                devOrg.name,
-                                custOrg.name,
-                                p.managementStep,
-                                p.startAt,
-                                p.closeAt,
-                                p.updateAt
-                        )
-                )
+        JPAQuery<ProjectList> query = jpaQueryFactory
+                .selectDistinct(new QProjectList(
+                        p.id,
+                        p.name,
+                        devOrg.name,
+                        custOrg.name,
+                        p.managementStep,
+                        p.startAt,
+                        p.deadlineAt,
+                        p.closeAt,
+                        p.updateAt
+                ))
                 .from(p)
 
                 // 개발사 조인
@@ -87,8 +87,7 @@ public class MemberOrganizationQueryRepository {
 
         query.where(builder);
 
-        // 페이징 처리 개선
-        List<ProjectListGet> results = query
+        List<ProjectList> results = query
                 .offset(pageable.getOffset())  // 시작 위치 설정
                 .limit(pageable.getPageSize())  // 페이지 크기 설정
                 .fetch();
