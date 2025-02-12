@@ -78,8 +78,8 @@ public class QuestionLinkRegister {
         public static QuestionLinkRegister.Response toDto(QuestionLink link) {
             QuestionLinkRegister.Response dto = new QuestionLinkRegister.Response();
             dto.id = link.getId();
-            // TODO : projectId 실제로 찾아서 가져오기 (getProject() 로 변경 예정이기 때문)
-            dto.projectId = link.getQuestion().getProjectId();
+
+            dto.projectId = link.getQuestion().getProject().getId();
             dto.name = link.getName();
             dto.url = link.getUrl();
             return dto;

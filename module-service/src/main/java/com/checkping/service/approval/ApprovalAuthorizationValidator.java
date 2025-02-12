@@ -101,13 +101,13 @@ public class ApprovalAuthorizationValidator {
     }
 
     /**
-     * 결재 댓글 수정 권한 확인 - 프로젝트에 속한 회원, 프로젝트에 속한 결재 글
+     * 결재 댓글 접근 권한 확인 - 프로젝트에 속한 회원, 프로젝트에 속한 결재 글
      *
      * @param projectId  프로젝트 id
      * @param approvalId 결재 id
      * @param member     멤버 엔티티
      */
-    public void validateModifiableApprovalComment(Long projectId, Long approvalId, Member member) {
+    public void validateAccessibleApprovalComment(Long projectId, Long approvalId, Member member) {
         // 관리자는 모든 행동 가능
         if (checkAdmin(member)) {
             return;

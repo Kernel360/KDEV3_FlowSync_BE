@@ -4,16 +4,18 @@ import com.checkping.common.dto.PageInfo;
 import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
-import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationDelete;
-import com.checkping.dto.OrganizationGet;
-import com.checkping.dto.OrganizationUpdate;
+import com.checkping.domain.member.projection.ProjectList;
+import com.checkping.domain.project.Project;
+import com.checkping.dto.*;
 import com.checkping.exception.member.OrganizationAlreadyDeletedException;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
 import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
+import com.checkping.infra.repository.member.ProjectQueryRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +27,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
+    private final ProjectQueryRepository projectQueryRepository;
+
     private final S3FileRepositoryImpl s3FileRepository;
-    private final S3FileRepositoryImpl s3FileRepositoryImpl;
+
+    private final CurrentMemberUtil currentMemberUtil;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -56,18 +62,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public OrganizationGet.Response getOrganization(Long id) {
+    public OrganizationListGet.Response getOrganization(Long id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        return OrganizationGet.Response.toDto(organization);
+        return OrganizationListGet.Response.toDto(organization);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageInfo.Response<OrganizationGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
+    public PageInfo.Response<OrganizationListGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
 
         Pageable pageable = PageRequest.of(
                 pageRequest.getCurrentPage() - 1,
@@ -83,10 +89,10 @@ public class OrganizationServiceImpl implements OrganizationService {
                 pageRequest.getKeyword(),
                 pageable);
 
-        List<OrganizationGet.Response> dtoList = result.getContent().stream().map(OrganizationGet.Response::toDto).toList();
+        List<OrganizationListGet.Response> dtoList = result.getContent().stream().map(OrganizationListGet.Response::toDto).toList();
         PageMetaResponse meta = PageMetaResponse.fromPage(result);
 
-        return PageInfo.Response.<OrganizationGet.Response>builder()
+        return PageInfo.Response.<OrganizationListGet.Response>builder()
                 .dtoList(dtoList)
                 .meta(meta.toMap())
                 .build();
@@ -107,7 +113,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             // 저장 파일명
             String saveName = organization.getBrCertificateUrl().split("\\|")[0];
             // 기존 파일 삭제
-            s3FileRepositoryImpl.deleteFile(saveName);
+            s3FileRepository.deleteFile(saveName);
         }
 
         // 수정 파일 등록
@@ -165,6 +171,36 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationDelete.Response.toDto(changedOrganization);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public PageInfo.Response<ProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequest.getCurrentPage() - 1,
+                pageRequest.getPageSize());
+
+        Project.ManagementStep validManagementStep = checkManagementStep(managementStep);
+
+        Long memberId = currentMemberUtil.getCurrentMember().getRole().toString().equals("ADMIN") ?
+                null : currentMemberUtil.getCurrentMember().getId();
+
+        Page<ProjectList> result = projectQueryRepository.getProjectsByMemberAndOrganization(
+                id,
+                memberId,
+                validManagementStep,
+                pageRequest.getKeyword(),
+                pageable);
+
+        List<ProjectListGet.Response> dtoList = result.getContent().stream().map(ProjectListGet.Response::toDto).toList();
+        PageMetaResponse meta = PageMetaResponse.fromPage(result);
+
+        return PageInfo.Response.<ProjectListGet.Response>builder()
+                .dtoList(dtoList)
+                .meta(meta.toMap())
+                .build();
+
+    }
+
 
     private Organization.Type checkType(String type) {
         if (type == null || type.trim().isEmpty()) {
@@ -178,6 +214,13 @@ public class OrganizationServiceImpl implements OrganizationService {
             return null;
         }
         return Organization.Status.valueOf(status.toUpperCase());
+    }
+
+    private Project.ManagementStep checkManagementStep(String managementStep) {
+        if (managementStep == null || managementStep.trim().isEmpty()) {
+            return null;
+        }
+        return Project.ManagementStep.valueOf(managementStep.toUpperCase());
     }
 
 

@@ -6,7 +6,10 @@ import com.checkping.domain.question.Question.Category;
 import com.checkping.domain.question.Question.Status;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
 import com.checkping.dto.question.link.QuestionLinkResponse.QuestionLinkDto;
+import com.checkping.exception.question.QuestionContentParsingException;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -97,7 +100,7 @@ public class QuestionResponse {
         @Schema(description = "게시글 제목", example = "게시글 제목 입니다.")
         private String title;
         @Schema(description = "게시글 본문", example = "게시글 본문 입니다.")
-        private String content;
+        private List<QuestionContent> content;
         @Schema(description = "등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime regAt;
@@ -124,7 +127,7 @@ public class QuestionResponse {
             boardDto.setId(question.getId());
             boardDto.setNumber(question.getNumber());
             boardDto.setTitle(question.getTitle());
-            boardDto.setContent(question.getContent());
+            boardDto.setContent(toContentList(question.getContent()));
             boardDto.setRegAt(question.getRegAt());
             boardDto.setEditAt(question.getEditAt());
             boardDto.setCategory(question.getCategory());
@@ -146,6 +149,22 @@ public class QuestionResponse {
             boardDto.setFileList(fileList);
 
             return boardDto;
+        }
+
+        /**
+         * String -> JSON LIST
+         *
+         * @param content content String
+         * @return content List
+         */
+        private static List<QuestionContent> toContentList(String content) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return objectMapper.readValue(content, new TypeReference<List<QuestionContent>>() {
+                });
+            } catch (Exception e) {
+                throw new QuestionContentParsingException();
+            }
         }
     }
 }

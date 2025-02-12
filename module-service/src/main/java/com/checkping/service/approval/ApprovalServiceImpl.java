@@ -16,9 +16,11 @@ import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Request;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister.Response;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
@@ -26,6 +28,7 @@ import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
 import com.checkping.exception.approval.comment.ApprovalCommentNotFoundEntityException;
+import com.checkping.exception.approval.comment.ApprovalCommentNotRegisterException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.info.approval.ApprovalCountProjection;
@@ -145,7 +148,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalAuthorizationValidator.validateAccessibleApproval(projectId, approvalId, member);
 
         // find approval
-        Approval approval = approvalReader.getByIdWithComments(approvalId)
+        Approval approval = approvalReader.getByIdWithComments(projectId, approvalId)
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Entity -> Response
@@ -282,7 +285,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         Member member = currentMemberUtil.getCurrentMember();
 
         // 권한 확인
-        approvalAuthorizationValidator.validateModifiableApprovalComment(projectId, approvalId, member);
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
 
         // Find approval
         Approval approval = approvalReader.getById(approvalId)
@@ -368,6 +371,54 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalCount.Response.toDto(queryResult);
     }
 
+    @Transactional
+    @Override
+    public ApprovalCommentUpdate.Response updateComment(Long projectId, Long approvalId,
+        Long commentId, ApprovalCommentUpdate.Request request) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 결재 댓글 접근 권한 확인
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+
+        // find approval comment
+        ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
+            .orElseThrow(ApprovalCommentNotFoundEntityException::new);
+
+        // 결재 댓글 작성자 확인
+        checkCommentRegister(member, approvalComment);
+
+        // update comment
+        approvalComment.updateContent(request.getContent());
+
+        return ApprovalCommentUpdate.Response.toDto(approvalComment);
+    }
+
+    @Transactional
+    @Override
+    public ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId,
+        Long commentId) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 체크
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+
+        // find approval comment
+        ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
+            .orElseThrow(ApprovalCommentNotFoundEntityException::new);
+
+        // 댓글 작성자 확인
+        checkCommentRegister(member, approvalComment);
+
+        // delete comment
+        approvalComment.deactivate();
+
+        // Entity -> Response
+        return ApprovalCommentDelete.Response.toDto(approvalComment);
+    }
 
     /**
      * 진행 단계와 프로젝트 일치 여부 확인
@@ -379,6 +430,23 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
+        }
+    }
+
+    /**
+     * 댓글 등록자와 멤버가 일치하는지 확인
+     *
+     * @param member     멤버
+     * @param approvalComment   댓글
+     */
+    private void checkCommentRegister(Member member, ApprovalComment approvalComment) {
+        if (member.isAdmin()) {
+            return;
+        }
+
+        if (approvalComment.getRegister().getId().equals(member.getId())) {
+            // throw exception
+            throw new ApprovalCommentNotRegisterException();
         }
     }
 }

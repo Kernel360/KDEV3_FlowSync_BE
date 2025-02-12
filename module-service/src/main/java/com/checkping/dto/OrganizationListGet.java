@@ -5,7 +5,7 @@ import com.checkping.domain.member.Organization;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-public class OrganizationGet {
+public class OrganizationListGet {
     /*
    id : 업체 ID
    type : 업체유형
@@ -15,9 +15,6 @@ public class OrganizationGet {
    detailAddress : 상세주소
    phoneNumber : 전화번호
    status : 업체 상태
-   regAt : 등록일시
-   memberList : 회원 목록
-   projectList : 프로젝트 목록
    */
     @Getter
     @ToString
@@ -49,7 +46,7 @@ public class OrganizationGet {
         @Schema(description = "등록일시")
         private String regAt;
 
-        public static OrganizationGet.Response toDto(Organization organization) {
+        public static OrganizationListGet.Response toDto(Organization organization) {
             return Response.builder()
                     .id(organization.getId().toString())
                     .type(organization.getType().toString())
