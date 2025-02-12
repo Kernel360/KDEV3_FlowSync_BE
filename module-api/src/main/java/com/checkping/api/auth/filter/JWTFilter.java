@@ -65,9 +65,6 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 엑세스 토큰에서 사용자 ID 추출
-        Long id = jwtUtil.getMemberId(accessToken);
-
         try {
             // 토큰 만료 여부 확인
             jwtUtil.isExpired(accessToken);
@@ -83,8 +80,16 @@ public class JWTFilter extends OncePerRequestFilter {
                     return;
                 }
                 log.info("블랙리스트 확인 완료");
+            }
 
-                // 2. 비활성화 회원인지 확인
+            // 사용자 정보 추출
+            Long id = jwtUtil.getMemberId(accessToken);
+            String name = jwtUtil.getName(accessToken);
+            String email = jwtUtil.getEmail(accessToken);
+            String role = jwtUtil.getRole(accessToken);
+
+            // 2. 비활성화 회원인지 확인
+            if(redisConnectionCheckService.isRedisAvailable()){
                 Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
 
                 if (Boolean.TRUE.equals(isInactive)) {
@@ -105,11 +110,6 @@ public class JWTFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-
-            // 사용자 정보 추출
-            String name = jwtUtil.getName(accessToken);
-            String email = jwtUtil.getEmail(accessToken);
-            String role = jwtUtil.getRole(accessToken);
 
             CustomUserDetails customUserDetails = new CustomUserDetails(id, name, email, role, "PASSWORDFORTOKEN");
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
