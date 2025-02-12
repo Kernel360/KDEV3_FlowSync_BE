@@ -25,7 +25,7 @@ public class NoticeGetListWithIsdeletedResponse implements NoticeGetListResponse
     private Notice.Priority priority;
 
     @Schema(description = "삭제 여부", example = "DEVELOPER")
-    private Boolean isDeleted;
+    private String isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
     private LocalDateTime regAt;
@@ -39,7 +39,7 @@ public class NoticeGetListWithIsdeletedResponse implements NoticeGetListResponse
                 .title(notice.getTitle())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .isDeleted(notice.getIsDeleted())
+                .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getUpdatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();

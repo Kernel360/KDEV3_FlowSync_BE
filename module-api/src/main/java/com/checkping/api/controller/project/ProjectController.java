@@ -1,23 +1,15 @@
-package com.checkping.api.controller;
+package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
-import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.*;
 import com.checkping.dto.project.ProgressStepGet.Response;
-import com.checkping.dto.project.ProjectRequest;
-import com.checkping.dto.project.ProjectResponse;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.service.project.progressstep.ProgressStepService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -69,11 +61,21 @@ public class ProjectController implements ProjectApi {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String managementStep,
             @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "desc") String order
             ) {
 
-        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(keyword, managementStep, currentPage, pageSize);
-        //log.info("FlowSync - getProjectlist : ");
+        ProjectSearchRequest searchRequest = ProjectSearchRequest.builder()
+                .keyword(keyword)
+                .managementStep(managementStep)
+                .currentPage(currentPage)
+                .pageSize(pageSize)
+                .sort(sort)
+                .order(order)
+                .build();
+
+        ProjectResponse.ProjectListDto projects = projectService.findAllProjects(searchRequest);
         return BaseResponse.success(projects);
     }
 
@@ -86,8 +88,8 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping(value = {"/admins/projects/{projectId}/project-info", "/projects/{projectId}/project-info"})
-    public BaseResponse<ProjectResponse.ProjectDetailDto> getProject(@PathVariable Long projectId) {
-        ProjectResponse.ProjectDetailDto project = projectService.findProjectByProjectId(projectId);
+    public BaseResponse<ProjectResponse.ProjectInfoDto> getProject(@PathVariable Long projectId) {
+        ProjectResponse.ProjectInfoDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
     }
 
@@ -101,11 +103,30 @@ public class ProjectController implements ProjectApi {
         return BaseResponse.success(projectList);
     }
 
+    @PutMapping("/projects/{projectId}/management-steps")
+    public BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
+            @PathVariable Long projectId,
+            @RequestParam String managementStep) {
+        ProjectResponse.ProjectDto project = projectService.updateManagementStep(projectId, managementStep);
+        return BaseResponse.success(project);
+    }
+
     @Override
     @GetMapping("/projects/{projectId}/progress-steps")
     public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
 
         List<Response> response = progressStepService.getProgressStep(projectId);
+
+        return BaseResponse.success(response);
+    }
+
+    @Override
+    @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
+    public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
+        @PathVariable Long progressStepId,
+        @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
+
+        ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
 
         return BaseResponse.success(response);
     }

@@ -14,32 +14,13 @@ import lombok.NoArgsConstructor;
 public class ApprovalConfirm {
 
     @Getter
-    public static class Request {
-
-        /*
-        status : 변경할 결재 상태
-         */
-        @Schema(description = "변경할 결재 상태", example = "REJECTED, APPROVED")
-        private String status;
-
-        /**
-         * Approval.ApprovalStatus 로 변환
-         *
-         * @return Approval.ApprovalStatus
-         */
-        public Approval.ApprovalStatus getStatus() {
-            return convertStatus(this.status);
-        }
-    }
-
-    @Getter
     public static class Response {
 
         /*
         projectId : 프로젝트 ID
         approvalId : 결재 ID
         status : 변경된 결재 상태
-        cancelAt : 취소 일시
+        category : 결재 카테고리
         approverAt : 승인 일시
         approver : 승인자
          */
@@ -49,8 +30,8 @@ public class ApprovalConfirm {
         private Long approvalId;
         @Schema(description = "변경된 결재 상태", example = "REJECTED, APPROVED")
         private String status;
-        @Schema(description = "취소 일시", example = "2021-07-01T00:00:00")
-        private String cancelAt;
+        @Schema(description = "결재 카테고리", example = "NORMAL_REQUEST, COMPLETE_REQUEST")
+        private String category;
         @Schema(description = "승인 일시", example = "2021-07-01T00:00:00")
         private String approverAt;
         @Schema(description = "승인자")
@@ -67,13 +48,12 @@ public class ApprovalConfirm {
             response.projectId = approval.getProject().getId();
             response.approvalId = approval.getId();
             response.status = approval.getStatus().name();
+            response.category = approval.getCategory().name();
 
-            response.cancelAt = null;
             response.approverAt = null;
             response.approver = null;
 
             if (!approval.isWaitStatus()) {
-                response.cancelAt = DateTimeUtils.format(approval.getCancelAt());
                 response.approverAt = DateTimeUtils.format(approval.getApproverAt());
                 response.approver = MemberResponseDto.MeWithSignatureResponseDto.fromEntity(approval.getApprover());
             }

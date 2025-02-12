@@ -50,7 +50,7 @@ public class Notice extends BaseEntity {
     private Priority priority;
 
     @CreatedDate
-    @Column(name = "reg_at", nullable = false)
+    @Column(name = "reg_at", nullable = false, updatable = false)
     private LocalDateTime regAt;
 
     @LastModifiedDate

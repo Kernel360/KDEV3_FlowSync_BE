@@ -1,7 +1,6 @@
 package com.checkping.infra.repository.project;
 
 import com.checkping.domain.project.Project;
-import com.checkping.infra.dto.ProjectDetailsDto;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.project.querydsl.ProjectRepositoryCustom;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Query(value =
             "SELECT " +
             "p.id, p.name, p.description, p.detail, p.management_step, " +
-            "p.reg_at, p.update_at, p.start_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
+            "p.reg_at, p.update_at, p.start_at, p.deadline_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
             "org_info.developer_name, org_info.customer_name, 1 AS clickable " +
             "FROM project p " +
             "LEFT JOIN ( " +
@@ -36,7 +35,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Query(value =
             "SELECT " +
             "p.id, p.name, p.description, p.detail, p.management_step, " +
-            "p.reg_at, p.update_at, p.start_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
+            "p.reg_at, p.update_at, p.start_at, p.deadline_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
             "org_info.developer_name, org_info.customer_name, " +
             "(SELECT CASE WHEN EXISTS (SELECT 1 FROM member_by_project mbp WHERE mbp.project_id=p.id AND mbp.member_id=m.id) THEN 1 ELSE 0 END) AS clickable " +
             "FROM project p " +
@@ -69,7 +68,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Query(value =
             "SELECT " +
             "p.id, p.name, p.description, p.detail, p.management_step, " +
-            "p.reg_at, p.update_at, p.start_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
+            "p.reg_at, p.update_at, p.start_at, p.deadline_at, p.close_at, p.deleted_yn, p.dev_owner_id, " +
             "org_info.developer_name, org_info.customer_name, 1 AS clickable " +
             "FROM project p " +
             "LEFT JOIN member_by_project mbp ON p.id = mbp.project_id " +
@@ -88,25 +87,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             "AND m.id = :memberId ", nativeQuery = true)
     Page<Object[]> findCustomerProjectsByKeywordAndManagementStep(@Param("keyword") String keyword, @Param("managementStep") String managementStep, @Param("pageable") Pageable pageable, @Param("memberId") Long memberId);
 
-    @Query(value = "SELECT " +
-            "    p.id, " +
-            "    p.name AS project_name, " +
-            "    p.description, " +
-            "    o.name AS dev_org_name, " +
-            "    m.profile_image_url, " +
-            "    m.name AS member_name, " +
-            "    m.job_role, " +
-            "    m.job_title, " +
-            "    m.phone_num, " +
-            "    p.start_at, " +
-            "    p.close_at " +
-            "FROM project p " +
-            "LEFT JOIN member m ON p.dev_owner_id = m.id " +
-            "LEFT JOIN organization o ON m.org_id = o.id " +
-            "WHERE p.id = :projectId", nativeQuery = true)
-    Optional<ProjectDetailsDto> findProjectById(@Param("projectId") Long projectId);
-
-    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.start_at, p.close_at, p.dev_owner_id, " +
+    @Query(value = "SELECT p.id, p.name, p.description, p.detail, p.management_step, p.start_at, p.deadline_at, p.close_at, p.dev_owner_id, p.customer_owner_id, " +
             "org_info.developer_org_id, " +
             "org_info.customer_org_id " +
             "FROM project p " +
@@ -126,4 +107,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     List<Long> findProjectMemberListByProjectIdAndOrgId(Long projectId);
 
     boolean existsByIdAndCustomerOwnerId(Long projectId, Long customerId);
+
+    boolean existsByIdAndDevOwnerId(Long projectId, Long devOwnerId);
 }

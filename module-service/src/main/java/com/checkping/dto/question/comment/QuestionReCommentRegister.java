@@ -1,6 +1,7 @@
 package com.checkping.dto.question.comment;
 
 import com.checkping.common.utils.DateTimeUtils;
+import com.checkping.domain.member.Member;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,8 +22,8 @@ public class QuestionReCommentRegister {
         private String content;
 
         public static QuestionComment toEntity(Request request, Question question,
-            QuestionComment parent) {
-            return QuestionComment.generate(request.getContent(), question, parent);
+            Member register, QuestionComment parent) {
+            return QuestionComment.generate(request.getContent(), question, register, parent);
         }
     }
 

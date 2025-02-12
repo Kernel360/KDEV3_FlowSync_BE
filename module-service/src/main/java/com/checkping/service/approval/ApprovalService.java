@@ -5,10 +5,13 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import java.util.List;
 
@@ -30,8 +33,14 @@ public interface ApprovalService {
     ApprovalReCommentRegister.Response registerReComment(Long projectId, Long approvalId,
         Long commentId, ApprovalReCommentRegister.Request request);
 
-    ApprovalConfirm.Response confirm(Long projectId, Long approvalId,
-        ApprovalConfirm.Request request);
+    ApprovalConfirm.Response confirm(Long projectId, Long approvalId);
+
+    ApprovalReject.Response reject(Long projectId, Long approvalId);
 
     List<ApprovalCount.Response> countByProgressStep(Long projectId);
+
+    ApprovalCommentUpdate.Response updateComment(Long projectId, Long approvalId, Long commentId,
+        ApprovalCommentUpdate.Request request);
+
+    ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId, Long commentId);
 }

@@ -21,19 +21,21 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     // 키워드와 카테고리를 기반으로 공지사항 목록 조회
     @Query("SELECT n FROM Notice n " +
-            "WHERE (:category IS NULL OR n.category = COALESCE(:category, n.category)) " +
-            "AND (:keyword IS NULL OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
-            "AND n.isDeleted = false " +  // 🔹 비관리자는 삭제되지 않은 공지만 조회
+            "WHERE (:category IS NULL OR n.category = :category) " +
+            "AND (:keyword IS NULL OR :keyword = '' OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
+            "AND (:isDeleted IS NULL OR n.isDeleted = :isDeleted) " +  // 🔹 비관리자는 삭제되지 않은 공지만 조회
             "ORDER BY " +
             "CASE WHEN n.priority = 'EMERGENCY' THEN 1 ELSE 2 END, " +
             "n.regAt DESC")
     Page<Notice> findSortedNotices(@Param("keyword") String keyword,
                                    @Param("category") Notice.Category category,
+                                   @Param("isDeleted") Boolean isDeleted,
                                    Pageable pageable);
 
     @Query("SELECT n FROM Notice n " +
-            "WHERE (:category IS NULL OR n.category = COALESCE(:category, n.category)) " +
-            "AND (:keyword IS NULL OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
+            "WHERE (:category IS NULL OR n.category = :category) " +
+            "AND (:keyword IS NULL OR :keyword = '' OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
+            "AND n.isDeleted = false " +
             "ORDER BY " +
             "CASE WHEN n.priority = 'EMERGENCY' THEN 1 ELSE 2 END, " +
             "n.regAt DESC")

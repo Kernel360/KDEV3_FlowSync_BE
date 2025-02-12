@@ -17,4 +17,6 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long>, Appro
     Optional<Approval> getByIdWithComments(@Param("approvalId") Long approvalId);
 
     boolean existsByProjectIdAndId(Long projectId, Long approvalId);
+
+    boolean existsByIdAndRegisterId(Long approvalId, Long registerId);
 }

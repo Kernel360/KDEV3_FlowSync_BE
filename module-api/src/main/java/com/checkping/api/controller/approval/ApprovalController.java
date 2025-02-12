@@ -6,12 +6,18 @@ import com.checkping.dto.approval.ApprovalCount;
 import com.checkping.dto.approval.ApprovalDelete;
 import com.checkping.dto.approval.ApprovalGet;
 import com.checkping.dto.approval.ApprovalRegister;
+import com.checkping.dto.approval.ApprovalReject;
 import com.checkping.dto.approval.ApprovalSearch;
 import com.checkping.dto.approval.ApprovalSearchCondition;
 import com.checkping.dto.approval.ApprovalUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Request;
+import com.checkping.dto.approval.comment.ApprovalCommentUpdate.Response;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.service.approval.ApprovalService;
+import com.fasterxml.jackson.databind.ser.Serializers.Base;
 import jakarta.validation.constraints.Min;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +93,8 @@ public class ApprovalController implements ApprovalApi {
 
     @DeleteMapping("/{approvalId}")
     @Override
-    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId, @PathVariable Long approvalId) {
+    public BaseResponse<ApprovalDelete.Response> delete(@PathVariable Long projectId,
+        @PathVariable Long approvalId) {
 
         ApprovalDelete.Response response = approvalService.delete(projectId, approvalId);
 
@@ -121,19 +128,53 @@ public class ApprovalController implements ApprovalApi {
     @PostMapping("/{approvalId}/confirm")
     @Override
     public BaseResponse<ApprovalConfirm.Response> confirm(@PathVariable Long projectId,
-        @PathVariable Long approvalId, ApprovalConfirm.Request request) {
+        @PathVariable Long approvalId) {
 
         // Confirm Approval
-        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId, request);
+        ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{approvalId}/reject")
+    @Override
+    public BaseResponse<ApprovalReject.Response> reject(@PathVariable Long projectId,
+        @PathVariable Long approvalId) {
+
+        ApprovalReject.Response response = approvalService.reject(projectId, approvalId);
 
         return BaseResponse.success(response);
     }
 
     @GetMapping("/counts")
     @Override
-    public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(@PathVariable Long projectId) {
+    public BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
+        @PathVariable Long projectId) {
 
         List<ApprovalCount.Response> response = approvalService.countByProgressStep(projectId);
+
+        return BaseResponse.success(response);
+    }
+
+    @PutMapping("/{approvalId}/comments/{commentId}")
+    @Override
+    public BaseResponse<ApprovalCommentUpdate.Response> updateComment(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @PathVariable Long commentId,
+        @RequestBody ApprovalCommentUpdate.Request request) {
+
+        ApprovalCommentUpdate.Response response = approvalService.updateComment(projectId,
+            approvalId, commentId, request);
+
+        return BaseResponse.success(response);
+    }
+
+    @DeleteMapping("/{approvalId}/comments/{commentId}")
+    @Override
+    public BaseResponse<ApprovalCommentDelete.Response> deleteComment(@PathVariable Long projectId,
+        @PathVariable Long approvalId, @PathVariable Long commentId) {
+
+        ApprovalCommentDelete.Response response = approvalService.deleteComment(projectId,
+            approvalId, commentId);
 
         return BaseResponse.success(response);
     }

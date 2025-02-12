@@ -21,4 +21,9 @@ public class ProgressStepReaderImpl implements ProgressStepReader {
     public Optional<ProgressStep> getById(Long progressStepId) {
         return progressStepRepository.findById(progressStepId);
     }
+
+    @Override
+    public Optional<ProgressStep> getByIdAndProjectId(Long progressStepId, Long projectId) {
+        return progressStepRepository.findByIdAndProjectId(progressStepId, projectId);
+    }
 }

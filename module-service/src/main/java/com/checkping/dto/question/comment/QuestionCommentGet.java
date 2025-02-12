@@ -2,6 +2,7 @@ package com.checkping.dto.question.comment;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.question.QuestionComment;
+import com.checkping.dto.member.response.MemberResponseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +25,7 @@ public class QuestionCommentGet {
         editAt : 수정 일시
         parentId : 부모 댓글 아이디
         isParent : 부모 댓글인지 여부 체크 T/F
+        register : 작성자 정보
          */
         @Schema(description = "질문 게시글 댓글 아이디")
         private Long id;
@@ -37,6 +39,8 @@ public class QuestionCommentGet {
         private Long parentId;
         @Schema(description = "부모 댓글인지 여부 체크 T/F")
         private boolean isParent;
+        @Schema(description = "작성자 정보")
+        private MemberResponseDto.MeResponseDto register;
         /**
          * 질문 게시글 댓글 엔티티를 응답 정보로 변환하는 메서드
          *
@@ -49,6 +53,7 @@ public class QuestionCommentGet {
             response.content = comment.getContent();
             response.regAt = DateTimeUtils.format(comment.getRegAt());
             response.editAt = DateTimeUtils.format(comment.getEditAt());
+            response.register = MemberResponseDto.MeResponseDto.fromEntity(comment.getRegister());
             response.parentId = null;
             response.isParent = true;
 

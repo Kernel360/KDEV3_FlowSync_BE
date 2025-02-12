@@ -22,7 +22,9 @@ public class ProgressStepGet {
         status : 단계 상태
         startAt : 시작 일시
         closeAt : 마감 일시
+        deadlineAt : 예상 마감 일시
         projectId : 프로젝트 ID
+        relatedApprovalId : 관련 결재 ID
          */
         @Schema(description = "진행 단계 ID")
         private Long id;
@@ -38,8 +40,12 @@ public class ProgressStepGet {
         private String startAt;
         @Schema(description = "마감 일시")
         private String closeAt;
+        @Schema(description = "예상 마감 일시")
+        private String deadlineAt;
         @Schema(description = "프로젝트 ID")
         private Long projectId;
+        @Schema(description = "관련 결재 ID")
+        private Long relatedApprovalId;
 
         /**
          * ProgressStep Entity -> ProgressStepGet.Response Dto
@@ -53,11 +59,12 @@ public class ProgressStepGet {
             response.name = progressStep.getName();
             response.description = progressStep.getDescription();
             response.stepOrder = progressStep.getStepOrder();
-            response.status =
-                progressStep.getStatus() != null ? progressStep.getStatus().name() : null;
+            response.status = progressStep.getStatus().name();
             response.startAt = DateTimeUtils.format(progressStep.getStartAt());
             response.closeAt = DateTimeUtils.format(progressStep.getCloseAt());
+            response.deadlineAt = DateTimeUtils.format(progressStep.getDeadlineAt());
             response.projectId = progressStep.getProjectId();
+            response.relatedApprovalId = progressStep.getRelatedApprovalId();
             return response;
         }
 
