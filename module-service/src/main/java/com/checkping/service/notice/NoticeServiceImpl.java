@@ -2,18 +2,21 @@ package com.checkping.service.notice;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.notice.NoticeRepository;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +26,12 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
+    private final S3FileRepositoryImpl s3FileRepository;
+
+    private final S3FileRepositoryImpl s3FileRepositoryImpl;
+
     @Override
-    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
+    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, MultipartFile file) {
 
         Notice.Priority priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
 
@@ -35,7 +42,22 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
+        NoticeCreateRequest newNoticeCreateRequest = null;
+        if (file != null) {
+            FileRequest fileRequest = s3FileRepository.uploadFile(file);
+
+            newNoticeCreateRequest = NoticeCreateRequest.builder()
+                    .title(noticeCreateRequest.getTitle())
+                    .content(noticeCreateRequest.getContent())
+                    .category(noticeCreateRequest.getCategory())
+                    .priority(noticeCreateRequest.getPriority())
+                    .noticeFileUrl(fileRequest.saveName() + "|" + fileRequest.url())
+                    .build();
+
+            Notice notice = noticeRepository.save(newNoticeCreateRequest.toEntity());
+        }
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
+
             return NoticeCreateResponse.toDto(notice);
     }
 

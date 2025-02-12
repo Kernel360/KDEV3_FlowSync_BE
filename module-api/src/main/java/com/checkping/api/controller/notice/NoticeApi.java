@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Notice API(NoticeController)", description = "공지사항 API 입니다.")
 public interface NoticeApi {
 
     @Operation(summary = "공지사항 생성", description = "공지사항을 생성하는 기능입니다.")
-    public BaseResponse<NoticeCreateResponse> registerNotice(@Parameter(description = "생성할 공지사항 정보 Dto") NoticeCreateRequest noticeCreateRequest);
+    public BaseResponse<NoticeCreateResponse> registerNotice(@Parameter(description = "생성할 공지사항 정보 Dto") NoticeCreateRequest noticeCreateRequest,
+                                                             @Parameter(description = "생성할 첨부파일 Dto")MultipartFile file);
 
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 기능입니다.")
     public BaseResponse<NoticeResponse> updateNotice(
