@@ -1,6 +1,8 @@
 package com.checkping.api.controller.member;
 
+import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.ProjectListGet;
 import com.checkping.dto.member.request.ChangePasswordDto;
 import com.checkping.dto.member.request.MemberRegisterDto;
 import com.checkping.dto.member.request.MemberUpdateDto;
@@ -110,5 +112,21 @@ public class AdminMemberController implements AdminMemberApi {
     public BaseResponse<String> deactivateMember(@RequestParam Long memberId) {
         memberService.deactivateMember(memberId);
         return BaseResponse.success("회원이 성공적으로 비활성화되었습니다.");
+    }
+
+    @Override
+    @GetMapping("/{memberId}/projects")
+    public BaseResponse<PageInfo.Response<ProjectListGet.Response>> getProjectsByMember(
+            @PathVariable Long memberId,
+            @RequestParam(required = false) String managementStep,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String keyword) {
+
+        PageInfo.Request request = new PageInfo.Request(currentPage, pageSize, keyword);
+
+        PageInfo.Response<ProjectListGet.Response> list = memberService.getProjectsByMember(memberId, managementStep, request);
+
+        return BaseResponse.success(list, "회원이 속한 프로젝트 목록 조회 성공");
     }
 }
