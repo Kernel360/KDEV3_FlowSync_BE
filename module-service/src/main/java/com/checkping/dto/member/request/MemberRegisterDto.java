@@ -14,11 +14,11 @@ public class MemberRegisterDto {
 
     @Schema(description = "조직 ID", example = "1")
     private Long organizationId;
-    @Schema(description = "이메일", example = "example@example.com")
+    @Schema(description = "이메일", example = "example@test.com")
     private String email;
-    @Schema(description = "비밀번호", example = "password1234")
+    @Schema(description = "비밀번호", example = "1111")
     private String password;
-    @Schema(description = "이름", example = "Optimus Prime")
+    @Schema(description = "이름", example = "주농퐛")
     private String name;
     @Schema(description = "역할", example = "ADMIN") // ADMIN, USER
     private String role;
@@ -28,9 +28,9 @@ public class MemberRegisterDto {
     private String jobRole;
     @Schema(description = "직책", example = "팀장")
     private String jobTitle;
-    @Schema(description = "소개", example = "안녕하세요. 저는 옵티머스프라임입니다.")
+    @Schema(description = "소개", example = "안녕하세요.")
     private String introduction;
-    @Schema(description = "비고", example = "곧 퇴사함")
+    @Schema(description = "비고", example = "안녕하세요")
     private String remark;
 
     //DTO -> Member 엔티티 변환

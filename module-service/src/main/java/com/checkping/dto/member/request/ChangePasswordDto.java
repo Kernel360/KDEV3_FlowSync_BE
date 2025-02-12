@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChangePasswordDto {
 
-    @Schema(description = "현재 비밀번호", example = "password1234")
+    @Schema(description = "현재 비밀번호", example = "passwor1234 * 지금은 현재 비밀번호 검증 없이 수정 가능 *")
     private String currentPassword;
     @Schema(description = "새로운 비밀번호", example = "newPassword1234")
     private String newPassword;
