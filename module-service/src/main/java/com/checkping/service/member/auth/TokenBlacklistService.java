@@ -14,48 +14,23 @@ public class TokenBlacklistService {
         this.redisTemplate = redisTemplate;
     }
 
-    // Redis 연결 가능 여부 체크 메서드
-
-    public boolean isRedisAvailable() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Boolean> future = executor.submit(() -> {
-            try {
-                String pong = redisTemplate.getConnectionFactory().getConnection().ping();
-                return "PONG".equalsIgnoreCase(pong);
-            } catch (Exception e) {
-                return false;
-            }
-        });
-
-        try {
-            return future.get(500, TimeUnit.MILLISECONDS); // 0.1초 이상 걸리면 false 반환
-        } catch (TimeoutException e) {
-            System.out.println("[JWTFilter] Redis connection timeout -> Skip blacklist check");
-            return false;
-        } catch (Exception e) {
-            return false;
-        } finally {
-            executor.shutdown();
-        }
-    }
-
     // Access Token 블랙리스트 저장
     public void blacklistAccessToken(String token, long expiration) {
-        redisTemplate.opsForValue().set("access_" + token, "blacklisted", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("access:" + token, "blacklisted", expiration, TimeUnit.MILLISECONDS);
     }
 
     // Refresh Token 블랙리스트 저장
     public void blacklistRefreshToken(String token, long expiration) {
-        redisTemplate.opsForValue().set("refresh_" + token, "blacklisted", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("refresh:" + token, "blacklisted", expiration, TimeUnit.MILLISECONDS);
     }
 
     // Access Token 블랙리스트 확인
     public boolean isAccessTokenBlacklisted(String token) {
-        return redisTemplate.hasKey("access_" + token);
+        return redisTemplate.hasKey("access:" + token);
     }
 
     // Refresh Token 블랙리스트 확인
     public boolean isRefreshTokenBlacklisted(String token) {
-        return redisTemplate.hasKey("refresh_" + token);
+        return redisTemplate.hasKey("refresh:" + token);
     }
 }
