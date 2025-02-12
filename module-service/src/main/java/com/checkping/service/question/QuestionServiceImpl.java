@@ -54,12 +54,13 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 등록하기
      *
-     * @param projectId 프로젝트 ID
-     * @param request   업무 관리 게시글에 필요한 request
+     * @param projectId  프로젝트 ID
+     * @param request    업무 관리 게시글에 필요한 request
+     * @param questionId
      * @return 생성한 Question 의 Dto
      */
     @Override
-    public QuestionRegister.Response register(Long projectId, Request request) {
+    public QuestionRegister.Response register(Long projectId, Request request, Long questionId) {
 
         // Member by CurrentMemberUtil
         Member member = currentMemberUtil.getCurrentMember();
@@ -73,6 +74,13 @@ public class QuestionServiceImpl implements QuestionService {
 
         // Question Dto -> Question Entity
         Question initQuestion = QuestionRegister.Request.toEntity(project, progressStep, request, member);
+
+        // 답글 게시글 인 경우 처리
+        if (questionId != null) {
+            Question parentQuestion = questionReader.getById(questionId)
+                .orElseThrow(QuestionNotFoundEntityException::new);
+            initQuestion.setParentQuestion(parentQuestion);
+        }
 
         // save Question entity
         Question question = questionStore.store(initQuestion);

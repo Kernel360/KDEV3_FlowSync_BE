@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    QuestionRegister.Response register(Long projectId, Request request);
+    QuestionRegister.Response register(Long projectId, Request request, Long questionId);
 
     QuestionSearch.Response searchQuestions(Long projectId,
         QuestionSearchCondition searchCondition);
