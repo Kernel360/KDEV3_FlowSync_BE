@@ -33,7 +33,7 @@ public interface AdminMemberApi {
         int size,
         @Parameter(description = "role(예: ADMIN, MEMBER)", example = "ADMIN")
         String role,
-        @Parameter(description = "status(예: ACTIVE, INACTIVE)", example = "ACTIVE")
+        @Parameter(description = "status(예: ACTIVE, INACTIVE, DELETED)", example = "ACTIVE")
         String status,
         @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동")
         String keyword);
