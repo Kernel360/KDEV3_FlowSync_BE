@@ -2,7 +2,7 @@ package com.checkping.service;
 
 import com.checkping.domain.member.Organization;
 import com.checkping.dto.OrganizationCreate;
-import com.checkping.dto.OrganizationGet;
+import com.checkping.dto.OrganizationListGet;
 import com.checkping.dto.OrganizationUpdate;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.OrganizationService;
@@ -66,7 +66,7 @@ class OrganizationServiceTests {
                         .phoneNumber("")
                         .build()));
 
-        OrganizationGet.Response organizationResponse =
+        OrganizationListGet.Response organizationResponse =
                 organizationService.getOrganization(organization.getId());
     }
 
