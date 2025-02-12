@@ -31,7 +31,6 @@ public class QuestionCommentResponse {
         private LocalDateTime editAt;
         private DeleteStatus deletedYn;
 
-
         /**
          * Entity -> Dto
          *
