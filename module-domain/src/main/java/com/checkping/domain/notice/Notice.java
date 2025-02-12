@@ -57,6 +57,9 @@ public class Notice extends BaseEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name ="notice_file_url")
+    private String noticeFileUrl;
+
     @Getter
     @RequiredArgsConstructor
     public enum Category {
