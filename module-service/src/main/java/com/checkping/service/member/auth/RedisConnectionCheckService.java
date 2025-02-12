@@ -24,7 +24,7 @@ public class RedisConnectionCheckService {
         });
 
         try {
-            return future.get(500, TimeUnit.MILLISECONDS); // 0.5초 이상 걸리면 false 반환
+            return future.get(2000, TimeUnit.MILLISECONDS); // 0.5초 이상 걸리면 false 반환
         } catch (TimeoutException e) {
             System.out.println("[RedisConnectionCheck] Redis connection timeout -> Skip blacklist check");
             return false;
