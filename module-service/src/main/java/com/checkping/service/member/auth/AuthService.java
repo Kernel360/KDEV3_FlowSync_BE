@@ -22,6 +22,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final CurrentMemberUtil currentMemberUtil;
     private final TokenBlacklistService tokenBlacklistService;
+    private final RedisConnectionCheckService redisConnectionCheckService;
 
     public BaseResponse getCurrentMember() {
         return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
@@ -79,9 +80,7 @@ public class AuthService {
         }
 
         // 레디스 연결 여부 먼저 확인
-        // Redis 연결 가능 시에만 블랙리스트 추가
-        // Redis연결이 안되어있다면(로컬 환경 등) 블랙리스트 등록을 스킵하고 바로 로그아웃 처리
-        if(tokenBlacklistService.isRedisAvailable()) {
+        if(redisConnectionCheckService.isRedisAvailable()) {
             // 블랙리스트 추가
             tokenBlacklistService.blacklistRefreshToken(refresh, jwtUtil.getExpiration(refresh));
             if (accessToken != null) {

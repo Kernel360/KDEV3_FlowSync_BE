@@ -15,10 +15,14 @@ import com.checkping.dto.member.response.MemberSignatureResponseDto;
 import com.checkping.exception.member.InvalidInputValueException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
+import com.checkping.service.member.auth.RedisConnectionCheckService;
 import com.checkping.service.member.util.CurrentMemberUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,21 +30,17 @@ import org.springframework.transaction.annotation.Transactional;
 // TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;          // 도메인 인터페이스
     private final OrganizationRepository organizationRepository; // 조직 레포지토리(예: JPA)
     private final BCryptPasswordEncoder passwordEncoder;
     private final CurrentMemberUtil currentMemberUtil;
+    private final StringRedisTemplate redisTemplateForInactiveMemers;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisConnectionCheckService redisConnectionCheckService;
 
-    public MemberService(MemberRepository memberRepository,
-        OrganizationRepository organizationRepository, BCryptPasswordEncoder passwordEncoder,
-        CurrentMemberUtil currentMemberUtil) {
-        this.memberRepository = memberRepository;
-        this.organizationRepository = organizationRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.currentMemberUtil = currentMemberUtil;
-    }
 
     // 아이디로 회원 조회
     public MemberResponseDto getMemberById(Long memberId) {
@@ -249,6 +249,11 @@ public class MemberService {
         }
         member.activateAccount();
         memberRepository.save(member);
+
+        // Redis 1번 저장소에 비활성화된 회원 ID 삭제
+        if(redisConnectionCheckService.isRedisAvailable()){
+            redisTemplateForInactiveMemers.delete("inactive:member:" + memberId);
+        }
     }
 
     /*
@@ -270,6 +275,12 @@ public class MemberService {
         }
         member.deactivateAccount();
         memberRepository.save(member);
+
+        // Redis 1번 저장소에 비활성화된 회원 ID 저장
+        if(redisConnectionCheckService.isRedisAvailable()){
+            redisTemplateForInactiveMemers.opsForValue().set("inactive:member:" + memberId, "true");
+        }
+
     }
 
     public String getMemberStatus(Long memberId) {
