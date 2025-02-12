@@ -60,10 +60,14 @@ public class NoticeServiceImpl implements NoticeService {
             Notice notice = noticeRepository.save(newNoticeCreateRequest.toEntity());
 
             return NoticeCreateResponse.toDto(notice);
-        }
+        } else {
+
             Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
 
             return NoticeCreateResponse.toDto(notice);
+        }
+
+
     }
 
     @Override
