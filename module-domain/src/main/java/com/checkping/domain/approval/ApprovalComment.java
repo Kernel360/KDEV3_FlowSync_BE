@@ -109,7 +109,7 @@ public class ApprovalComment extends BaseEntity {
     /**
      * 댓글 비활성화
      */
-    public void inactivate() {
+    public void deactivate() {
         this.deleteYn = DeleteStatus.Y;
     }
 
@@ -118,5 +118,14 @@ public class ApprovalComment extends BaseEntity {
      */
     public void activate() {
         this.deleteYn = DeleteStatus.N;
+    }
+
+    /**
+     * 댓글 내용 수정
+     *
+     * @param content 수정할 댓글 내용
+     */
+    public void updateContent(String content) {
+        this.content = content;
     }
 }

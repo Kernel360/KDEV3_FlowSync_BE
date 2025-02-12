@@ -1,6 +1,8 @@
 package com.checkping.service.question;
 
+import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
+import com.checkping.domain.project.Project;
 import com.checkping.domain.question.Question;
 import com.checkping.domain.question.QuestionComment;
 import com.checkping.domain.question.QuestionFile;
@@ -16,6 +18,7 @@ import com.checkping.dto.question.QuestionSearch;
 import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.file.QuestionFileRegister;
 import com.checkping.dto.question.link.QuestionLinkRegister;
+import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.info.question.QuestionSearchInfo;
 import com.checkping.infra.repository.project.ProgressStepReader;
@@ -26,6 +29,7 @@ import com.checkping.infra.repository.question.comment.QuestionCommentReader;
 import com.checkping.infra.repository.question.comment.QuestionCommentStore;
 import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
+import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionFileStore questionFileStore;
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
+    private final CurrentMemberUtil currentMemberUtil;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -56,8 +61,18 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionRegister.Response register(Long projectId, Request request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // find Project Entity
+        Project project = projectReader.getById(projectId);
+
+        // find ProgressStep Entity
+        ProgressStep progressStep = progressStepReader.getById(request.getProgressStepId()).orElseThrow(
+            ProgressStepNotFoundException::new);
+
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(projectId, request);
+        Question initQuestion = QuestionRegister.Request.toEntity(project, progressStep, request, member);
 
         // save Question entity
         Question question = questionStore.store(initQuestion);
@@ -185,6 +200,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
 
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
         // find Question Entity
         Question initQuestion = questionReader.getById(taskBoardId)
             .orElseThrow(QuestionNotFoundEntityException::new);
@@ -192,7 +210,7 @@ public class QuestionServiceImpl implements QuestionService {
         // update
         String title = request.getTitle();
         String content = request.getContent();
-        initQuestion.update(title, content);
+        initQuestion.update(title, content, member);
 
         // save
         Question updatedQuestion = questionStore.store(initQuestion);
@@ -202,8 +220,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public List<QuestionCounter.Response> countByProgressStep(Long projectId) {
-
-        // TODO: project id 로 project 조회
 
         // project 에 해당하는 progressStep 조회
         List<ProgressStep> steps = progressStepReader.getByProjectId(projectId);

@@ -3,7 +3,8 @@ package com.checkping.dto.question;
 import com.checkping.common.response.PaginationProps;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.question.Question;
-import java.time.format.DateTimeFormatter;
+import com.checkping.dto.member.response.MemberResponseDto;
+import com.checkping.dto.project.ProgressStepGet;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,27 +20,32 @@ public class QuestionSearch {
         /*
         id : 게시글 ID
         title : 게시글 제목
-        progressStepId : 게시글 진행 단계 ID
+        progressStep : 게시글 진행 단계
         category : 게시글 유형
         status : 게시글 상태
         createdDate : 게시글 생성일
+        register : 게시글 작성자
+        projectId : 게시글이 속한 프로젝트 ID
          */
         private Long id;
         private String title;
-        // TODO : progressStepId 는 ProgressStep Entity 으로 변경할 에정
-        private Long progressStepId;
+        private ProgressStepGet.Response progressStep;
         private String category;
         private String status;
         private String createdDate;
+        private MemberResponseDto.MeResponseDto register;
+        private Long projectId;
 
         public static QuestionItem toDto(Question question) {
             QuestionItem dto = new QuestionItem();
             dto.id = question.getId();
             dto.title = question.getTitle();
-            dto.progressStepId = question.getProgressStepId();
+            dto.progressStep = ProgressStepGet.Response.toDto(question.getProgressStep());
             dto.category = question.getCategory().name();
             dto.status = question.getStatus().name();
             dto.createdDate = DateTimeUtils.format(question.getCreatedAt());
+            dto.register = MemberResponseDto.MeResponseDto.fromEntity(question.getRegister());
+            dto.projectId = question.getProject().getId();
             return dto;
         }
 

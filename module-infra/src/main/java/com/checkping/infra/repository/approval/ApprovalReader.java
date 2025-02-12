@@ -11,7 +11,7 @@ public interface ApprovalReader {
 
     Optional<Approval> getById(Long approvalId);
 
-    Optional<Approval> getByIdWithComments(Long approvalId);
+    Optional<Approval> getByIdWithComments(Long projectId, Long approvalId);
 
     Page<Approval> getApprovals(Long projectId, ApprovalSearchInfo.SearchCondition searchCondition);
 

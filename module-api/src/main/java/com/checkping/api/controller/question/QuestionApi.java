@@ -17,6 +17,7 @@ import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ public interface QuestionApi {
         @Parameter(description = "질문 게시글 유형") Long progressId,
         @Parameter(description = "질문 게시글 상태") String status,
         @Parameter(description = "질문 게시글 검색어") String keyword,
-        @Parameter(description = "현재 페이지") Integer currentPage,
+        @Parameter(description = "현재 페이지") @Min(1)Integer currentPage,
         @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
