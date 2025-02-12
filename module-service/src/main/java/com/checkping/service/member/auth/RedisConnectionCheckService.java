@@ -1,37 +1,27 @@
 package com.checkping.service.member.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.*;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RedisConnectionCheckService {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
 
     public boolean isRedisAvailable() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Boolean> future = executor.submit(() -> {
-            try {
-                String pong = redisTemplate.getConnectionFactory().getConnection().ping();
-                return "PONG".equalsIgnoreCase(pong);
-            } catch (Exception e) {
-                return false;
-            }
-        });
 
-        try {
-            return future.get(500, TimeUnit.MILLISECONDS); // 0.5초 이상 걸리면 false 반환
-        } catch (TimeoutException e) {
-            System.out.println("[RedisConnectionCheck] Redis connection timeout -> Skip blacklist check");
+        // Redis 연결 확인 로직
+        // redisHost가 localhost인 경우에 false 반환
+        if (redisHost.equals("localhost")) {
+            log.info("[isRedisAvailable] Redis is not available");
             return false;
-        } catch (Exception e) {
-            return false;
-        } finally {
-            executor.shutdown();
         }
+
+        return true;
     }
 }
