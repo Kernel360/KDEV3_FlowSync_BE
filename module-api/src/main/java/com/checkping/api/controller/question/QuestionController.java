@@ -87,7 +87,7 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<QuestionGet.Response> get(@PathVariable Long projectId,
         @PathVariable Long questionId) {
 
-        QuestionGet.Response response = questionService.getById(questionId);
+        QuestionGet.Response response = questionService.getById(projectId, questionId);
 
         return BaseResponse.success(response);
     }
