@@ -89,27 +89,27 @@ public class JWTFilter extends OncePerRequestFilter {
             String role = jwtUtil.getRole(accessToken);
 
             // 2. 비활성화 회원인지 확인
-            if(redisConnectionCheckService.isRedisAvailable()){
-                Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
-
-                if (Boolean.TRUE.equals(isInactive)) {
-                    // 비활성화된 회원이 보낸 토큰을 블랙리스트에 추가
-                    tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
-                    // 리프레시 토큰도 블랙리스트에 추가
-                    String refreshToken = jwtUtil.extractToken(request, "refresh");
-                    tokenBlacklistService.blacklistRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
-
-                    // 쿠키 삭제
-                    Cookie delAccess = CookieUtil.deleteCookie("access");
-                    Cookie delRefresh = CookieUtil.deleteCookie("refresh");
-                    response.addCookie(delAccess);
-                    response.addCookie(delRefresh);
-
-                    BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_MEMBER);
-                    ResponseUtil.sendErrorResponse(response, HttpStatus.FORBIDDEN, errorResponse);
-                    return;
-                }
-            }
+//            if(redisConnectionCheckService.isRedisAvailable()){
+//                Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
+//
+//                if (Boolean.TRUE.equals(isInactive)) {
+//                    // 비활성화된 회원이 보낸 토큰을 블랙리스트에 추가
+//                    tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
+//                    // 리프레시 토큰도 블랙리스트에 추가
+//                    String refreshToken = jwtUtil.extractToken(request, "refresh");
+//                    tokenBlacklistService.blacklistRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
+//
+//                    // 쿠키 삭제
+//                    Cookie delAccess = CookieUtil.deleteCookie("access");
+//                    Cookie delRefresh = CookieUtil.deleteCookie("refresh");
+//                    response.addCookie(delAccess);
+//                    response.addCookie(delRefresh);
+//
+//                    BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_MEMBER);
+//                    ResponseUtil.sendErrorResponse(response, HttpStatus.FORBIDDEN, errorResponse);
+//                    return;
+//                }
+//            }
 
             CustomUserDetails customUserDetails = new CustomUserDetails(id, name, email, role, "PASSWORDFORTOKEN");
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of(new SimpleGrantedAuthority(customUserDetails.getRole())));
