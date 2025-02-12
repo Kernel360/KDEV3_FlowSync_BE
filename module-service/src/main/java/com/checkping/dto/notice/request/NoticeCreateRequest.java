@@ -33,7 +33,7 @@ public class NoticeCreateRequest {
     private String priority;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private String noticeFileUrl;
+    private List<String> noticeFileUrls;
 
     public Notice toEntity(){
         return Notice.builder()
@@ -41,7 +41,7 @@ public class NoticeCreateRequest {
                 .content(convertContentToJson())
                 .category(Notice.Category.valueOf(category))
                 .priority(Notice.Priority.valueOf(priority))
-                .noticeFileUrl(noticeFileUrl)
+                .noticeFileUrls(noticeFileUrls)
                 .isDeleted(false)
                 .build();
     }

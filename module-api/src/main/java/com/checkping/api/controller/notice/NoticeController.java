@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class NoticeController implements NoticeApi {
@@ -20,8 +22,8 @@ public class NoticeController implements NoticeApi {
     @Override
     @PostMapping(value = "/admins/notices", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<NoticeCreateResponse> registerNotice(@RequestPart NoticeCreateRequest noticeCreateRequest,
-                                                             @RequestPart(required = false) MultipartFile file) {
-        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, file);
+                                                             @RequestPart(required = false) List<MultipartFile> files) {
+        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, files);
         return BaseResponse.success(noticeCreateResponse);
     }
 
@@ -30,8 +32,8 @@ public class NoticeController implements NoticeApi {
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
             @RequestPart NoticeUpdateRequest noticeUpdateRequest,
-            @RequestPart(required = false) MultipartFile file) {
-        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest, file);
+            @RequestPart(required = false) List<MultipartFile> files) {
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest, files);
         return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 
