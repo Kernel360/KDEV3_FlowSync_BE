@@ -30,7 +30,9 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) String sortDirection
     ) {
         // Service layer로 전달 시 0-based index로 맞춰줌
         MemberListResponseDto response = memberService.getAllMembersWithFilters(
@@ -38,7 +40,9 @@ public class AdminMemberController implements AdminMemberApi {
                 pageSize,
                 role,
                 status,
-                keyword
+                keyword,
+                sortField,
+                sortDirection
         );
         return BaseResponse.success(response);
     }
