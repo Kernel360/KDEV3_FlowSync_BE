@@ -21,11 +21,13 @@ import com.checkping.exception.member.InvalidInputValueException;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.member.ProjectQueryRepository;
+import com.checkping.service.member.auth.RedisConnectionCheckService;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,9 @@ public class MemberServiceImpl implements MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final CurrentMemberUtil currentMemberUtil;
     private final ProjectQueryRepository projectQueryRepository;
+    private final RedisConnectionCheckService redisConnectionCheckService;
+    private final StringRedisTemplate redisTemplateForInactiveMemers;
+
 
     // 아이디로 회원 조회
     @Override
@@ -260,12 +265,17 @@ public class MemberServiceImpl implements MemberService {
         }
         member.activateAccount();
         memberRepository.save(member);
+
+        // Redis 1번 저장소에 비활성화된 회원 ID 삭제
+        if(redisConnectionCheckService.isRedisAvailable()){
+            redisTemplateForInactiveMemers.delete("inactive:member:" + memberId);
+        }
     }
 
     /**
-    * 회원 비활성화
-    * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
-    * */
+     * 회원 비활성화
+     * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
+     * */
     @Override
     public void deactivateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -281,6 +291,11 @@ public class MemberServiceImpl implements MemberService {
         }
         member.deactivateAccount();
         memberRepository.save(member);
+
+        // Redis 1번 저장소에 비활성화된 회원 ID 저장
+        if(redisConnectionCheckService.isRedisAvailable()){
+            redisTemplateForInactiveMemers.opsForValue().set("inactive:member:" + memberId, "true");
+        }
     }
 
     @Override
