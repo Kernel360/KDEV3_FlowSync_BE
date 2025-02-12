@@ -50,6 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
     private final CurrentMemberUtil currentMemberUtil;
+    private final QuestionAuthorizationValidator questionAuthorizationValidator;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -65,15 +66,19 @@ public class QuestionServiceImpl implements QuestionService {
         // Member by CurrentMemberUtil
         Member member = currentMemberUtil.getCurrentMember();
 
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
+
         // find Project Entity
         Project project = projectReader.getById(projectId);
 
         // find ProgressStep Entity
-        ProgressStep progressStep = progressStepReader.getById(request.getProgressStepId()).orElseThrow(
-            ProgressStepNotFoundException::new);
+        ProgressStep progressStep = progressStepReader.getById(request.getProgressStepId())
+            .orElseThrow(ProgressStepNotFoundException::new);
 
         // Question Dto -> Question Entity
-        Question initQuestion = QuestionRegister.Request.toEntity(project, progressStep, request, member);
+        Question initQuestion = QuestionRegister.Request.toEntity(project, progressStep, request,
+            member);
 
         // 답글 게시글 인 경우 처리
         if (questionId != null) {
@@ -114,6 +119,12 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionSearch.Response searchQuestions(Long projectId,
         QuestionSearchCondition searchCondition) {
 
+        // Member by Security Context
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
+
         // RequestParam -> Info
         QuestionSearchInfo.SearchCondition searchInfo = QuestionSearchCondition.toInfo(
             searchCondition);
@@ -128,12 +139,19 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 서비스 - 상세 조회
      *
+     * @param projectId  프로젝트 ID
      * @param questionId 업무 관리 게시글 ID
      * @return QuestionListDto
      */
     @Transactional(readOnly = true)
     @Override
-    public QuestionGet.Response getById(Long questionId) {
+    public QuestionGet.Response getById(Long projectId, Long questionId) {
+
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
 
         // find Question Entity
         Question question = questionReader.getByIdWithComments(questionId)
@@ -146,14 +164,21 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 서비스 - SOFT DELETE
      *
-     * @param taskBoardId 업무 관리 게시글 ID
+     * @param projectId  프로젝트 ID
+     * @param questionId 업무 관리 게시글 ID
      * @return 상태 변경이 된 업무 관리 게시글 Dto
      */
     @Override
-    public QuestionListDto deleteSoft(Long taskBoardId) {
+    public QuestionListDto deleteSoft(Long projectId, Long questionId) {
+
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
 
         // find Question Entity
-        Question initQuestion = questionReader.getById(taskBoardId)
+        Question initQuestion = questionReader.getById(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // QuestionComment - SOFT DELETE
@@ -201,18 +226,22 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 업무 관리 게시글 서비스 - 수정 기능
      *
-     * @param taskBoardId 업무 관리 게시글 ID
-     * @param request     업무 관리 게시글 수정 요청 Dto
+     * @param projectId  프로젝트 ID
+     * @param questionId 업무 관리 게시글 ID
+     * @param request    업무 관리 게시글 수정 요청 Dto
      * @return 수정을 완료한 업무 관리 게시글 Dto
      */
     @Override
-    public QuestionItemDto update(Long taskBoardId, UpdateDto request) {
+    public QuestionItemDto update(Long projectId, Long questionId, UpdateDto request) {
 
         // Member by CurrentMemberUtil
         Member member = currentMemberUtil.getCurrentMember();
 
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
+
         // find Question Entity
-        Question initQuestion = questionReader.getById(taskBoardId)
+        Question initQuestion = questionReader.getById(questionId)
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // update
@@ -228,6 +257,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public List<QuestionCounter.Response> countByProgressStep(Long projectId) {
+
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
 
         // project 에 해당하는 progressStep 조회
         List<ProgressStep> steps = progressStepReader.getByProjectId(projectId);
