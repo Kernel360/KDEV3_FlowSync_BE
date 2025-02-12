@@ -39,6 +39,9 @@ public class NoticeCreateResponse {
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
     private LocalDateTime regAt;
 
+    @Schema(description = "공지사항 첨부파일 링크")
+    private String noticeFileUrl;
+
     public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
                 .id(notice.getId())
@@ -48,6 +51,7 @@ public class NoticeCreateResponse {
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
+                .noticeFileUrl(notice.getNoticeFileUrl())
                 .build();
     }
 

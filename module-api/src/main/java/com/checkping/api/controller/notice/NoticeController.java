@@ -8,6 +8,7 @@ import com.checkping.dto.notice.response.*;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +18,9 @@ public class NoticeController implements NoticeApi {
 
     @Override
     @PostMapping("/admins/notices")
-    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest) {
-        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest);
+    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestPart NoticeCreateRequest noticeCreateRequest,
+                                                             @RequestPart MultipartFile file) {
+        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, file);
         return BaseResponse.success(noticeCreateResponse);
     }
 
