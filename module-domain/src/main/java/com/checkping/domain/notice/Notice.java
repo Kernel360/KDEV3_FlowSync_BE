@@ -80,11 +80,12 @@ public class Notice extends BaseEntity {
         private final String descrption;
     }
 
-    public void updateNotice(String title, String content,String category, String priority){
+    public void updateNotice(String title, String content,String category, String priority, String noticeFileUrl){
         if (title != null) this.title = title;
         if (content != null) this.content = content;
         if (category != null) this.category = Category.valueOf(category);
         if (priority != null) this.priority = Priority.valueOf(priority);
+        if (noticeFileUrl != null) this.noticeFileUrl = noticeFileUrl;
     }
 
     public void markAsDeleted() {

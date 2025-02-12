@@ -22,7 +22,8 @@ public interface NoticeApi {
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 기능입니다.")
     public BaseResponse<NoticeResponse> updateNotice(
             @Parameter(description = "수정할 공지사항 아이디") Long noticeid,
-            @Parameter(description = "수정할 공지사항 정보") NoticeUpdateRequest noticeUpdateRequest);
+            @Parameter(description = "수정할 공지사항 정보") NoticeUpdateRequest noticeUpdateRequest,
+            @Parameter(description = "수정할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))MultipartFile file);
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제하는 기능입니다.")
     public BaseResponse<NoticeResponse> deleteNotice(
