@@ -18,6 +18,6 @@ public interface OrganizationService {
 
     OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request);
 
-    PageInfo.Response<MemberOrganizationProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest);
+    PageInfo.Response<ProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest);
 
 }

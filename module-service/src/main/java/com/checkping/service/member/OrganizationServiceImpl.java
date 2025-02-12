@@ -4,17 +4,18 @@ import com.checkping.common.dto.PageInfo;
 import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Organization;
-import com.checkping.domain.member.projection.ProjectListGet;
+import com.checkping.domain.member.projection.ProjectList;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.*;
 import com.checkping.exception.member.OrganizationAlreadyDeletedException;
 import com.checkping.exception.member.OrganizationAlreadyExistEntityException;
 import com.checkping.exception.member.OrganizationNotFoundEntityException;
 import com.checkping.infra.repository.file.S3FileRepositoryImpl;
-import com.checkping.infra.repository.member.MemberOrganizationQueryRepository;
+import com.checkping.infra.repository.member.ProjectQueryRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
-    private final MemberOrganizationQueryRepository memberOrganizationQueryRepository;
+    private final ProjectQueryRepository projectQueryRepository;
 
     private final S3FileRepositoryImpl s3FileRepository;
 
@@ -169,8 +171,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         return OrganizationDelete.Response.toDto(changedOrganization);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public PageInfo.Response<MemberOrganizationProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest) {
+    public PageInfo.Response<ProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest) {
 
         Pageable pageable = PageRequest.of(
                 pageRequest.getCurrentPage() - 1,
@@ -179,20 +182,24 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Project.ManagementStep validManagementStep = checkManagementStep(managementStep);
 
-        Page<ProjectListGet> result = memberOrganizationQueryRepository.getProjectsByMemberAndOrganization(
+        Long memberId = currentMemberUtil.getCurrentMember().getRole().toString().equals("ADMIN") ?
+                null : currentMemberUtil.getCurrentMember().getId();
+
+        Page<ProjectList> result = projectQueryRepository.getProjectsByMemberAndOrganization(
                 id,
-                null,
+                memberId,
                 validManagementStep,
                 pageRequest.getKeyword(),
                 pageable);
 
-        List<MemberOrganizationProjectListGet.Response> dtoList = result.getContent().stream().map(MemberOrganizationProjectListGet.Response::toDto).toList();
+        List<ProjectListGet.Response> dtoList = result.getContent().stream().map(ProjectListGet.Response::toDto).toList();
         PageMetaResponse meta = PageMetaResponse.fromPage(result);
 
-        return PageInfo.Response.<MemberOrganizationProjectListGet.Response>builder()
+        return PageInfo.Response.<ProjectListGet.Response>builder()
                 .dtoList(dtoList)
                 .meta(meta.toMap())
                 .build();
+
     }
 
 
