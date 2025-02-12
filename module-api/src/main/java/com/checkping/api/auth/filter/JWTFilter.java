@@ -74,6 +74,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // 3) Redis 블랙리스트, 회원 활성화 여부 검증 (연결 여부 먼저 확인)
             if (redisConnectionCheckService.isRedisAvailable()) {
+                log.info("Redis 연결 성공");
 
                 // 1. 요청한 토큰 블랙리스트에 있는지 확인
                 if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
@@ -81,6 +82,7 @@ public class JWTFilter extends OncePerRequestFilter {
                     ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
                     return;
                 }
+                log.info("블랙리스트 확인 완료");
 
                 // 2. 비활성화 회원인지 확인
                 Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
