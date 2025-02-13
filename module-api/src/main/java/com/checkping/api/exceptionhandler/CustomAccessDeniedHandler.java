@@ -24,7 +24,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("UTF-8");
 
         // BaseResponse 사용
-        BaseResponse<?> errorResponse = BaseResponse.fail(ErrorCode.FORBIDDEN);
+        BaseResponse<?> errorResponse = BaseResponse.fail(ErrorCode.AUTHENTICATION_FAILED);
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }

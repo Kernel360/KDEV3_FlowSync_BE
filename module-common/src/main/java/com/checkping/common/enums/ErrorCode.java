@@ -29,6 +29,7 @@ public enum ErrorCode {
     LOGOUT_FAILED(HttpStatus.UNAUTHORIZED, "로그아웃에 실패했습니다."),
     COOKIE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "쿠키를 찾을 수 없습니다."),
     BLACKLISTED_TOKEN(HttpStatus.UNAUTHORIZED, "블랙리스트에 등록된 토큰입니다."),
+    AUTHENTICATION_FAILED(HttpStatus.FORBIDDEN, "인증에 실패했습니다."),
 
 
     /*
