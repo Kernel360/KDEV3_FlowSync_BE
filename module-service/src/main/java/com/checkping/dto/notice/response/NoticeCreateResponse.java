@@ -40,7 +40,7 @@ public class NoticeCreateResponse {
     private LocalDateTime regAt;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private String noticeFileUrl;
+    private List<String> noticeFileUrls;
 
     public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
@@ -51,7 +51,7 @@ public class NoticeCreateResponse {
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
-                .noticeFileUrl(notice.getNoticeFileUrl())
+                .noticeFileUrls(notice.getNoticeFileUrls())
                 .build();
     }
 

@@ -100,6 +100,7 @@ public class QuestionRegister {
         commentList : 게시글 댓글 리스트
         linkList : 게시글 첨부 링크 리스트
         fileList : 게시글 첨부 파일 리스트
+        parentQuestion : 부모 게시글
          */
         @Schema(description = "게시글 번호")
         private Long id;
@@ -129,6 +130,8 @@ public class QuestionRegister {
         private List<QuestionLinkRegister.Response> linkList;
         @Schema(description = "게시글 첨부 파일 목록")
         private List<QuestionFileRegister.Response> fileList;
+        @Schema(description = "부모 게시글")
+        private QuestionParentAnswer.Response parent;
 
         public static Response toDto(Question question) {
             Response questionDto = new Response();
@@ -146,6 +149,7 @@ public class QuestionRegister {
                 QuestionFileRegister.Response.toDto(question.getQuestionFileList()));
             questionDto.setLinkList(
                 QuestionLinkRegister.Response.toDto(question.getQuestionLinkList()));
+            questionDto.setParent(QuestionParentAnswer.Response.toDto(question.getParent()));
             return questionDto;
         }
 
