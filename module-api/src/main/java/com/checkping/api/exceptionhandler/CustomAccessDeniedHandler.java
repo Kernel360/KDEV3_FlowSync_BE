@@ -1,7 +1,7 @@
 package com.checkping.api.exceptionhandler;
 
-import com.checkping.common.response.BaseResponse;
 import com.checkping.common.enums.ErrorCode;
+import com.checkping.common.response.BaseResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+//권한이 없는 요청을 할 경우 403 Forbidden 에러 처리
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -21,14 +22,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException {
-
         log.error("Access Denied Handler : {}", accessDeniedException.getMessage());
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setCharacterEncoding("UTF-8");
 
         // BaseResponse 사용
-        BaseResponse<?> errorResponse = BaseResponse.fail(ErrorCode.AUTHENTICATION_FAILED);
+        BaseResponse<?> errorResponse = BaseResponse.fail(ErrorCode.FORBIDDEN);
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
