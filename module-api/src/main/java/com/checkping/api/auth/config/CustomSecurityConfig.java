@@ -80,7 +80,6 @@ public class CustomSecurityConfig {
 
         http.exceptionHandling((exception) -> exception.accessDeniedHandler(customAccessDeniedHandler));
 
-        //Custom AuthenticationEntryPoint 설정
         http.exceptionHandling((exception) -> exception.authenticationEntryPoint(customAuthenticationEntryPoint));
 
         http.addFilterBefore(new JWTFilter(jwtUtil,tokenBlacklistService, redisTemplateForInactiveMembers, redisConnectionCheckService), UsernamePasswordAuthenticationFilter.class);
