@@ -2,6 +2,7 @@ package com.checkping.api.auth.config;
 
 import com.checkping.api.auth.filter.JWTFilter;
 import com.checkping.api.exceptionhandler.CustomAccessDeniedHandler;
+import com.checkping.api.exceptionhandler.CustomAuthenticationEntryPoint;
 import com.checkping.service.member.auth.RedisConnectionCheckService;
 import com.checkping.service.member.auth.TokenBlacklistService;
 import com.checkping.service.member.util.JwtUtil;
@@ -37,6 +38,7 @@ public class CustomSecurityConfig {
     private final JwtUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final StringRedisTemplate redisTemplateForInactiveMembers;
     private final RedisConnectionCheckService redisConnectionCheckService;
 
@@ -77,6 +79,9 @@ public class CustomSecurityConfig {
                 .anyRequest().authenticated());
 
         http.exceptionHandling((exception) -> exception.accessDeniedHandler(customAccessDeniedHandler));
+
+        //Custom AuthenticationEntryPoint 설정
+        http.exceptionHandling((exception) -> exception.authenticationEntryPoint(customAuthenticationEntryPoint));
 
         http.addFilterBefore(new JWTFilter(jwtUtil,tokenBlacklistService, redisTemplateForInactiveMembers, redisConnectionCheckService), UsernamePasswordAuthenticationFilter.class);
 
