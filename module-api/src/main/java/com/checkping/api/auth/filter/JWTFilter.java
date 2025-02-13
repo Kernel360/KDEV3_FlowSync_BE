@@ -15,6 +15,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -97,6 +99,7 @@ public class JWTFilter extends OncePerRequestFilter {
                     response.addCookie(delRefresh);
 
                     BaseResponse errorResponse = BaseResponse.fail(ErrorCode.INACTIVE_MEMBER);
+                    log.info("[JWTFilter] 비활성화된 회원의 요청. id: {}", id);
                     ResponseUtil.sendErrorResponse(response, HttpStatus.FORBIDDEN, errorResponse);
                     return;
                 }
@@ -112,10 +115,13 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
         } catch (ExpiredJwtException e) {
+            log.info("[JWTFilter] Access Token이 만료되었습니다. id: {}", id);
             BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
         } catch (Exception e) {
+            log.info("[JWTFilter] Access Token 검증 중 에러 발생. {}", e);
+            log.info("[JWTFilter] 유효하지 않은 Access Token입니다. id: {}", id);
             BaseResponse<Void> errorResponse = BaseResponse.fail(ErrorCode.UNAUTHORIZED);
             ResponseUtil.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, errorResponse);
             return;
