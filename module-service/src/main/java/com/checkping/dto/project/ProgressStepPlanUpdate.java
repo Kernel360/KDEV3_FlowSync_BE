@@ -45,11 +45,11 @@ public class ProgressStepPlanUpdate {
         private String description;
         private Integer stepOrder;
         private String status;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime startAt;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime closeAt;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime deadlineAt;
         private Long projectId;
         private Long relatedApprovalId;
