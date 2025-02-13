@@ -18,11 +18,11 @@ public class ProgressStepPlanUpdate {
         deadlineAt : 예상 마감 일시
          */
         @NotNull(message = "시작 일시는 필수값입니다.")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime startAt;
 
         @NotNull(message = "예상 마감 일시는 필수값입니다.")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime deadlineAt;
     }
 
