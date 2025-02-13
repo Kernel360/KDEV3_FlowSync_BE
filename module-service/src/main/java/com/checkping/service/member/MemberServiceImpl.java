@@ -96,19 +96,23 @@ public class MemberServiceImpl implements MemberService {
                     }
                 }).orElse(null);
 
-        // (3) 검색어 null 처리 (Optional 사용)
+        // (3) 검색어 null 처리
         String sanitizedKeyword = Optional.ofNullable(keyword)
                 .filter(param -> !param.isBlank())
                 .orElse(null);
 
-        // (4) 정렬 필드 검증
+        // (4) 정렬 필드 검증 및 기본값 설정
         List<String> allowedSortFields = List.of("id", "name", "email", "created_at", "updated_at", "role");
         String sortProperty = Optional.ofNullable(sortField)
                 .filter(param -> !param.isBlank() && allowedSortFields.contains(param))
-                .orElse("id");
+                .orElse("id"); // 기본 정렬 필드는 "id"
 
         // (5) 정렬 방향 설정
-        Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction direction = Optional.ofNullable(sortDirection)
+                .filter(param -> !param.isBlank())
+                .map(param -> "desc".equalsIgnoreCase(param) ? Sort.Direction.DESC : Sort.Direction.ASC)
+                .orElse(sortProperty.equals("id") ? Sort.Direction.DESC : Sort.Direction.ASC); // id는 기본적으로 DESC, 나머지는 ASC
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortProperty));
 
         // (6) 페이징 처리

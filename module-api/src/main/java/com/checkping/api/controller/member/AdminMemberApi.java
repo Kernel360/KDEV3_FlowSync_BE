@@ -37,7 +37,7 @@ public interface AdminMemberApi {
         String status,
         @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동")
         String keyword,
-        @Parameter(description = "정렬 필드 - 예시: id(기본), name, email, created_at, updated_at, role", example = "name")
+        @Parameter(description = "정렬 필드 - 예시: id(기본), name, email, reg_at, modified_at, role", example = "name")
         String sortField,
         @Parameter(description = "정렬 방향 (ASC, DESC)", example = "DESC")
         String sortDirection);
