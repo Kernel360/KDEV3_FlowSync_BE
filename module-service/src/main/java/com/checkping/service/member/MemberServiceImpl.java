@@ -235,10 +235,7 @@ public class MemberServiceImpl implements MemberService {
         if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
             throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
         }
-        //페이지에 회원이 없는 경우 예외 처리
-        if (memberPage.isEmpty()) {
-            throw new BaseException("해당 업체에 회원이 존재하지 않습니다.", ErrorCode.USER_NOT_FOUND);
-        }
+
         // MemberListResponseDto로 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
     }
