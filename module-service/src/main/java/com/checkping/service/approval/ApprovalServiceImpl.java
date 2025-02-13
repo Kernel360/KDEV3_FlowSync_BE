@@ -2,6 +2,8 @@ package com.checkping.service.approval;
 
 import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
+import com.checkping.domain.approval.ApprovalCompleteHistory;
+import com.checkping.domain.approval.ApprovalCompleteHistory.Status;
 import com.checkping.domain.approval.ApprovalFile;
 import com.checkping.domain.approval.ApprovalLink;
 import com.checkping.domain.member.Member;
@@ -24,6 +26,7 @@ import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
+import com.checkping.dto.approval.history.complete.ApprovalCompleteHistoryInfo;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
@@ -33,6 +36,7 @@ import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectE
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
+import com.checkping.infra.repository.approval.ApprovalCompleteHistoryStore;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
 import com.checkping.infra.repository.approval.comment.ApprovalCommentReader;
@@ -63,6 +67,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ProgressStepReader progressStepReader;
     private final CurrentMemberUtil currentMemberUtil;
     private final ApprovalAuthorizationValidator approvalAuthorizationValidator;
+    private final ApprovalCompleteHistoryStore approvalCompleteHistoryStore;
 
     @Transactional
     @Override
@@ -103,6 +108,13 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalLinkStore.store(approvalLinks);
         // Add approvalLinks to approval
         approval.updateLinks(approvalLinks);
+
+
+        // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(progressStep, approval, Status.CREATE);
+            approvalCompleteHistoryStore.store(completeHistory);
+        }
 
         return ApprovalRegister.Response.toDto(approval);
     }
@@ -217,6 +229,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Save approvalFiles
         approvalFileStore.store(newFiles);
 
+        // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.MODIFY);
+            approvalCompleteHistoryStore.store(completeHistory);
+        }
+
         return ApprovalUpdate.Response.toDto(approval);
     }
 
@@ -247,6 +265,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         List<ApprovalFile> approvalFiles = approval.getFileList();
         for (ApprovalFile approvalFile : approvalFiles) {
             approvalFile.deactivate();
+        }
+
+        // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
+        if (approval.isCompleteRequest()) {
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.DELETE);
+            approvalCompleteHistoryStore.store(completeHistory);
         }
 
         return ApprovalDelete.Response.toDto(approval);
@@ -327,6 +351,9 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (approval.isCompleteRequest()) {
             ProgressStep progressStep = approval.getProgressStep();
             progressStep.completeStep(approval);
+
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.CONFIRM);
+            approvalCompleteHistoryStore.store(completeHistory);
         }
 
         return ApprovalConfirm.Response.toDto(approval);
@@ -354,6 +381,9 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (approval.isCompleteRequest()) {
             ProgressStep progressStep = approval.getProgressStep();
             progressStep.rejectStep(approval);
+
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.REJECT);
+            approvalCompleteHistoryStore.store(completeHistory);
         }
 
         // Entity -> Response
