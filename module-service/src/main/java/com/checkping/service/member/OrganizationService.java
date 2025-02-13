@@ -10,7 +10,7 @@ public interface OrganizationService {
 
     OrganizationListGet.Response getOrganization(Long id);
 
-    PageInfo.Response<OrganizationListGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest);
+    PageInfo.Response<OrganizationListGet.Response> getListOrganization(String type, String status, String sortField, String sortDirection, PageInfo.Request pageRequest);
 
     OrganizationUpdate.Response modifyOrganization(Long id, OrganizationUpdate.Request request, MultipartFile file);
 
