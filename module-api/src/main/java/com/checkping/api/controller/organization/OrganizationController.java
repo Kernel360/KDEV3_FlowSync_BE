@@ -42,6 +42,8 @@ public class OrganizationController implements OrganizationApi {
     public BaseResponse<PageInfo.Response<OrganizationListGet.Response>> getListOrganization(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "DESC") String sortDirection,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String keyword
@@ -49,7 +51,7 @@ public class OrganizationController implements OrganizationApi {
 
         PageInfo.Request request = new PageInfo.Request(currentPage, pageSize, keyword);
 
-        PageInfo.Response<OrganizationListGet.Response> list = organizationService.getListOrganization(type, status, request);
+        PageInfo.Response<OrganizationListGet.Response> list = organizationService.getListOrganization(type, status, sortField, sortDirection, request);
         return BaseResponse.success(list, "업체 조회 성공");
     }
 
