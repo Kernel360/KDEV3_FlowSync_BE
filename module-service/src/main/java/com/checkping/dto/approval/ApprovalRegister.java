@@ -2,7 +2,6 @@ package com.checkping.dto.approval;
 
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
-import com.checkping.domain.approval.Approval.ApprovalCategory;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
@@ -15,17 +14,21 @@ import com.checkping.exception.approval.ApprovalContentParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalRegister {
 
     @Getter
+    @Setter
     public static class Request {
 
         /*
@@ -35,7 +38,10 @@ public class ApprovalRegister {
         category : 결재 유형
         fileInfoList : 첨부 파일
          */
+        @NotNull(message = "프로젝트 진행 단계를 입력해주세요")
         private Long progressStepId;
+        @NotEmpty(message = "제목을 입력해주세요.")
+        @Max(value = 100, message = "제목은 100자 이하로 입력해주세요.")
         private String title;
         @NotEmpty(message = "결재 유형을 입력해주세요")
         private String category;

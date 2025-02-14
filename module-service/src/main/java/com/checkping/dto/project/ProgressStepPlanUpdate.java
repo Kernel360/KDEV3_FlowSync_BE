@@ -49,7 +49,7 @@ public class ProgressStepPlanUpdate {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime deadlineAt;
         private Long projectId;
-        private Long relatedApprovalId;
+        private Long relatedApprovalId = null;
 
         /**
          * ProgressStep Entity -> Response Dto
@@ -68,7 +68,10 @@ public class ProgressStepPlanUpdate {
             dto.closeAt = progressStep.getCloseAt();
             dto.deadlineAt = progressStep.getDeadlineAt();
             dto.projectId = progressStep.getProjectId();
-            dto.relatedApprovalId = progressStep.getRelatedApprovalId();
+
+            if (progressStep.getRelatedApproval() != null) {
+                dto.relatedApprovalId = progressStep.getRelatedApproval().getId();
+            }
             return dto;
         }
     }
