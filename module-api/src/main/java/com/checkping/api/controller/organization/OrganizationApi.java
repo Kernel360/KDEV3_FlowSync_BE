@@ -52,8 +52,7 @@ public interface OrganizationApi {
 
     @Operation(summary = "업체 상태 변경", description = "업체 활성화 상태 전환 기능입니다.")
     BaseResponse<String> changeStatusOrganization(
-            @Parameter(description = "업체 ID") @PathVariable Long organizationId,
-            @Parameter(description = "전환 사유") @RequestBody OrganizationDelete.Request request
+            @Parameter(description = "업체 ID") @PathVariable Long organizationId
     );
 
     @Operation(summary = "업체가 참여중인 프로젝트 목록", description = "업체가 속한 프로젝트 목록을 조회합니다.")
