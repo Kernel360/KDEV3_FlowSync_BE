@@ -6,12 +6,13 @@ import com.checkping.domain.project.ProgressStep;
 import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
-import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
+import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,15 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
     @Transactional
     @Override
-    public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId, Long progressStepId, Request request) {
+    public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId, Long progressStepId, ProgressStepPlanUpdate.Request request) {
         // TODO : 권한 처리를 인터셉터에서 하도록 하며, 개발사 오너 담당자만 수정 가능 처리해야 한다.
+
+        // 프로젝트 진행단계 시작일시 보다 마감일시가 이전이면 예외 발생
+        LocalDateTime startAt = request.getStartAt();
+        LocalDateTime deadlineAt = request.getDeadlineAt();
+        if (!startAt.isAfter(deadlineAt)) {
+            throw new ProgressStepNotAfterStartAtException();
+        }
 
         // Find ProgressStep by Id and ProjectId - 프로젝트에 속한 단계인지 확인과 동시에 단계 정보를 가져옴
         ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,

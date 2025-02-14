@@ -2,6 +2,7 @@ package com.checkping.dto.project;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.project.ProgressStep;
+import com.checkping.dto.member.response.MemberResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AccessLevel;
@@ -25,6 +26,7 @@ public class ProgressStepGet {
         deadlineAt : 예상 마감 일시
         projectId : 프로젝트 ID
         relatedApprovalId : 관련 결재 ID
+        approver : 결재 승인자
          */
         @Schema(description = "진행 단계 ID")
         private Long id;
@@ -45,7 +47,9 @@ public class ProgressStepGet {
         @Schema(description = "프로젝트 ID")
         private Long projectId;
         @Schema(description = "관련 결재 ID")
-        private Long relatedApprovalId;
+        private Long relatedApprovalId = null;
+        @Schema(description = "결재 승인자")
+        private MemberResponseDto.MeResponseDto approver;
 
         /**
          * ProgressStep Entity -> ProgressStepGet.Response Dto
@@ -64,7 +68,16 @@ public class ProgressStepGet {
             response.closeAt = DateTimeUtils.format(progressStep.getCloseAt());
             response.deadlineAt = DateTimeUtils.format(progressStep.getDeadlineAt());
             response.projectId = progressStep.getProjectId();
-            response.relatedApprovalId = progressStep.getRelatedApprovalId();
+
+            // 관련 결재가 존재하면 결재 ID를 설정
+            if (progressStep.getRelatedApproval() != null) {
+                response.relatedApprovalId = progressStep.getRelatedApproval().getId();
+            }
+
+            // 결재가 결정되었으면 결재자 정보를 설정
+            if(progressStep.isDecided())  {
+                response.approver = MemberResponseDto.MeResponseDto.fromEntity(progressStep.getRelatedApproval().getApprover());
+            }
             return response;
         }
 

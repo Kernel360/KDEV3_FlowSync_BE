@@ -7,9 +7,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -68,8 +71,9 @@ public class ProgressStep extends BaseEntity {
     @Column(name = "project_id")
     private Long projectId;
 
-    @Column(name = "related_approval_id")
-    private Long relatedApprovalId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "related_approval_id")
+    private Approval relatedApproval;
 
     @Getter
     @RequiredArgsConstructor
@@ -133,17 +137,21 @@ public class ProgressStep extends BaseEntity {
         return this.status == Status.WAIT;
     }
 
+    public boolean isDecided() {
+        return this.status == Status.COMPLETED;
+    }
+
     // 프로젝트 진행 단계 완료 처리
     public void completeStep(Approval approval) {
         this.status = Status.COMPLETED;
         this.closeAt = LocalDateTime.now();
-        this.relatedApprovalId = approval.getId();
+        this.relatedApproval = approval;
     }
 
     // 프로젝트 진행 단계 반려 처리
     public void rejectStep(Approval approval) {
         this.status = Status.IN_PROGRESS;
         this.closeAt = null;
-        this.relatedApprovalId = approval.getId();
+        this.relatedApproval = approval;
     }
 }
