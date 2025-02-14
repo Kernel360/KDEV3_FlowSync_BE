@@ -29,7 +29,7 @@ public class ApprovalCompleteHistory extends BaseEntity {
     project : 프로젝트(FK : project_id)
     approval : 결재(FK : approval_id)
     progress_step : 진행 단계(FK : progress_step_id)
-    actor : 작업자(FK : member_id)
+    actor : 작업자(FK : actor_id)
     status : 진행 상태
     reg_at : 등록 일시
      */
