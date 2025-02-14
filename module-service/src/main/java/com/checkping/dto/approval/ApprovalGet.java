@@ -10,10 +10,14 @@ import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalGet {
@@ -89,9 +93,13 @@ public class ApprovalGet {
                 approval.getRegister());
             response.updatedAt = DateTimeUtils.format(approval.getUpdatedAt());
             response.regAt = DateTimeUtils.format(approval.getRegAt());
-            response.commentList = ApprovalCommentGet.Response.toDto(approval.getCommentList());
-            response.linkList = ApprovalLinkGet.Response.toDto(approval.getLinkList());
-            response.fileList = ApprovalFileGet.Response.toDto(approval.getFileList());
+            response.commentList =
+                Objects.isNull(approval.getCommentList()) ? Collections.emptyList() :
+                    ApprovalCommentGet.Response.toDto(approval.getCommentList());
+            response.linkList = Objects.isNull(approval.getLinkList()) ? Collections.emptyList()
+                : ApprovalLinkGet.Response.toDto(approval.getLinkList());
+            response.fileList = Objects.isNull(approval.getFileList()) ? Collections.emptyList()
+                : ApprovalFileGet.Response.toDto(approval.getFileList());
 
             response.approverAt = null;
             response.approver = null;
