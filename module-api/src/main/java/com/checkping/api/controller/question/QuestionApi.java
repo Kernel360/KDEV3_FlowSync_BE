@@ -4,12 +4,10 @@ import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
-import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
-import com.checkping.dto.question.comment.QuestionCommentGet;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -27,7 +25,14 @@ public interface QuestionApi {
     @Operation(summary = "질문 게시글 등록", description = "질문 게시글을 등록하는 기능입니다.")
     BaseResponse<QuestionRegister.Response> register(
         @Parameter(description = "프로젝트 ID") Long projectId,
-        @Parameter(description = "등록 게시글 정보") Request request);
+        @Parameter(description = "등록 게시글 정보") QuestionRegister.Request request);
+
+    @Operation(summary = "질문 게시글 답글 등록", description = "질문 게시글에 답글을 등록하는 기능입니다.")
+    BaseResponse<QuestionRegister.Response> registerAnswer(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "게시글 ID") Long questionId,
+        @Parameter(description = "등록 게시글 정보") QuestionRegister.Request request);
+
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<QuestionSearch.Response> searchQuestions(
