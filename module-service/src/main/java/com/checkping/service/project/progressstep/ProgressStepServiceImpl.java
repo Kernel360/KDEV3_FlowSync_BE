@@ -79,6 +79,11 @@ public class ProgressStepServiceImpl implements ProgressStepService {
      */
     private void checkOrganization(Project project, Member currentMember) {
 
+        // check admin
+        if(currentMember.isAdmin()) {
+            return;
+        }
+
         // organization ids (organization -> organization id)
         List<Long> organizationIds = project.getOrganizations().stream()
             .map(Organization::getId).toList();

@@ -27,12 +27,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 // TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
@@ -58,50 +60,70 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponseDto.fromEntity(member);
     }
 
-    // 페이징된 전체 회원 목록 조회
     @Override
     public MemberListResponseDto getAllMembersWithFilters(
-        int page, int size, String roleParam, String statusParam, String keyword
+            int page,
+            int size,
+            String roleParam,
+            String statusParam,
+            String keyword,
+            String sortField,
+            String sortDirection
     ) {
-        // (1) 페이지, 사이즈 유효성 검증
+        // (1) 페이지 및 사이즈 검증
         if (page < 0 || size < 1) {
             throw new InvalidInputValueException("유효하지 않은 페이지/사이즈 값입니다.");
         }
 
-        // (2) 문자열로 들어온 role, status를 Enum으로 변환
-        Member.Role role = null;
-        if (roleParam != null && !roleParam.isBlank()) {
-            try {
-                role = Member.Role.valueOf(roleParam.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new InvalidInputValueException("유효하지 않은 role 값입니다. " + roleParam);
-            }
-        }
+        // (2) 문자열을 Enum으로 변환 (Optional 사용)
+        Member.Role role = Optional.ofNullable(roleParam)
+                .filter(param -> !param.isBlank())
+                .map(param -> {
+                    try {
+                        return Member.Role.valueOf(param.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new InvalidInputValueException("유효하지 않은 role 값입니다. " + param);
+                    }
+                }).orElse(null);
 
-        Member.Status status = null;
-        if (statusParam != null && !statusParam.isBlank()) {
-            try {
-                status = Member.Status.valueOf(statusParam.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new InvalidInputValueException("유효하지 않은 status 값입니다. " + statusParam);
-            }
-        }
+        Member.Status status = Optional.ofNullable(statusParam)
+                .filter(param -> !param.isBlank())
+                .map(param -> {
+                    try {
+                        return Member.Status.valueOf(param.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new InvalidInputValueException("유효하지 않은 status 값입니다. " + param);
+                    }
+                }).orElse(null);
 
         // (3) 검색어 null 처리
-        if (keyword != null && keyword.isBlank()) {
-            keyword = null;
-        }
+        String sanitizedKeyword = Optional.ofNullable(keyword)
+                .filter(param -> !param.isBlank())
+                .orElse(null);
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberRepository.findAllWithFilters(role, status, keyword,
-            pageable);
+        // (4) 정렬 필드 검증 및 기본값 설정
+        List<String> allowedSortFields = List.of("id", "name", "email", "created_at", "updated_at", "role");
+        String sortProperty = Optional.ofNullable(sortField)
+                .filter(param -> !param.isBlank() && allowedSortFields.contains(param))
+                .orElse("id"); // 기본 정렬 필드는 "id"
 
-        // (4) page 범위 초과 시 예외 처리
-        if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
+        // (5) 정렬 방향 설정
+        Sort.Direction direction = Optional.ofNullable(sortDirection)
+                .filter(param -> !param.isBlank())
+                .map(param -> "desc".equalsIgnoreCase(param) ? Sort.Direction.DESC : Sort.Direction.ASC)
+                .orElse(sortProperty.equals("id") ? Sort.Direction.DESC : Sort.Direction.ASC); // id는 기본적으로 DESC, 나머지는 ASC
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortProperty));
+
+        // (6) 페이징 처리
+        Page<Member> memberPage = memberRepository.findAllWithFilters(role, status, sanitizedKeyword, pageable);
+
+        // (7) 페이지 번호 검증
+        if (memberPage.getTotalPages() > 0 && page >= memberPage.getTotalPages()) {
             throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
         }
 
-        // (5) 결과 DTO 변환
+        // (8) 결과 DTO 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
     }
 
@@ -213,10 +235,7 @@ public class MemberServiceImpl implements MemberService {
         if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
             throw new InvalidInputValueException("페이지 번호가 범위를 벗어났습니다.");
         }
-        //페이지에 회원이 없는 경우 예외 처리
-        if (memberPage.isEmpty()) {
-            throw new BaseException("해당 업체에 회원이 존재하지 않습니다.", ErrorCode.USER_NOT_FOUND);
-        }
+
         // MemberListResponseDto로 변환
         return MemberListResponseDto.fromEntityPage(memberPage);
     }

@@ -15,8 +15,9 @@ public interface MemberService {
 
     MemberResponseDto getMemberById(Long memberId);
 
-    MemberListResponseDto getAllMembersWithFilters(int page, int size, String roleParam, String statusParam, String keyword);
-
+    MemberListResponseDto getAllMembersWithFilters(
+            int page, int size, String roleParam, String statusParam, String keyword, String sortField, String sortDirection
+    );
     MemberResponseDto registerMember(MemberRegisterDto dto);
 
     MemberResponseDto updateMember(Long memberId, MemberUpdateDto dto);

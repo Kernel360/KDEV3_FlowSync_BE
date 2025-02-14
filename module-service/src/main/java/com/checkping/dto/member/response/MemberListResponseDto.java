@@ -5,6 +5,7 @@ import com.checkping.domain.member.Member;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,9 @@ public class MemberListResponseDto {
     }
 
     public static MemberListResponseDto fromEntityPage(Page<Member> page) {
-        List<MemberResponseDto> memberDtos = page.getContent().stream()
+
+        List<MemberResponseDto> memberDtos = page.isEmpty() ?
+                Collections.emptyList() : page.getContent().stream()
                 .map(MemberResponseDto::fromEntity)
                 .toList();
 

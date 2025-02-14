@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
+@Tag(name = "어드민 회원 관리 API(AdminMemberApi)", description = "회원 관리 API입니다.")
 public interface AdminMemberApi {
 
     @Operation(summary = "회원 등록", description = "새로운 회원을 등록하는 기능입니다.")
@@ -36,7 +36,11 @@ public interface AdminMemberApi {
         @Parameter(description = "status(예: ACTIVE, INACTIVE, DELETED)", example = "ACTIVE")
         String status,
         @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동")
-        String keyword);
+        String keyword,
+        @Parameter(description = "정렬 필드 - 예시: id(기본), name, email, reg_at, modified_at, role", example = "name")
+        String sortField,
+        @Parameter(description = "정렬 방향 (ASC, DESC)", example = "DESC")
+        String sortDirection);
 
     @Operation(summary = "회원 상세 조회", description = "특정 회원의 상세 정보를 조회하는 기능입니다.")
     BaseResponse<MemberResponseDto> getMemberById(

@@ -30,6 +30,8 @@ public interface OrganizationApi {
     BaseResponse<PageInfo.Response<OrganizationListGet.Response>> getListOrganization(
             @Parameter(description = "업체 타입(CUSTOMER / DEVELOPER)") @RequestParam(required = false) String type,
             @Parameter(description = "업체 상태(ACTIVE / INACTIVE / DELETED)") @RequestParam(required = false) String status,
+            @Parameter(description = "정렬 필드 - 예시: id(기본), name", example = "name") @RequestParam(required = false) String sortField,
+            @Parameter(description = "정렬 방향 (ASC, DESC)", example = "DESC") @RequestParam(required = false) String sortDirection,
             @Parameter(description = "페이지 번호") @RequestParam int currentPage,
             @Parameter(description = "게시글 수") @RequestParam int pageSize,
             @Parameter(description = "검색어") @RequestParam String keyword
