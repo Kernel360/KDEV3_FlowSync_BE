@@ -12,7 +12,7 @@ public interface NoticeService {
 
     NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest);
 
-    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, List<MultipartFile> files);
+    NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest);
 
     NoticeResponse deleteNotice(Long noticeid);
 

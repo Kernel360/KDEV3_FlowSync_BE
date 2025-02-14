@@ -27,12 +27,11 @@ public class NoticeController implements NoticeApi {
     }
 
     @Override
-    @PutMapping(value = "/admins/notices/{noticeid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admins/notices/{noticeid}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
-            @RequestPart NoticeUpdateRequest noticeUpdateRequest,
-            @RequestPart(required = false) List<MultipartFile> files) {
-        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest, files);
+            @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
         return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 

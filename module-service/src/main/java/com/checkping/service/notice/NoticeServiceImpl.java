@@ -57,7 +57,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, List<MultipartFile> files) {
+    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -76,13 +76,9 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = new ArrayList<>();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                FileRequest fileRequest = s3FileRepository.uploadFile(file);
-                fileUrls.add(fileRequest.saveName() + "|" + fileRequest.url());
-            }
-        }
+        List<String> fileUrls = noticeUpdateRequest.getFileInfoList().stream()
+                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                .collect(Collectors.toList());
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
