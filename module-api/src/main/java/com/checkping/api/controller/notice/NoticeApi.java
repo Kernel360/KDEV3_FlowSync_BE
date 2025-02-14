@@ -18,8 +18,7 @@ import java.util.List;
 public interface NoticeApi {
 
     @Operation(summary = "공지사항 생성", description = "공지사항을 생성하는 기능입니다.")
-    public BaseResponse<NoticeCreateResponse> registerNotice(@Parameter(description = "생성할 공지사항 정보 Dto") NoticeCreateRequest noticeCreateRequest,
-                                                             @Parameter(description = "생성할 첨부파일 Dto", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) List<MultipartFile> files);
+    public BaseResponse<NoticeCreateResponse> registerNotice(@Parameter(description = "생성할 공지사항 정보 Dto") NoticeCreateRequest noticeCreateRequest);
 
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 기능입니다.")
     public BaseResponse<NoticeResponse> updateNotice(
