@@ -79,7 +79,7 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoList().stream()
+        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
                 .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
                 .collect(Collectors.toList());
 
