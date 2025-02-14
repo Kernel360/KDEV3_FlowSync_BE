@@ -46,9 +46,12 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeCreateRequest.getFileInfoList().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
+        List<String> fileUrls = new ArrayList<>();
+        if (noticeCreateRequest.getFileInfoList() != null && !noticeCreateRequest.getFileInfoList().isEmpty()) {
+            fileUrls = noticeCreateRequest.getFileInfoList().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
+        }
 
         Notice notice = noticeRepository.save(noticeCreateRequest.toEntity(fileUrls));
 
@@ -85,7 +88,7 @@ public class NoticeServiceImpl implements NoticeService {
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? null : fileUrls // 파일이 없으면 null 유지
+                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
