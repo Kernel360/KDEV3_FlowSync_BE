@@ -71,6 +71,9 @@ public interface AdminMemberApi {
     BaseResponse<MemberListResponseDto> getMembersByOrganizationId(
         @Schema(description = "소속 업체 ID", example = "1")
         @Parameter(description = "소속 업체 ID", required = true) Long organizationId,
+        @Parameter(description = "role(예: ADMIN, MEMBER)", example = "ADMIN") String role,
+        @Parameter(description = "status(예: ACTIVE, INACTIVE, DELETED)", example = "ACTIVE") String status,
+        @Parameter(description = "검색어 (이름/이메일 검색)", example = "홍길동") String keyword,
         @Parameter(description = "페이지 번호 (1부터 시작)", example = "1", required = true) int page,
         @Parameter(description = "페이지 크기", example = "10", required = true) int size);
 
