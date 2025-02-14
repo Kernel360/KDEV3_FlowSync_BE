@@ -20,7 +20,7 @@ public class NoticeController implements NoticeApi {
     private final NoticeServiceImpl noticeService;
 
     @Override
-    @PostMapping(value = "/admins/notices", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/admins/notices", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest) {
         NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest);
         return BaseResponse.success(noticeCreateResponse);
