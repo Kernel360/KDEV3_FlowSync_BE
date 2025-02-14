@@ -26,7 +26,7 @@ public class ApprovalCompleteHistorySearch {
         pageSize : 페이지 사이즈
          */
         private Long progressStepId;
-        @Min(0)
+        @Min(1)
         private Integer currentPage = 1;
         @Min(5)
         private Integer pageSize = 10;
@@ -38,7 +38,7 @@ public class ApprovalCompleteHistorySearch {
          * @return  ApprovalCompleteHistorySearchInfo
          */
         public ApprovalCompleteHistorySearchInfo toInfo() {
-            return new ApprovalCompleteHistorySearchInfo(progressStepId, currentPage, pageSize);
+            return new ApprovalCompleteHistorySearchInfo(progressStepId, currentPage - 1, pageSize);
         }
     }
 
