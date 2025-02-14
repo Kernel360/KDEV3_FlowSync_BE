@@ -3,6 +3,7 @@ package com.checkping.dto.notice.response;
 
 import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.DateTimeUtils;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -13,6 +14,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -40,7 +42,7 @@ public class NoticeCreateResponse {
     private LocalDateTime regAt;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private List<String> noticeFileUrls;
+    private List<FileRequest> fileInfoList;
 
     public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
@@ -51,7 +53,12 @@ public class NoticeCreateResponse {
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
-                .noticeFileUrls(notice.getNoticeFileUrls())
+                .fileInfoList(notice.getNoticeFileUrls().stream()
+                        .map(url -> {
+                            String[] parts = url.split("\\|");
+                            return new FileRequest(parts[0], parts[1], parts[1], 0); // size는 0으로 설정
+                        })
+                        .collect(Collectors.toList()))
                 .build();
     }
 
