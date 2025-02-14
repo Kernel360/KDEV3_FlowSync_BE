@@ -1,6 +1,5 @@
 package com.checkping.infra.repository.approval;
 
-import static com.checkping.domain.approval.QApproval.approval;
 import static com.checkping.domain.approval.QApprovalCompleteHistory.approvalCompleteHistory;
 import static java.util.Optional.ofNullable;
 
@@ -41,7 +40,7 @@ public class ApprovalCompleteHistoryCustomRepositoryImpl implements
 
         // 총 개수 조회
         long total = ofNullable(
-            queryFactory.select(approval.count()).from(approval).where(builder).fetchOne())
+            queryFactory.select(approvalCompleteHistory.count()).from(approvalCompleteHistory).where(builder).fetchOne())
             .orElse(0L);
 
         List<ApprovalCompleteHistory> histories = queryFactory.selectFrom(approvalCompleteHistory)
