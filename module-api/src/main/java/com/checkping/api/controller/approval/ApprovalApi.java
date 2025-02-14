@@ -33,7 +33,7 @@ public interface ApprovalApi {
     @PostMapping
     BaseResponse<Response> register(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
-        @Parameter(description = "결재 등록 정보") @RequestBody ApprovalRegister.Request request);
+        @Parameter(description = "결재 등록 정보") @RequestBody @Valid ApprovalRegister.Request request);
 
     @Operation(summary = "결재 목록 조회", description = "결재 목록을 조회하는 기능입니다.")
     BaseResponse<ApprovalSearch.Response> search(
@@ -53,7 +53,7 @@ public interface ApprovalApi {
     BaseResponse<ApprovalUpdate.Response> update(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
-        @Parameter(description = "결재 수정 정보") @RequestBody ApprovalUpdate.Request request);
+        @Parameter(description = "결재 수정 정보") @RequestBody @Valid ApprovalUpdate.Request request);
 
     @Operation(summary = "결재 삭제", description = "결재를 삭제하는 기능입니다.")
     BaseResponse<ApprovalDelete.Response> delete(

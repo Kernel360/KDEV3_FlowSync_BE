@@ -84,7 +84,7 @@ public class ApprovalController implements ApprovalApi {
     @PutMapping("/{approvalId}")
     @Override
     public BaseResponse<ApprovalUpdate.Response> update(@PathVariable Long projectId,
-        @PathVariable Long approvalId, @RequestBody ApprovalUpdate.Request request) {
+        @PathVariable Long approvalId, @RequestBody @Valid ApprovalUpdate.Request request) {
 
         ApprovalUpdate.Response response = approvalService.update(projectId, approvalId, request);
 
