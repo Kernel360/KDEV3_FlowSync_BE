@@ -96,9 +96,12 @@ public class AdminMemberController implements AdminMemberApi {
     @GetMapping("/member/org/{organizationId}")
     public BaseResponse<MemberListResponseDto> getMembersByOrganizationId(
             @PathVariable Long organizationId,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
-        MemberListResponseDto response = memberService.getMembersByOrganizationId(organizationId, currentPage-1, pageSize);
+        MemberListResponseDto response = memberService.getMembersByOrganizationId(organizationId, role, status, keyword, currentPage-1, pageSize);
         return BaseResponse.success(response);
     }
 
