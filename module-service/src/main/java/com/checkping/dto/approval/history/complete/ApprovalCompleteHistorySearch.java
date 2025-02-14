@@ -21,11 +21,11 @@ public class ApprovalCompleteHistorySearch {
     @Setter
     public static class Condition {
         /*
-        progressId : 진행 단계 ID
+        progressStepId : 진행 단계 ID
         currentPage : 현재 페이지
         pageSize : 페이지 사이즈
          */
-        private Long progressId;
+        private Long progressStepId;
         @Min(0)
         private Integer currentPage = 1;
         @Min(5)
@@ -38,7 +38,7 @@ public class ApprovalCompleteHistorySearch {
          * @return  ApprovalCompleteHistorySearchInfo
          */
         public ApprovalCompleteHistorySearchInfo toInfo() {
-            return new ApprovalCompleteHistorySearchInfo(progressId, currentPage, pageSize);
+            return new ApprovalCompleteHistorySearchInfo(progressStepId, currentPage, pageSize);
         }
     }
 
@@ -49,14 +49,14 @@ public class ApprovalCompleteHistorySearch {
         projectId : 프로젝트 ID
         approvalId : 결재 ID
         approvalName : 결재 이름
-        approver : 승인자 정보
+        actor : 행위자
         progress_step : 진행 단계(FK : progress_step_id)
          */
         private Long id;
         private Long projectId;
         private Long approvalId;
         private String approvalName;
-        private MemberResponseDto.MeResponseDto approver;
+        private MemberResponseDto.MeResponseDto actor;
         private ProgressStepGet.Response progressStep;
 
         /**
@@ -71,8 +71,8 @@ public class ApprovalCompleteHistorySearch {
             dto.projectId = approvalCompleteHistory.getApproval().getProject().getId();
             dto.approvalId = approvalCompleteHistory.getApproval().getId();
             dto.approvalName = approvalCompleteHistory.getApproval().getTitle();
-            dto.approver = MemberResponseDto.MeResponseDto.fromEntity(
-                approvalCompleteHistory.getApproval().getApprover());
+            dto.actor = MemberResponseDto.MeResponseDto.fromEntity(
+                approvalCompleteHistory.getActor());
             dto.progressStep = ProgressStepGet.Response.toDto(
                 approvalCompleteHistory.getProgressStep());
             return dto;
