@@ -16,8 +16,8 @@ public class OrganizationDelete {
     @AllArgsConstructor
     public static class Request {
 
-        @Schema(description = "삭제 사유")
-        String reason;
+        @Schema(description = "삭제 사유", defaultValue = "")
+        String reason ="";
 
     }
 

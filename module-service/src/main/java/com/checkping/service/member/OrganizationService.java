@@ -16,7 +16,7 @@ public interface OrganizationService {
 
     OrganizationDelete.Response removeOrganization(Long id, OrganizationDelete.Request request);
 
-    OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request);
+    OrganizationDelete.Response changeStatusOrganization(Long id);
 
     PageInfo.Response<ProjectListGet.Response> getListProjectByOrganization(Long id, String managementStep, PageInfo.Request pageRequest);
 
