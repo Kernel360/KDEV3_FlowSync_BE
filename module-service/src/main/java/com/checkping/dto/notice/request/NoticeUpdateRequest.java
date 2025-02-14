@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -40,6 +41,10 @@ public class NoticeUpdateRequest {
         } catch (JsonProcessingException e) {
             throw new BaseException();
         }
+    }
+
+    public List<FileRequest> getFileInfoListSafe() {
+        return fileInfoList == null ? new ArrayList<>() : fileInfoList;
     }
 
 }
