@@ -146,6 +146,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
+        if (organization.getStatus().toString().equals("DELETED")) {
+            throw new OrganizationAlreadyDeletedException();
+        }
+
         organization.removeOrganization(request.getReason());
 
         Organization removeOrganization = organizationRepository.save(organization);
@@ -155,7 +159,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public OrganizationDelete.Response changeStatusOrganization(Long id, OrganizationDelete.Request request) {
+    public OrganizationDelete.Response changeStatusOrganization(Long id) {
 
         Optional<Organization> result = organizationRepository.findById(id);
 
@@ -165,7 +169,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new OrganizationAlreadyDeletedException();
         }
 
-        organization.changeStatus(request.getReason());
+        organization.changeStatus();
 
         Organization changedOrganization = organizationRepository.save(organization);
 

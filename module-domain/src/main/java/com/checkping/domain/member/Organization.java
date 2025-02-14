@@ -67,7 +67,7 @@ public class Organization extends BaseEntity {
     @Column(length = 100)
     private String remark;
 
-    @Column(name = "reason_for_delete_organization", length = 100)
+    @Column(name = "reason_for_delete_organization" ,length = 100)
     private String reasonForDeleteOrganization;
 
     public enum Type {
@@ -94,16 +94,14 @@ public class Organization extends BaseEntity {
 
     public void removeOrganization(String reason) {
         this.status = Status.DELETED;
-        this.reasonForDeleteOrganization = reason;
+        this.reasonForDeleteOrganization = reason != null ? reason : "";
     }
 
-    public void changeStatus(String reason) {
+    public void changeStatus() {
         if (this.status == Status.ACTIVE) {
             this.status = Status.INACTIVE;
-            this.reasonForDeleteOrganization = reason;
         } else {
             this.status = Status.ACTIVE;
-            this.reasonForDeleteOrganization = "";
         }
     }
 

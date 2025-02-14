@@ -84,11 +84,10 @@ public class OrganizationController implements OrganizationApi {
     @PostMapping("/admins/organizations/{organizationId}/changeStatus")
     @Override
     public BaseResponse<String> changeStatusOrganization(
-            @PathVariable Long organizationId,
-            @RequestBody OrganizationDelete.Request request
+            @PathVariable Long organizationId
     ) {
 
-        organizationService.changeStatusOrganization(organizationId, request);
+        organizationService.changeStatusOrganization(organizationId);
 
         return BaseResponse.success("업체 상태 전환 완료");
     }
