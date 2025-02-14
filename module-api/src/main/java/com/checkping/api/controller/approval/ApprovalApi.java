@@ -14,9 +14,11 @@ import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
+import com.checkping.dto.approval.history.complete.ApprovalCompleteHistorySearch;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,9 +83,9 @@ public interface ApprovalApi {
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId);
 
-    @Operation(summary="프로젝트 진행 단계 별 결재 글 개수 조회", description="프로젝트 진행 단계 별 결재 글 개수를 조회하는 기능입니다.")
+    @Operation(summary = "프로젝트 진행 단계 별 결재 글 개수 조회", description = "프로젝트 진행 단계 별 결재 글 개수를 조회하는 기능입니다.")
     BaseResponse<List<ApprovalCount.Response>> countByProgressStep(
-        @Parameter(description="프로젝트 ID") @PathVariable Long projectId);
+        @Parameter(description = "프로젝트 ID") @PathVariable Long projectId);
 
     @Operation(summary = "결재 댓글 수정", description = "결재 댓글을 수정하는 기능입니다.")
     BaseResponse<ApprovalCommentUpdate.Response> updateComment(
@@ -98,5 +100,11 @@ public interface ApprovalApi {
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "결재 ID") Long approvalId,
         @Parameter(description = "결재 댓글 ID") Long commentId
+    );
+
+    @Operation(summary = "프로젝트 진행단계 완료 결재 로그 조회", description = "프로젝트 진행단계 완료 결재 로그 조회")
+    BaseResponse<ApprovalCompleteHistorySearch.Response> searchCompleteHistory(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "로그 검색 조건") @Valid ApprovalCompleteHistorySearch.Condition condition
     );
 }

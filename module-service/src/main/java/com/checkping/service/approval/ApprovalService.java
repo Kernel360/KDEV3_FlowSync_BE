@@ -13,6 +13,7 @@ import com.checkping.dto.approval.comment.ApprovalCommentDelete;
 import com.checkping.dto.approval.comment.ApprovalCommentRegister;
 import com.checkping.dto.approval.comment.ApprovalCommentUpdate;
 import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
+import com.checkping.dto.approval.history.complete.ApprovalCompleteHistorySearch;
 import java.util.List;
 
 public interface ApprovalService {
@@ -43,4 +44,6 @@ public interface ApprovalService {
         ApprovalCommentUpdate.Request request);
 
     ApprovalCommentDelete.Response deleteComment(Long projectId, Long approvalId, Long commentId);
+
+    ApprovalCompleteHistorySearch.Response searchCompleteHistory(Long projectId, ApprovalCompleteHistorySearch.Condition condition);
 }
