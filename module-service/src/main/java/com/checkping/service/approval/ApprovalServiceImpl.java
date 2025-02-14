@@ -27,6 +27,7 @@ import com.checkping.dto.approval.comment.ApprovalReCommentRegister;
 import com.checkping.dto.approval.file.ApprovalFileRegister;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
 import com.checkping.dto.approval.history.complete.ApprovalCompleteHistoryInfo;
+import com.checkping.dto.approval.history.complete.ApprovalCompleteHistorySearch;
 import com.checkping.dto.approval.link.ApprovalLinkRegister;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
 import com.checkping.exception.approval.ApprovalNotFoundEntityException;
@@ -36,6 +37,7 @@ import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectE
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo;
+import com.checkping.infra.repository.approval.ApprovalCompleteHistoryReader;
 import com.checkping.infra.repository.approval.ApprovalCompleteHistoryStore;
 import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.approval.ApprovalStore;
@@ -68,6 +70,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final CurrentMemberUtil currentMemberUtil;
     private final ApprovalAuthorizationValidator approvalAuthorizationValidator;
     private final ApprovalCompleteHistoryStore approvalCompleteHistoryStore;
+    private final ApprovalCompleteHistoryReader approvalCompleteHistoryReader;
 
     @Transactional
     @Override
@@ -109,10 +112,10 @@ public class ApprovalServiceImpl implements ApprovalService {
         // Add approvalLinks to approval
         approval.updateLinks(approvalLinks);
 
-
         // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
         if (approval.isCompleteRequest()) {
-            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(progressStep, approval, Status.CREATE);
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(project,
+                progressStep, approval, Status.CREATE, member);
             approvalCompleteHistoryStore.store(completeHistory);
         }
 
@@ -231,7 +234,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
         if (approval.isCompleteRequest()) {
-            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.MODIFY);
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval,
+                Status.MODIFY, member);
             approvalCompleteHistoryStore.store(completeHistory);
         }
 
@@ -269,7 +273,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 진행 단계 완료 요청 결재 등록 시 진행 단계 완료 처리
         if (approval.isCompleteRequest()) {
-            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.DELETE);
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval,
+                Status.DELETE, member);
             approvalCompleteHistoryStore.store(completeHistory);
         }
 
@@ -309,7 +314,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         Member member = currentMemberUtil.getCurrentMember();
 
         // 권한 확인
-        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
+            member);
 
         // Find approval
         Approval approval = approvalReader.getById(approvalId)
@@ -352,7 +358,8 @@ public class ApprovalServiceImpl implements ApprovalService {
             ProgressStep progressStep = approval.getProgressStep();
             progressStep.completeStep(approval);
 
-            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.CONFIRM);
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval,
+                Status.CONFIRM, member);
             approvalCompleteHistoryStore.store(completeHistory);
         }
 
@@ -382,7 +389,8 @@ public class ApprovalServiceImpl implements ApprovalService {
             ProgressStep progressStep = approval.getProgressStep();
             progressStep.rejectStep(approval);
 
-            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval, Status.REJECT);
+            ApprovalCompleteHistory completeHistory = ApprovalCompleteHistoryInfo.toEntity(approval,
+                Status.REJECT, member);
             approvalCompleteHistoryStore.store(completeHistory);
         }
 
@@ -410,7 +418,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         Member member = currentMemberUtil.getCurrentMember();
 
         // 결재 댓글 접근 권한 확인
-        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
+            member);
 
         // find approval comment
         ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
@@ -434,7 +443,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         Member member = currentMemberUtil.getCurrentMember();
 
         // 권한 체크
-        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId, member);
+        approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
+            member);
 
         // find approval comment
         ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
@@ -450,13 +460,32 @@ public class ApprovalServiceImpl implements ApprovalService {
         return ApprovalCommentDelete.Response.toDto(approvalComment);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public ApprovalCompleteHistorySearch.Response searchCompleteHistory(Long projectId,
+        ApprovalCompleteHistorySearch.Condition condition) {
+
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 체크
+        approvalAuthorizationValidator.validateAllowedRegisterApproval(projectId, member);
+
+        // search complete history
+        Page<ApprovalCompleteHistory> completeHistories = approvalCompleteHistoryReader.search(
+            projectId, condition.toInfo());
+
+        return ApprovalCompleteHistorySearch.Response.toDto(completeHistories);
+    }
+
     /**
      * 진행 단계와 프로젝트 일치 여부 확인
      *
      * @param progressStep  진행 단계
      * @param targetProject 프로젝트
      */
-    private void checkProjectContainsProgressStep(ProgressStep progressStep, Project targetProject) {
+    private void checkProjectContainsProgressStep(ProgressStep progressStep,
+        Project targetProject) {
         if (!progressStep.getProjectId().equals(targetProject.getId())) {
             // throw exception
             throw new ProgressStepMismatchProjectException();
@@ -466,8 +495,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     /**
      * 댓글 등록자와 멤버가 일치하는지 확인
      *
-     * @param member     멤버
-     * @param approvalComment   댓글
+     * @param member          멤버
+     * @param approvalComment 댓글
      */
     private void checkCommentRegister(Member member, ApprovalComment approvalComment) {
         if (member.isAdmin()) {

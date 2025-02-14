@@ -7,7 +7,11 @@ import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
 import com.checkping.service.notice.NoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,18 +20,20 @@ public class NoticeController implements NoticeApi {
     private final NoticeServiceImpl noticeService;
 
     @Override
-    @PostMapping("/admins/notices")
-    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest) {
-        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest);
+    @PostMapping(value = "/admins/notices", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestPart NoticeCreateRequest noticeCreateRequest,
+                                                             @RequestPart(required = false) List<MultipartFile> files) {
+        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, files);
         return BaseResponse.success(noticeCreateResponse);
     }
 
     @Override
-    @PutMapping("/admins/notices/{noticeid}")
+    @PutMapping(value = "/admins/notices/{noticeid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
-            @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
-        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
+            @RequestPart NoticeUpdateRequest noticeUpdateRequest,
+            @RequestPart(required = false) List<MultipartFile> files) {
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest, files);
         return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 

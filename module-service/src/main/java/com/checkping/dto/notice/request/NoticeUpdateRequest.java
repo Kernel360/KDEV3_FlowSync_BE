@@ -29,6 +29,9 @@ public class NoticeUpdateRequest {
     @Schema(description = "공지사항 글 중요도", example = "EMERGENCY")
     private String priority;
 
+    @Schema(description = "공지사항 첨부파일 링크")
+    private List<String> noticeFileUrls;
+
     public String convertContentToJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {

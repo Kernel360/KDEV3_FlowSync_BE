@@ -40,6 +40,9 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
     private LocalDateTime updatedAt;
 
+    @Schema(description = "공지사항 첨부파일 링크")
+    private List<String> noticeFileUrls;
+
     public static NoticeResponse toDto(Notice notice){
         return NoticeWithIsdeletedResponse.builder()
                 .id(notice.getId())
@@ -50,6 +53,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
+                .noticeFileUrls(notice.getNoticeFileUrls())
                 .build();
     }
 
