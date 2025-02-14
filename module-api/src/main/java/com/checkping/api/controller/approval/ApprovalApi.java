@@ -64,14 +64,14 @@ public interface ApprovalApi {
     BaseResponse<ApprovalCommentRegister.Response> registerComment(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
-        @Parameter(description = "결재 댓글 등록 정보") @RequestBody ApprovalCommentRegister.Request request);
+        @Parameter(description = "결재 댓글 등록 정보") @RequestBody @Valid ApprovalCommentRegister.Request request);
 
     @Operation(summary = "결재 대댓글 생성", description = "결재 대댓글을 생성하는 기능입니다.")
     BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 댓글 ID") @PathVariable Long commentId,
-        @Parameter(description = "결재 대댓글 등록 정보") @RequestBody ApprovalReCommentRegister.Request request);
+        @Parameter(description = "결재 대댓글 등록 정보") @RequestBody @Valid ApprovalReCommentRegister.Request request);
 
     @Operation(summary = "결재 승인", description = "결재를 승인하는 기능입니다.")
     BaseResponse<ApprovalConfirm.Response> confirm(
