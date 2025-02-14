@@ -26,7 +26,7 @@ public interface MemberService {
 
     void deleteMember(Long memberId, String reasonForDelete);
 
-    MemberListResponseDto getMembersByOrganizationId(Long organizationId, int page, int size);
+    MemberListResponseDto getMembersByOrganizationId(Long organizationId, String roleParam, String statusParam, String keyword, int page, int size);
 
     MemberSignatureResponseDto uploadSignature(FileResponse signatureFile);
 

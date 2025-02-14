@@ -215,8 +215,7 @@ public class MemberServiceImpl implements MemberService {
 
     //업체별 회원 목록 조회
     @Override
-    public MemberListResponseDto getMembersByOrganizationId(Long organizationId, int page,
-        int size) {
+    public MemberListResponseDto getMembersByOrganizationId(Long organizationId, String roleParam, String statusParam, String keyword, int page, int size) {
 
         //존재하지 않는 업체 아이디인 경우 예외 처리
         if (!organizationRepository.existsById(organizationId)) {
@@ -228,8 +227,17 @@ public class MemberServiceImpl implements MemberService {
             throw new InvalidInputValueException("페이지 번호는 0보다 크고 사이즈는 1보다 커야합니다.");
         }
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberRepository.findByOrganizationId(organizationId, pageable);
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("id").descending());
+
+        Page<Member> memberPage = memberRepository.findByOrganizationId(
+                organizationId,
+                checkRole(roleParam),
+                checkStatus(statusParam),
+                keyword,
+                pageable);
 
         //범위 바깥의 페이지 요청
         if (page >= memberPage.getTotalPages() && memberPage.getTotalPages() != 0) {
@@ -356,4 +364,21 @@ public class MemberServiceImpl implements MemberService {
         }
         return Project.ManagementStep.valueOf(managementStep.toUpperCase());
     }
+
+    private Member.Role checkRole(String role) {
+        if (role == null || role.trim().isEmpty()) {
+            return null;
+        }
+        return Member.Role.valueOf(role.toUpperCase());
+    }
+
+    private Member.Status checkStatus(String status) {
+        if (status == null || status.trim().isEmpty()) {
+            return null;
+        }
+        return Member.Status.valueOf(status.toUpperCase());
+    }
+
+
+
 }

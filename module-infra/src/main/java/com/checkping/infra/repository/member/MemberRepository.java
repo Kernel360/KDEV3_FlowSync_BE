@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -26,21 +27,34 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // - status가 null이면 무시
     // - keyword가 공백이거나 null이면 무시
     @Query("""
-        SELECT m
-        FROM Member m
-        WHERE (:role IS NULL OR m.role = :role)
-          AND (:status IS NULL OR m.status = :status)
-          AND (
-              COALESCE(:keyword, '') = ''
-              OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-              OR LOWER(m.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
-          )
-    """)
+                SELECT m
+                FROM Member m
+                WHERE (:role IS NULL OR m.role = :role)
+                  AND (:status IS NULL OR m.status = :status)
+                  AND (
+                      COALESCE(:keyword, '') = ''
+                      OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                      OR LOWER(m.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                  )
+            """)
     Page<Member> findAllWithFilters(Member.Role role,
                                     Member.Status status,
                                     String keyword,
                                     Pageable pageable);
 
     // 소속 업체 아이디로 회원 조회
-    Page<Member> findByOrganizationId(Long organizationId, Pageable pageable);
+    @Query("SELECT m FROM Member m " +
+            "WHERE m.organization.id = :organizationId " +
+            "AND (:role IS NULL OR m.role = :role) " +
+            "AND (:status IS NULL OR m.status = :status) " +
+            "AND (COALESCE(:keyword, '') = '' " +
+            "     OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "     OR LOWER(m.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Member> findByOrganizationId(
+            @Param("organizationId") Long organizationId,
+            @Param("role") Member.Role role,
+            @Param("status") Member.Status status,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 }
