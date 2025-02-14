@@ -2,18 +2,24 @@ package com.checkping.service.notice;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
 import com.checkping.dto.notice.request.NoticeUpdateRequest;
 import com.checkping.dto.notice.response.*;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.checkping.infra.repository.notice.NoticeRepository;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +29,12 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
+    private final S3FileRepositoryImpl s3FileRepository;
+
+    private final S3FileRepositoryImpl s3FileRepositoryImpl;
+
     @Override
-    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
+    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, List<MultipartFile> files) {
 
         Notice.Priority priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
 
@@ -35,13 +45,30 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-            Notice notice = noticeRepository.save(noticeCreateRequest.toEntity());
+        List<String> fileUrls = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                FileRequest fileRequest = s3FileRepository.uploadFile(file);
+                fileUrls.add(fileRequest.saveName() + "|" + fileRequest.url());
+            }
+        }
+
+        NoticeCreateRequest newNoticeCreateRequest = NoticeCreateRequest.builder()
+                .title(noticeCreateRequest.getTitle())
+                .content(noticeCreateRequest.getContent())
+                .category(noticeCreateRequest.getCategory())
+                .priority(noticeCreateRequest.getPriority())
+                .noticeFileUrls(fileUrls) // 다수의 파일을 리스트로 저장
+                .build();
+
+        Notice notice = noticeRepository.save(newNoticeCreateRequest.toEntity());
+
             return NoticeCreateResponse.toDto(notice);
     }
 
     @Override
     @Transactional
-    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
+    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, List<MultipartFile> files) {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -50,11 +77,30 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
 
+        if (noticeUpdateRequest.getPriority() != null) {
+            Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
+            if (priority == Notice.Priority.EMERGENCY) {
+                long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
+                if (emergencyNoticeCount >= 3) {
+                    throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
+                }
+            }
+        }
+
+        List<String> fileUrls = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                FileRequest fileRequest = s3FileRepository.uploadFile(file);
+                fileUrls.add(fileRequest.saveName() + "|" + fileRequest.url());
+            }
+        }
+
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
-                noticeUpdateRequest.getPriority()
+                noticeUpdateRequest.getPriority(),
+                fileUrls.isEmpty() ? null : fileUrls // 파일이 없으면 null 유지
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
