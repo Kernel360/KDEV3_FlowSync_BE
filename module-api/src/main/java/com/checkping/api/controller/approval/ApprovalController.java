@@ -45,7 +45,7 @@ public class ApprovalController implements ApprovalApi {
     @PostMapping
     @Override
     public BaseResponse<ApprovalRegister.Response> register(@PathVariable Long projectId,
-        @RequestBody ApprovalRegister.Request request) {
+        @RequestBody @Valid ApprovalRegister.Request request) {
 
         ApprovalRegister.Response response = approvalService.register(projectId, request);
 
@@ -105,7 +105,7 @@ public class ApprovalController implements ApprovalApi {
     @Override
     public BaseResponse<ApprovalCommentRegister.Response> registerComment(
         @PathVariable Long projectId, @PathVariable Long approvalId,
-        @RequestBody ApprovalCommentRegister.Request request) {
+        @RequestBody @Valid ApprovalCommentRegister.Request request) {
 
         ApprovalCommentRegister.Response response = approvalService.registerComment(projectId,
             approvalId, request);
@@ -117,7 +117,7 @@ public class ApprovalController implements ApprovalApi {
     @Override
     public BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
         @PathVariable Long projectId, @PathVariable Long approvalId, @PathVariable Long commentId,
-        @RequestBody ApprovalReCommentRegister.Request request) {
+        @RequestBody @Valid ApprovalReCommentRegister.Request request) {
 
         ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,
             approvalId, commentId, request);
@@ -185,7 +185,8 @@ public class ApprovalController implements ApprovalApi {
         @PathVariable Long projectId,
         @ModelAttribute @Valid ApprovalCompleteHistorySearch.Condition condition) {
 
-        ApprovalCompleteHistorySearch.Response response = approvalService.searchCompleteHistory(projectId, condition);
+        ApprovalCompleteHistorySearch.Response response = approvalService.searchCompleteHistory(
+            projectId, condition);
 
         return BaseResponse.success(response);
     }

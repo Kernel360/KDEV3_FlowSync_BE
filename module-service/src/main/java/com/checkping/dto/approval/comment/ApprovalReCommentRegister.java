@@ -5,6 +5,7 @@ import com.checkping.domain.approval.Approval;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class ApprovalReCommentRegister {
         content : 대댓글 내용
          */
 
+        @NotEmpty(message = "내용을 입력해주세요.")
         @Schema(description = "대댓글 내용")
         private String content;
 
@@ -32,7 +34,8 @@ public class ApprovalReCommentRegister {
          */
         public static ApprovalComment toEntity(Request request, Approval approval,
             ApprovalComment parentComment, Member register) {
-            return ApprovalComment.generate(request.getContent(), approval, parentComment, register);
+            return ApprovalComment.generate(request.getContent(), approval, parentComment,
+                register);
         }
     }
 

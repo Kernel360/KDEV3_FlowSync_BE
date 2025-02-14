@@ -3,6 +3,7 @@ package com.checkping.dto.approval.comment;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.approval.ApprovalComment;
 import com.checkping.dto.member.response.MemberResponseDto;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +13,17 @@ public class ApprovalCommentUpdate {
 
     @Getter
     public static class Request {
+
         /*
         content : 댓글 내용
          */
+        @NotEmpty(message = "댓글 내용을 입력해주세요.")
         private String content;
     }
 
     @Getter
     public static class Response {
+
         /*
         id : id
         approval : 결재(FK : approval_id)
@@ -46,7 +50,8 @@ public class ApprovalCommentUpdate {
             dto.regAt = DateTimeUtils.format(approvalComment.getRegAt());
             dto.updatedAt = DateTimeUtils.format(approvalComment.getUpdatedAt());
             dto.deletedYn = null;
-            dto.register = MemberResponseDto.MeResponseDto.fromEntity(approvalComment.getRegister());
+            dto.register = MemberResponseDto.MeResponseDto.fromEntity(
+                approvalComment.getRegister());
             return dto;
         }
     }
