@@ -5,7 +5,6 @@ import com.checkping.dto.question.QuestionCounter;
 import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
-import com.checkping.dto.question.QuestionRegister.Request;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
@@ -44,10 +43,20 @@ public class QuestionController implements QuestionApi {
 
     @PostMapping
     @Override
-    public BaseResponse<QuestionRegister.Response> register(
-        @PathVariable Long projectId, @RequestBody Request request) {
+    public BaseResponse<QuestionRegister.Response> register(@PathVariable Long projectId,
+        @RequestBody QuestionRegister.Request request) {
 
-        QuestionRegister.Response response = questionService.register(projectId, request);
+        QuestionRegister.Response response = questionService.register(projectId, request, null);
+
+        return BaseResponse.success(response);
+    }
+
+    @PostMapping("/{questionId}/answers")
+    @Override
+    public BaseResponse<QuestionRegister.Response> registerAnswer(@PathVariable Long projectId, @PathVariable Long questionId,
+        @RequestBody QuestionRegister.Request request) {
+
+        QuestionRegister.Response response = questionService.register(projectId, request, questionId);
 
         return BaseResponse.success(response);
     }
@@ -86,8 +95,7 @@ public class QuestionController implements QuestionApi {
     @PutMapping("/{questionId}")
     @Override
     public BaseResponse<QuestionItemDto> updateQuestion(@PathVariable Long projectId,
-        @PathVariable Long questionId,
-        @RequestBody UpdateDto request) {
+        @PathVariable Long questionId, @RequestBody UpdateDto request) {
 
         QuestionItemDto updatedBoardDto = questionService.update(projectId,
             questionId, request);

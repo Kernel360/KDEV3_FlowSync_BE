@@ -73,12 +73,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageInfo.Response<OrganizationListGet.Response> getListOrganization(String type, String status, PageInfo.Request pageRequest) {
+    public PageInfo.Response<OrganizationListGet.Response> getListOrganization(
+            String type, String status, String sortField, String sortDirection, PageInfo.Request pageRequest) {
 
         Pageable pageable = PageRequest.of(
                 pageRequest.getCurrentPage() - 1,
                 pageRequest.getPageSize(),
-                Sort.by("id").descending());
+                Sort.by(Sort.Direction.fromString(sortDirection), sortField));
 
         Organization.Type validType = checkType(type);
         Organization.Status validStatus = checkStatus(status);
