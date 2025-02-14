@@ -8,6 +8,7 @@ import com.checkping.dto.question.QuestionRequest.UpdateDto;
 import com.checkping.dto.question.QuestionResponse.QuestionItemDto;
 import com.checkping.dto.question.QuestionResponse.QuestionListDto;
 import com.checkping.dto.question.QuestionSearch;
+import com.checkping.dto.question.QuestionSearchCondition;
 import com.checkping.dto.question.comment.QuestionCommentRegister;
 import com.checkping.dto.question.comment.QuestionCommentRequest;
 import com.checkping.dto.question.comment.QuestionCommentResponse.QuestionCommentDto;
@@ -15,6 +16,7 @@ import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import java.util.List;
 
@@ -33,15 +35,19 @@ public interface QuestionApi {
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "등록 게시글 정보") QuestionRegister.Request request);
 
+//    @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
+//    BaseResponse<QuestionSearch.Response> searchQuestions(
+//        @Parameter(description = "프로젝트 ID") Long projectId,
+//        @Parameter(description = "질문 게시글 유형") Long progressId,
+//        @Parameter(description = "질문 게시글 상태") String status,
+//        @Parameter(description = "질문 게시글 검색어") String keyword,
+//        @Parameter(description = "현재 페이지") @Min(1)Integer currentPage,
+//        @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<QuestionSearch.Response> searchQuestions(
         @Parameter(description = "프로젝트 ID") Long projectId,
-        @Parameter(description = "질문 게시글 유형") Long progressId,
-        @Parameter(description = "질문 게시글 상태") String status,
-        @Parameter(description = "질문 게시글 검색어") String keyword,
-        @Parameter(description = "현재 페이지") @Min(1)Integer currentPage,
-        @Parameter(description = "페이지 사이즈") Integer pageSize);
+        @Parameter(description = "질문 게시글 검색 조건") @Valid QuestionSearchCondition condition);
 
     @Operation(summary = "질문 게시글 상세 조회", description = "질문 게시글을 조회하는 기능입니다.")
     BaseResponse<QuestionGet.Response> get(@Parameter(description = "프로젝트 ID") Long projectId,
