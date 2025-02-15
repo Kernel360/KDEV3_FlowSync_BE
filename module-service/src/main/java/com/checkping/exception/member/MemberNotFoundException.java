@@ -7,4 +7,8 @@ public class MemberNotFoundException extends MemberException{
     public MemberNotFoundException() {
         super("회원이 존재하지 않습니다.", ErrorCode.USER_NOT_FOUND);
     }
+
+    public MemberNotFoundException(String message) {
+        super(message, ErrorCode.USER_NOT_FOUND);
+    }
 }
