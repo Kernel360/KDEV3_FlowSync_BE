@@ -147,12 +147,16 @@ public class Member extends BaseEntity {
     public void deleteAccount(String reason) {
         this.deleteAccountAt = LocalDateTime.now();
         this.reasonForDeleteAccount = reason;
+        this.remark = "회원 탈퇴됨 : " + LocalDate.now();
         this.status = Status.DELETED;
     }
 
     //회원 활성화
     public void activateAccount() {
-        this.reasonForDeleteAccount = "회원 재활성화됨 : " + LocalDate.now();
+        if (this.reasonForDeleteAccount != null && !this.reasonForDeleteAccount.isEmpty()) {
+            this.reasonForDeleteAccount = null;
+        }
+        this.remark = "회원 재활성화됨 : " + LocalDate.now();
         this.status = Status.ACTIVE;
     }
 
