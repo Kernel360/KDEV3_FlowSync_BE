@@ -1,9 +1,7 @@
 package com.checkping.service.project.progressstep;
 
 import com.checkping.domain.member.Member;
-import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.ProgressStep;
-import com.checkping.domain.project.Project;
 import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
@@ -36,11 +34,8 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         // check current member
         Member currentMember = currentMemberUtil.getCurrentMember();
 
-        // find Project
-        Project project = projectReader.getById(projectId);
-
         // check member organization
-        checkOrganization(project, currentMember);
+        checkOrganization(projectId, currentMember);
 
         // find progress steps
         List<ProgressStep> progressSteps = progressStepReader.getByProjectId(projectId);
@@ -111,23 +106,22 @@ public class ProgressStepServiceImpl implements ProgressStepService {
     /**
      * check member organization
      *
-     * @param project       project
+     * @param projectId       projectId
      * @param currentMember current member
      * @throws ProgressStepMismatchProjectException progress step mismatch project exception
      */
-    private void checkOrganization(Project project, Member currentMember) {
+    private void checkOrganization(Long projectId, Member currentMember) {
 
         // check admin
         if (currentMember.isAdmin()) {
             return;
         }
 
-        // organization ids (organization -> organization id)
-        List<Long> organizationIds = project.getOrganizations().stream().map(Organization::getId)
-            .toList();
+        // check project member
+        boolean isProjectMember =  projectReader.matchProjectAndOrganization(projectId,
+            currentMember.getOrganization().getId());
 
-        // check member organization
-        if (!organizationIds.contains(currentMember.getOrganization().getId())) {
+        if (!isProjectMember) {
             throw new ProgressStepMismatchProjectException();
         }
     }
