@@ -1,5 +1,14 @@
 package com.checkping.api.controller.approval;
 
+import static com.checkping.common.enums.SuccessCode.APPROVAL_COMMENT_DELETE;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_COMMENT_REGISTER;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_COMMENT_UPDATE;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_CONFIRM;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_DELETE;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_REGISTER;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_REJECT;
+import static com.checkping.common.enums.SuccessCode.APPROVAL_UPDATE;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.approval.ApprovalConfirm;
 import com.checkping.dto.approval.ApprovalCount;
@@ -49,7 +58,7 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalRegister.Response response = approvalService.register(projectId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_REGISTER.getMessage());
     }
 
     @GetMapping
@@ -88,7 +97,7 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalUpdate.Response response = approvalService.update(projectId, approvalId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_UPDATE.getMessage());
     }
 
     @DeleteMapping("/{approvalId}")
@@ -98,7 +107,7 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalDelete.Response response = approvalService.delete(projectId, approvalId);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_DELETE.getMessage());
     }
 
     @PostMapping("/{approvalId}/comments")
@@ -110,7 +119,7 @@ public class ApprovalController implements ApprovalApi {
         ApprovalCommentRegister.Response response = approvalService.registerComment(projectId,
             approvalId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_COMMENT_REGISTER.getMessage());
     }
 
     @PostMapping("/{approvalId}/comments/{commentId}/recomments")
@@ -122,7 +131,7 @@ public class ApprovalController implements ApprovalApi {
         ApprovalReCommentRegister.Response response = approvalService.registerReComment(projectId,
             approvalId, commentId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_COMMENT_REGISTER.getMessage());
     }
 
     @PostMapping("/{approvalId}/confirm")
@@ -133,7 +142,7 @@ public class ApprovalController implements ApprovalApi {
         // Confirm Approval
         ApprovalConfirm.Response response = approvalService.confirm(projectId, approvalId);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_CONFIRM.getMessage());
     }
 
     @PostMapping("/{approvalId}/reject")
@@ -143,7 +152,7 @@ public class ApprovalController implements ApprovalApi {
 
         ApprovalReject.Response response = approvalService.reject(projectId, approvalId);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_REJECT.getMessage());
     }
 
     @GetMapping("/counts")
@@ -165,7 +174,7 @@ public class ApprovalController implements ApprovalApi {
         ApprovalCommentUpdate.Response response = approvalService.updateComment(projectId,
             approvalId, commentId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_COMMENT_UPDATE.getMessage());
     }
 
     @DeleteMapping("/{approvalId}/comments/{commentId}")
@@ -176,7 +185,7 @@ public class ApprovalController implements ApprovalApi {
         ApprovalCommentDelete.Response response = approvalService.deleteComment(projectId,
             approvalId, commentId);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, APPROVAL_COMMENT_DELETE.getMessage());
     }
 
     @GetMapping("/histories/completion-requests")

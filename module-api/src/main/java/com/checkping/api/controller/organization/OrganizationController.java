@@ -1,5 +1,9 @@
 package com.checkping.api.controller.organization;
 
+import static com.checkping.common.enums.SuccessCode.ORGANIZATION_CHANGE_STATUS;
+import static com.checkping.common.enums.SuccessCode.ORGANIZATION_REGISTER;
+import static com.checkping.common.enums.SuccessCode.ORGANIZATION_UPDATE;
+
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.*;
@@ -25,7 +29,7 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationCreate.Response response = organizationService.createOrganization(request, file);
 
-        return BaseResponse.success(response, "업체 생성 성공");
+        return BaseResponse.success(response, ORGANIZATION_REGISTER.getMessage());
     }
 
     @GetMapping({"/admins/organizations/{organizationId}", "/organization/{organizationId}"})
@@ -66,7 +70,7 @@ public class OrganizationController implements OrganizationApi {
                 organizationId,
                 request, file);
 
-        return BaseResponse.success(response, "업체 수정 성공");
+        return BaseResponse.success(response, ORGANIZATION_UPDATE.getMessage());
     }
 
     @PostMapping("/admins/organizations/{organizationId}/remove")
@@ -78,7 +82,7 @@ public class OrganizationController implements OrganizationApi {
 
         organizationService.removeOrganization(organizationId, request);
 
-        return BaseResponse.success("업체 삭제 완료");
+        return BaseResponse.success(ORGANIZATION_REGISTER.getMessage(), ORGANIZATION_REGISTER.getMessage());
     }
 
     @PostMapping("/admins/organizations/{organizationId}/changeStatus")
@@ -90,7 +94,7 @@ public class OrganizationController implements OrganizationApi {
 
         organizationService.changeStatusOrganization(organizationId, request);
 
-        return BaseResponse.success("업체 상태 전환 완료");
+        return BaseResponse.success(ORGANIZATION_CHANGE_STATUS.getMessage(), ORGANIZATION_CHANGE_STATUS.getMessage());
     }
 
     @GetMapping({"/admins/organizations/{organizationId}/projects","/organizations/{organizationId}/projects"})
