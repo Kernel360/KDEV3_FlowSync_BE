@@ -1,5 +1,12 @@
 package com.checkping.api.controller.member;
 
+import static com.checkping.common.enums.SuccessCode.MEMBER_ACTIVATE;
+import static com.checkping.common.enums.SuccessCode.MEMBER_CHANGE_PASSWORD;
+import static com.checkping.common.enums.SuccessCode.MEMBER_DEACTIVATE;
+import static com.checkping.common.enums.SuccessCode.MEMBER_DELETE;
+import static com.checkping.common.enums.SuccessCode.MEMBER_REGISTER;
+import static com.checkping.common.enums.SuccessCode.MEMBER_UPDATE;
+
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.ProjectListGet;
@@ -52,7 +59,7 @@ public class AdminMemberController implements AdminMemberApi {
     @PostMapping
     public BaseResponse<MemberResponseDto> registerMember(@RequestBody MemberRegisterDto request) {
         MemberResponseDto response = memberService.registerMember(request);
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, MEMBER_REGISTER.getMessage());
     }
 
     @Override
@@ -69,7 +76,7 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestBody MemberUpdateDto request
     ) {
         MemberResponseDto response = memberService.updateMember(memberId, request);
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, MEMBER_UPDATE.getMessage());
     }
 
     @Override
@@ -79,7 +86,7 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestBody ChangePasswordDto request
     ) {
         memberService.changePassword(memberId, request);
-        return BaseResponse.success("비밀번호가 성공적으로 변경되었습니다!");
+        return BaseResponse.success(MEMBER_CHANGE_PASSWORD.getMessage(), MEMBER_CHANGE_PASSWORD.getMessage());
     }
 
     @Override
@@ -89,7 +96,7 @@ public class AdminMemberController implements AdminMemberApi {
             @RequestBody String reason
     ) {
         memberService.deleteMember(memberId, reason);
-        return BaseResponse.success("회원이 성공적으로 삭제되었습니다.");
+        return BaseResponse.success(MEMBER_DELETE.getMessage(), MEMBER_DELETE.getMessage());
     }
 
     @Override
@@ -110,7 +117,7 @@ public class AdminMemberController implements AdminMemberApi {
     @PostMapping("/activate")
     public BaseResponse<String> activateMember(@RequestParam Long memberId) {
         memberService.activateMember(memberId);
-        return BaseResponse.success("회원이 성공적으로 활성화되었습니다.");
+        return BaseResponse.success(MEMBER_ACTIVATE.getMessage(), MEMBER_ACTIVATE.getMessage());
     }
 
     //회원 비활성화
@@ -118,7 +125,7 @@ public class AdminMemberController implements AdminMemberApi {
     @PostMapping("/deactivate")
     public BaseResponse<String> deactivateMember(@RequestParam Long memberId) {
         memberService.deactivateMember(memberId);
-        return BaseResponse.success("회원이 성공적으로 비활성화되었습니다.");
+        return BaseResponse.success(MEMBER_DEACTIVATE.getMessage(), MEMBER_DEACTIVATE.getMessage());
     }
 
     @Override

@@ -1,5 +1,11 @@
 package com.checkping.api.controller.project;
 
+import static com.checkping.common.enums.SuccessCode.PROJECT_DELETE;
+import static com.checkping.common.enums.SuccessCode.PROJECT_MANAGEMENT_STEP_UPDATE;
+import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_UPDATE;
+import static com.checkping.common.enums.SuccessCode.PROJECT_REGISTER;
+import static com.checkping.common.enums.SuccessCode.PROJECT_UPDATE;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.*;
 import com.checkping.dto.project.ProgressStepGet.Response;
@@ -26,7 +32,7 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@RequestBody ProjectRequest.ResisterDto request) {
         ProjectResponse.ProjectDto projectDto = projectService.registerProject(request);
         log.info("FlowSync - resisterProjects name : {}, register_at : {}", projectDto.getName(), projectDto.getRegAt());
-        return BaseResponse.success(projectDto);
+        return BaseResponse.success(projectDto, PROJECT_REGISTER.getMessage());
     }
 
     @Override
@@ -34,7 +40,7 @@ public class ProjectController implements ProjectApi {
     public BaseResponse<ProjectResponse.ProjectDto> deleteProjects(@PathVariable Long projectId) {
         ProjectResponse.ProjectDto projectDto = projectService.deleteProject(projectId);
         log.info("FlowSync - deleteProjects project_id : {}, ", projectId);
-        return BaseResponse.success(projectDto);
+        return BaseResponse.success(projectDto, PROJECT_DELETE.getMessage());
     }
 
     @Override
@@ -52,7 +58,7 @@ public class ProjectController implements ProjectApi {
     {
         ProjectResponse.ProjectDto projectDto = projectService.updateProject(projectId, request);
         log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}", projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt());
-        return BaseResponse.success(projectDto);
+        return BaseResponse.success(projectDto, PROJECT_UPDATE.getMessage());
     }
 
     @Override
@@ -108,7 +114,7 @@ public class ProjectController implements ProjectApi {
             @PathVariable Long projectId,
             @RequestParam String managementStep) {
         ProjectResponse.ProjectDto project = projectService.updateManagementStep(projectId, managementStep);
-        return BaseResponse.success(project);
+        return BaseResponse.success(project, PROJECT_MANAGEMENT_STEP_UPDATE.getMessage());
     }
 
     @Override
@@ -128,6 +134,6 @@ public class ProjectController implements ProjectApi {
 
         ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, PROJECT_PROGRESS_STEP_UPDATE.getMessage());
     }
 }

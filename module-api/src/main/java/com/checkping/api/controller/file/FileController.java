@@ -1,5 +1,7 @@
 package com.checkping.api.controller.file;
 
+import static com.checkping.common.enums.SuccessCode.FILE_UPLOAD;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.service.file.FileService;
@@ -21,6 +23,6 @@ public class FileController implements FileApi {
     @Override
     public BaseResponse<FileResponse> uploadFile(
         @RequestParam("file") MultipartFile multipartFile) {
-        return BaseResponse.success(fileService.upload(multipartFile));
+        return BaseResponse.success(fileService.upload(multipartFile), FILE_UPLOAD.getMessage());
     }
 }

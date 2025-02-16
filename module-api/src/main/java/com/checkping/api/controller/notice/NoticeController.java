@@ -1,5 +1,9 @@
 package com.checkping.api.controller.notice;
 
+import static com.checkping.common.enums.SuccessCode.NOTICE_DELETE;
+import static com.checkping.common.enums.SuccessCode.NOTICE_REGISTER;
+import static com.checkping.common.enums.SuccessCode.NOTICE_UPDATE;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.notice.request.NoticeCreateRequest;
 import com.checkping.dto.notice.request.NoticeSearchRequest;
@@ -41,7 +45,7 @@ public class NoticeController implements NoticeApi {
             @PathVariable Long noticeid
     ) {
         NoticeResponse noticeDeleteResponse = noticeService.deleteNotice(noticeid);
-        return BaseResponse.success(noticeDeleteResponse);
+        return BaseResponse.success(noticeDeleteResponse, NOTICE_DELETE.getMessage());
     }
 
     @Override

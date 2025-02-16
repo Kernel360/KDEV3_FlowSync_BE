@@ -1,5 +1,7 @@
 package com.checkping.api.controller.member;
 
+import static com.checkping.common.enums.SuccessCode.MEMBER_SIGNATURE_UPLOAD;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.dto.member.response.MemberSignatureExistResponseDto;
@@ -35,7 +37,7 @@ public class MemberController implements MemberApi {
         // 서명 파일 URL 저장
         MemberSignatureResponseDto response = memberService.uploadSignature(fileUpload);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, MEMBER_SIGNATURE_UPLOAD.getMessage());
     }
 
     @Override
