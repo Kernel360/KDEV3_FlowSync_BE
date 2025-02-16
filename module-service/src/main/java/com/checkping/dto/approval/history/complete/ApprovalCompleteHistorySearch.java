@@ -53,6 +53,7 @@ public class ApprovalCompleteHistorySearch {
         actor : 행위자
         progress_step : 진행 단계(FK : progress_step_id)
         regAt : 로그 등록 일자
+        status : 진행 상태
          */
         private Long id;
         private Long projectId;
@@ -61,6 +62,7 @@ public class ApprovalCompleteHistorySearch {
         private MemberResponseDto.MeResponseDto actor;
         private ProgressStepGet.Response progressStep;
         private String regAt;
+        private String status;
 
         /**
          * ApprovalCompleteHistory Entity -> ApprovalCompleteHistoryItem Dto
@@ -79,6 +81,7 @@ public class ApprovalCompleteHistorySearch {
             dto.progressStep = ProgressStepGet.Response.toDto(
                 approvalCompleteHistory.getProgressStep());
             dto.regAt = DateTimeUtils.format(approvalCompleteHistory.getRegAt());
+            dto.status = approvalCompleteHistory.getStatus().name();
             return dto;
         }
 
