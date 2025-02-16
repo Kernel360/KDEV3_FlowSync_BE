@@ -48,13 +48,14 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
     @Transactional
     @Override
-    public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId, Long progressStepId, ProgressStepPlanUpdate.Request request) {
+    public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId,
+        Long progressStepId, ProgressStepPlanUpdate.Request request) {
         // TODO : 권한 처리를 인터셉터에서 하도록 하며, 개발사 오너 담당자만 수정 가능 처리해야 한다.
 
         // 프로젝트 진행단계 시작일시 보다 마감일시가 이전이면 예외 발생
         LocalDateTime startAt = request.getStartAt();
         LocalDateTime deadlineAt = request.getDeadlineAt();
-        if (!startAt.isAfter(deadlineAt)) {
+        if (startAt != null && deadlineAt != null && !startAt.isAfter(deadlineAt)) {
             throw new ProgressStepNotAfterStartAtException();
         }
 
@@ -80,7 +81,7 @@ public class ProgressStepServiceImpl implements ProgressStepService {
     private void checkOrganization(Project project, Member currentMember) {
 
         // check admin
-        if(currentMember.isAdmin()) {
+        if (currentMember.isAdmin()) {
             return;
         }
 
