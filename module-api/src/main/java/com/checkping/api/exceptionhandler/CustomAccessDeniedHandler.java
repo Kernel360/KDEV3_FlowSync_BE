@@ -29,7 +29,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         // BaseResponse 사용
         BaseResponse<?> errorResponse = BaseResponse.fail(ErrorCode.FORBIDDEN);
-
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }
