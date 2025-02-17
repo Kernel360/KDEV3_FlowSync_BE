@@ -2,7 +2,6 @@ package com.checkping.service.member.auth;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.domain.member.projection.ProjectList;
-import com.checkping.dto.ProjectListGet;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
@@ -42,9 +41,11 @@ public class AuthService {
                 null,
                 null);
 
-        List<ProjectListGet.Response> dtoList = result.getContent().stream().map(ProjectListGet.Response::toDto).toList();
+        List<Long> projectIds = result.getContent().stream()
+                .map(ProjectList::getId)
+                .toList();
 
-        return BaseResponse.success(MemberResponseDto.MeProjectResponseDto.fromEntity(currentMemberUtil.getCurrentMember(), dtoList));
+        return BaseResponse.success(MemberResponseDto.MeProjectResponseDto.fromEntity(currentMemberUtil.getCurrentMember(), projectIds));
     }
 
     /**
