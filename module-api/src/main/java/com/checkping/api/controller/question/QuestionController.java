@@ -1,5 +1,12 @@
 package com.checkping.api.controller.question;
 
+import static com.checkping.common.enums.SuccessCode.QUESTION_COMMENT_DELETE;
+import static com.checkping.common.enums.SuccessCode.QUESTION_COMMENT_REGISTER;
+import static com.checkping.common.enums.SuccessCode.QUESTION_COMMENT_UPDATE;
+import static com.checkping.common.enums.SuccessCode.QUESTION_DELETE;
+import static com.checkping.common.enums.SuccessCode.QUESTION_REGISTER;
+import static com.checkping.common.enums.SuccessCode.QUESTION_UPDATE;
+
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter;
 import com.checkping.dto.question.QuestionCounter.Response;
@@ -50,7 +57,7 @@ public class QuestionController implements QuestionApi {
 
         QuestionRegister.Response response = questionService.register(projectId, request, null);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, QUESTION_REGISTER.getMessage());
     }
 
     @PostMapping("/{questionId}/answers")
@@ -60,7 +67,7 @@ public class QuestionController implements QuestionApi {
 
         QuestionRegister.Response response = questionService.register(projectId, request, questionId);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, QUESTION_REGISTER.getMessage());
     }
 
 //    @GetMapping
@@ -115,7 +122,7 @@ public class QuestionController implements QuestionApi {
         QuestionItemDto updatedBoardDto = questionService.update(projectId,
             questionId, request);
 
-        return BaseResponse.success(updatedBoardDto);
+        return BaseResponse.success(updatedBoardDto, QUESTION_UPDATE.getMessage());
     }
 
     @DeleteMapping("/{questionId}")
@@ -125,7 +132,7 @@ public class QuestionController implements QuestionApi {
 
         QuestionListDto deletedBoardDto = questionService.deleteSoft(projectId, questionId);
 
-        return BaseResponse.success(deletedBoardDto);
+        return BaseResponse.success(deletedBoardDto, QUESTION_DELETE.getMessage());
     }
 
     @PostMapping("/{questionId}/comments")
@@ -137,7 +144,7 @@ public class QuestionController implements QuestionApi {
         QuestionCommentRegister.Response response = questionCommentService.register(
             questionId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, QUESTION_COMMENT_REGISTER.getMessage());
     }
 
     @Override
@@ -150,7 +157,7 @@ public class QuestionController implements QuestionApi {
         QuestionReCommentRegister.Response response = questionCommentService.registerReComment(
             projectId, questionId, commentId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, QUESTION_COMMENT_REGISTER.getMessage());
     }
 
     @DeleteMapping("/{questionId}/comments/{commentId}")
@@ -161,7 +168,7 @@ public class QuestionController implements QuestionApi {
         QuestionCommentDto deletedCommentDto = questionCommentService.deleteSoft(
             questionId, commentId);
 
-        return BaseResponse.success(deletedCommentDto);
+        return BaseResponse.success(deletedCommentDto, QUESTION_COMMENT_DELETE.getMessage());
     }
 
     @PutMapping("/{questionId}/comments/{commentId}")
@@ -173,7 +180,7 @@ public class QuestionController implements QuestionApi {
         QuestionCommentDto updatedCommentDto = questionCommentService.update(
             questionId, commentId, request);
 
-        return BaseResponse.success(updatedCommentDto);
+        return BaseResponse.success(updatedCommentDto, QUESTION_COMMENT_UPDATE.getMessage());
     }
 
     @GetMapping("/counts")
