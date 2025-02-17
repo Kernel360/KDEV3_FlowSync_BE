@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -218,6 +219,10 @@ public class MemberServiceImpl implements MemberService {
         // 회원 삭제 처리
         member.deleteAccount(reasonForDelete);
         memberRepository.save(member);
+        // Redis 1번 저장소에 탈퇴처리된 회원 ID 저장
+        if(redisConnectionCheckService.isRedisAvailable()){
+            redisTemplateForInactiveMemers.opsForValue().set("deleted:member:" + memberId, "true", 24, TimeUnit.HOURS);
+        }
     }
 
     //업체별 회원 목록 조회
@@ -305,6 +310,7 @@ public class MemberServiceImpl implements MemberService {
         // Redis 1번 저장소에 비활성화된 회원 ID 삭제
         if(redisConnectionCheckService.isRedisAvailable()){
             redisTemplateForInactiveMemers.delete("inactive:member:" + memberId);
+            redisTemplateForInactiveMemers.delete("deleted:member:" + memberId);
         }
     }
 
