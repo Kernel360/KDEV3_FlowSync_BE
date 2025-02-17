@@ -48,7 +48,7 @@ public class Project extends BaseEntity {
     @Column(name = "description", length = 255)
     private String description;
 
-    @Column(name = "detail", length = 255)
+    @Column(name = "detail", length = 500)
     private String detail;
 
     @Enumerated(EnumType.STRING)
