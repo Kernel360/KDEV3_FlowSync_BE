@@ -56,6 +56,12 @@ public enum ErrorCode {
     INACTIVE_OR_DELETED_MEMBER(HttpStatus.CONFLICT, "비활성화 또는 삭제된 회원입니다."),
 
     /*
+        429 Too Many Requests
+    */
+    ALREADY_PROCESSING_REQUEST(HttpStatus.TOO_MANY_REQUESTS, "이미 처리 중인 요청입니다."),
+
+
+    /*
         500 Internal Server Error
     */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
