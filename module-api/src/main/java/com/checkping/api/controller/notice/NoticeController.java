@@ -20,20 +20,18 @@ public class NoticeController implements NoticeApi {
     private final NoticeServiceImpl noticeService;
 
     @Override
-    @PostMapping(value = "/admins/notices", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestPart NoticeCreateRequest noticeCreateRequest,
-                                                             @RequestPart(required = false) List<MultipartFile> files) {
-        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest, files);
+    @PostMapping(value = "/admins/notices", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BaseResponse<NoticeCreateResponse> registerNotice(@RequestBody NoticeCreateRequest noticeCreateRequest) {
+        NoticeCreateResponse noticeCreateResponse = noticeService.registerNotice(noticeCreateRequest);
         return BaseResponse.success(noticeCreateResponse);
     }
 
     @Override
-    @PutMapping(value = "/admins/notices/{noticeid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/admins/notices/{noticeid}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeid,
-            @RequestPart NoticeUpdateRequest noticeUpdateRequest,
-            @RequestPart(required = false) List<MultipartFile> files) {
-        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest, files);
+            @RequestBody NoticeUpdateRequest noticeUpdateRequest) {
+        NoticeResponse noticeWithIsdeletedResponse = noticeService.updateNotice(noticeid, noticeUpdateRequest);
         return BaseResponse.success(noticeWithIsdeletedResponse);
     }
 

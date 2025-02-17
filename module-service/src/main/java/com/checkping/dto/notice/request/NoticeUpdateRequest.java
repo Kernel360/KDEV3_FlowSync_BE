@@ -1,6 +1,7 @@
 package com.checkping.dto.notice.request;
 
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -30,7 +32,7 @@ public class NoticeUpdateRequest {
     private String priority;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private List<String> noticeFileUrls;
+    private List<FileRequest> fileInfoList;
 
     public String convertContentToJson() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -39,6 +41,10 @@ public class NoticeUpdateRequest {
         } catch (JsonProcessingException e) {
             throw new BaseException();
         }
+    }
+
+    public List<FileRequest> getFileInfoListSafe() {
+        return fileInfoList == null ? new ArrayList<>() : fileInfoList;
     }
 
 }

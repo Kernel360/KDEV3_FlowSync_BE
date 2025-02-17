@@ -1,6 +1,7 @@
 package com.checkping.dto.notice.response;
 
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -41,7 +43,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
     private LocalDateTime updatedAt;
 
     @Schema(description = "공지사항 첨부파일 링크")
-    private List<String> noticeFileUrls;
+    private List<FileRequest> fileInfoList;
 
     public static NoticeResponse toDto(Notice notice){
         return NoticeWithIsdeletedResponse.builder()
@@ -53,7 +55,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
-                .noticeFileUrls(notice.getNoticeFileUrls())
+                .fileInfoList(convertFileUrlsToFileRequestList(notice.getNoticeFileUrls()))
                 .build();
     }
 
@@ -64,5 +66,17 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
         } catch (Exception e) {
             throw new BaseException();
         }
+    }
+
+    private static List<FileRequest> convertFileUrlsToFileRequestList(List<String> fileUrls) {
+        List<FileRequest> fileRequestList = new ArrayList<>();
+        for (String fileUrl : fileUrls) {
+            String[] parts = fileUrl.split("\\|");
+            // FileRequest 생성 시, originalName, saveName, url, size 값을 모두 매핑해줘야 함
+            fileRequestList.add(
+                    new FileRequest(parts[0], parts[0], parts[1], 0L) // 사이즈는 0L로 임시 설정, 실제로 사이즈 정보가 필요하면 추가 처리
+            );
+        }
+        return fileRequestList;
     }
 }

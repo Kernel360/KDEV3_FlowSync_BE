@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final S3FileRepositoryImpl s3FileRepositoryImpl;
 
     @Override
-    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest, List<MultipartFile> files) {
+    public NoticeCreateResponse registerNotice(NoticeCreateRequest noticeCreateRequest) {
 
         Notice.Priority priority = Notice.Priority.valueOf(noticeCreateRequest.getPriority());
 
@@ -46,29 +47,20 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         List<String> fileUrls = new ArrayList<>();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                FileRequest fileRequest = s3FileRepository.uploadFile(file);
-                fileUrls.add(fileRequest.saveName() + "|" + fileRequest.url());
-            }
+        if (noticeCreateRequest.getFileInfoList() != null && !noticeCreateRequest.getFileInfoList().isEmpty()) {
+            fileUrls = noticeCreateRequest.getFileInfoList().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
         }
 
-        NoticeCreateRequest newNoticeCreateRequest = NoticeCreateRequest.builder()
-                .title(noticeCreateRequest.getTitle())
-                .content(noticeCreateRequest.getContent())
-                .category(noticeCreateRequest.getCategory())
-                .priority(noticeCreateRequest.getPriority())
-                .noticeFileUrls(fileUrls) // 다수의 파일을 리스트로 저장
-                .build();
-
-        Notice notice = noticeRepository.save(newNoticeCreateRequest.toEntity());
+        Notice notice = noticeRepository.save(noticeCreateRequest.toEntity(fileUrls));
 
             return NoticeCreateResponse.toDto(notice);
     }
 
     @Override
     @Transactional
-    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest, List<MultipartFile> files) {
+    public NoticeResponse updateNotice(Long noticeid, NoticeUpdateRequest noticeUpdateRequest) {
 
         Notice notice = noticeRepository.findById(noticeid)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -87,20 +79,16 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = new ArrayList<>();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                FileRequest fileRequest = s3FileRepository.uploadFile(file);
-                fileUrls.add(fileRequest.saveName() + "|" + fileRequest.url());
-            }
-        }
+        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                .collect(Collectors.toList());
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? null : fileUrls // 파일이 없으면 null 유지
+                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
