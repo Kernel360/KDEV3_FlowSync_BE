@@ -12,6 +12,9 @@ import com.checkping.domain.project.projection.ProjectInfo;
 import com.checkping.domain.project.projection.ProjectListInfoByManagementStep;
 import com.checkping.dto.project.ProjectResponse;
 import com.checkping.dto.project.ProjectSearchRequest;
+import com.checkping.exception.member.MemberNotFoundException;
+import com.checkping.exception.member.OrganizationNotFoundEntityException;
+import com.checkping.exception.project.*;
 import com.checkping.infra.dto.ProjectUpdateDetailsDto;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
@@ -47,21 +50,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public ProjectResponse.ProjectDto registerProject(ProjectRequest.ResisterDto request) {
-        if (StringUtils.isBlank(request.getName())) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
+        validateProjectData(request.getStartAt(), request.getDeadlineAt(), request.getManagementStep());
 
         List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
         Project project = projectRepository.save(ProjectRequest.ResisterDto.toEntity(request, organizations, members));
 
-        List<ProgressStep> steps = new ArrayList<>();
+        List<ProgressStep> steps = Arrays.stream(ProgressStep.CurrentStep.values())
+                .map(step -> ProgressStep.generate(project.getId(), step.getName(), step.getDescription(), step.getOrder()))
+                .toList();
 
-        for (ProgressStep.CurrentStep step : ProgressStep.CurrentStep.values()) {
-            // generate progress step
-            ProgressStep progressStep = ProgressStep.generate(project.getId(),step.getName(),step.getDescription(), step.getOrder());
-            steps.add(progressStep);
+        if (steps.isEmpty()) {
+            throw new ProjectStepCreationException();
         }
 
         progressStepRepository.saveAll(steps);
@@ -83,6 +84,10 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
+        if ("Y".equalsIgnoreCase(project.getDeletedYn())) {
+            throw new ProjectAlreadyDeletedException();
+        }
+
         project.deleteProject();
 
         return ProjectResponse.ProjectDto.toDto(projectRepository.save(project));
@@ -91,18 +96,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponse.ProjectDto updateProject(Long projectId,
                                                     ProjectRequest.UpdateDto request) {
-        if (StringUtils.isBlank(request.getName())) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
-        }
+        validateProjectData(request.getStartAt(), request.getDeadlineAt(), request.getManagementStep());
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(ProjectNotFoundException::new);
 
-        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(),
-                request.getCustomerOrgId());
+        List<Organization> organizations = getOrganizations(request.getDeveloperOrgId(), request.getCustomerOrgId());
         List<Member> members = getMembers(request.getMembers());
 
-        if(Project.ManagementStep.valueOf(request.getManagementStep()).equals(Project.ManagementStep.COMPLETED)){
+        if (Project.ManagementStep.valueOf(request.getManagementStep()) == Project.ManagementStep.COMPLETED) {
             project.updateCloseAt();
         }
 
@@ -166,16 +168,16 @@ public class ProjectServiceImpl implements ProjectService {
     private List<Organization> getOrganizations(Long developerOrgId, Long customerOrgId) {
         return Arrays.asList(
                 organizationRepository.findByIdAndType(developerOrgId, Organization.Type.DEVELOPER)
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)),
+                        .orElseThrow(OrganizationNotFoundEntityException::new),
                 organizationRepository.findByIdAndType(customerOrgId, Organization.Type.CUSTOMER)
-                        .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND))
+                        .orElseThrow(OrganizationNotFoundEntityException::new)
         );
     }
 
     private List<Member> getMembers(List<Long> memberIds) {
         return memberIds.stream()
                 .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND)))
+                        .orElseThrow(MemberNotFoundException::new))
                 .collect(Collectors.toList());
     }
 
@@ -277,27 +279,53 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public ProjectResponse.ProjectDto updateManagementStep(Long projectId, String managementStep) {
+        validateManagementStep(managementStep);
+
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
+                .orElseThrow(ProjectNotFoundException::new);
 
         Member member = currentMemberUtil.getCurrentMember();
+        validateUpdatePermissions(member, project);
 
-        // 관리자 및 개발사 대표자만 수정 가능
-        if (member.getRole() != Member.Role.ADMIN) {
-            if (!member.getOrganization().getType().equals(Organization.Type.DEVELOPER) ||
-                    !member.getId().equals(project.getDevOwner().getId())) {
-                throw new BaseException(ErrorCode.BAD_REQUEST);
-            }
-        }
+        Optional.of(Project.ManagementStep.valueOf(managementStep))
+                .filter(step -> step == Project.ManagementStep.COMPLETED)
+                .ifPresent(step -> project.updateCloseAt());
 
-        if(Project.ManagementStep.valueOf(managementStep).equals(Project.ManagementStep.COMPLETED)){
+        if (Project.ManagementStep.valueOf(managementStep) == Project.ManagementStep.COMPLETED) {
             project.updateCloseAt();
         }
 
         project.updateManagementStep(Project.ManagementStep.valueOf(managementStep));
-        projectRepository.save(project);
 
         return ProjectResponse.ProjectDto.toDto(project);
     }
 
+    private void validateProjectData(LocalDateTime startAt, LocalDateTime deadlineAt, String managementStep) {
+        if (!deadlineAt.isAfter(startAt)) {
+            throw new InvalidProjectDataException("마감일은 시작일보다 이후여야 합니다.");
+        }
+
+        validateManagementStep(managementStep);
+    }
+
+    private void validateManagementStep(String managementStep) {
+        if (StringUtils.isBlank(managementStep))
+            throw new InvalidProjectDataException("관리 단계는 필수 입력값입니다.");
+
+        try {
+            Project.ManagementStep.valueOf(managementStep);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidProjectDataException("잘못된 관리 단계 값입니다.");
+        }
+    }
+
+    private void validateUpdatePermissions(Member member, Project project) {
+        if (member.getRole() == Member.Role.ADMIN) return;
+
+        if (member.getOrganization() == null
+                || member.getOrganization().getType() != Organization.Type.DEVELOPER
+                || !member.getId().equals(project.getDevOwner().getId())) {
+            throw new ProjectUpdatePermissionException();
+        }
+    }
 }
