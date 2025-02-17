@@ -1,12 +1,5 @@
 package com.checkping.api.controller.member;
 
-import static com.checkping.common.enums.SuccessCode.MEMBER_ACTIVATE;
-import static com.checkping.common.enums.SuccessCode.MEMBER_CHANGE_PASSWORD;
-import static com.checkping.common.enums.SuccessCode.MEMBER_DEACTIVATE;
-import static com.checkping.common.enums.SuccessCode.MEMBER_DELETE;
-import static com.checkping.common.enums.SuccessCode.MEMBER_REGISTER;
-import static com.checkping.common.enums.SuccessCode.MEMBER_UPDATE;
-
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.ProjectListGet;
@@ -17,18 +10,19 @@ import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.service.member.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static com.checkping.common.enums.SuccessCode.*;
+
 
 @Tag(name = "어드민 회원 관리 API(AdminMemberApi)", description = "어드민 권한으로 회원을 관리할 수 있도록 하는 API입니다.")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/admins/members")
 public class AdminMemberController implements AdminMemberApi {
 
     private final MemberService memberService;
-
-    public AdminMemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     //keyword(예: 이름/이메일 검색)
     @GetMapping
