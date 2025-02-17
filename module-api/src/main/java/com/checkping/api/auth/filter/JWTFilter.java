@@ -67,12 +67,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // 요청한 Access Token이 블랙리스트에 등록된 토큰인지 확인
             if (tokenBlacklistService.isAccessTokenBlacklisted(accessToken)) {
-                throw new AuthenticationException("블랙리스트에 등록된 토큰입니다.");
+                throw new AuthenticationException("블랙리스트에 등록된 토큰입니다. 요청된 토큰 발급회원 id: " + id);
             }
 
-            // 요청한 access token의 id가 비활성화된 회원인지 확인
+            // 요청한 access token의 id가 비활성화되었거나 삭제된 회원인지 확인
             Boolean isInactive = redisTemplateForInactiveMembers.hasKey("inactive:member:" + id);
-            if (Boolean.TRUE.equals(isInactive)) {
+            Boolean isDeleted = redisTemplateForInactiveMembers.hasKey("deleted:member:" + id);
+            if (Boolean.TRUE.equals(isInactive) || Boolean.TRUE.equals(isDeleted)) {
                 // 비활성화된 회원이 보낸 토큰을 블랙리스트에 추가
                 tokenBlacklistService.blacklistAccessToken(accessToken, jwtUtil.getExpiration(accessToken));
                 // 리프레시 토큰도 블랙리스트에 추가
@@ -84,7 +85,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 response.addCookie(delAccess);
                 response.addCookie(delRefresh);
 
-                throw new AuthenticationException("비활성화된 회원입니다.");
+                throw isInactive ? new AuthenticationException("비활성화된 회원입니다. 요청된 토큰 발급회원 id: " + id) : new AuthenticationException("삭제된 회원입니다. 요청된 토큰 발급회원 id: " + id);
             }
         }
 
