@@ -14,6 +14,7 @@ public class QuestionCounter {
         private String title;
         private String value;
         private Long count;
+        private Integer stepOrder;
 
         public static Response toDto(ProgressStep progressStep, Long count) {
             Response response = new Response();
@@ -21,6 +22,7 @@ public class QuestionCounter {
             response.title = progressStep.getName();
             response.value = progressStep.getDescription();
             response.count = count;
+            response.stepOrder = progressStep.getStepOrder();
             return response;
         }
 
@@ -36,6 +38,7 @@ public class QuestionCounter {
             response.title = "전체";
             response.value = "ALL";
             response.count = count;
+            response.stepOrder = -1;
             return response;
         }
     }
