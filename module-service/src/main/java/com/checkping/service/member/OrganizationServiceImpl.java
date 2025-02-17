@@ -44,6 +44,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationCreate.Response createOrganization(OrganizationCreate.Request request, MultipartFile file) {
 
+        request.setName(request.getName().strip());
+
         if (organizationRepository.findByNameAndType(request.getName(), request.getTypeEnum()).isPresent()) {
             throw new OrganizationAlreadyExistEntityException();
         }
