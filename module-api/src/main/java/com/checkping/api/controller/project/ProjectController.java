@@ -119,7 +119,7 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
+    @PatchMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
     public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
         @PathVariable Long progressStepId,
         @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
