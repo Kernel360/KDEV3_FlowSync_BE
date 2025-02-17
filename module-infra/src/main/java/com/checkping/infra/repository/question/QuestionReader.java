@@ -18,4 +18,6 @@ public interface QuestionReader {
     Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
 
     boolean checkQuestionContaining(Long projectId, Long questionId);
+
+    boolean existsByProgressStepId(Long progressStepId);
 }

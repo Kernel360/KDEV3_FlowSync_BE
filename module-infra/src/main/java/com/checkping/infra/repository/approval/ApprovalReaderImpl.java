@@ -52,4 +52,9 @@ public class ApprovalReaderImpl implements ApprovalReader {
     public boolean isApprovalRegister(Long approvalId, Long registerId) {
         return approvalRepository.existsByIdAndRegisterId(approvalId, registerId);
     }
+
+    @Override
+    public boolean existsByProgressStepId(Long progressStepId) {
+        return approvalRepository.existsByProgressStepId(progressStepId);
+    }
 }

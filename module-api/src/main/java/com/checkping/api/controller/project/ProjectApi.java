@@ -1,6 +1,7 @@
 package com.checkping.api.controller.project;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.dto.project.ProgressStepDelete;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
@@ -91,5 +92,11 @@ public interface ProjectApi {
     BaseResponse<List<ProgressStepOrderUpdater.Response>> updateProgressStepOrder(
             @Parameter(description = "프로젝트 ID") Long projectId,
             @Parameter(description = "수정할 프로젝트 진행 상태 순서 정보 Dto") @Valid ProgressStepOrderUpdater.Request request
+    );
+
+    @Operation(summary = "프로젝트 진행 상태 삭제", description = "프로젝트 진행 상태를 삭제하는 기능입니다.")
+    BaseResponse<ProgressStepDelete.Response> deleteProgressStep(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId
     );
 }

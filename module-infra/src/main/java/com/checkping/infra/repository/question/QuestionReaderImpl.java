@@ -92,4 +92,9 @@ public class QuestionReaderImpl implements QuestionReader {
     public boolean checkQuestionContaining(Long projectId, Long questionId) {
         return questionRepository.existsByProjectIdAndId(projectId, questionId);
     }
+
+    @Override
+    public boolean existsByProgressStepId(Long progressStepId) {
+        return questionRepository.existsByProgressStepId(progressStepId);
+    }
 }

@@ -19,4 +19,6 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long>, Appro
     boolean existsByProjectIdAndId(Long projectId, Long approvalId);
 
     boolean existsByIdAndRegisterId(Long approvalId, Long registerId);
+
+    boolean existsByProgressStepId(Long progressStepId);
 }

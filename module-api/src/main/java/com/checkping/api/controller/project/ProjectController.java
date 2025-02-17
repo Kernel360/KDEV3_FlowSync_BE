@@ -2,6 +2,7 @@ package com.checkping.api.controller.project;
 
 import static com.checkping.common.enums.SuccessCode.PROJECT_DELETE;
 import static com.checkping.common.enums.SuccessCode.PROJECT_MANAGEMENT_STEP_UPDATE;
+import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_DELETE;
 import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_REGISTER;
 import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_UPDATE;
 import static com.checkping.common.enums.SuccessCode.PROJECT_REGISTER;
@@ -33,7 +34,8 @@ public class ProjectController implements ProjectApi {
     @PostMapping("/admins/projects")
     public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@Valid @RequestBody ProjectRequest.ResisterDto request) {
         ProjectResponse.ProjectDto projectDto = projectService.registerProject(request);
-        log.info("FlowSync - resisterProjects name : {}, register_at : {}", projectDto.getName(), projectDto.getRegAt());
+        log.info("FlowSync - resisterProjects name : {}, register_at : {}", projectDto.getName(),
+            projectDto.getRegAt());
         return BaseResponse.success(projectDto, PROJECT_REGISTER.getMessage());
     }
 
@@ -47,8 +49,10 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @GetMapping("/admins/projects/{projectId}")
-    public BaseResponse<ProjectResponse.ProjectUpdateDto> getProjectUpdateInfo(@PathVariable Long projectId) {
-        ProjectResponse.ProjectUpdateDto projectUpdateDto = projectService.getUpdateProjectInfo(projectId);
+    public BaseResponse<ProjectResponse.ProjectUpdateDto> getProjectUpdateInfo(
+        @PathVariable Long projectId) {
+        ProjectResponse.ProjectUpdateDto projectUpdateDto = projectService.getUpdateProjectInfo(
+            projectId);
         return BaseResponse.success(projectUpdateDto);
     }
 
@@ -59,43 +63,46 @@ public class ProjectController implements ProjectApi {
             @Valid @RequestBody ProjectRequest.UpdateDto request)
     {
         ProjectResponse.ProjectDto projectDto = projectService.updateProject(projectId, request);
-        log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}", projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt());
+        log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}",
+            projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt());
         return BaseResponse.success(projectDto, PROJECT_UPDATE.getMessage());
     }
 
     @Override
     @GetMapping(value = {"/admins/projects", "/projects"})
     public BaseResponse<ProjectResponse.ProjectListDto> listProjects(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String managementStep,
-            @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "desc") String order
-            ) {
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) String managementStep,
+        @RequestParam(defaultValue = "1") int currentPage,
+        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestParam(defaultValue = "id") String sort,
+        @RequestParam(defaultValue = "desc") String order
+    ) {
 
         ProjectSearchRequest searchRequest = ProjectSearchRequest.builder()
-                .keyword(keyword)
-                .managementStep(managementStep)
-                .currentPage(currentPage)
-                .pageSize(pageSize)
-                .sort(sort)
-                .order(order)
-                .build();
+            .keyword(keyword)
+            .managementStep(managementStep)
+            .currentPage(currentPage)
+            .pageSize(pageSize)
+            .sort(sort)
+            .order(order)
+            .build();
 
         ProjectResponse.ProjectListDto projects = projectService.findAllProjects(searchRequest);
         return BaseResponse.success(projects);
     }
 
     @Override
-    @GetMapping(value={"/admins/projects/management-steps/count", "/projects/management-steps/count"})
+    @GetMapping(value = {"/admins/projects/management-steps/count",
+        "/projects/management-steps/count"})
     public BaseResponse<ProjectResponse.ProjectManagementStepCountDto> countProjectsByManagementStep() {
         ProjectResponse.ProjectManagementStepCountDto projectCount = projectService.countProjectsByManagementStep();
         return BaseResponse.success(projectCount);
     }
 
     @Override
-    @GetMapping(value = {"/admins/projects/{projectId}/project-info", "/projects/{projectId}/project-info"})
+    @GetMapping(value = {"/admins/projects/{projectId}/project-info",
+        "/projects/{projectId}/project-info"})
     public BaseResponse<ProjectResponse.ProjectInfoDto> getProject(@PathVariable Long projectId) {
         ProjectResponse.ProjectInfoDto project = projectService.findProjectByProjectId(projectId);
         return BaseResponse.success(project);
@@ -104,24 +111,27 @@ public class ProjectController implements ProjectApi {
     @Override
     @GetMapping(value = {"/admins/projects/management-steps", "/projects/management-steps"})
     public BaseResponse<ProjectResponse.ProjectListByManagementStepDto> findProjectsByManagementSteps(
-            @RequestParam String managementStep,
-            @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        ProjectResponse.ProjectListByManagementStepDto projectList = projectService.findProjectsByManagementSteps(managementStep, currentPage, pageSize);
+        @RequestParam String managementStep,
+        @RequestParam(defaultValue = "1") int currentPage,
+        @RequestParam(defaultValue = "10") int pageSize) {
+        ProjectResponse.ProjectListByManagementStepDto projectList = projectService.findProjectsByManagementSteps(
+            managementStep, currentPage, pageSize);
         return BaseResponse.success(projectList);
     }
 
     @PutMapping("/projects/{projectId}/management-steps")
     public BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
-            @PathVariable Long projectId,
-            @RequestParam String managementStep) {
-        ProjectResponse.ProjectDto project = projectService.updateManagementStep(projectId, managementStep);
+        @PathVariable Long projectId,
+        @RequestParam String managementStep) {
+        ProjectResponse.ProjectDto project = projectService.updateManagementStep(projectId,
+            managementStep);
         return BaseResponse.success(project, PROJECT_MANAGEMENT_STEP_UPDATE.getMessage());
     }
 
     @Override
     @GetMapping("/projects/{projectId}/progress-steps")
-    public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(@PathVariable Long projectId) {
+    public BaseResponse<List<ProgressStepGet.Response>> getProgressStep(
+        @PathVariable Long projectId) {
 
         List<Response> response = progressStepService.getProgressStep(projectId);
 
@@ -130,21 +140,25 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
-    public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
+    public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(
+        @PathVariable Long projectId,
         @PathVariable Long progressStepId,
         @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
 
-        ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
+        ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(
+            projectId, progressStepId, request);
 
         return BaseResponse.success(response, PROJECT_PROGRESS_STEP_UPDATE.getMessage());
     }
 
     @Override
     @PostMapping("/projects/{projectId}/progress-steps")
-    public BaseResponse<ProgressStepRegister.Response> resisterProgressStep(@PathVariable Long projectId,
+    public BaseResponse<ProgressStepRegister.Response> resisterProgressStep(
+        @PathVariable Long projectId,
         @RequestBody @Valid ProgressStepRegister.Request request) {
 
-        ProgressStepRegister.Response response = progressStepService.registerProgressStep(projectId, request);
+        ProgressStepRegister.Response response = progressStepService.registerProgressStep(projectId,
+            request);
 
         return BaseResponse.success(response, PROJECT_PROGRESS_STEP_REGISTER.getMessage());
     }
@@ -152,10 +166,22 @@ public class ProjectController implements ProjectApi {
     @Override
     @PutMapping("/projects/{projectId}/progress-steps/orders")
     public BaseResponse<List<ProgressStepOrderUpdater.Response>> updateProgressStepOrder(
-        @PathVariable Long projectId, @RequestBody @Valid ProgressStepOrderUpdater.Request request) {
+        @PathVariable Long projectId,
+        @RequestBody @Valid ProgressStepOrderUpdater.Request request) {
 
-        List<ProgressStepOrderUpdater.Response> response = progressStepService.updateProgressStepOrder(projectId, request);
+        List<ProgressStepOrderUpdater.Response> response = progressStepService.updateProgressStepOrder(
+            projectId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, PROJECT_PROGRESS_STEP_UPDATE.getMessage());
+    }
+
+    @Override
+    @DeleteMapping("/projects/{projectId}/progress-steps/{progressStepId}")
+    public BaseResponse<ProgressStepDelete.Response> deleteProgressStep(
+        @PathVariable Long projectId, @PathVariable Long progressStepId) {
+
+        ProgressStepDelete.Response response = progressStepService.deleteProgressStep(projectId, progressStepId);
+
+        return BaseResponse.success(response, PROJECT_PROGRESS_STEP_DELETE.getMessage());
     }
 }

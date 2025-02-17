@@ -36,6 +36,7 @@ public enum SuccessCode {
     PROJECT_MANAGEMENT_STEP_UPDATE(HttpStatus.OK, "프로젝트 관리 단계 수정이 완료되었습니다."),
     PROJECT_PROGRESS_STEP_REGISTER(HttpStatus.OK, "프로젝트 진행 단계 등록이 완료되었습니다."),
     PROJECT_PROGRESS_STEP_UPDATE(HttpStatus.OK, "프로젝트 진행 단계 수정이 완료되었습니다."),
+    PROJECT_PROGRESS_STEP_DELETE(HttpStatus.OK, "프로젝트 진행 단계 삭제가 완료되었습니다."),
 
     // APPROVAL
     APPROVAL_REGISTER(HttpStatus.OK, "결재 등록이 완료되었습니다."),
