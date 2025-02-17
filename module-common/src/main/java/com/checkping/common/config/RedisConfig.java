@@ -3,6 +3,7 @@ package com.checkping.common.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,6 +30,16 @@ public class RedisConfig {
     public RedisConnectionFactory redisConnectionFactoryForInactiveMembers() {
         LettuceConnectionFactory factory = new LettuceConnectionFactory(redisHost, redisPort);
         factory.setDatabase(1);
+        factory.afterPropertiesSet();  // 필수 초기화 호출
+        return factory;
+    }
+
+    // 2번 저장소 사용 - 중복 클릭 방지
+    @Bean
+    public RedisConnectionFactory redisConnectionFactoryForDuplicatedClick() {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisHost, redisPort);
+        factory.setDatabase(2);
+        factory.afterPropertiesSet();  // 필수 초기화 호출
         return factory;
     }
 
@@ -42,7 +53,13 @@ public class RedisConfig {
     }
 
     @Bean // 1번 저장소 사용
+    @Primary
     public StringRedisTemplate redisTemplateForInactiveMembers() {
         return new StringRedisTemplate(redisConnectionFactoryForInactiveMembers());
+    }
+
+    @Bean // 2번 저장소 사용 (중복 클릭 방지)
+    public StringRedisTemplate redisTemplateForDuplicatedClick() {
+        return new StringRedisTemplate(redisConnectionFactoryForDuplicatedClick());
     }
 }
