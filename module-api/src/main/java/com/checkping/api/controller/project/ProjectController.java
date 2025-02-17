@@ -146,4 +146,14 @@ public class ProjectController implements ProjectApi {
 
         return BaseResponse.success(response, PROJECT_PROGRESS_STEP_REGISTER.getMessage());
     }
+
+    @Override
+    @PutMapping("/projects/{projectId}/progress-steps/orders")
+    public BaseResponse<List<ProgressStepOrderUpdater.Response>> updateProgressStepOrder(
+        @PathVariable Long projectId, @RequestBody @Valid ProgressStepOrderUpdater.Request request) {
+
+        List<ProgressStepOrderUpdater.Response> response = progressStepService.updateProgressStepOrder(projectId, request);
+
+        return BaseResponse.success(response);
+    }
 }
