@@ -89,14 +89,19 @@ public class ProjectQueryRepository {
 
         query.orderBy(p.id.desc());
 
-        List<ProjectList> results = query
-                .offset(pageable.getOffset())  // 시작 위치 설정
-                .limit(pageable.getPageSize())  // 페이지 크기 설정
-                .fetch();
+        List<ProjectList> results;
+        long totalCount;
 
-        long totalCount = query.fetchCount();
+        // pageable이 null이면 전체 목록 반환
+        if (pageable == null) {
+            results = query.fetch();
+            totalCount = results.size();
+        } else {
+            results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+            totalCount = query.fetchCount();
+        }
 
-        return new PageImpl<>(results, pageable, totalCount);
+        return new PageImpl<>(results, pageable != null ? pageable : Pageable.unpaged(), totalCount);
     }
 
 
