@@ -41,7 +41,6 @@ public enum ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     ORGANIZATION_NOT_FOUND(HttpStatus.NOT_FOUND, "업체를 찾을 수 없습니다."),
-    DELETED_MEMBER(HttpStatus.NOT_FOUND, "삭제된 회원입니다."),
 
     /*
         409 Conflict
@@ -50,6 +49,7 @@ public enum ErrorCode {
     ALREADY_APPLIED(HttpStatus.CONFLICT, "이미 적용된 상태입니다."),
     INSUFFICIENT_PERMISSIONS(HttpStatus.CONFLICT, "권한이 부족합니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
+    DELETED_MEMBER(HttpStatus.CONFLICT, "삭제된 회원입니다."),
     INACTIVE_MEMBER(HttpStatus.CONFLICT, "비활성화된 회원입니다."),
     INACTIVE_OR_DELETED_MEMBER(HttpStatus.CONFLICT, "비활성화 또는 삭제된 회원입니다."),
 

@@ -3,7 +3,6 @@ package com.checkping.service.member;
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.dto.PageMetaResponse;
 import com.checkping.common.enums.ErrorCode;
-import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileResponse;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.member.Organization;
@@ -17,7 +16,7 @@ import com.checkping.dto.member.response.MemberListResponseDto;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.dto.member.response.MemberSignatureExistResponseDto;
 import com.checkping.dto.member.response.MemberSignatureResponseDto;
-import com.checkping.exception.member.InvalidInputValueException;
+import com.checkping.exception.member.*;
 import com.checkping.infra.repository.member.MemberRepository;
 import com.checkping.infra.repository.member.OrganizationRepository;
 import com.checkping.infra.repository.member.ProjectQueryRepository;
@@ -35,8 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
-// TODO BaseException 을 상속하는 커스텀 Exception 작성하기
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
         return MemberResponseDto.fromEntity(member);
     }
 
@@ -132,12 +129,12 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto registerMember(MemberRegisterDto dto) {
         // 이메일 중복 체크
         if (memberRepository.existsByEmail(dto.getEmail())) {
-            throw new BaseException("이미 사용중인 이메일입니다.", ErrorCode.DUPLICATE_EMAIL);
+            throw new MemberException("이미 사용중인 이메일입니다. "+ dto.getEmail(), ErrorCode.DUPLICATE_EMAIL);
         }
 
         // 조직(Organization) 존재 여부 확인
         Organization organization = organizationRepository.findById(dto.getOrganizationId())
-            .orElseThrow(() -> new BaseException("조직이 존재하지 않습니다: " + dto.getOrganizationId(),
+            .orElseThrow(() -> new OrganizationException("조직이 존재하지 않습니다. id: " + dto.getOrganizationId(),
                 ErrorCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
@@ -159,7 +156,12 @@ public class MemberServiceImpl implements MemberService {
         // 기존 회원 찾기
         Member existingMember = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
+
+        // 삭제된 회원이면 수정 불가
+        if (existingMember.isDeleted()) {
+            throw new DeletedMemberException();
+        }
 
         // DTO -> 엔티티 업데이트
         MemberUpdateDto.toEntity(existingMember, dto);
@@ -176,16 +178,21 @@ public class MemberServiceImpl implements MemberService {
     public void changePassword(Long memberId, ChangePasswordDto dto) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
+
+        // 삭제된 회원이면 수정 불가
+        if (member.isDeleted()) {
+            throw new DeletedMemberException();
+        }
 
         // 현재 비밀번호 확인, TODO 추후 현재 비밀번호 확인 로직 추가
 //        if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
-//            throw new BaseException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
+//            throw new MemberException("현재 비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_LOGIN_CREDENTIALS);
 //        }
 
         // 새 비밀번호와 확인 비밀번호 일치 여부 확인
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new BaseException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.",
+            throw new MemberException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.",
                 ErrorCode.INVALID_LOGIN_CREDENTIALS);
         }
 
@@ -199,14 +206,14 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    // 회원 삭제
+    // 회원 탈퇴
     @Override
     public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
         if (member.isDeleted()) {
-            throw new BaseException("이미 삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+            throw new DeletedMemberException();
         }
         // 회원 삭제 처리
         member.deleteAccount(reasonForDelete);
@@ -220,7 +227,7 @@ public class MemberServiceImpl implements MemberService {
 
         //존재하지 않는 업체 아이디인 경우 예외 처리
         if (!organizationRepository.existsById(organizationId)) {
-            throw new BaseException("해당 업체가 존재하지 않습니다.", ErrorCode.ORGANIZATION_NOT_FOUND);
+            throw new OrganizationNotFoundEntityException();
         }
 
         //페이지에 음수들어온 경우 예외 처리
@@ -272,15 +279,17 @@ public class MemberServiceImpl implements MemberService {
         return MemberSignatureExistResponseDto.toDto(member);
     }
 
-    //회원 활성화
+    /** 회원 활성화
+     *  관리자가 회원을 활성화 처리합니다. - activateAccount
+     *  */
     @Override
     public void activateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
 
         if(member.isActive()){
-            throw new BaseException("이미 활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+            throw new MemberException("이미 활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
         }
         member.activateAccount();
         memberRepository.save(member);
@@ -299,14 +308,14 @@ public class MemberServiceImpl implements MemberService {
     public void deactivateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
 
         if(member.isDeleted()){
-            throw new BaseException("삭제된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+            throw new DeletedMemberException();
         }
 
         if(!member.isActive()){
-            throw new BaseException("이미 비활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
+            throw new MemberException("이미 비활성화된 회원입니다.", ErrorCode.ALREADY_APPLIED);
         }
         member.deactivateAccount();
         memberRepository.save(member);
@@ -321,7 +330,7 @@ public class MemberServiceImpl implements MemberService {
     public String getMemberStatus(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new BaseException("회원이 존재하지 않습니다: " + memberId, ErrorCode.USER_NOT_FOUND));
+                () -> new MemberNotFoundException("회원이 존재하지 않습니다. id: " + memberId));
         return member.getStatus().name();
     }
 
