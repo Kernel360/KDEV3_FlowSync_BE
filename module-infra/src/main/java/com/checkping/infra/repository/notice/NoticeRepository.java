@@ -33,7 +33,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
                                    Pageable pageable);
 
     @Query("SELECT n FROM Notice n " +
-            "WHERE (:category IS NULL OR n.category = :category) " +
+            "WHERE (n.priority = 'EMERGENCY' OR :category IS NULL OR n.category = :category) " +
             "AND (:keyword IS NULL OR :keyword = '' OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) " +
             "AND n.isDeleted = false " +
             "ORDER BY " +
