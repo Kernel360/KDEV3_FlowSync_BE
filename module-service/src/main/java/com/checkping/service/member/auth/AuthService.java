@@ -1,18 +1,24 @@
 package com.checkping.service.member.auth;
 
 import com.checkping.common.response.BaseResponse;
+import com.checkping.domain.member.projection.ProjectList;
+import com.checkping.dto.ProjectListGet;
 import com.checkping.dto.member.response.MemberResponseDto;
 import com.checkping.exception.auth.InvalidTokenException;
 import com.checkping.exception.auth.LoginFailureException;
 import com.checkping.exception.auth.RefreshTokenNotFoundException;
+import com.checkping.infra.repository.member.ProjectQueryRepository;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import com.checkping.service.member.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +29,22 @@ public class AuthService {
     private final CurrentMemberUtil currentMemberUtil;
     private final TokenBlacklistService tokenBlacklistService;
     private final RedisConnectionCheckService redisConnectionCheckService;
+    private final ProjectQueryRepository projectQueryRepository;
 
     public BaseResponse getCurrentMember() {
-        return BaseResponse.success(MemberResponseDto.MeResponseDto.fromEntity(currentMemberUtil.getCurrentMember()));
+
+        Long memberId = currentMemberUtil.getCurrentMember().getId();
+
+        Page<ProjectList> result = projectQueryRepository.getProjectsByMemberAndOrganization(
+                null,
+                memberId,
+                null,
+                null,
+                null);
+
+        List<ProjectListGet.Response> dtoList = result.getContent().stream().map(ProjectListGet.Response::toDto).toList();
+
+        return BaseResponse.success(MemberResponseDto.MeProjectResponseDto.fromEntity(currentMemberUtil.getCurrentMember(), dtoList));
     }
 
     /**
@@ -80,7 +99,7 @@ public class AuthService {
         }
 
         // 레디스 연결 여부 먼저 확인
-        if(redisConnectionCheckService.isRedisAvailable()) {
+        if (redisConnectionCheckService.isRedisAvailable()) {
             // 블랙리스트 추가
             tokenBlacklistService.blacklistRefreshToken(refresh, jwtUtil.getExpiration(refresh));
             if (accessToken != null) {
