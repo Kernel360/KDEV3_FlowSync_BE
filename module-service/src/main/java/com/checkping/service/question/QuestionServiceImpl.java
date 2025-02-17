@@ -31,6 +31,7 @@ import com.checkping.infra.repository.question.file.QuestionFileStore;
 import com.checkping.infra.repository.question.link.QuestionLinkStore;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -280,6 +281,10 @@ public class QuestionServiceImpl implements QuestionService {
                 questionReader.countQuestionsByProgressStep(projectId, step.getId()));
             list.add(dto);
         }
+
+        // 정렬
+        list.sort(Comparator.comparingInt(QuestionCounter.Response::getStepOrder));
+
         return list;
     }
 }
