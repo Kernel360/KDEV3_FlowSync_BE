@@ -20,7 +20,6 @@ public class QuestionReaderImpl implements QuestionReader {
 
     /**
      * Question 검색 기능
-     * TODO : 동적 쿼리가 가능하도록 변경
      *
      * @param projectId       프로젝트 아이디
      * @param searchCondition 검색 조건
@@ -34,58 +33,7 @@ public class QuestionReaderImpl implements QuestionReader {
         Pageable pageable = PageRequest.of(searchCondition.currentPage(),
             searchCondition.pageSize());
 
-        // keyword / category / status 검색 조건 여부 확인
-        boolean isKeyword = searchCondition.keyword() != null && !searchCondition.keyword()
-            .isEmpty();
-        boolean isProgressStep = searchCondition.progressId() != null;
-        boolean isStatus = searchCondition.status() != null;
-
-        // Search all
-        if (!isProgressStep && !isStatus && !isKeyword) {
-            return questionRepository.findByProjectId(
-                projectId, pageable);
-        }
-
-        // Search keyword
-        if (!isProgressStep && !isStatus && isKeyword) {
-            return questionRepository.findByProjectIdAndTitleContaining(
-                projectId, searchCondition.keyword(), pageable);
-        }
-
-        // Search status
-        if (!isProgressStep && isStatus && !isKeyword) {
-            return questionRepository.findByProjectIdAndStatus(
-                projectId, searchCondition.status(), pageable);
-        }
-
-        // Search category
-        if (isProgressStep && !isStatus && !isKeyword) {
-            return questionRepository.findByProjectIdAndProgressStepId(
-                projectId, searchCondition.progressId(), pageable);
-        }
-
-        // Search category AND status
-        if (isProgressStep && isStatus && !isKeyword) {
-            return questionRepository.findByProjectIdAndProgressStepIdAndStatus(
-                projectId, searchCondition.progressId(), searchCondition.status(), pageable);
-        }
-
-        // Search category AND keyword
-        if (isProgressStep && !isStatus && isKeyword) {
-            return questionRepository.findByProjectIdAndProgressStepIdAndTitleContaining(
-                projectId, searchCondition.progressId(), searchCondition.keyword(), pageable);
-        }
-
-        // Search status AND keyword
-        if (!isProgressStep && isStatus && isKeyword) {
-            return questionRepository.findByProjectIdAndStatusAndTitleContaining(
-                projectId, searchCondition.status(), searchCondition.keyword(), pageable);
-        }
-
-        // Search category AND status AND keyword
-        return questionRepository.findByProjectIdAndProgressStepIdAndStatusAndTitleContaining(
-            projectId, searchCondition.progressId(), searchCondition.status(),
-            searchCondition.keyword(), pageable);
+        return questionRepository.getByCondition(projectId, searchCondition, pageable);
     }
 
     /**

@@ -127,7 +127,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         // RequestParam -> Info
         QuestionSearchInfo.SearchCondition searchInfo = QuestionSearchCondition.toInfo(
-            searchCondition);
+            searchCondition, false);
 
         // search
         Page<Question> questions = questionReader.searchQuestions(projectId, searchInfo);

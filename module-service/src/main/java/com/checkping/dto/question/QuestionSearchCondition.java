@@ -5,37 +5,40 @@ import com.checkping.domain.question.Question.Status;
 import com.checkping.exception.question.QuestionCategoryException;
 import com.checkping.exception.question.QuestionStatusException;
 import com.checkping.info.question.QuestionSearchInfo;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class QuestionSearchCondition {
 
     /*
     category : 게시글 카테고리 (Enum 으로 변경해야함)
-    progressId : 게시글 진행 단계 ID
+    progressStepId : 게시글 진행 단계 ID
     status : 게시글 상태 (Enum 으로 변경해야함)
     keyword : 게시글 검색어 (String)
     currentPage: 현재 페이지
     pageSize: 페이지 사이즈
      */
-    private Long progressId;
+    private Long progressStepId;
     private String status;
     private String keyword;
-    private Integer currentPage;
-    private Integer pageSize;
+    @Min(1)
+    private Integer currentPage = 1;
+    @Min(5)
+    private Integer pageSize = 10;
 
     public static QuestionSearchInfo.SearchCondition toInfo(
-        QuestionSearchCondition searchCondition) {
-        return new QuestionSearchInfo.SearchCondition(
-            searchCondition.getProgressId(),
+        QuestionSearchCondition searchCondition, boolean adminSearch) {
+        return new QuestionSearchInfo.SearchCondition(searchCondition.getProgressStepId(),
             convertStatus(searchCondition.getStatus()), searchCondition.getKeyword(),
-            searchCondition.getCurrentPage(), searchCondition.getPageSize());
+            searchCondition.getCurrentPage() - 1, searchCondition.getPageSize(), adminSearch);
     }
 
-    public QuestionSearchCondition(Long progressId, String status, String keyword,
-        Integer currentPage,
-        Integer pageSize) {
-        this.progressId = progressId;
+    public QuestionSearchCondition(Long progressStepId, String status, String keyword,
+        Integer currentPage, Integer pageSize) {
+        this.progressStepId = progressStepId;
         this.status = status;
         this.keyword = keyword;
         this.currentPage = currentPage;
