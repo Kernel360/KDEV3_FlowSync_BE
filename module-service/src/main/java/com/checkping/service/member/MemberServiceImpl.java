@@ -46,11 +46,12 @@ public class MemberServiceImpl implements MemberService {
     private final CurrentMemberUtil currentMemberUtil;
     private final ProjectQueryRepository projectQueryRepository;
     private final RedisConnectionCheckService redisConnectionCheckService;
-    private final StringRedisTemplate redisTemplateForInactiveMemers;
+    private final StringRedisTemplate redisTemplateForInactiveMembers;
 
 
     // 아이디로 회원 조회
     @Override
+    @Transactional(readOnly = true)
     public MemberResponseDto getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -59,6 +60,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MemberListResponseDto getAllMembersWithFilters(
             int page,
             int size,
@@ -127,6 +129,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 등록
     @Override
+    @Transactional
     public MemberResponseDto registerMember(MemberRegisterDto dto) {
         // 이메일 중복 체크
         if (memberRepository.existsByEmail(dto.getEmail())) {
@@ -153,6 +156,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 정보 수정
     @Override
+    @Transactional
     public MemberResponseDto updateMember(Long memberId, MemberUpdateDto dto) {
         // 기존 회원 찾기
         Member existingMember = memberRepository.findById(memberId)
@@ -176,6 +180,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 비밀번호 변경
     @Override
+    @Transactional
     public void changePassword(Long memberId, ChangePasswordDto dto) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -209,6 +214,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 탈퇴
     @Override
+    @Transactional
     public void deleteMember(Long memberId, String reasonForDelete) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -221,7 +227,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         // Redis 1번 저장소에 탈퇴처리된 회원 ID 저장
         if(redisConnectionCheckService.isRedisAvailable()){
-            redisTemplateForInactiveMemers.opsForValue().set("deleted:member:" + memberId, "true", 24, TimeUnit.HOURS);
+            redisTemplateForInactiveMembers.opsForValue().set("deleted:member:" + memberId, "true", 24, TimeUnit.HOURS);
         }
     }
 
@@ -296,6 +302,7 @@ public class MemberServiceImpl implements MemberService {
      *  관리자가 회원을 활성화 처리합니다. - activateAccount
      *  */
     @Override
+    @Transactional
     public void activateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -309,8 +316,8 @@ public class MemberServiceImpl implements MemberService {
 
         // Redis 1번 저장소에 비활성화된 회원 ID 삭제
         if(redisConnectionCheckService.isRedisAvailable()){
-            redisTemplateForInactiveMemers.delete("inactive:member:" + memberId);
-            redisTemplateForInactiveMemers.delete("deleted:member:" + memberId);
+            redisTemplateForInactiveMembers.delete("inactive:member:" + memberId);
+            redisTemplateForInactiveMembers.delete("deleted:member:" + memberId);
         }
     }
 
@@ -319,6 +326,7 @@ public class MemberServiceImpl implements MemberService {
      * 관리자가 회원을 비활성화 처리합니다. - inactiveAccount
      * */
     @Override
+    @Transactional
     public void deactivateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
@@ -336,11 +344,12 @@ public class MemberServiceImpl implements MemberService {
 
         // Redis 1번 저장소에 비활성화된 회원 ID 저장
         if(redisConnectionCheckService.isRedisAvailable()){
-            redisTemplateForInactiveMemers.opsForValue().set("inactive:member:" + memberId, "true");
+            redisTemplateForInactiveMembers.opsForValue().set("inactive:member:" + memberId, "true");
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getMemberStatus(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
