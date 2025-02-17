@@ -2,6 +2,7 @@ package com.checkping.api.controller.project;
 
 import static com.checkping.common.enums.SuccessCode.PROJECT_DELETE;
 import static com.checkping.common.enums.SuccessCode.PROJECT_MANAGEMENT_STEP_UPDATE;
+import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_REGISTER;
 import static com.checkping.common.enums.SuccessCode.PROJECT_PROGRESS_STEP_UPDATE;
 import static com.checkping.common.enums.SuccessCode.PROJECT_REGISTER;
 import static com.checkping.common.enums.SuccessCode.PROJECT_UPDATE;
@@ -9,6 +10,7 @@ import static com.checkping.common.enums.SuccessCode.PROJECT_UPDATE;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.*;
 import com.checkping.dto.project.ProgressStepGet.Response;
+import com.checkping.dto.project.ProgressStepRegister.Request;
 import com.checkping.service.project.ProjectServiceImpl;
 import com.checkping.service.project.progressstep.ProgressStepService;
 import jakarta.validation.Valid;
@@ -127,7 +129,7 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    @PutMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
+    @PatchMapping("/projects/{projectId}/progress-steps/{progressStepId}/plans")
     public BaseResponse<ProgressStepPlanUpdate.Response> updateProgressStepPlan(@PathVariable Long projectId,
         @PathVariable Long progressStepId,
         @RequestBody @Valid ProgressStepPlanUpdate.Request request) {
@@ -135,5 +137,15 @@ public class ProjectController implements ProjectApi {
         ProgressStepPlanUpdate.Response response = progressStepService.updateProgressStepPlan(projectId, progressStepId, request);
 
         return BaseResponse.success(response, PROJECT_PROGRESS_STEP_UPDATE.getMessage());
+    }
+
+    @Override
+    @PostMapping("/projects/{projectId}/progress-steps")
+    public BaseResponse<ProgressStepRegister.Response> resisterProgressStep(@PathVariable Long projectId,
+        @RequestBody @Valid ProgressStepRegister.Request request) {
+
+        ProgressStepRegister.Response response = progressStepService.registerProgressStep(projectId, request);
+
+        return BaseResponse.success(response, PROJECT_PROGRESS_STEP_REGISTER.getMessage());
     }
 }
