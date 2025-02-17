@@ -1,6 +1,7 @@
 package com.checkping.service.project.progressstep;
 
 import com.checkping.dto.project.ProgressStepGet;
+import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepRegister;
 import java.util.List;
@@ -11,4 +12,6 @@ public interface ProgressStepService {
     ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId, Long progressStepId, ProgressStepPlanUpdate.Request request);
 
     ProgressStepRegister.Response registerProgressStep(Long projectId, ProgressStepRegister.Request request);
+
+    List<ProgressStepOrderUpdater.Response> updateProgressStepOrder(Long projectId, ProgressStepOrderUpdater.Request request);
 }
