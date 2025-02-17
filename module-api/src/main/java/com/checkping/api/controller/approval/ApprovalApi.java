@@ -33,7 +33,7 @@ public interface ApprovalApi {
     @PostMapping
     BaseResponse<Response> register(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
-        @Parameter(description = "결재 등록 정보") @RequestBody ApprovalRegister.Request request);
+        @Parameter(description = "결재 등록 정보") @RequestBody @Valid ApprovalRegister.Request request);
 
     @Operation(summary = "결재 목록 조회", description = "결재 목록을 조회하는 기능입니다.")
     BaseResponse<ApprovalSearch.Response> search(
@@ -53,7 +53,7 @@ public interface ApprovalApi {
     BaseResponse<ApprovalUpdate.Response> update(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
-        @Parameter(description = "결재 수정 정보") @RequestBody ApprovalUpdate.Request request);
+        @Parameter(description = "결재 수정 정보") @RequestBody @Valid ApprovalUpdate.Request request);
 
     @Operation(summary = "결재 삭제", description = "결재를 삭제하는 기능입니다.")
     BaseResponse<ApprovalDelete.Response> delete(
@@ -64,14 +64,14 @@ public interface ApprovalApi {
     BaseResponse<ApprovalCommentRegister.Response> registerComment(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
-        @Parameter(description = "결재 댓글 등록 정보") @RequestBody ApprovalCommentRegister.Request request);
+        @Parameter(description = "결재 댓글 등록 정보") @RequestBody @Valid ApprovalCommentRegister.Request request);
 
     @Operation(summary = "결재 대댓글 생성", description = "결재 대댓글을 생성하는 기능입니다.")
     BaseResponse<ApprovalReCommentRegister.Response> registerReComment(
         @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
         @Parameter(description = "결재 ID") @PathVariable Long approvalId,
         @Parameter(description = "결재 댓글 ID") @PathVariable Long commentId,
-        @Parameter(description = "결재 대댓글 등록 정보") @RequestBody ApprovalReCommentRegister.Request request);
+        @Parameter(description = "결재 대댓글 등록 정보") @RequestBody @Valid ApprovalReCommentRegister.Request request);
 
     @Operation(summary = "결재 승인", description = "결재를 승인하는 기능입니다.")
     BaseResponse<ApprovalConfirm.Response> confirm(

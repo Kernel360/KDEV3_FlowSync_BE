@@ -1,41 +1,39 @@
 package com.checkping.dto.approval;
 
-import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.approval.Approval;
-import com.checkping.domain.approval.Approval.ApprovalStatus;
-import com.checkping.dto.approval.comment.ApprovalCommentGet;
-import com.checkping.dto.approval.file.ApprovalFileGet;
 import com.checkping.dto.approval.file.ApprovalFileUpdate;
-import com.checkping.dto.approval.file.ApprovalFileUpdate.Request;
-import com.checkping.dto.approval.link.ApprovalLinkGet;
 import com.checkping.dto.approval.link.ApprovalLinkUpdate;
-import com.checkping.dto.member.response.MemberResponseDto.MeResponseDto;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.exception.approval.ApprovalContentParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApprovalUpdate {
 
     @Getter
     public static class Request {
+
         /*
         title : 제목
         content : 내용
         fileInfoList : 첨부 파일
         linkList : 링크
          */
-
+        @NotEmpty(message = "제목을 입력해주세요.")
+        @Size(max = 100, message = "제목은 100자 이하로 입력해주세요.")
         private String title;
+        @Size(min = 1, message = "결재 내용을 입력해주세요.")
         private List<ApprovalContent> content;
         private List<ApprovalFileUpdate.Request> fileInfoList;
         private List<ApprovalLinkUpdate.Request> linkList;
