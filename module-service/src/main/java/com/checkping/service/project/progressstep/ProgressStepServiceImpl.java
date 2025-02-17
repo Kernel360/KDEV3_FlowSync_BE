@@ -5,11 +5,13 @@ import com.checkping.domain.project.ProgressStep;
 import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
+import com.checkping.dto.project.ProgressStepRegister;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.project.progressstep.ProgressStepStartAtException;
 import com.checkping.infra.repository.project.ProgressStepReader;
+import com.checkping.infra.repository.project.ProgressStepStore;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
     private final ProjectReader projectReader;
     private final ProgressStepReader progressStepReader;
+    private final ProgressStepStore progressStepStore;
     private final CurrentMemberUtil currentMemberUtil;
 
     @Transactional(readOnly = true)
@@ -103,10 +106,36 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         return ProgressStepPlanUpdate.Response.toDto(progressStep);
     }
 
+    @Override
+    @Transactional
+    public ProgressStepRegister.Response registerProgressStep(Long projectId,
+        ProgressStepRegister.Request request) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // Max Step Order
+        Integer maxStepOrder = progressStepReader.getByProjectId(projectId).stream()
+            .map(ProgressStep::getStepOrder).max(Integer::compareTo).orElse(0);
+
+        // register progress step
+        ProgressStep init = ProgressStepRegister.Request.toEntity(request, projectId,
+            maxStepOrder + 1);
+
+        // Save ProgressStep
+        ProgressStep progressStep = progressStepStore.store(init);
+
+        // Entity -> Dto
+        return ProgressStepRegister.Response.toDto(progressStep);
+    }
+
     /**
      * check member organization
      *
-     * @param projectId       projectId
+     * @param projectId     projectId
      * @param currentMember current member
      * @throws ProgressStepMismatchProjectException progress step mismatch project exception
      */
@@ -118,7 +147,7 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         }
 
         // check project member
-        boolean isProjectMember =  projectReader.matchProjectAndOrganization(projectId,
+        boolean isProjectMember = projectReader.matchProjectAndOrganization(projectId,
             currentMember.getOrganization().getId());
 
         if (!isProjectMember) {

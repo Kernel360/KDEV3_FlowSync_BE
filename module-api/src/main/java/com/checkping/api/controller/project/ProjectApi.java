@@ -3,12 +3,14 @@ package com.checkping.api.controller.project;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
+import com.checkping.dto.project.ProgressStepRegister;
 import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Tag(name = "Project API(ProjectController)", description = "프로젝트 API 입니다.")
@@ -65,7 +67,6 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 ID") Long projectId
     );
 
-
     @Operation(summary = "프로젝트 관리단계 수정", description = "프로젝트 관리단계를 수정하는 기능입니다.")
     BaseResponse<ProjectResponse.ProjectDto> updateProjectsByManagementSteps(
             @Parameter(description = "프로젝트 ID") Long projectId,
@@ -77,5 +78,11 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 ID") Long projectId,
             @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId,
             @Parameter(description = "수정할 프로젝트 진행 상태 일정 정보 Dto") ProgressStepPlanUpdate.Request request
+    );
+
+    @Operation(summary = "프로젝트 진행 상태 생성", description = "프로젝트 진행 상태를 생성하는 기능입니다.")
+    BaseResponse<ProgressStepRegister.Response> resisterProgressStep(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 진행 상태 생성 정보 Dto") @Valid ProgressStepRegister.Request request
     );
 }
