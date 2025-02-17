@@ -22,16 +22,16 @@ public class ProjectSearchRequest {
     private String managementStep;
 
     @Schema(description = "현재 페이지", defaultValue = "1")
-    private int currentPage = 1;
+    private int currentPage;
 
     @Schema(description = "페이지 사이즈", defaultValue = "10")
-    private int pageSize = 10;
+    private int pageSize;
 
     @Schema(description = "정렬 필드", defaultValue = "id")
-    private String sort = "id";
+    private String sort;
 
     @Schema(description = "정렬 순서 (asc, desc)", defaultValue = "desc")
-    private String order = "desc";
+    private String order;
 
     public ProjectSearchRequest(String keyword, String managementStep, int currentPage, int pageSize, String sort, String order) {
         this.keyword = keyword;
