@@ -5,6 +5,7 @@ import com.checkping.domain.member.Organization;
 import com.checkping.domain.project.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,8 @@ public class ProjectRequest {
 
         /*
         name : 프로젝트 이름
-        description : 프로젝트 설명
-        detail : 프로젝트 세부 설명
+        description : 프로젝트 개요
+        detail : 프로젝트 상세 내용
         managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
         startAt : 프로젝트 시작 일시
         deadlineAt : 프로젝트 예상 종료 일시
@@ -38,28 +39,51 @@ public class ProjectRequest {
         members : 추가할 멤버 목록
         */
         @Schema(description = "프로젝트 이름", example = "FlowSync")
+        @NotBlank
+        @Size(min=2, max=100, message = "프로젝트 이름은 2글자 이상, 100글자 이하여야 합니다.")
         private String name;
-        @Schema(description = "프로젝트 짧은 설명")
+
+        @Schema(description = "프로젝트 개요")
+        @NotBlank
+        @Size(min=1, max=255, message = "프로젝트 개요는 1글자 이상, 255글자 이하여야 합니다.")
         private String description;
-        @Schema(description = "프로젝트 긴 설명")
+
+        @Schema(description = "프로젝트 상세 내용")
+        @Size(max=1000, message = "프로젝트 상세 내용은 1000글자 이하여야 합니다.")
         private String detail;
+
         @Schema(description = "프로젝트 관리단계", example = "IN_PROGRESS")
+        @NotNull(message = "프로젝트 관리단계는 필수 입력값입니다.")
         private String managementStep;
+
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull(message = "프로젝트 시작일시는 필수 입력값입니다.")
         private LocalDateTime startAt;
+
         @Schema(description = "프로젝트 예상 종료 일시", example = "2025-12-28 10:10:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull(message = "프로젝트 예상 종료 일시는 필수 입력값입니다.")
         private LocalDateTime deadlineAt;
+
         @Schema(description = "개발사 대표자 아이디", example = "1")
+        @NotNull(message = "개발사 대표자 아이디는 필수 입력 값입니다.")
         private Long devOwnerId;
+
         @Schema(description = "고객사 결재자 아이디", example = "1")
+        @NotNull(message = "고객사 결재자 아이디는 필수 입력값입니다.")
         private Long customerOwnerId;
+
         @Schema(description = "개발사 아이디", example = "1")
+        @NotNull(message = "개발사 아이디는 필수 입력값입니다.")
         private Long developerOrgId;
+
         @Schema(description = "고객사 아이디", example = "2")
+        @NotNull(message = "고객사 아이디는 필수 입력값입니다.")
         private Long customerOrgId;
+
         @Schema(description = "추가할 멤버 아이디 목록")
+        @NotNull(message = "추가할 멤버 아이디는 필수 입력값입니다.")
         private List<Long> members;
 
         public static Project toEntity(ResisterDto resisterDto, List<Organization> organizations, List<Member> members) {
@@ -93,8 +117,8 @@ public class ProjectRequest {
     public static class UpdateDto {
         /*
        name : 프로젝트 이름
-       description : 프로젝트 설명
-       detail : 프로젝트 세부 설명
+       description : 프로젝트 개요
+       detail : 프로젝트 상세 내용
        managementStep : 프로젝트 관리 단계 * CONTRACT(계약), IN_PROGRESS(진행중), COMPLETED(납품완료), MAINTENANCE(하자보수), PAUSED(일시중단)
        startAt : 프로젝트 시작 일시
        deadlineAt : 프로젝트 예상 종료 일시
@@ -105,28 +129,51 @@ public class ProjectRequest {
        members : 추가할 멤버 목록
        */
         @Schema(description = "프로젝트 이름", example = "FlowSync")
+        @NotBlank
+        @Size(min=2, max=100, message = "프로젝트 이름은 2글자 이상, 100글자 이하여야 합니다.")
         private String name;
-        @Schema(description = "프로젝트 짧은 설명")
+
+        @Schema(description = "프로젝트 개요")
+        @NotBlank
+        @Size(min=2, max=255, message = "프로젝트 개요는 2글자 이상, 255글자 이하여야 합니다.")
         private String description;
-        @Schema(description = "프로젝트 긴 설명")
+
+        @Schema(description = "프로젝트 상세 내용")
+        @Size(max=500, message = "프로젝트 상세 내용은 500글자 이하여야 합니다.")
         private String detail;
+
         @Schema(description = "프로젝트 관리단계", example = "COMPLETED")
+        @NotNull(message = "프로젝트 관리단계는 필수 입력값입니다.")
         private String managementStep;
+
         @Schema(description = "프로젝트 시작 일시", example = "2025-01-15 10:17:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull(message = "프로젝트 시작일시는 필수 입력값입니다.")
         private LocalDateTime startAt;
+
         @Schema(description = "프로젝트 예상 종료 일시", examples = "2025-12-28 10:10:15", type = "string")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull(message = "프로젝트 예상 종료 일시는 필수 입력값입니다.")
         private LocalDateTime deadlineAt;
+
         @Schema(description = "개발사 대표자 아이디", example = "1")
+        @NotNull(message = "개발사 대표자 아이디는 필수 입력 값입니다.")
         private Long devOwnerId;
+
         @Schema(description = "고객사 결재자 아이디", example = "1")
+        @NotNull(message = "고객사 결재자 아이디는 필수 입력값입니다.")
         private Long customerOwnerId;
+
         @Schema(description = "개발사 아이디", example = "1")
+        @NotNull(message = "개발사 아이디는 필수 입력값입니다.")
         private Long developerOrgId;
+
         @Schema(description = "고객사 아이디", example = "2")
+        @NotNull(message = "고객사 아이디는 필수 입력값입니다.")
         private Long customerOrgId;
+
         @Schema(description = "추가할 멤버 아이디 목록")
+        @NotNull(message = "추가할 멤버 아이디는 필수 입력값입니다.")
         private List<Long> members;
 
         public static Project toEntity(UpdateDto updateDto, Project existingProject, List<Organization> organizations, List<Member> members) {
