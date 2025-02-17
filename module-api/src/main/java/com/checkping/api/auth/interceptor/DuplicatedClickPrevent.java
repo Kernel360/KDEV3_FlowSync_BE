@@ -27,7 +27,7 @@ public class DuplicatedClickPrevent implements HandlerInterceptor {
     public boolean checkAndSetRequest(String email) {
         String key = PREFIX + email;
         Boolean success = stringRedisTemplate.opsForValue()
-                .setIfAbsent(key, "LOCK", 3, TimeUnit.SECONDS);
+                .setIfAbsent(key, "LOCK", 1, TimeUnit.SECONDS);
 
         return success != null && success;
     }
@@ -39,6 +39,11 @@ public class DuplicatedClickPrevent implements HandlerInterceptor {
 
         // 1. GET 요청이면 바로 통과
         if ("GET".equalsIgnoreCase(method)) {
+            return true;
+        }
+
+        // 2. 특정 경로 PUT 요청 제외
+        if ("PUT".equalsIgnoreCase(method) && requestURI.matches("^/projects/\\d+/progress-steps/orders$")) {
             return true;
         }
 
