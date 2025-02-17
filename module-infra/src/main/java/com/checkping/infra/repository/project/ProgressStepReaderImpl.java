@@ -14,7 +14,7 @@ public class ProgressStepReaderImpl implements ProgressStepReader {
 
     @Override
     public List<ProgressStep> getByProjectId(Long projectId) {
-        return progressStepRepository.findByProjectId(projectId);
+        return progressStepRepository.findByProjectIdOrderByStepOrderAsc(projectId);
     }
 
     @Override
