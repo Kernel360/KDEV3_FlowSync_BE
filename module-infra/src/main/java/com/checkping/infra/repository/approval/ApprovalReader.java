@@ -20,4 +20,6 @@ public interface ApprovalReader {
     List<ApprovalCountProjection> countByProgressStep(Long projectId);
 
     boolean isApprovalRegister(Long approvalId, Long registerId);
+
+    boolean existsByProgressStepId(Long progressStepId);
 }

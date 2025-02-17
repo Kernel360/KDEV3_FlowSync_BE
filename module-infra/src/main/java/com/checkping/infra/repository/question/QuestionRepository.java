@@ -24,4 +24,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long>,
     Long countByProjectIdAndProgressStepId(Long projectId, Long progressStepId);
 
     boolean existsByProjectIdAndId(Long projectId, Long id);
+
+    boolean existsByProgressStepId(Long progressStepId);
 }

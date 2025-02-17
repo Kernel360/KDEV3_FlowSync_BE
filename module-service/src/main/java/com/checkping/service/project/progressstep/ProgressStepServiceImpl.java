@@ -2,19 +2,23 @@ package com.checkping.service.project.progressstep;
 
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
+import com.checkping.dto.project.ProgressStepDelete;
 import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.dto.project.ProgressStepRegister;
+import com.checkping.exception.project.progressstep.ProgressStepExistsBoardException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.project.progressstep.ProgressStepStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepUpdateSizeException;
+import com.checkping.infra.repository.approval.ApprovalReader;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProgressStepStore;
 import com.checkping.infra.repository.project.ProjectReader;
+import com.checkping.infra.repository.question.QuestionReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +35,8 @@ public class ProgressStepServiceImpl implements ProgressStepService {
     private final ProgressStepReader progressStepReader;
     private final ProgressStepStore progressStepStore;
     private final CurrentMemberUtil currentMemberUtil;
+    private final ApprovalReader approvalReader;
+    private final QuestionReader questionReader;
 
     @Transactional(readOnly = true)
     @Override
@@ -165,6 +171,32 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepOrderUpdater.Response.toDto(progressSteps);
+    }
+
+    @Override
+    @Transactional
+    public ProgressStepDelete.Response deleteProgressStep(Long projectId, Long progressStepId) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress step
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
+            projectId).orElseThrow(ProgressStepNotFoundException::new);
+
+        // check progress step Approvals and Questions
+        if (!approvalReader.existsByProgressStepId(progressStepId) || !questionReader.existsByProgressStepId(progressStepId)) {
+            throw new ProgressStepExistsBoardException();
+        }
+
+        // delete progress step
+        progressStepStore.delete(progressStep);
+
+        // Entity -> Dto
+        return ProgressStepDelete.Response.toDto(progressStep);
     }
 
     /**

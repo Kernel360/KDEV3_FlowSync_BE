@@ -1,5 +1,6 @@
 package com.checkping.service.project.progressstep;
 
+import com.checkping.dto.project.ProgressStepDelete;
 import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
@@ -14,4 +15,6 @@ public interface ProgressStepService {
     ProgressStepRegister.Response registerProgressStep(Long projectId, ProgressStepRegister.Request request);
 
     List<ProgressStepOrderUpdater.Response> updateProgressStepOrder(Long projectId, ProgressStepOrderUpdater.Request request);
+
+    ProgressStepDelete.Response deleteProgressStep(Long projectId, Long progressStepId);
 }
