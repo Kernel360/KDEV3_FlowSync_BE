@@ -14,4 +14,9 @@ public class ProgressStepStoreImpl implements ProgressStepStore {
     public ProgressStep store(ProgressStep progressStep) {
         return progressStepRepository.save(progressStep);
     }
+
+    @Override
+    public void delete(ProgressStep progressStep) {
+        progressStepRepository.delete(progressStep);
+    }
 }
