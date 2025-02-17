@@ -8,5 +8,6 @@ import java.util.List;
 public interface FileRepository {
     List<FileRequest> uploadFiles(List<MultipartFile> multipartFiles);
     FileRequest uploadFile(MultipartFile multipartFile);
-    public void deleteFile(String saveName);
+    void deleteFile(String saveName);
+    String getPresignedUrl(String filename);
 }

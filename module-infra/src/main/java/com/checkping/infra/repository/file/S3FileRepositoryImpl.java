@@ -8,12 +8,17 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +27,7 @@ import java.util.List;
 public class S3FileRepositoryImpl implements FileRepository {
 
     private final S3Client s3Client;
+    private final S3Presigner presigner;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
@@ -115,5 +121,30 @@ public class S3FileRepositoryImpl implements FileRepository {
                 .bucket(bucket)
                 .key(saveName)
                 .build());
+    }
+
+    @Override
+    public String getPresignedUrl(String filename) {
+        if(filename == null || filename.equals("")) {
+            return null;
+        }
+
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(filename)
+                .build();
+
+        GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(1)) // presignedURL 5분간 접근 허용
+                .getObjectRequest(getObjectRequest)
+                .build();
+
+        PresignedGetObjectRequest presignedGetObjectRequest = presigner
+                .presignGetObject(getObjectPresignRequest);
+
+        String url = presignedGetObjectRequest.url().toString();
+
+        presigner.close(); // presigner를 닫고 획득한 모든 리소스를 해제
+        return url;
     }
 }
