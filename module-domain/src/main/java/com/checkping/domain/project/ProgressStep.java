@@ -154,4 +154,9 @@ public class ProgressStep extends BaseEntity {
         this.closeAt = null;
         this.relatedApproval = approval;
     }
+
+    // 프로젝트 진행 단계 업데이트
+    public void updateOrder (Integer order) {
+        this.stepOrder = order;
+    }
 }

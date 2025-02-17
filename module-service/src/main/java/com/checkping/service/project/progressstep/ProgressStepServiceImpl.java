@@ -3,6 +3,7 @@ package com.checkping.service.project.progressstep;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.dto.project.ProgressStepGet.Response;
+import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.dto.project.ProgressStepRegister;
@@ -10,6 +11,7 @@ import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectE
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.project.progressstep.ProgressStepStartAtException;
+import com.checkping.exception.project.progressstep.ProgressStepUpdateSizeException;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProgressStepStore;
 import com.checkping.infra.repository.project.ProjectReader;
@@ -130,6 +132,39 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepRegister.Response.toDto(progressStep);
+    }
+
+    @Override
+    @Transactional
+    public List<ProgressStepOrderUpdater.Response> updateProgressStepOrder(Long projectId,
+        ProgressStepOrderUpdater.Request request) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress steps
+        List<ProgressStep> progressSteps = progressStepReader.getByProjectId(projectId);
+
+        // validate request and progressStep List
+        // 사이즈 가 같은지, 전부 속해있는지 검증
+        if (request.getSteps().size() != progressSteps.size()) {
+            throw new ProgressStepUpdateSizeException();
+        }
+
+        // 순서 변경 및 Update
+        for (ProgressStepOrderUpdater.Item step : request.getSteps()) {
+            ProgressStep updatingProgressStep = progressSteps.stream()
+                .filter(it -> Objects.equals(it.getId(), step.getId())).findFirst()
+                .orElseThrow(ProgressStepNotFoundException::new);
+
+            updatingProgressStep.updateOrder(step.getOrder());
+        }
+
+        // Entity -> Dto
+        return ProgressStepOrderUpdater.Response.toDto(progressSteps);
     }
 
     /**
