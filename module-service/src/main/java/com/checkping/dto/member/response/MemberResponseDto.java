@@ -2,7 +2,6 @@ package com.checkping.dto.member.response;
 
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.domain.member.Member;
-import com.checkping.dto.ProjectListGet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -131,9 +130,9 @@ public class MemberResponseDto {
         @Schema(description = "소속 업체 유형", example = "DEVELOPER") // DEVELOPER, CUSTOMER
         private String organizationType;
         @Schema(description = "회원이 속한 프로젝트 목록")
-        private List<ProjectListGet.Response> projectList;
+        private List<Long> projectIdList;
 
-        public static MeProjectResponseDto fromEntity(Member member, List<ProjectListGet.Response> projectList) {
+        public static MeProjectResponseDto fromEntity(Member member, List<Long> projectIdList) {
             return MeProjectResponseDto.builder()
                     .id(member.getId())
                     .role(member.getRole())  // 예: ADMIN / MEMBER
@@ -141,7 +140,7 @@ public class MemberResponseDto {
                     .organizationId(member.getOrganization().getId())
                     .organizationName(member.getOrganization().getName())
                     .organizationType( member.getOrganization().getType().name())  // 예: DEVELOPER / CUSTOMER)
-                    .projectList(projectList)
+                    .projectIdList(projectIdList)
                     .build();
         }
     }
