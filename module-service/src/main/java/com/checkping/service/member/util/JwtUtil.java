@@ -132,8 +132,12 @@ public class JwtUtil {
     }
 
     public Long getMemberId(String token) {
-
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
+        return Jwts.parserBuilder().
+                setSigningKey(key).
+                build().
+                parseClaimsJws(token).
+                getBody().
+                get("memberId", Long.class);
     }
 
     /**

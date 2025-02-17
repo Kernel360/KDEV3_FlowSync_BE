@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
+//TODO : JWT Filter를 스프링 시큐리티 예외처리 적용하는 방식으로 수정하여 응답 생성 유틸 클래스 테스트 후 제거 예정
 public class ResponseUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

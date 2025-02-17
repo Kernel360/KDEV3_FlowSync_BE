@@ -17,7 +17,7 @@ public enum ErrorCode {
     /*
         401 Unauthorized
     */
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다. Access Token을 확인하세요."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다. Access Token을 확인하세요."),
     INVALID_JWT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Access Token입니다."),
     EXPIRED_JWT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Access Token이 만료되었습니다. 재발급 받으세요."),
     INVALID_JWT_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Refresh Token입니다."),
