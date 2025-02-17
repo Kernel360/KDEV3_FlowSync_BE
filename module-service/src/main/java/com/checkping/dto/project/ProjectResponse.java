@@ -13,6 +13,7 @@ import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -173,19 +174,19 @@ public class ProjectResponse {
         private Project.ManagementStep managementStep;
         @Schema(description = "프로젝트 등록 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date regAt;
+        private String regAt;
         @Schema(description = "프로젝트 수정 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date updateAt;
+        private String updateAt;
         @Schema(description = "프로젝트 시작 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date startAt;
+        private String startAt;
         @Schema(description = "프로젝트 예상 종료 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date deadlineAt;
+        private String deadlineAt;
         @Schema(description = "프로젝트 종료 일시")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date closeAt;
+        private String closeAt;
         @Schema(description = "프로젝트 삭제여부")
         private String deletedYn;
         @Schema(description = "개발사 대표자 아이디")
@@ -203,11 +204,13 @@ public class ProjectResponse {
             this.description = description;
             this.detail = detail;
             this.managementStep = Project.ManagementStep.valueOf(managementStep);
-            this.regAt = regAt;
-            this.updateAt = updateAt;
-            this.startAt = startAt;
-            this.deadlineAt = deadlineAt;
-            this.closeAt = closeAt;
+            this.regAt = DateTimeUtils.format(regAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            this.updateAt = DateTimeUtils.format(updateAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            this.startAt = DateTimeUtils.format(startAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            this.deadlineAt = deadlineAt == null ? null
+                    : DateTimeUtils.format(deadlineAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            this.closeAt = closeAt == null ? null
+                    : DateTimeUtils.format(closeAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             this.deletedYn = deletedYn;
             this.devOwnerId = devOwnerId;
             this.developerName = developerName;

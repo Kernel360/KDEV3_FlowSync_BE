@@ -1,5 +1,6 @@
 package com.checkping.dto.notice.response;
 
+import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
@@ -64,7 +65,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
         try {
             return objectMapper.readValue(json, new TypeReference<List<NoticeContent>>() {});
         } catch (Exception e) {
-            throw new BaseException();
+            throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
         }
     }
 

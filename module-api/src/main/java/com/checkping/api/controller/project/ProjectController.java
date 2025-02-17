@@ -30,8 +30,7 @@ public class ProjectController implements ProjectApi {
 
     @Override
     @PostMapping("/admins/projects")
-    public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(
-        @RequestBody ProjectRequest.ResisterDto request) {
+    public BaseResponse<ProjectResponse.ProjectDto> resisterProjects(@Valid @RequestBody ProjectRequest.ResisterDto request) {
         ProjectResponse.ProjectDto projectDto = projectService.registerProject(request);
         log.info("FlowSync - resisterProjects name : {}, register_at : {}", projectDto.getName(),
             projectDto.getRegAt());
@@ -58,8 +57,9 @@ public class ProjectController implements ProjectApi {
     @Override
     @PatchMapping("/admins/projects/{projectId}")
     public BaseResponse<ProjectResponse.ProjectDto> updateProjects(
-        @PathVariable Long projectId,
-        @RequestBody ProjectRequest.UpdateDto request) {
+            @PathVariable Long projectId,
+            @Valid @RequestBody ProjectRequest.UpdateDto request)
+    {
         ProjectResponse.ProjectDto projectDto = projectService.updateProject(projectId, request);
         log.info("FlowSync - updateProjects project_id : {}, name : {}, update_at : {}",
             projectDto.getId(), projectDto.getName(), projectDto.getUpdateAt());
