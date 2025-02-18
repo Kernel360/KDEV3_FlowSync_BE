@@ -107,4 +107,10 @@ public interface ProjectApi {
             @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId,
             @Parameter(description = "수정할 프로젝트 진행 상태 정보 Dto") @Valid ProgressStepUpdater.Request request
     );
+
+    @Operation(summary = "프로젝트 진행 상태 정보 조회", description = "프로젝트 진행 상태 정보를 조회하는 기능입니다.")
+    BaseResponse<ProgressStepGet.Response> getProgressStepInfo(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId
+    );
 }

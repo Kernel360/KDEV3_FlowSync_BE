@@ -3,6 +3,7 @@ package com.checkping.service.project.progressstep;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.dto.project.ProgressStepDelete;
+import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
@@ -220,6 +221,23 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepUpdater.Response.toDto(progressStep);
+    }
+
+    @Override
+    public ProgressStepGet.Response getInfo(Long projectId, Long progressStepId) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress step
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId, projectId)
+            .orElseThrow(ProgressStepNotFoundException::new);
+
+        // Entity -> Dto
+        return ProgressStepGet.Response.toDto(progressStep);
     }
 
     /**

@@ -20,4 +20,6 @@ public interface ProgressStepService {
     ProgressStepDelete.Response deleteProgressStep(Long projectId, Long progressStepId);
 
     ProgressStepUpdater.Response update(Long projectId, Long progressStepId, ProgressStepUpdater.Request request);
+
+    ProgressStepGet.Response getInfo(Long projectId, Long progressStepId);
 }
