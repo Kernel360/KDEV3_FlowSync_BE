@@ -55,7 +55,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         Notice notice = noticeRepository.save(noticeCreateRequest.toEntity(fileUrls));
 
-            return NoticeCreateResponse.toDto(notice);
+            return NoticeCreateResponse.toDto(notice, s3FileRepository);
     }
 
     @Override

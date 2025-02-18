@@ -6,6 +6,7 @@ import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,7 +45,7 @@ public class NoticeCreateResponse {
     @Schema(description = "공지사항 첨부파일 링크")
     private List<FileRequest> fileInfoList;
 
-    public static NoticeCreateResponse toDto(Notice notice){
+    public static NoticeCreateResponse toDto(Notice notice, S3FileRepositoryImpl s3FileRepository){
         return NoticeCreateResponse.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
@@ -56,7 +57,8 @@ public class NoticeCreateResponse {
                 .fileInfoList(notice.getNoticeFileUrls().stream()
                         .map(url -> {
                             String[] parts = url.split("\\|");
-                            return new FileRequest(parts[0], parts[1], parts[1], 0); // size는 0으로 설정
+                            String presignedUrl = s3FileRepository.getPresignedUrl(parts[1]);
+                            return new FileRequest(parts[0], presignedUrl, presignedUrl, 0); // size는 0으로 설정
                         })
                         .collect(Collectors.toList()))
                 .build();
