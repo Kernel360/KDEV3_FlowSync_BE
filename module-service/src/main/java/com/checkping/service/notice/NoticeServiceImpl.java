@@ -66,12 +66,12 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         if (noticeUpdateRequest.getPriority() != null) {
             Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
-            if (priority == Notice.Priority.EMERGENCY) {
+            if (priority == Notice.Priority.EMERGENCY&& !notice.getPriority().equals(Notice.Priority.EMERGENCY)) {
                 long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
                 if (emergencyNoticeCount >= 3) {
                     throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
@@ -79,16 +79,30 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
+        List<String> newFileUrls = new ArrayList<>();
+        if (noticeUpdateRequest.getFileInfoList() != null) {
+            newFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
+        }
+
+        List<String> existingFileUrls = notice.getNoticeFileUrls();
+        List<String> filesToDelete = new ArrayList<>(existingFileUrls);
+
+        if (newFileUrls.isEmpty()) {
+            filesToDelete.addAll(existingFileUrls);
+        } else {
+            filesToDelete.removeAll(newFileUrls);
+        }
+
+        List<String> updatedFileUrls = new ArrayList<>(newFileUrls);
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
+                updatedFileUrls
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
@@ -101,7 +115,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         notice.markAsDeleted();

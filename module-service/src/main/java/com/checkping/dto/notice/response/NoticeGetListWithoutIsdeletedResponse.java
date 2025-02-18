@@ -39,7 +39,7 @@ public class NoticeGetListWithoutIsdeletedResponse implements NoticeGetListRespo
                 .title(notice.getTitle())
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
-                .regAt(notice.getUpdatedAt())
+                .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
     }

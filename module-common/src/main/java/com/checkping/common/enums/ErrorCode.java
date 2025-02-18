@@ -52,6 +52,7 @@ public enum ErrorCode {
     DELETED_MEMBER(HttpStatus.CONFLICT, "삭제된 회원입니다."),
     INACTIVE_MEMBER(HttpStatus.CONFLICT, "비활성화된 회원입니다."),
     INACTIVE_OR_DELETED_MEMBER(HttpStatus.CONFLICT, "비활성화 또는 삭제된 회원입니다."),
+    DELETED_NOTICE(HttpStatus.CONFLICT, "삭제된 공지사항입니다"),
 
     /*
         429 Too Many Requests
