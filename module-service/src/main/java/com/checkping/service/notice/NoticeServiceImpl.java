@@ -88,16 +88,15 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         List<String> currentFileUrls = notice.getNoticeFileUrls();
-        List<String> updatedFileUrls = noticeUpdateRequest.getFileInfoListSafe() == null ?
-                currentFileUrls :
-                noticeUpdateRequest.getFileInfoListSafe().stream()
-                        .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                        .collect(Collectors.toList());
+        List<String> updatedFileUrls = currentFileUrls;
 
         if (noticeUpdateRequest.getFileInfoListSafe() != null) {
             if (noticeUpdateRequest.getFileInfoListSafe().isEmpty()) {
-
-                updatedFileUrls = new ArrayList<>();
+                updatedFileUrls = new ArrayList<>(); // 빈 목록이 들어오면 첨부파일 삭제
+            } else {
+                updatedFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                        .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                        .collect(Collectors.toList());
             }
         }
 
