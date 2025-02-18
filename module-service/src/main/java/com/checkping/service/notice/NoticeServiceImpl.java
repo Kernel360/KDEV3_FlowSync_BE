@@ -79,16 +79,30 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
+        List<String> newFileUrls = new ArrayList<>();
+        if (noticeUpdateRequest.getFileInfoList() != null) {
+            newFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
+        }
+
+        List<String> existingFileUrls = notice.getNoticeFileUrls();
+        List<String> filesToDelete = new ArrayList<>(existingFileUrls);
+
+        if (newFileUrls.isEmpty()) {
+            filesToDelete.addAll(existingFileUrls);
+        } else {
+            filesToDelete.removeAll(newFileUrls);
+        }
+
+        List<String> updatedFileUrls = new ArrayList<>(newFileUrls);
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
+                updatedFileUrls
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
