@@ -79,16 +79,16 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
+        List<String> fileUrls = new ArrayList<>(notice.getNoticeFileUrls());
+        noticeUpdateRequest.getFileInfoListSafe().forEach(fileInfo ->
+                fileUrls.add(fileInfo.saveName() + "|" + fileInfo.url()));
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
+                fileUrls // 파일이 없으면 null 유지
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository);
