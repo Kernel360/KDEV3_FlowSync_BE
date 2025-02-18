@@ -30,8 +30,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
-    private final S3FileRepositoryImpl s3FileRepository;
-
     private final S3FileRepositoryImpl s3FileRepositoryImpl;
 
     @Override
@@ -134,11 +132,29 @@ public class NoticeServiceImpl implements NoticeService {
         if (isAdmin) {
             notice = noticeRepository.findById(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 관리자: 삭제된 공지사항도 볼 수 있음
-            return NoticeWithIsdeletedResponse.toDto(notice); // 관리자: isDeleted 포함
+
+            List<FileRequest> fileRequests = convertFileUrlsToFileRequestList(notice.getNoticeFileUrls());
+
+            NoticeResponse response = NoticeWithIsdeletedResponse.toDto(notice);
+
+            NoticeWithIsdeletedResponse response1 = (NoticeWithIsdeletedResponse) response;
+
+            response1.setFileInfoList(fileRequests);
+
+            return (NoticeResponse) response1; // 관리자: isDeleted 포함
         } else {
             notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 비관리자: 삭제된 공지사항은 볼 수 없음
-            return NoticeWithoutIsdeletedResponse.toDto(notice); // 비관리자: isDeleted 제외
+
+            List<FileRequest> fileRequests = convertFileUrlsToFileRequestList(notice.getNoticeFileUrls());
+
+            NoticeResponse response = NoticeWithoutIsdeletedResponse.toDto(notice);
+
+            NoticeWithoutIsdeletedResponse response1 = (NoticeWithoutIsdeletedResponse) response;
+
+            response1.setFileInfoList(fileRequests);
+
+            return (NoticeResponse) response1; // 비관리자: isDeleted 제외
         }
     }
 
@@ -179,6 +195,22 @@ public class NoticeServiceImpl implements NoticeService {
         return isAdmin
                 ? NoticeListResponse.fromEntityPage(result, true)  // 관리자: isDeleted 포함
                 : NoticeListResponse.fromEntityPage(result, false); // 비관리자: isDeleted 제외
+    }
+
+
+    private List<FileRequest> convertFileUrlsToFileRequestList(List<String> fileUrls) {
+
+        List<FileRequest> fileRequestList = new ArrayList<>();
+        for (String fileUrl : fileUrls) {
+            String[] parts = fileUrl.split("\\|");
+
+            String url = s3FileRepositoryImpl.getPresignedUrl(parts[0]);
+
+            fileRequestList.add(
+                    new FileRequest(parts[0], parts[0], url, 0L) // 사이즈는 0L로 임시 설정
+            );
+        }
+        return fileRequestList;
     }
 
 }
