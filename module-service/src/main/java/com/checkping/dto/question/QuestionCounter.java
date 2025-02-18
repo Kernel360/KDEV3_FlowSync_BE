@@ -15,6 +15,7 @@ public class QuestionCounter {
         private String value;
         private Long count;
         private Integer stepOrder;
+        private String color;
 
         public static Response toDto(ProgressStep progressStep, Long count) {
             Response response = new Response();
@@ -23,6 +24,7 @@ public class QuestionCounter {
             response.value = progressStep.getDescription();
             response.count = count;
             response.stepOrder = progressStep.getStepOrder();
+            response.color = progressStep.getColor();
             return response;
         }
 
@@ -39,6 +41,7 @@ public class QuestionCounter {
             response.value = "ALL";
             response.count = count;
             response.stepOrder = -1;
+            response.color = "#333333";
             return response;
         }
     }

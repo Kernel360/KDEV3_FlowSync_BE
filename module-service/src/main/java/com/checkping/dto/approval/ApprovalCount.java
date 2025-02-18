@@ -24,6 +24,7 @@ public class ApprovalCount {
         count : progressStep 카운트
         status : progressStep 상태
         stepOrder : progressStep 순서
+        color : progressStep 색상
          */
         @Schema(description = "progressStep ID")
         private Long id;
@@ -37,6 +38,8 @@ public class ApprovalCount {
         private String status;
         @Schema(description = "progressStep 순서")
         private Integer stepOrder;
+        @Schema(description = "progressStep 색상")
+        private String color;
 
         /**
          * 전체 카운트 생성
@@ -52,6 +55,7 @@ public class ApprovalCount {
             dto.count = count;
             dto.status = "ALL";
             dto.stepOrder = -1;
+            dto.color = "#333333";
             return dto;
         }
 
@@ -69,6 +73,7 @@ public class ApprovalCount {
             dto.count = approvalCountProjection.getCount();
             dto.status = approvalCountProjection.getStatus();
             dto.stepOrder = approvalCountProjection.getStepOrder();
+            dto.color = approvalCountProjection.getColor();
             return dto;
         }
 

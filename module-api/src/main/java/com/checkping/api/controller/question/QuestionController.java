@@ -9,7 +9,6 @@ import static com.checkping.common.enums.SuccessCode.QUESTION_UPDATE;
 
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.question.QuestionCounter;
-import com.checkping.dto.question.QuestionCounter.Response;
 import com.checkping.dto.question.QuestionGet;
 import com.checkping.dto.question.QuestionRegister;
 import com.checkping.dto.question.QuestionRequest.UpdateDto;
@@ -163,7 +162,7 @@ public class QuestionController implements QuestionApi {
     public BaseResponse<List<QuestionCounter.Response>> countByProgressStep(
         @PathVariable Long projectId) {
 
-        List<Response> response = questionService.countByProgressStep(projectId);
+        List<QuestionCounter.Response> response = questionService.countByProgressStep(projectId);
 
         return BaseResponse.success(response);
     }
