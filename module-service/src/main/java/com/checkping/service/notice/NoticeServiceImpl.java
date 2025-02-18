@@ -69,45 +69,6 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
-        boolean isUpdated = false;
-
-        if (noticeUpdateRequest.getTitle() != null && !noticeUpdateRequest.getTitle().equals(notice.getTitle())) {
-            isUpdated = true;
-        }
-
-        if (noticeUpdateRequest.getContent() != null && !noticeUpdateRequest.convertContentToJson().equals(notice.getContent())) {
-            isUpdated = true;
-        }
-
-        if (noticeUpdateRequest.getCategory() != null && !noticeUpdateRequest.getCategory().equals(notice.getCategory().toString())) {
-            isUpdated = true;
-        }
-
-        if (noticeUpdateRequest.getPriority() != null && !noticeUpdateRequest.getPriority().equals(notice.getPriority().toString())) {
-            isUpdated = true;
-        }
-
-        List<String> currentFileUrls = notice.getNoticeFileUrls();
-        List<String> updatedFileUrls = currentFileUrls;
-
-        if (noticeUpdateRequest.getFileInfoListSafe() != null) {
-            if (noticeUpdateRequest.getFileInfoListSafe().isEmpty()) {
-                updatedFileUrls = new ArrayList<>(); // 빈 목록이 들어오면 첨부파일 삭제
-            } else {
-                updatedFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                        .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                        .collect(Collectors.toList());
-            }
-        }
-
-        if (!currentFileUrls.equals(updatedFileUrls)) {
-            isUpdated = true;
-        }
-
-        if (!isUpdated) {
-            throw new BaseException(ErrorCode.NO_CHANGE);
-        }
-
         if (noticeUpdateRequest.getPriority() != null) {
             Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
             if (priority == Notice.Priority.EMERGENCY&& !notice.getPriority().equals(Notice.Priority.EMERGENCY)) {
@@ -118,12 +79,16 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
+        List<String> fileUrls = new ArrayList<>(notice.getNoticeFileUrls());
+        noticeUpdateRequest.getFileInfoListSafe().forEach(fileInfo ->
+                fileUrls.add(fileInfo.saveName() + "|" + fileInfo.url()));
+
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                updatedFileUrls
+                fileUrls // 파일이 없으면 null 유지
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository);
