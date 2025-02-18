@@ -29,6 +29,7 @@ public class ProgressStepPlanUpdate {
         id : id
         name : 단계명
         description : 단계 설명
+        color : 커스텀 색상
         stepOrder : 순서
         status : 진행 단계 상태
         startAt : 시작 일시
@@ -40,6 +41,7 @@ public class ProgressStepPlanUpdate {
         private Long id;
         private String name;
         private String description;
+        private String color;
         private Integer stepOrder;
         private String status;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -62,6 +64,7 @@ public class ProgressStepPlanUpdate {
             dto.id = progressStep.getId();
             dto.name = progressStep.getName();
             dto.description = progressStep.getDescription();
+            dto.color = progressStep.getColor();
             dto.stepOrder = progressStep.getStepOrder();
             dto.status = progressStep.getStatus().name();
             dto.startAt = progressStep.getStartAt();

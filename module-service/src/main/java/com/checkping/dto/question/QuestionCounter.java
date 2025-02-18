@@ -12,17 +12,19 @@ public class QuestionCounter {
     public static class Response {
         private Long id;
         private String title;
-        private String value;
+        private String description;
         private Long count;
         private Integer stepOrder;
+        private String color;
 
         public static Response toDto(ProgressStep progressStep, Long count) {
             Response response = new Response();
             response.id = progressStep.getId();
             response.title = progressStep.getName();
-            response.value = progressStep.getDescription();
+            response.description = progressStep.getDescription();
             response.count = count;
             response.stepOrder = progressStep.getStepOrder();
+            response.color = progressStep.getColor();
             return response;
         }
 
@@ -36,9 +38,10 @@ public class QuestionCounter {
             Response response = new Response();
             response.id = 0L;
             response.title = "전체";
-            response.value = "ALL";
+            response.description = "전체 정보를 표현합니다.";
             response.count = count;
             response.stepOrder = -1;
+            response.color = "#333333";
             return response;
         }
     }

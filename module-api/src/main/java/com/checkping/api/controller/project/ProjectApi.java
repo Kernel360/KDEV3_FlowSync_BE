@@ -6,6 +6,7 @@ import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepRegister;
+import com.checkping.dto.project.ProgressStepUpdater;
 import com.checkping.dto.project.ProjectRequest;
 import com.checkping.dto.project.ProjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -96,6 +97,19 @@ public interface ProjectApi {
 
     @Operation(summary = "프로젝트 진행 상태 삭제", description = "프로젝트 진행 상태를 삭제하는 기능입니다.")
     BaseResponse<ProgressStepDelete.Response> deleteProgressStep(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId
+    );
+
+    @Operation(summary = "프로젝트 진행 상태 수정", description = "프로젝트 진행 상태 정보를 수정하는 기능입니다.")
+    BaseResponse<ProgressStepUpdater.Response> updateProgressStep(
+            @Parameter(description = "프로젝트 ID") Long projectId,
+            @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId,
+            @Parameter(description = "수정할 프로젝트 진행 상태 정보 Dto") @Valid ProgressStepUpdater.Request request
+    );
+
+    @Operation(summary = "프로젝트 진행 상태 정보 조회", description = "프로젝트 진행 상태 정보를 조회하는 기능입니다.")
+    BaseResponse<ProgressStepGet.Response> getProgressStepInfo(
             @Parameter(description = "프로젝트 ID") Long projectId,
             @Parameter(description = "프로젝트 진행 상태 ID") Long progressStepId
     );

@@ -19,6 +19,7 @@ public class ProgressStepGet {
         id : 진행 단계 ID
         name : 단계명
         description : 단계 설명
+        color : 커스텀 색상
         stepOrder : 순서
         status : 단계 상태
         startAt : 시작 일시
@@ -34,6 +35,8 @@ public class ProgressStepGet {
         private String name;
         @Schema(description = "단계 설명")
         private String description;
+        @Schema(description = "커스텀 색상")
+        private String color;
         @Schema(description = "순서")
         private Integer stepOrder;
         @Schema(description = "단계 상태")
@@ -62,6 +65,7 @@ public class ProgressStepGet {
             response.id = progressStep.getId();
             response.name = progressStep.getName();
             response.description = progressStep.getDescription();
+            response.color = progressStep.getColor();
             response.stepOrder = progressStep.getStepOrder();
             response.status = progressStep.getStatus().name();
             response.startAt = DateTimeUtils.format(progressStep.getStartAt());
