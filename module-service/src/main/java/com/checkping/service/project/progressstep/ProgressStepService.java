@@ -5,6 +5,7 @@ import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepRegister;
+import com.checkping.dto.project.ProgressStepUpdater;
 import java.util.List;
 
 public interface ProgressStepService {
@@ -17,4 +18,6 @@ public interface ProgressStepService {
     List<ProgressStepOrderUpdater.Response> updateProgressStepOrder(Long projectId, ProgressStepOrderUpdater.Request request);
 
     ProgressStepDelete.Response deleteProgressStep(Long projectId, Long progressStepId);
+
+    ProgressStepUpdater.Response update(Long projectId, Long progressStepId, ProgressStepUpdater.Request request);
 }
