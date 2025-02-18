@@ -235,4 +235,12 @@ public class Question extends BaseEntity {
     public void setParentQuestion(Question parent) {
         this.parent = parent;
     }
+
+
+    /**
+     * 질문 게시글 답변 처리
+     */
+    public void resolve() {
+        this.status = Status.COMPLETED;
+    }
 }
