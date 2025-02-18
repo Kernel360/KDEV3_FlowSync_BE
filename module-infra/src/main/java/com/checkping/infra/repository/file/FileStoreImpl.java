@@ -11,7 +11,7 @@ public class FileStoreImpl implements FileStore {
 
     private final FileRepository fileRepository;
 
-    public FileStoreImpl(@Qualifier("s3PublicFileRepositoryImpl") FileRepository fileRepository) {
+    public FileStoreImpl(@Qualifier("s3FileRepositoryImpl") FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
