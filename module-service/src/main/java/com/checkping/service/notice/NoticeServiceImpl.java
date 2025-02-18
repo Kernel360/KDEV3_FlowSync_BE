@@ -69,6 +69,33 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
+        boolean isUpdated = false;
+
+        if (noticeUpdateRequest.getTitle() != null && !noticeUpdateRequest.getTitle().equals(notice.getTitle())) {
+            isUpdated = true;
+        }
+
+        if (noticeUpdateRequest.getContent() != null && !noticeUpdateRequest.convertContentToJson().equals(notice.getContent())) {
+            isUpdated = true;
+        }
+
+        if (noticeUpdateRequest.getCategory() != null && !noticeUpdateRequest.getCategory().equals(notice.getCategory().toString())) {
+            isUpdated = true;
+        }
+
+        if (noticeUpdateRequest.getPriority() != null && !noticeUpdateRequest.getPriority().equals(notice.getPriority().toString())) {
+            isUpdated = true;
+        }
+
+        if (noticeUpdateRequest.getFileInfoListSafe() != null && !noticeUpdateRequest.getFileInfoListSafe().isEmpty()) {
+            isUpdated = true;
+        }
+
+        // 수정할 내용이 없는 경우 예외 던지기
+        if (!isUpdated) {
+            throw new BaseException(ErrorCode.NO_CHANGE);
+        }
+
         if (noticeUpdateRequest.getPriority() != null) {
             Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
             if (priority == Notice.Priority.EMERGENCY) {
