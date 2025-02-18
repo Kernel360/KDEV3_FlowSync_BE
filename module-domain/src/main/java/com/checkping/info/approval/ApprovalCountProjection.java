@@ -11,14 +11,16 @@ public class ApprovalCountProjection {
     private Long count;
     private String status;
     private Integer stepOrder;
+    private String color;
 
     @QueryProjection
-    public ApprovalCountProjection(Long id, String title, String value, Long count, String status, Integer stepOrder) {
+    public ApprovalCountProjection(Long id, String title, String value, Long count, String status, Integer stepOrder, String color) {
         this.id = id;
         this.title = title;
         this.value = value;
         this.count = count;
         this.status = status;
         this.stepOrder = stepOrder;
+        this.color = color;
     }
 }
