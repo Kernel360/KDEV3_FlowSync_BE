@@ -5,6 +5,7 @@ import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -46,7 +48,7 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
     @Schema(description = "공지사항 첨부파일 링크")
     private List<FileRequest> fileInfoList;
 
-    public static NoticeResponse toDto(Notice notice){
+    public static NoticeResponse toDto(Notice notice, S3FileRepositoryImpl s3FileRepository){
         return NoticeWithIsdeletedResponse.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
@@ -56,7 +58,14 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
                 .regAt(notice.getRegAt())
                 .updatedAt(notice.getUpdatedAt())
-                .fileInfoList(convertFileUrlsToFileRequestList(notice.getNoticeFileUrls()))
+                .fileInfoList(notice.getNoticeFileUrls().stream()
+                        .map(url -> {
+                            String[] parts = url.split("\\|");
+                            String fileName = extractFileName(parts[1]);
+                            String presignedUrl = s3FileRepository.getPresignedUrl(fileName);
+                            return new FileRequest(parts[0], presignedUrl, presignedUrl, 0); // size는 0으로 설정
+                        })
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -79,5 +88,13 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
             );
         }
         return fileRequestList;
+    }
+
+    private static String extractFileName(String url) {
+        try {
+            return url.substring(url.lastIndexOf("/") + 1);
+        } catch (Exception e) {
+            throw new BaseException("파일첨부 부분 오류 발생", ErrorCode.FILE_UPLOAD_FAILED);
+        }
     }
 }

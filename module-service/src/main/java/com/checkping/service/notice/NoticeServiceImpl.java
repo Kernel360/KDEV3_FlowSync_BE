@@ -126,7 +126,7 @@ public class NoticeServiceImpl implements NoticeService {
                 updatedFileUrls
         );
 
-        return NoticeWithIsdeletedResponse.toDto(notice);
+        return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         noticeRepository.save(notice);
 
-        return NoticeWithIsdeletedResponse.toDto(notice);
+        return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository);
     }
 
     @Override
@@ -155,11 +155,11 @@ public class NoticeServiceImpl implements NoticeService {
         if (isAdmin) {
             notice = noticeRepository.findById(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 관리자: 삭제된 공지사항도 볼 수 있음
-            return NoticeWithIsdeletedResponse.toDto(notice); // 관리자: isDeleted 포함
+            return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository); // 관리자: isDeleted 포함
         } else {
             notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 비관리자: 삭제된 공지사항은 볼 수 없음
-            return NoticeWithoutIsdeletedResponse.toDto(notice); // 비관리자: isDeleted 제외
+            return NoticeWithoutIsdeletedResponse.toDto(notice, s3FileRepository); // 비관리자: isDeleted 제외
         }
     }
 
