@@ -128,4 +128,13 @@ public class ApprovalComment extends BaseEntity {
     public void updateContent(String content) {
         this.content = content;
     }
+
+    /**
+     * 댓글 삭제 여부 확인
+     *
+     * @return  삭제 여부
+     */
+    public boolean isDeleted() {
+        return this.deleteYn == DeleteStatus.Y;
+    }
 }

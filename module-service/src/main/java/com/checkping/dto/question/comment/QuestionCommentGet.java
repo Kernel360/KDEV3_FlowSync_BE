@@ -26,6 +26,7 @@ public class QuestionCommentGet {
         parentId : 부모 댓글 아이디
         isParent : 부모 댓글인지 여부 체크 T/F
         register : 작성자 정보
+        isDeleted : 삭제 여부 체크 T/F
          */
         @Schema(description = "질문 게시글 댓글 아이디")
         private Long id;
@@ -41,6 +42,9 @@ public class QuestionCommentGet {
         private boolean isParent;
         @Schema(description = "작성자 정보")
         private MemberResponseDto.MeResponseDto register;
+        @Schema(description = "삭제 여부 체크 T/F")
+        private boolean isDeleted;
+
         /**
          * 질문 게시글 댓글 엔티티를 응답 정보로 변환하는 메서드
          *
@@ -61,6 +65,12 @@ public class QuestionCommentGet {
             if (comment.getParent() != null) {
                 response.parentId = comment.getParent().getId();
                 response.isParent = false;
+            }
+
+            // 삭제 댓글 처리
+            response.isDeleted = comment.isDeleted();
+            if (response.isDeleted) {
+                response.content = "삭제된 댓글입니다.";
             }
 
             return response;
