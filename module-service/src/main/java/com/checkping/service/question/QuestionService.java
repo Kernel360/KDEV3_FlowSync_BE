@@ -27,4 +27,6 @@ public interface QuestionService {
     QuestionItemDto update(Long projectId, Long questionId, UpdateDto request);
 
     List<QuestionCounter.Response> countByProgressStep(Long projectId);
+
+    QuestionGet.Response resolve(Long projectId, Long questionId);
 }
