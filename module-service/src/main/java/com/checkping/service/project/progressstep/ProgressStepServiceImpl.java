@@ -8,6 +8,7 @@ import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.dto.project.ProgressStepRegister;
+import com.checkping.dto.project.ProgressStepUpdater;
 import com.checkping.exception.project.progressstep.ProgressStepExistsBoardException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
@@ -197,6 +198,28 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepDelete.Response.toDto(progressStep);
+    }
+
+    @Override
+    @Transactional
+    public ProgressStepUpdater.Response update(Long projectId, Long progressStepId,
+        ProgressStepUpdater.Request request) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress step
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
+            projectId).orElseThrow(ProgressStepNotFoundException::new);
+
+        // update progress step
+        progressStep.update(request.getTitle(), request.getDescription(), request.getColor());
+
+        // Entity -> Dto
+        return ProgressStepUpdater.Response.toDto(progressStep);
     }
 
     /**

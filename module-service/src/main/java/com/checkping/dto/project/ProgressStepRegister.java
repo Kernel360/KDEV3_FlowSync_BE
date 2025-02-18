@@ -14,19 +14,38 @@ public class ProgressStepRegister {
 
     @Getter
     public static class Request {
+
         /*
         title : 진행단계 제목
+        description : 진행단계 설명
+        color: 커스텀 색상
          */
         @NotEmpty(message = "진행단계 제목은 필수입니다.")
+        @Schema(description = "진행 단계 제목", example = "진행 단계 제목")
         private String title;
+        @NotEmpty(message = "진행단계 설명은 필수입니다.")
+        @Schema(description = "진행 단계 설명", example = "진행 단계 설명")
+        private String description;
+        @Schema(description = "커스텀 색상", example = "#333333")
+        private String color;
 
+        /**
+         * ProgressStepRegister.Request Dto -> ProgressStep Entity
+         *
+         * @param request   ProgressStepRegister.Request Dto
+         * @param projectId 프로젝트 ID
+         * @param stepOrder 단계 순서
+         * @return ProgressStep Entity
+         */
         public static ProgressStep toEntity(Request request, Long projectId, Integer stepOrder) {
-            return ProgressStep.generate(projectId, request.getTitle(), request.getTitle(), stepOrder);
+            return ProgressStep.generate(projectId, request.getTitle(), request.getDescription(),
+                stepOrder, request.getColor());
         }
     }
 
     @Getter
     public static class Response {
+
         /*
         id : 진행 단계 ID
         name : 단계명
