@@ -1,5 +1,6 @@
 package com.checkping.api.controller.file;
 
+import static com.checkping.common.enums.SuccessCode.FILE_PRIVATE_UPLOAD;
 import static com.checkping.common.enums.SuccessCode.FILE_UPLOAD;
 
 import com.checkping.common.response.BaseResponse;
@@ -24,5 +25,13 @@ public class FileController implements FileApi {
     public BaseResponse<FileResponse> uploadFile(
         @RequestParam("file") MultipartFile multipartFile) {
         return BaseResponse.success(fileService.upload(multipartFile), FILE_UPLOAD.getMessage());
+    }
+
+    @PostMapping(value = "/file/public", consumes = {"multipart/form-data"})
+    @Override
+    public BaseResponse<FileResponse> uploadPublicFile(MultipartFile multipartFile) {
+
+        return BaseResponse.success(fileService.uploadPublic(multipartFile),
+            FILE_PRIVATE_UPLOAD.getMessage());
     }
 }
