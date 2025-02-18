@@ -2,6 +2,7 @@ package com.checkping.domain.question;
 
 import com.checkping.domain.BaseEntity;
 import com.checkping.domain.member.Member;
+import com.checkping.domain.question.Question.DeleteStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -129,5 +130,13 @@ public class QuestionComment extends BaseEntity {
     // update
     public void update(String content) {
         this.content = content;
+    }
+
+    /**
+     * 삭제 여부 확인
+     * @return  삭제 여부
+     */
+    public boolean isDeleted() {
+        return this.deletedYn == QuestionComment.DeleteStatus.Y;
     }
 }

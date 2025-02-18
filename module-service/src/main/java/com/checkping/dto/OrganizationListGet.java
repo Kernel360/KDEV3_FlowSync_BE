@@ -17,6 +17,7 @@ public class OrganizationListGet {
    status : 업체 상태
    */
     @Getter
+    @Setter
     @ToString
     @Builder
     @NoArgsConstructor

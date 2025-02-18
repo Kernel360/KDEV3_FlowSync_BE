@@ -30,8 +30,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
-    private final S3FileRepositoryImpl s3FileRepository;
-
     private final S3FileRepositoryImpl s3FileRepositoryImpl;
 
     @Override
@@ -66,12 +64,12 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         if (noticeUpdateRequest.getPriority() != null) {
             Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
-            if (priority == Notice.Priority.EMERGENCY) {
+            if (priority == Notice.Priority.EMERGENCY&& !notice.getPriority().equals(Notice.Priority.EMERGENCY)) {
                 long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
                 if (emergencyNoticeCount >= 3) {
                     throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
@@ -79,16 +77,30 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
+        List<String> newFileUrls = new ArrayList<>();
+        if (noticeUpdateRequest.getFileInfoList() != null) {
+            newFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
+        }
+
+        List<String> existingFileUrls = notice.getNoticeFileUrls();
+        List<String> filesToDelete = new ArrayList<>(existingFileUrls);
+
+        if (newFileUrls.isEmpty()) {
+            filesToDelete.addAll(existingFileUrls);
+        } else {
+            filesToDelete.removeAll(newFileUrls);
+        }
+
+        List<String> updatedFileUrls = new ArrayList<>(newFileUrls);
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
+                updatedFileUrls
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
@@ -101,7 +113,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         notice.markAsDeleted();
@@ -120,11 +132,29 @@ public class NoticeServiceImpl implements NoticeService {
         if (isAdmin) {
             notice = noticeRepository.findById(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 관리자: 삭제된 공지사항도 볼 수 있음
-            return NoticeWithIsdeletedResponse.toDto(notice); // 관리자: isDeleted 포함
+
+            List<FileRequest> fileRequests = convertFileUrlsToFileRequestList(notice.getNoticeFileUrls());
+
+            NoticeResponse response = NoticeWithIsdeletedResponse.toDto(notice);
+
+            NoticeWithIsdeletedResponse response1 = (NoticeWithIsdeletedResponse) response;
+
+            response1.setFileInfoList(fileRequests);
+
+            return (NoticeResponse) response1; // 관리자: isDeleted 포함
         } else {
             notice = noticeRepository.findByIdAndIsDeletedFalse(noticeid)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND)); // 비관리자: 삭제된 공지사항은 볼 수 없음
-            return NoticeWithoutIsdeletedResponse.toDto(notice); // 비관리자: isDeleted 제외
+
+            List<FileRequest> fileRequests = convertFileUrlsToFileRequestList(notice.getNoticeFileUrls());
+
+            NoticeResponse response = NoticeWithoutIsdeletedResponse.toDto(notice);
+
+            NoticeWithoutIsdeletedResponse response1 = (NoticeWithoutIsdeletedResponse) response;
+
+            response1.setFileInfoList(fileRequests);
+
+            return (NoticeResponse) response1; // 비관리자: isDeleted 제외
         }
     }
 
@@ -165,6 +195,22 @@ public class NoticeServiceImpl implements NoticeService {
         return isAdmin
                 ? NoticeListResponse.fromEntityPage(result, true)  // 관리자: isDeleted 포함
                 : NoticeListResponse.fromEntityPage(result, false); // 비관리자: isDeleted 제외
+    }
+
+
+    private List<FileRequest> convertFileUrlsToFileRequestList(List<String> fileUrls) {
+
+        List<FileRequest> fileRequestList = new ArrayList<>();
+        for (String fileUrl : fileUrls) {
+            String[] parts = fileUrl.split("\\|");
+
+            String url = s3FileRepositoryImpl.getPresignedUrl(parts[0]);
+
+            fileRequestList.add(
+                    new FileRequest(parts[0], parts[0], url, 0L) // 사이즈는 0L로 임시 설정
+            );
+        }
+        return fileRequestList;
     }
 
 }

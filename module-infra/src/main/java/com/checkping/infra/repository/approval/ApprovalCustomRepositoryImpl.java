@@ -89,6 +89,7 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
         List<Approval> approvals = queryFactory.selectFrom(approval).where(builder)
             .offset(pageable.getOffset()) // ✅ 페이징 처리 (시작 위치)
             .limit(pageable.getPageSize()) // ✅ 페이지 크기 지정
+            .orderBy(approval.regAt.desc()) // ✅ 생성일자 기준으로 내림차순 정렬
             .fetch();
 
         return new PageImpl<>(approvals, pageable, total);

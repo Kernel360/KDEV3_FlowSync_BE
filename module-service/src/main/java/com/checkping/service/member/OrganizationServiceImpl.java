@@ -70,7 +70,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        return OrganizationListGet.Response.toDto(organization);
+        OrganizationListGet.Response response = OrganizationListGet.Response.toDto(organization);
+
+        String brCertificateUrl = response.getBrCertificateUrl();
+
+        if (brCertificateUrl != null && brCertificateUrl.contains("|")) {
+            String saveName = response.getBrCertificateUrl().split("\\|")[0];
+            String url = s3FileRepository.getPresignedUrl(saveName);
+
+            response.setBrCertificateUrl(saveName + "|" + url);
+        }
+
+        return response;
     }
 
     @Transactional(readOnly = true)
@@ -111,18 +122,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         Optional<Organization> result = organizationRepository.findById(id);
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        // 기존 파일이 있다면 삭제
-        if (organization.getBrCertificateUrl() != null && !organization.getBrCertificateUrl().isEmpty()) {
-            // 저장 파일명
-            String saveName = organization.getBrCertificateUrl().split("\\|")[0];
-            // 기존 파일 삭제
-            s3FileRepository.deleteFile(saveName);
-        }
+        // 프론트에서 파일을 수정하지 않고 보내면 url에 Prisigned URL을 보내기 때문에 기존 URL로 수정 작업
+        request.setBrCertificateUrl(organization.getBrCertificateUrl());
 
         // 수정 파일 등록
         if (file != null) {
             FileRequest fileRequest = s3FileRepository.uploadFile(file);
             request.setBrCertificateUrl(fileRequest.saveName() + "|" + fileRequest.url());
+
+            // 기존 파일이 있다면 삭제
+            if (organization.getBrCertificateUrl() != null && organization.getBrCertificateUrl().contains("|")) {
+                // 저장 파일명
+                String saveName = organization.getBrCertificateUrl().split("\\|")[0];
+                // 기존 파일 삭제
+                s3FileRepository.deleteFile(saveName);
+            }
         }
 
         organization.updateOrganization(

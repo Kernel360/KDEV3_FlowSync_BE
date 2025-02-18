@@ -16,9 +16,9 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long>, Appro
         + "ORDER BY COALESCE(c.parent.id, c.id), c.regAt ASC")
     Optional<Approval> getByIdWithComments(@Param("approvalId") Long approvalId);
 
-    boolean existsByProjectIdAndId(Long projectId, Long approvalId);
+    boolean existsByProjectIdAndId(Long projectId, Long id);
 
-    boolean existsByIdAndRegisterId(Long approvalId, Long registerId);
+    boolean existsByIdAndRegisterId(Long id, Long registerId);
 
     boolean existsByProgressStepId(Long progressStepId);
 }

@@ -4,13 +4,11 @@ import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
+import com.checkping.infra.repository.file.S3FileRepositoryImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
     @Getter
+    @Setter
     @Builder
     public class NoticeWithoutIsdeletedResponse implements NoticeResponse {
 
@@ -69,9 +68,11 @@ import java.util.List;
         }
 
         private static List<FileRequest> convertFileUrlsToFileRequestList(List<String> fileUrls) {
+
             List<FileRequest> fileRequestList = new ArrayList<>();
             for (String fileUrl : fileUrls) {
                 String[] parts = fileUrl.split("\\|");
+
                 fileRequestList.add(
                         new FileRequest(parts[0], parts[0], parts[1], 0L) // 사이즈는 0L로 임시 설정
                 );

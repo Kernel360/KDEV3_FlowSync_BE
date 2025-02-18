@@ -23,6 +23,7 @@ public class ApprovalCommentGet {
         regAt : 작성 일시
         parentId : 부모 댓글 Id
         isParent : 부모 댓글 여부
+        isDeleted : 삭제 여부
          */
         @Schema(description = "결재 댓글 ID")
         private Long id;
@@ -38,6 +39,8 @@ public class ApprovalCommentGet {
         private Long parentId;
         @Schema(description = "부모 댓글 여부")
         private boolean isParent;
+        @Schema(description = "삭제 여부")
+        private boolean isDeleted;
 
         /**
          * 결재 댓글이 부모 댓글인지 여부를 반환하는 메서드
@@ -57,6 +60,7 @@ public class ApprovalCommentGet {
         public static Response toDto(ApprovalComment comment) {
             Response response = new Response();
             response.id = comment.getId();
+
             response.approvalId = comment.getApproval().getId();
             response.content = comment.getContent();
             response.regAt = DateTimeUtils.format(comment.getRegAt());
@@ -68,6 +72,12 @@ public class ApprovalCommentGet {
             if (comment.getParent() != null) {
                 response.parentId = comment.getParent().getId();
                 response.isParent = false;
+            }
+
+            response.isDeleted = comment.isDeleted();
+            // 삭제된 댓글 처리
+            if (comment.isDeleted()) {
+                response.content = "삭제된 댓글입니다.";
             }
 
             return response;

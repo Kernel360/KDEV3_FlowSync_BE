@@ -62,6 +62,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         Long id = jwtUtil.getMemberId(accessToken);
+        request.setAttribute("memberId", id);
 
         if (redisConnectionCheckService.isRedisAvailable()) {
 
