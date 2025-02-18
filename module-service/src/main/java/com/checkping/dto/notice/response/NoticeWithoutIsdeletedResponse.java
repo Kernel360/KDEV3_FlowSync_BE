@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
         @Schema(description = "공지사항 첨부파일 링크")
         private List<FileRequest> fileInfoList;
 
-        public static NoticeResponse toDto(Notice notice, S3FileRepositoryImpl s3FileRepository) {
+        public static NoticeResponse toDto(Notice notice) {
             return NoticeWithoutIsdeletedResponse.builder()
                     .id(notice.getId())
                     .title(notice.getTitle())
@@ -57,14 +57,7 @@ import java.util.stream.Collectors;
                     .priority(notice.getPriority())
                     .regAt(notice.getRegAt())
                     .updatedAt(notice.getUpdatedAt())
-                    .fileInfoList(notice.getNoticeFileUrls().stream()
-                            .map(url -> {
-                                String[] parts = url.split("\\|");
-                                String fileName = extractFileName(parts[1]);
-                                String presignedUrl = s3FileRepository.getPresignedUrl(fileName);
-                                return new FileRequest(parts[0], presignedUrl, presignedUrl, 0); // size는 0으로 설정
-                            })
-                            .collect(Collectors.toList()))
+                    .fileInfoList(convertFileUrlsToFileRequestList(notice.getNoticeFileUrls()))
                     .build();
         }
 
@@ -87,14 +80,6 @@ import java.util.stream.Collectors;
                 );
             }
             return fileRequestList;
-        }
-
-        private static String extractFileName(String url) {
-            try {
-                return url.substring(url.lastIndexOf("/") + 1);
-            } catch (Exception e) {
-                throw new BaseException("파일첨부 부분 오류 발생", ErrorCode.FILE_UPLOAD_FAILED);
-            }
         }
     }
 

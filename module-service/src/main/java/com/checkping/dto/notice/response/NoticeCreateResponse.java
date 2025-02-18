@@ -46,7 +46,7 @@ public class NoticeCreateResponse {
     @Schema(description = "공지사항 첨부파일 링크")
     private List<FileRequest> fileInfoList;
 
-    public static NoticeCreateResponse toDto(Notice notice, S3FileRepositoryImpl s3FileRepository){
+    public static NoticeCreateResponse toDto(Notice notice){
         return NoticeCreateResponse.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
@@ -58,9 +58,7 @@ public class NoticeCreateResponse {
                 .fileInfoList(notice.getNoticeFileUrls().stream()
                         .map(url -> {
                             String[] parts = url.split("\\|");
-                            String fileName = extractFileName(parts[1]);
-                            String presignedUrl = s3FileRepository.getPresignedUrl(fileName);
-                            return new FileRequest(parts[0], presignedUrl, presignedUrl, 0); // size는 0으로 설정
+                            return new FileRequest(parts[0], parts[1], parts[1], 0); // size는 0으로 설정
                         })
                         .collect(Collectors.toList()))
                 .build();
@@ -69,17 +67,10 @@ public class NoticeCreateResponse {
     private static List<NoticeContent> convertJsonToContentList(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(json, new TypeReference<List<NoticeContent>>() {});
+            return objectMapper.readValue(json, new TypeReference<List<NoticeContent>>() {
+            });
         } catch (Exception e) {
             throw new BaseException();
-        }
-    }
-
-    private static String extractFileName(String url) {
-        try {
-            return url.substring(url.lastIndexOf("/") + 1);
-        } catch (Exception e) {
-            throw new BaseException("파일첨부 부분 오류 발생", ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
 }
