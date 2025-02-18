@@ -61,6 +61,7 @@ public class QuestionCustomRepositoryImpl implements QuestionCustomRepository {
             .where(builder)
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
+            .orderBy(question.createdAt.desc())
             .fetch();
 
         return new PageImpl<>(questions, pageable, totalCount);
