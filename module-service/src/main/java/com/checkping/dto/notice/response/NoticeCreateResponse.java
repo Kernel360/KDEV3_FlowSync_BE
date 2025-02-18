@@ -1,6 +1,7 @@
 package com.checkping.dto.notice.response;
 
 
+import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
 import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.common.utils.FileRequest;
@@ -57,7 +58,8 @@ public class NoticeCreateResponse {
                 .fileInfoList(notice.getNoticeFileUrls().stream()
                         .map(url -> {
                             String[] parts = url.split("\\|");
-                            String presignedUrl = s3FileRepository.getPresignedUrl(parts[1]);
+                            String fileName = extractFileName(parts[1]);
+                            String presignedUrl = s3FileRepository.getPresignedUrl(fileName);
                             return new FileRequest(parts[0], presignedUrl, presignedUrl, 0); // size는 0으로 설정
                         })
                         .collect(Collectors.toList()))
@@ -70,6 +72,14 @@ public class NoticeCreateResponse {
             return objectMapper.readValue(json, new TypeReference<List<NoticeContent>>() {});
         } catch (Exception e) {
             throw new BaseException();
+        }
+    }
+
+    private static String extractFileName(String url) {
+        try {
+            return url.substring(url.lastIndexOf("/") + 1);
+        } catch (Exception e) {
+            throw new BaseException("파일첨부 부분 오류 발생", ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
 }
