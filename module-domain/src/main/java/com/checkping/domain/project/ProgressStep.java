@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -135,7 +134,7 @@ public class ProgressStep extends BaseEntity {
         entity.status = Status.WAIT;
 
         // color 기본값 설정
-        entity.color = StringUtils.hasText(color)  ? color : "#333333";
+        entity.color = StringUtils.hasText(color) ? color : "#333333";
         return entity;
     }
 
@@ -184,5 +183,18 @@ public class ProgressStep extends BaseEntity {
     // 프로젝트 진행 단계 업데이트
     public void updateOrder(Integer order) {
         this.stepOrder = order;
+    }
+
+    /**
+     * 프로젝트 진행 단계 업데이트
+     *
+     * @param title       프로젝트 진행 단계 제목
+     * @param description 프로젝트 진행 단계 설명
+     * @param color       프로젝트 진행 단계 색상
+     */
+    public void update(String title, String description, String color) {
+        this.name = title;
+        this.description = description;
+        this.color = color;
     }
 }
