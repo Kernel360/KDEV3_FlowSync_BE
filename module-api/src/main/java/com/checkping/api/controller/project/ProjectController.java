@@ -186,4 +186,13 @@ public class ProjectController implements ProjectApi {
 
         return BaseResponse.success(response);
     }
+
+    @Override
+    @GetMapping("/projects/{projectId}/progress-steps/{progressStepId}")
+    public BaseResponse<Response> getProgressStepInfo(@PathVariable Long projectId, @PathVariable Long progressStepId) {
+
+        Response response = progressStepService.getInfo(projectId, progressStepId);
+
+        return BaseResponse.success(response);
+    }
 }
