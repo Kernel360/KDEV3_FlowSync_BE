@@ -66,7 +66,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         if (noticeUpdateRequest.getPriority() != null) {
@@ -101,7 +101,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
 
         if (notice.getIsDeleted()) {
-            throw new BaseException(ErrorCode.BAD_REQUEST);
+            throw new BaseException(ErrorCode.DELETED_NOTICE);
         }
 
         notice.markAsDeleted();
