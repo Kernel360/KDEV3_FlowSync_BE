@@ -86,10 +86,15 @@ public class NoticeServiceImpl implements NoticeService {
                     .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
                     .collect(Collectors.toList());
 
-            // 기존 파일에서 제거할 파일을 찾고 삭제
-            fileUrls.removeIf(existingFile -> newFileUrls.stream().noneMatch(newFile -> newFile.startsWith(existingFile.split("\\|")[1])));
-            // 새로운 파일 추가
-            fileUrls.addAll(newFileUrls);
+            fileUrls.removeIf(existingFile -> newFileUrls.stream()
+                    .noneMatch(newFile -> newFile.equals(existingFile))); // 정확한 URL 일치 비교
+
+            // 새로운 파일 추가 (중복 제거)
+            newFileUrls.forEach(fileUrl -> {
+                if (!fileUrls.contains(fileUrl)) {
+                    fileUrls.add(fileUrl); // 중복된 파일은 추가하지 않음
+                }
+            });
         }
 
         notice.updateNotice(
