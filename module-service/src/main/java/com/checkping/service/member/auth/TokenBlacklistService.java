@@ -1,5 +1,6 @@
 package com.checkping.service.member.auth;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ public class TokenBlacklistService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public TokenBlacklistService(RedisTemplate<String, String> redisTemplate) {
+    public TokenBlacklistService(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
