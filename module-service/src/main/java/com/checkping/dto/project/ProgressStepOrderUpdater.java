@@ -45,6 +45,7 @@ public class ProgressStepOrderUpdater {
         id : id
         name : 단계명
         description : 단계 설명
+        color: 커스텀 색상
         stepOrder : 순서
         status : 진행 단계 상태
         startAt : 시작 일시
@@ -56,6 +57,7 @@ public class ProgressStepOrderUpdater {
         private Long id;
         private String name;
         private String description;
+        private String color;
         private Integer stepOrder;
         private String status;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
