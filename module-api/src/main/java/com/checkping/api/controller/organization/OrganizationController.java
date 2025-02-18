@@ -1,9 +1,5 @@
 package com.checkping.api.controller.organization;
 
-import static com.checkping.common.enums.SuccessCode.ORGANIZATION_CHANGE_STATUS;
-import static com.checkping.common.enums.SuccessCode.ORGANIZATION_REGISTER;
-import static com.checkping.common.enums.SuccessCode.ORGANIZATION_UPDATE;
-
 import com.checkping.common.dto.PageInfo;
 import com.checkping.common.response.BaseResponse;
 import com.checkping.dto.*;
@@ -13,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.checkping.common.enums.SuccessCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,7 +80,7 @@ public class OrganizationController implements OrganizationApi {
 
         organizationService.removeOrganization(organizationId, request);
 
-        return BaseResponse.success(ORGANIZATION_REGISTER.getMessage(), ORGANIZATION_REGISTER.getMessage());
+        return BaseResponse.success(ORGANIZATION_DELETE.getMessage());
     }
 
     @PostMapping("/admins/organizations/{organizationId}/changeStatus")
@@ -93,7 +91,7 @@ public class OrganizationController implements OrganizationApi {
 
         organizationService.changeStatusOrganization(organizationId);
 
-        return BaseResponse.success(ORGANIZATION_CHANGE_STATUS.getMessage(), ORGANIZATION_CHANGE_STATUS.getMessage());
+        return BaseResponse.success(ORGANIZATION_CHANGE_STATUS.getMessage());
     }
 
     @GetMapping({"/admins/organizations/{organizationId}/projects","/organizations/{organizationId}/projects"})
