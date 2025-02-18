@@ -98,7 +98,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         if (noticeUpdateRequest.getPriority() != null) {
             Notice.Priority priority = Notice.Priority.valueOf(noticeUpdateRequest.getPriority());
-            if (priority == Notice.Priority.EMERGENCY) {
+            if (priority == Notice.Priority.EMERGENCY&& !notice.getPriority().equals(Notice.Priority.EMERGENCY)) {
                 long emergencyNoticeCount = noticeRepository.countByPriorityAndIsDeletedFalse(Notice.Priority.EMERGENCY);
                 if (emergencyNoticeCount >= 3) {
                     throw new BaseException("긴급 공지사항은 최대 3개 등록 가능합니다", ErrorCode.BAD_REQUEST);
