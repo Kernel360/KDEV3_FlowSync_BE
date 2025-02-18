@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProgressStepRepository extends JpaRepository<ProgressStep, Long> {
 
-    List<ProgressStep> findByProjectId(Long projectId);
+    List<ProgressStep> findByProjectIdOrderByStepOrderAsc(Long projectId);
 
     Optional<ProgressStep> findByIdAndProjectId(Long progressStepId, Long projectId);
 }

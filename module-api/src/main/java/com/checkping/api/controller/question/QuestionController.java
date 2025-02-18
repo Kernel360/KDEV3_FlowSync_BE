@@ -24,7 +24,6 @@ import com.checkping.dto.question.comment.QuestionReCommentRegister;
 import com.checkping.service.question.QuestionService;
 import com.checkping.service.question.comment.QuestionCommentService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -69,27 +67,6 @@ public class QuestionController implements QuestionApi {
 
         return BaseResponse.success(response, QUESTION_REGISTER.getMessage());
     }
-
-//    @GetMapping
-//    @Override
-//    public BaseResponse<QuestionSearch.Response> searchQuestions(
-//        @PathVariable Long projectId,
-//        @RequestParam(required = false) Long progressId,
-//        @RequestParam(required = false) String status,
-//        @RequestParam(required = false) String keyword,
-//        @RequestParam(defaultValue = "1") @Min(1) Integer currentPage,
-//        @RequestParam(defaultValue = "10") Integer pageSize) {
-//
-//        // Create QuestionSearchCondition
-//        QuestionSearchCondition searchCondition = new QuestionSearchCondition(progressId, status,
-//            keyword, currentPage, pageSize);
-//
-//        // Search Questions
-//        QuestionSearch.Response response = questionService.searchQuestions(projectId,
-//            searchCondition);
-//
-//        return BaseResponse.success(response);
-//    }
 
     @GetMapping
     @Override

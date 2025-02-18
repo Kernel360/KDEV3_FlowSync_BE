@@ -188,7 +188,7 @@ public class ProgressStepServiceImpl implements ProgressStepService {
             projectId).orElseThrow(ProgressStepNotFoundException::new);
 
         // check progress step Approvals and Questions
-        if (!approvalReader.existsByProgressStepId(progressStepId) || !questionReader.existsByProgressStepId(progressStepId)) {
+        if (approvalReader.existsByProgressStepId(progressStepId) || questionReader.existsByProgressStepId(progressStepId)) {
             throw new ProgressStepExistsBoardException();
         }
 

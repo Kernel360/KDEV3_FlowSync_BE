@@ -90,7 +90,7 @@ public class ApprovalCount {
             responseList.add(makeEntireCount(totalCount));
 
             // 정렬 (오름차순)
-            responseList.sort(Comparator.naturalOrder());
+            responseList.sort(Comparator.comparingInt(Response::getStepOrder));
 
             return responseList;
         }
