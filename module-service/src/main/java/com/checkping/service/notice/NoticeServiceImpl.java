@@ -87,11 +87,24 @@ public class NoticeServiceImpl implements NoticeService {
             isUpdated = true;
         }
 
-        if (noticeUpdateRequest.getFileInfoListSafe() != null && !noticeUpdateRequest.getFileInfoListSafe().isEmpty()) {
+        List<String> currentFileUrls = notice.getNoticeFileUrls();
+        List<String> updatedFileUrls = noticeUpdateRequest.getFileInfoListSafe() == null ?
+                currentFileUrls :
+                noticeUpdateRequest.getFileInfoListSafe().stream()
+                        .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                        .collect(Collectors.toList());
+
+        if (noticeUpdateRequest.getFileInfoListSafe() != null) {
+            if (noticeUpdateRequest.getFileInfoListSafe().isEmpty()) {
+
+                updatedFileUrls = new ArrayList<>();
+            }
+        }
+
+        if (!currentFileUrls.equals(updatedFileUrls)) {
             isUpdated = true;
         }
 
-        // 수정할 내용이 없는 경우 예외 던지기
         if (!isUpdated) {
             throw new BaseException(ErrorCode.NO_CHANGE);
         }
@@ -106,16 +119,12 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
 
-        List<String> fileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
-                .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
-                .collect(Collectors.toList());
-
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls // 파일이 없으면 null 유지
+                updatedFileUrls
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice);
