@@ -70,7 +70,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization organization = result.orElseThrow(OrganizationNotFoundEntityException::new);
 
-        return OrganizationListGet.Response.toDto(organization);
+        OrganizationListGet.Response response = OrganizationListGet.Response.toDto(organization);
+
+        String brCertificateUrl = response.getBrCertificateUrl();
+
+        if (brCertificateUrl != null && brCertificateUrl.contains("|")) {
+            String saveName = response.getBrCertificateUrl().split("\\|")[0];
+            String url = s3FileRepository.getPresignedUrl(saveName);
+
+            response.setBrCertificateUrl(saveName + "|" + url);
+        }
+
+        return response;
     }
 
     @Transactional(readOnly = true)
