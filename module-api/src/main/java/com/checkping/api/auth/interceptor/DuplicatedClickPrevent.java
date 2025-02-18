@@ -18,14 +18,14 @@ import java.util.concurrent.TimeUnit;
 public class DuplicatedClickPrevent implements HandlerInterceptor {
 
     private final StringRedisTemplate stringRedisTemplate;
-    private static final String PREFIX = "CLICK:ID:";
 
     public DuplicatedClickPrevent(@Qualifier("redisTemplateForDuplicatedClick") StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public boolean checkAndSetRequest(String email) {
-        String key = PREFIX + email;
+    public boolean checkAndSetRequest(String memberId, String requestURI, String method) {
+        // 요청별로 고유한 키 생성: "CLICK:MEMBERID:요청경로:MEMBERID"
+        String key = "CLICK:" + memberId + ":" + method + ":" + requestURI + ":" + memberId;
         Boolean success = stringRedisTemplate.opsForValue()
                 .setIfAbsent(key, "LOCK", 1, TimeUnit.SECONDS);
 
@@ -42,7 +42,7 @@ public class DuplicatedClickPrevent implements HandlerInterceptor {
             return true;
         }
 
-        // 2. 특정 경로 PUT 요청 제외
+        // 2. 특정 경로 PUT 요청은 중복 체크 제외
         if ("PUT".equalsIgnoreCase(method) && requestURI.matches("^/projects/\\d+/progress-steps/orders$")) {
             return true;
         }
@@ -55,7 +55,7 @@ public class DuplicatedClickPrevent implements HandlerInterceptor {
             return true; // memberId가 없으면 중복 체크 패스
         }
 
-        if(!checkAndSetRequest(memberId.toString())) {
+        if (!checkAndSetRequest(memberId.toString(), requestURI, method)) {
             throw new DuplicateRequestException();
         }
 
