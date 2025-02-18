@@ -80,15 +80,24 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         List<String> fileUrls = new ArrayList<>(notice.getNoticeFileUrls());
-        noticeUpdateRequest.getFileInfoListSafe().forEach(fileInfo ->
-                fileUrls.add(fileInfo.saveName() + "|" + fileInfo.url()));
+
+        if (noticeUpdateRequest.getFileInfoListSafe() != null) {
+            List<String> newFileUrls = noticeUpdateRequest.getFileInfoListSafe().stream()
+                    .map(fileInfo -> fileInfo.saveName() + "|" + fileInfo.url())
+                    .collect(Collectors.toList());
+
+            // 기존 파일에서 제거할 파일을 찾고 삭제
+            fileUrls.removeIf(existingFile -> newFileUrls.stream().noneMatch(newFile -> newFile.startsWith(existingFile.split("\\|")[1])));
+            // 새로운 파일 추가
+            fileUrls.addAll(newFileUrls);
+        }
 
         notice.updateNotice(
                 noticeUpdateRequest.getTitle(),
                 noticeUpdateRequest.getContent() != null ? noticeUpdateRequest.convertContentToJson() : null,
                 noticeUpdateRequest.getCategory(),
                 noticeUpdateRequest.getPriority(),
-                fileUrls // 파일이 없으면 null 유지
+                fileUrls.isEmpty() ? new ArrayList<>() : fileUrls
         );
 
         return NoticeWithIsdeletedResponse.toDto(notice, s3FileRepository);
