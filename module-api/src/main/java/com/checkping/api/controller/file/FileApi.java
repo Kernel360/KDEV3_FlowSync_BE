@@ -13,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "File API(FileController)", description = "파일 업로드 API 입니다.")
 public interface FileApi {
 
-    @Operation(summary = "파일 업로드", description = "파일을 업로드하는 기능입니다.")
+    @Operation(summary = "프라이빗 S3 파일 업로드", description = "프라이빗 S3에 파일을 업로드하는 기능입니다.")
     BaseResponse<FileResponse> uploadFile(
         @Parameter(description = "파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestParam("file") MultipartFile multipartFile);
 
-    @Operation(summary = "프라이빗 파일 업로드", description = "프라이빗 파일을 업로드하는 기능입니다.")
+    @Operation(summary = "퍼블릭 S3 파일 업로드", description = "퍼블릭 S3에 파일을 업로드하는 기능입니다.")
     BaseResponse<FileResponse> uploadPublicFile(
         @Parameter(description = "파일", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) @RequestParam("file") MultipartFile multipartFile);
 }

@@ -24,7 +24,7 @@ public class FileController implements FileApi {
     @Override
     public BaseResponse<FileResponse> uploadFile(
         @RequestParam("file") MultipartFile multipartFile) {
-        return BaseResponse.success(fileService.upload(multipartFile), FILE_UPLOAD.getMessage());
+        return BaseResponse.success(fileService.upload(multipartFile), FILE_PRIVATE_UPLOAD.getMessage());
     }
 
     @PostMapping(value = "/file/public", consumes = {"multipart/form-data"})
@@ -32,6 +32,6 @@ public class FileController implements FileApi {
     public BaseResponse<FileResponse> uploadPublicFile(MultipartFile multipartFile) {
 
         return BaseResponse.success(fileService.uploadPublic(multipartFile),
-            FILE_PRIVATE_UPLOAD.getMessage());
+            FILE_UPLOAD.getMessage());
     }
 }
