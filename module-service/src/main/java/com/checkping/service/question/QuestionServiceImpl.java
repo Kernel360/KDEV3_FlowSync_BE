@@ -294,6 +294,27 @@ public class QuestionServiceImpl implements QuestionService {
         return list;
     }
 
+    @Override
+    @Transactional
+    public QuestionGet.Response resolve(Long projectId, Long questionId) {
+
+        // Member by CurrentMemberUtil
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // 권한 확인
+        questionAuthorizationValidator.validateAccessibleQuestion(projectId, member);
+
+        // find Question Entity
+        Question question = questionReader.getById(questionId)
+            .orElseThrow(QuestionNotFoundEntityException::new);
+
+        // resolve
+        question.resolve();
+
+        return QuestionGet.Response.toDto(question);
+
+    }
+
     /**
      * PreSignedUrl 을 이용하여 파일 다운로드 링크를 생성한다.
      *

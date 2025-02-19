@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import java.util.List;
 
 
@@ -34,15 +33,6 @@ public interface QuestionApi {
         @Parameter(description = "프로젝트 ID") Long projectId,
         @Parameter(description = "게시글 ID") Long questionId,
         @Parameter(description = "등록 게시글 정보") QuestionRegister.Request request);
-
-//    @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
-//    BaseResponse<QuestionSearch.Response> searchQuestions(
-//        @Parameter(description = "프로젝트 ID") Long projectId,
-//        @Parameter(description = "질문 게시글 유형") Long progressId,
-//        @Parameter(description = "질문 게시글 상태") String status,
-//        @Parameter(description = "질문 게시글 검색어") String keyword,
-//        @Parameter(description = "현재 페이지") @Min(1)Integer currentPage,
-//        @Parameter(description = "페이지 사이즈") Integer pageSize);
 
     @Operation(summary = "질문 게시글 목록 조회", description = "질문 게시글 목록을 조회하는 기능입니다.")
     BaseResponse<QuestionSearch.Response> searchQuestions(
@@ -92,4 +82,9 @@ public interface QuestionApi {
     @Operation(summary = "프로젝트 진행 단계 별 질문 게시글 수 조회", description = "프로젝트 진행 단계 별 질문 게시글 수를 조회하는 기능입니다.")
     BaseResponse<List<Response>> countByProgressStep(
         @Parameter(description = "프로젝트 ID") Long projectId);
+
+    @Operation(summary = "질문 해결 기능", description = "질문을 해결하는 기능입니다.")
+    BaseResponse<QuestionGet.Response> resolve(
+        @Parameter(description = "프로젝트 ID") Long projectId,
+        @Parameter(description = "게시글 ID") Long questionId);
 }

@@ -16,13 +16,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Getter
-@Builder
 @Table(name = "progress_step")
 @Entity
 @AllArgsConstructor
@@ -32,6 +31,7 @@ public class ProgressStep extends BaseEntity {
     id : id
     name : 단계명
     description : 단계 설명
+    color : 커스텀 색상
     stepOrder : 순서
     status : 진행 단계 상태
     start_at : 시작 일시
@@ -51,6 +51,9 @@ public class ProgressStep extends BaseEntity {
 
     @Column(name = "description", length = 1000)
     private String description;
+
+    @Column(name = "color", columnDefinition = "varchar(7) default '#333333'")
+    private String color;
 
     @Column(name = "step_order")
     private Integer stepOrder;
@@ -86,12 +89,10 @@ public class ProgressStep extends BaseEntity {
     @Getter
     @RequiredArgsConstructor
     public enum CurrentStep {
-        REQUIREMENTS(1, "요구사항 정의", "요구사항을 수집하고 문서화하는 단계"),
-        SCREEN_DESIGN(2, "화면설계", "화면의 구조와 흐름을 정의하는 단계"),
-        DESIGN(3, "디자인", "UI/UX 디자인을 수행하는 단계"),
-        PUBLISHING(4, "퍼블리싱", "디자인을 웹 표준에 맞춰 적용하는 단계"),
-        DEVELOPMENT(5, "개발", "기능을 구현하고 시스템을 개발하는 단계"),
-        REVIEW(6, "검수", "완성된 결과물을 테스트하고 검수하는 단계");
+        REQUIREMENTS(1, "요구사항 정의", "요구사항을 수집하고 문서화하는 단계"), SCREEN_DESIGN(2, "화면설계",
+            "화면의 구조와 흐름을 정의하는 단계"), DESIGN(3, "디자인", "UI/UX 디자인을 수행하는 단계"), PUBLISHING(4, "퍼블리싱",
+            "디자인을 웹 표준에 맞춰 적용하는 단계"), DEVELOPMENT(5, "개발", "기능을 구현하고 시스템을 개발하는 단계"), REVIEW(6, "검수",
+            "완성된 결과물을 테스트하고 검수하는 단계");
 
         private final Integer order;
         private final String name;
@@ -109,8 +110,32 @@ public class ProgressStep extends BaseEntity {
      */
     public static ProgressStep generate(Long projectId, String name, String description,
         Integer stepOrder) {
-        return ProgressStep.builder().projectId(projectId).name(name).description(description)
-            .stepOrder(stepOrder).status(Status.WAIT).build();
+        return generate(projectId, name, description, stepOrder, null);
+    }
+
+    /**
+     * 생성 팩토리 메서드
+     *
+     * @param projectId   프로젝트 아이디
+     * @param name        단계명
+     * @param description 단계 설명
+     * @param stepOrder   순서
+     * @param color       커스텀 색상
+     * @return ProgressStep Entity
+     */
+    public static ProgressStep generate(Long projectId, String name, String description,
+        Integer stepOrder, String color) {
+
+        ProgressStep entity = new ProgressStep();
+        entity.projectId = projectId;
+        entity.name = name;
+        entity.description = description;
+        entity.stepOrder = stepOrder;
+        entity.status = Status.WAIT;
+
+        // color 기본값 설정
+        entity.color = StringUtils.hasText(color) ? color : "#333333";
+        return entity;
     }
 
     /**
@@ -131,7 +156,7 @@ public class ProgressStep extends BaseEntity {
     /**
      * 프로젝트 진행 단계 - 대기중 상태 여부
      *
-     * @return  대기중 상태 여부
+     * @return 대기중 상태 여부
      */
     public boolean isWait() {
         return this.status == Status.WAIT;
@@ -156,7 +181,20 @@ public class ProgressStep extends BaseEntity {
     }
 
     // 프로젝트 진행 단계 업데이트
-    public void updateOrder (Integer order) {
+    public void updateOrder(Integer order) {
         this.stepOrder = order;
+    }
+
+    /**
+     * 프로젝트 진행 단계 업데이트
+     *
+     * @param title       프로젝트 진행 단계 제목
+     * @param description 프로젝트 진행 단계 설명
+     * @param color       프로젝트 진행 단계 색상
+     */
+    public void update(String title, String description, String color) {
+        this.name = title;
+        this.description = description;
+        this.color = color;
     }
 }

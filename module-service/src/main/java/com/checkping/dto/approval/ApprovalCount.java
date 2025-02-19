@@ -20,23 +20,26 @@ public class ApprovalCount {
         /*
         id : progressStep ID
         title : progressStep 제목
-        value : progressStep 값
+        description : progressStep 값
         count : progressStep 카운트
         status : progressStep 상태
         stepOrder : progressStep 순서
+        color : progressStep 색상
          */
         @Schema(description = "progressStep ID")
         private Long id;
         @Schema(description = "progressStep 제목")
         private String title;
-        @Schema(description = "progressStep 값")
-        private String value;
+        @Schema(description = "progressStep 설명")
+        private String description;
         @Schema(description = "progressStep 에 해당하는 결재 글의 개수")
         private Long count;
         @Schema(description = "progressStep 상태")
         private String status;
         @Schema(description = "progressStep 순서")
         private Integer stepOrder;
+        @Schema(description = "progressStep 색상")
+        private String color;
 
         /**
          * 전체 카운트 생성
@@ -48,10 +51,11 @@ public class ApprovalCount {
             Response dto = new Response();
             dto.id = 0L;
             dto.title = "전체";
-            dto.value = "ALL";
+            dto.description = "전체 결재에 대한 정보를 의미합니다.";
             dto.count = count;
             dto.status = "ALL";
             dto.stepOrder = -1;
+            dto.color = "#333333";
             return dto;
         }
 
@@ -65,10 +69,11 @@ public class ApprovalCount {
             Response dto = new Response();
             dto.id = approvalCountProjection.getId();
             dto.title = approvalCountProjection.getTitle();
-            dto.value = approvalCountProjection.getValue();
+            dto.description = approvalCountProjection.getDescription();
             dto.count = approvalCountProjection.getCount();
             dto.status = approvalCountProjection.getStatus();
             dto.stepOrder = approvalCountProjection.getStepOrder();
+            dto.color = approvalCountProjection.getColor();
             return dto;
         }
 

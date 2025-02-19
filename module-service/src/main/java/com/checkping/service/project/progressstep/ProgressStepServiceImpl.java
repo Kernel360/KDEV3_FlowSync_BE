@@ -3,11 +3,13 @@ package com.checkping.service.project.progressstep;
 import com.checkping.domain.member.Member;
 import com.checkping.domain.project.ProgressStep;
 import com.checkping.dto.project.ProgressStepDelete;
+import com.checkping.dto.project.ProgressStepGet;
 import com.checkping.dto.project.ProgressStepGet.Response;
 import com.checkping.dto.project.ProgressStepOrderUpdater;
 import com.checkping.dto.project.ProgressStepPlanUpdate;
 import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.dto.project.ProgressStepRegister;
+import com.checkping.dto.project.ProgressStepUpdater;
 import com.checkping.exception.project.progressstep.ProgressStepExistsBoardException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
@@ -197,6 +199,45 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // Entity -> Dto
         return ProgressStepDelete.Response.toDto(progressStep);
+    }
+
+    @Override
+    @Transactional
+    public ProgressStepUpdater.Response update(Long projectId, Long progressStepId,
+        ProgressStepUpdater.Request request) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress step
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
+            projectId).orElseThrow(ProgressStepNotFoundException::new);
+
+        // update progress step
+        progressStep.update(request.getTitle(), request.getDescription(), request.getColor());
+
+        // Entity -> Dto
+        return ProgressStepUpdater.Response.toDto(progressStep);
+    }
+
+    @Override
+    public ProgressStepGet.Response getInfo(Long projectId, Long progressStepId) {
+
+        // check current member
+        Member member = currentMemberUtil.getCurrentMember();
+
+        // check member organization
+        checkOrganization(projectId, member);
+
+        // get progress step
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId, projectId)
+            .orElseThrow(ProgressStepNotFoundException::new);
+
+        // Entity -> Dto
+        return ProgressStepGet.Response.toDto(progressStep);
     }
 
     /**

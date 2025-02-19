@@ -7,18 +7,20 @@ import lombok.Getter;
 public class ApprovalCountProjection {
     private Long id;
     private String title;
-    private String value;
+    private String description;
     private Long count;
     private String status;
     private Integer stepOrder;
+    private String color;
 
     @QueryProjection
-    public ApprovalCountProjection(Long id, String title, String value, Long count, String status, Integer stepOrder) {
+    public ApprovalCountProjection(Long id, String title, String description, Long count, String status, Integer stepOrder, String color) {
         this.id = id;
         this.title = title;
-        this.value = value;
+        this.description = description;
         this.count = count;
         this.status = status;
         this.stepOrder = stepOrder;
+        this.color = color;
     }
 }
