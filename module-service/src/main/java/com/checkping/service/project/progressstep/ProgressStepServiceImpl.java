@@ -11,8 +11,10 @@ import com.checkping.dto.project.ProgressStepPlanUpdate.Request;
 import com.checkping.dto.project.ProgressStepRegister;
 import com.checkping.dto.project.ProgressStepUpdater;
 import com.checkping.exception.project.progressstep.ProgressStepExistsBoardException;
+import com.checkping.exception.project.progressstep.ProgressStepMismatchMemberException;
 import com.checkping.exception.project.progressstep.ProgressStepMismatchProjectException;
 import com.checkping.exception.project.progressstep.ProgressStepNotAfterStartAtException;
+import com.checkping.exception.project.progressstep.ProgressStepNotDevOwnerException;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.project.progressstep.ProgressStepStartAtException;
 import com.checkping.exception.project.progressstep.ProgressStepUpdateSizeException;
@@ -61,7 +63,9 @@ public class ProgressStepServiceImpl implements ProgressStepService {
     @Override
     public ProgressStepPlanUpdate.Response updateProgressStepPlan(Long projectId,
         Long progressStepId, Request request) {
-        // TODO : 권한 처리를 인터셉터에서 하도록 하며, 개발사 오너 담당자만 수정 가능 처리해야 한다.
+
+        // check current member
+        checkProjectDevOwner(projectId, currentMemberUtil.getCurrentMember());
 
         // 프로젝트 진행단계 시작일시 보다 마감일시가 이전이면 예외 발생
         LocalDateTime startAt = request.getStartAt();
@@ -127,6 +131,9 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         // check member organization
         checkOrganization(projectId, member);
 
+        // check project dev owner
+        checkProjectDevOwner(projectId, member);
+
         // Max Step Order
         Integer maxStepOrder = progressStepReader.getByProjectId(projectId).stream()
             .map(ProgressStep::getStepOrder).max(Integer::compareTo).orElse(0);
@@ -152,6 +159,9 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // check member organization
         checkOrganization(projectId, member);
+
+        // check project dev owner
+        checkProjectDevOwner(projectId, member);
 
         // get progress steps
         List<ProgressStep> progressSteps = progressStepReader.getByProjectId(projectId);
@@ -185,12 +195,16 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         // check member organization
         checkOrganization(projectId, member);
 
+        // check project dev owner
+        checkProjectDevOwner(projectId, member);
+
         // get progress step
         ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
             projectId).orElseThrow(ProgressStepNotFoundException::new);
 
         // check progress step Approvals and Questions
-        if (approvalReader.existsByProgressStepId(progressStepId) || questionReader.existsByProgressStepId(progressStepId)) {
+        if (approvalReader.existsByProgressStepId(progressStepId)
+            || questionReader.existsByProgressStepId(progressStepId)) {
             throw new ProgressStepExistsBoardException();
         }
 
@@ -211,6 +225,9 @@ public class ProgressStepServiceImpl implements ProgressStepService {
 
         // check member organization
         checkOrganization(projectId, member);
+
+        // check project dev owner
+        checkProjectDevOwner(projectId, member);
 
         // get progress step
         ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
@@ -233,8 +250,8 @@ public class ProgressStepServiceImpl implements ProgressStepService {
         checkOrganization(projectId, member);
 
         // get progress step
-        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId, projectId)
-            .orElseThrow(ProgressStepNotFoundException::new);
+        ProgressStep progressStep = progressStepReader.getByIdAndProjectId(progressStepId,
+            projectId).orElseThrow(ProgressStepNotFoundException::new);
 
         // Entity -> Dto
         return ProgressStepGet.Response.toDto(progressStep);
@@ -259,7 +276,27 @@ public class ProgressStepServiceImpl implements ProgressStepService {
             currentMember.getOrganization().getId());
 
         if (!isProjectMember) {
-            throw new ProgressStepMismatchProjectException();
+            throw new ProgressStepMismatchMemberException();
+        }
+    }
+
+    /**
+     * check project dev owner
+     *
+     * @param projectId     projectId
+     * @param currentMember current member
+     * @throws ProgressStepNotDevOwnerException progress step not dev owner exception
+     */
+    private void checkProjectDevOwner(Long projectId, Member currentMember) {
+
+        if (currentMember.isAdmin()) {
+            return;
+        }
+
+        boolean checkProjectDevOwner = projectReader.isDevOwner(projectId, currentMember.getId());
+
+        if (!checkProjectDevOwner) {
+            throw new ProgressStepNotDevOwnerException();
         }
     }
 }
