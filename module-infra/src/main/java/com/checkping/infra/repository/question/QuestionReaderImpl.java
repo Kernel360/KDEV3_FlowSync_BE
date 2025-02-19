@@ -66,7 +66,7 @@ public class QuestionReaderImpl implements QuestionReader {
      */
     @Override
     public Long countQuestionsByProject(Long projectId) {
-        return questionRepository.countByProjectId(projectId);
+        return questionRepository.countByProjectIdAndDeletedYn(projectId, Question.DeleteStatus.N);
     }
 
     /**
@@ -78,7 +78,8 @@ public class QuestionReaderImpl implements QuestionReader {
      */
     @Override
     public Long countQuestionsByProgressStep(Long projectId, Long progressStepId) {
-        return questionRepository.countByProjectIdAndProgressStepId(projectId, progressStepId);
+        return questionRepository.countByProjectIdAndProgressStepIdAndDeletedYn(projectId,
+            progressStepId, Question.DeleteStatus.N);
     }
 
     /**
