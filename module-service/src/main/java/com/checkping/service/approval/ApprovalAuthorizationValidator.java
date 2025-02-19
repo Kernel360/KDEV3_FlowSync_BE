@@ -139,10 +139,6 @@ public class ApprovalAuthorizationValidator extends AbstractAuthorizationValidat
      * @throws ApprovalMismatchProjectException 해당 프로젝트에 속한 결재 글이 아닌 경우
      */
     private boolean checkProjectContainsApproval(Long projectId, Long approvalId) {
-
-        System.out.println("approvalReader.existsByProjectIdAndId(projectId, approvalId) = "
-            + approvalReader.existsByProjectIdAndId(projectId, approvalId));
-
         return approvalReader.existsByProjectIdAndId(projectId, approvalId);
     }
 
@@ -199,10 +195,6 @@ public class ApprovalAuthorizationValidator extends AbstractAuthorizationValidat
      * @return 댓글 포함 여부
      */
     private boolean checkApprovalContainsComment(Long approvalId, Long commentId) {
-
-        System.out.println("approvalCommentReader.isContainingComment(approvalId, commentId) = "
-            + approvalCommentReader.isContainingComment(approvalId, commentId));
-
         return approvalCommentReader.isContainingComment(approvalId, commentId);
     }
 }
