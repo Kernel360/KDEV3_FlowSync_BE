@@ -24,11 +24,12 @@ import com.checkping.dto.project.ProjectRequest;
 
 import com.checkping.service.member.util.CurrentMemberUtil;
 import io.micrometer.common.util.StringUtils;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -79,6 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public ProjectResponse.ProjectDto deleteProject(Long projectId) {
 
         Project project = projectRepository.findById(projectId)
@@ -94,6 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public ProjectResponse.ProjectDto updateProject(Long projectId,
                                                     ProjectRequest.UpdateDto request) {
         validateProjectData(request.getStartAt(), request.getDeadlineAt(), request.getManagementStep());
@@ -156,6 +159,7 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectResponse.ProjectInfoDto.toDto(projectInfo, developerOwnerInfo, customerOwnerInfo);
     }
 
+    @Transactional(readOnly = true)
     public ProjectResponse.ProjectUpdateDto getUpdateProjectInfo(Long projectId) {
         ProjectUpdateDetailsDto dto = projectRepository.getUpdateProjectInfoById(projectId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND));
@@ -278,6 +282,7 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectResponse.ProjectListByManagementStepDto.toDto(results);
     }
 
+    @Transactional
     public ProjectResponse.ProjectDto updateManagementStep(Long projectId, String managementStep) {
         validateManagementStep(managementStep);
 
