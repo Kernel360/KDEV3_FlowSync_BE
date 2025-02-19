@@ -21,6 +21,7 @@ import com.checkping.dto.question.link.QuestionLinkRegister;
 import com.checkping.exception.project.progressstep.ProgressStepNotFoundException;
 import com.checkping.exception.question.QuestionNotFoundEntityException;
 import com.checkping.info.question.QuestionSearchInfo;
+import com.checkping.infra.repository.file.FileReader;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.infra.repository.question.QuestionReader;
@@ -37,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final ProgressStepReader progressStepReader;
     private final CurrentMemberUtil currentMemberUtil;
     private final QuestionAuthorizationValidator questionAuthorizationValidator;
+    private final FileReader fileReader;
 
     /**
      * 업무 관리 게시글 등록하기
@@ -159,7 +162,10 @@ public class QuestionServiceImpl implements QuestionService {
             .orElseThrow(QuestionNotFoundEntityException::new);
 
         // Entity -> Dto
-        return QuestionGet.Response.toDto(question);
+        QuestionGet.Response response = QuestionGet.Response.toDto(question);
+
+        // PreSignedUrl 을 이용하여 파일 다운로드 링크를 생성한 후 반환
+        return convertPreSignedUrl(response);
     }
 
     /**
@@ -286,5 +292,25 @@ public class QuestionServiceImpl implements QuestionService {
         list.sort(Comparator.comparingInt(QuestionCounter.Response::getStepOrder));
 
         return list;
+    }
+
+    /**
+     * PreSignedUrl 을 이용하여 파일 다운로드 링크를 생성한다.
+     *
+     * @param response QuestionGet.Response
+     * @return PreSignedUrl 이 추가된 QuestionGet.Response
+     */
+    private QuestionGet.Response convertPreSignedUrl(QuestionGet.Response response) {
+        if (CollectionUtils.isEmpty(response.getFileList())) {
+            return response;
+        }
+
+        response.getFileList().forEach(file -> {
+            // Get PreSigned Url
+            String preSignedUrl = fileReader.getPresignedUrlToDownload(file.getSaveName());
+            file.setPreSignedUrl(preSignedUrl);
+        });
+
+        return response;
     }
 }
