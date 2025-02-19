@@ -105,8 +105,10 @@ public class ApprovalAuthorizationValidator extends AbstractAuthorizationValidat
      * @param projectId  프로젝트 id
      * @param approvalId 결재 id
      * @param member     멤버 엔티티
+     * @param commentId  댓글 id
      */
-    public void validateAccessibleApprovalComment(Long projectId, Long approvalId, Member member) {
+    public void validateAccessibleApprovalComment(Long projectId, Long approvalId, Member member,
+        Long commentId) {
         // 관리자는 모든 행동 가능
         if (checkAdmin(member)) {
             return;
@@ -115,7 +117,7 @@ public class ApprovalAuthorizationValidator extends AbstractAuthorizationValidat
         validate(checkProjectMember(projectId, member), ProjectNotMemberException::new);
         validate(checkProjectContainsApproval(projectId, approvalId),
             ApprovalMismatchProjectException::new);
-        validate(checkApprovalContainsComment(approvalId, member.getId()),
+        validate(checkApprovalContainsComment(approvalId, commentId),
             ApprovalCommentMismatchException::new);
     }
 
