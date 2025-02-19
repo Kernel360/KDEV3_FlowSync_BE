@@ -2,6 +2,7 @@ package com.checkping.dto.notice.response;
 
 import com.checkping.common.enums.ErrorCode;
 import com.checkping.common.exception.BaseException;
+import com.checkping.common.utils.DateTimeUtils;
 import com.checkping.common.utils.FileRequest;
 import com.checkping.domain.notice.Notice;
 import com.checkping.dto.notice.NoticeContent;
@@ -42,10 +43,10 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
     private String isDeleted;
 
     @Schema(description = "생성 날짜", example = "2025-01-27T13:43:33.4716151")
-    private LocalDateTime regAt;
+    private String regAt;
 
     @Schema(description = "수정 날짜", example = "2025-01-28T13:43:33.4716151")
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     @Schema(description = "공지사항 첨부파일 링크")
     private List<FileRequest> fileInfoList;
@@ -58,8 +59,8 @@ public class NoticeWithIsdeletedResponse implements NoticeResponse {
                 .category(notice.getCategory())
                 .priority(notice.getPriority())
                 .isDeleted(notice.getIsDeleted() != null && notice.getIsDeleted() ? "Y" : "N")
-                .regAt(notice.getRegAt())
-                .updatedAt(notice.getUpdatedAt())
+                .regAt(DateTimeUtils.format(notice.getRegAt()))
+                .updatedAt(DateTimeUtils.format(notice.getUpdatedAt()))
                 .fileInfoList(convertFileUrlsToFileRequestList(notice.getNoticeFileUrls()))
                 .build();
     }
