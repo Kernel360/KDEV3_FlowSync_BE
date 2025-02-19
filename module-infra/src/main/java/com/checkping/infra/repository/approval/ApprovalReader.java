@@ -17,7 +17,7 @@ public interface ApprovalReader {
 
     boolean existsByProjectIdAndId(Long projectId, Long approvalId);
 
-    List<ApprovalCountProjection> countByProgressStep(Long projectId);
+    List<ApprovalCountProjection> countByProgressStep(Long projectId, boolean isAdmin);
 
     boolean isApprovalRegister(Long approvalId, Long registerId);
 

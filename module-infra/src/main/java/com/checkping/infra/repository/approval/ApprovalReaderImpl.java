@@ -44,8 +44,8 @@ public class ApprovalReaderImpl implements ApprovalReader {
     }
 
     @Override
-    public List<ApprovalCountProjection> countByProgressStep(Long projectId) {
-        return approvalRepository.countByProgressStep(projectId);
+    public List<ApprovalCountProjection> countByProgressStep(Long projectId, boolean isAdmin) {
+        return approvalRepository.countByProgressStep(projectId, isAdmin);
     }
 
     @Override

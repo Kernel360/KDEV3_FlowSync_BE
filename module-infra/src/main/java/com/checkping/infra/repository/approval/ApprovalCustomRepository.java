@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ApprovalCustomRepository {
 
-    List<ApprovalCountProjection> countByProgressStep(Long projectId);
+    List<ApprovalCountProjection> countByProgressStep(Long projectId, boolean isAdmin);
 
     Page<Approval> getByCondition(Long projectId, ApprovalSearchInfo.SearchCondition searchCondition,
         Pageable pageable);
