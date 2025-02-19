@@ -285,6 +285,8 @@ public class QuestionServiceImpl implements QuestionService {
         for (ProgressStep step : steps) {
             QuestionCounter.Response dto = QuestionCounter.Response.toDto(step,
                 questionReader.countQuestionsByProgressStep(projectId, step.getId()));
+
+            System.out.println(step.getName() + " : " + dto.getCount());
             list.add(dto);
         }
 
