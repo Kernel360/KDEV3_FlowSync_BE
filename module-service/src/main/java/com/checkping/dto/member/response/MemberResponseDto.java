@@ -73,6 +73,10 @@ public class MemberResponseDto {
         private String organizationName;
         @Schema(description = "소속 업체 유형", example = "DEVELOPER") // DEVELOPER, CUSTOMER
         private String organizationType;
+        @Schema(description = "직무", example = "개발자")
+        private String jobRole;
+        @Schema(description = "직급", example = "팀장")
+        private String jobTitle;
 
         public static MeResponseDto fromEntity(Member member) {
             return MeResponseDto.builder()
@@ -82,6 +86,8 @@ public class MemberResponseDto {
                     .organizationId(member.getOrganization().getId())
                     .organizationName(member.getOrganization().getName())
                     .organizationType( member.getOrganization().getType().name())  // 예: DEVELOPER / CUSTOMER)
+                    .jobRole(member.getJobRole())
+                    .jobTitle(member.getJobTitle())
                     .build();
         }
     }
@@ -101,6 +107,10 @@ public class MemberResponseDto {
         private String organizationType;
         @Schema(description = "서명 URL", example = "서명이미지 url")
         private String signatureUrl;
+        @Schema(description = "직무", example = "개발자")
+        private String jobRole;
+        @Schema(description = "직급", example = "팀장")
+        private String jobTitle;
 
         public static MeWithSignatureResponseDto fromEntity(Member member) {
             return MeWithSignatureResponseDto.builder()
@@ -110,6 +120,8 @@ public class MemberResponseDto {
                 .organizationName(member.getOrganization().getName())
                 .organizationType( member.getOrganization().getType().name())  // 예: DEVELOPER / CUSTOMER)
                 .signatureUrl(member.getSignatureUrl())
+                .jobRole(member.getJobRole())
+                .jobTitle(member.getJobTitle())
                 .build();
         }
     }
