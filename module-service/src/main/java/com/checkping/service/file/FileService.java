@@ -9,4 +9,6 @@ public interface FileService {
     FileResponse upload(MultipartFile multipartFile);
 
     List<FileResponse> uploadFiles(List<MultipartFile> multipartFiles);
+
+    FileResponse uploadPublic(MultipartFile multipartFile);
 }

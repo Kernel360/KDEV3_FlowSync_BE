@@ -107,5 +107,14 @@ public class QuestionFileRegister {
 
             return questionFiles.stream().map(QuestionFileRegister.Response::toDto).toList();
         }
+
+        /**
+         * Set PreSignedUrl
+         *
+         * @param preSignedUrl  PreSignedUrl
+         */
+        public void setPreSignedUrl(String preSignedUrl) {
+            this.url = preSignedUrl;
+        }
     }
 }
