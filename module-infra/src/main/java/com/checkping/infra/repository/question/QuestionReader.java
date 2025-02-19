@@ -13,9 +13,9 @@ public interface QuestionReader {
 
     Optional<Question> getByIdWithComments(Long questionId);
 
-    Long countQuestionsByProject(Long projectId);
+    Long countQuestionsByProject(Long projectId, boolean isAdmin);
 
-    Long countQuestionsByProgressStep(Long projectId, Long progressStepId);
+    Long countQuestionsByProgressStep(Long projectId, Long progressStepId, boolean isAdmin);
 
     boolean checkQuestionContaining(Long projectId, Long questionId);
 

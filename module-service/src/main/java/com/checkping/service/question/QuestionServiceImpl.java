@@ -131,7 +131,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         // RequestParam -> Info
         QuestionSearchInfo.SearchCondition searchInfo = QuestionSearchCondition.toInfo(
-            searchCondition, false);
+            searchCondition, member.isAdmin());
 
         // search
         Page<Question> questions = questionReader.searchQuestions(projectId, searchInfo);
@@ -279,14 +279,13 @@ public class QuestionServiceImpl implements QuestionService {
 
         // 전체 question 의 개수 조회
         QuestionCounter.Response allCount = QuestionCounter.Response.makeAllCount(
-            questionReader.countQuestionsByProject(projectId));
+            questionReader.countQuestionsByProject(projectId, member.isAdmin()));
         list.add(allCount);
 
         for (ProgressStep step : steps) {
             QuestionCounter.Response dto = QuestionCounter.Response.toDto(step,
-                questionReader.countQuestionsByProgressStep(projectId, step.getId()));
+                questionReader.countQuestionsByProgressStep(projectId, step.getId(), member.isAdmin()));
 
-            System.out.println(step.getName() + " : " + dto.getCount());
             list.add(dto);
         }
 
