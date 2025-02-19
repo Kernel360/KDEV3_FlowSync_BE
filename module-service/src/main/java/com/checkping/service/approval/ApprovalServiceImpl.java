@@ -315,7 +315,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 권한 확인
         approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
-            member);
+            member, commentId);
 
         // Find approval
         Approval approval = approvalReader.getById(approvalId)
@@ -419,7 +419,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 결재 댓글 접근 권한 확인
         approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
-            member);
+            member, commentId);
 
         // find approval comment
         ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
@@ -444,7 +444,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 권한 체크
         approvalAuthorizationValidator.validateAccessibleApprovalComment(projectId, approvalId,
-            member);
+            member, commentId);
 
         // find approval comment
         ApprovalComment approvalComment = approvalCommentReader.getById(commentId)
