@@ -52,6 +52,16 @@ public class ApprovalFileGet {
         public static List<Response> toDto(List<ApprovalFile> files) {
             return files.stream().map(Response::toDto).toList();
         }
+
+
+        /**
+         * 결재 첨부 링크 ID를 반환하는 메서드
+         *
+         * @param preSignedUrl 결재 첨부 링크 ID
+         */
+        public void setPreSignedUrl(String preSignedUrl) {
+            this.url = preSignedUrl;
+        }
     }
 
 }

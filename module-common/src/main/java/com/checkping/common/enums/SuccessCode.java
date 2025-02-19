@@ -59,8 +59,8 @@ public enum SuccessCode {
     QUESTION_COMMENT_DELETE(HttpStatus.OK, "질문 댓글 삭제가 완료되었습니다."),
 
     // FILE
-    FILE_UPLOAD(HttpStatus.OK, "파일 업로드가 완료되었습니다.");
-
+    FILE_UPLOAD(HttpStatus.OK, "파일 업로드가 완료되었습니다."),
+    FILE_PRIVATE_UPLOAD(HttpStatus.OK, "보안 파일 업로드가 완료되었습니다.");
 
     private final HttpStatus status;
     private final String message;

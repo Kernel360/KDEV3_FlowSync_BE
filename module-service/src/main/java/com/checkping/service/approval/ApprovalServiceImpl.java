@@ -45,6 +45,7 @@ import com.checkping.infra.repository.approval.comment.ApprovalCommentReader;
 import com.checkping.infra.repository.approval.comment.ApprovalCommentStore;
 import com.checkping.infra.repository.approval.file.ApprovalFileStore;
 import com.checkping.infra.repository.approval.link.ApprovalLinkStore;
+import com.checkping.infra.repository.file.FileReader;
 import com.checkping.infra.repository.project.ProgressStepReader;
 import com.checkping.infra.repository.project.ProjectReader;
 import com.checkping.service.member.util.CurrentMemberUtil;
@@ -54,6 +55,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +73,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalAuthorizationValidator approvalAuthorizationValidator;
     private final ApprovalCompleteHistoryStore approvalCompleteHistoryStore;
     private final ApprovalCompleteHistoryReader approvalCompleteHistoryReader;
+    private final FileReader fileReader;
 
     @Transactional
     @Override
@@ -167,7 +170,9 @@ public class ApprovalServiceImpl implements ApprovalService {
             .orElseThrow(ApprovalNotFoundEntityException::new);
 
         // Entity -> Response
-        return ApprovalGet.Response.toDto(approval);
+        ApprovalGet.Response response = ApprovalGet.Response.toDto(approval);
+
+        return convertPresignedUrl(response);
     }
 
     @Transactional
@@ -507,5 +512,27 @@ public class ApprovalServiceImpl implements ApprovalService {
             // throw exception
             throw new ApprovalCommentNotRegisterException();
         }
+    }
+
+
+    /**
+     * 결재 첨부 파일 목록에 preSignedUrl 추가
+     *
+     * @param response  결재 응답 정보
+     * @return  결재 응답 정보
+     */
+    private ApprovalGet.Response convertPresignedUrl(ApprovalGet.Response response) {
+        if (CollectionUtils.isEmpty(response.getFileList())) {
+            return response;
+        }
+
+        response.getFileList().forEach(file -> {
+            // Get preSigned Url
+            String preSignedUrl = fileReader.getPresignedUrlToDownload(file.getSaveName());
+            // Set preSigned Url
+            file.setPreSignedUrl(preSignedUrl);
+        });
+
+        return response;
     }
 }
