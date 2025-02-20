@@ -182,7 +182,7 @@ public class ProjectController implements ProjectApi {
         ProgressStepUpdater.Response response = progressStepService.update(projectId,
             progressStepId, request);
 
-        return BaseResponse.success(response);
+        return BaseResponse.success(response, PROJECT_PROGRESS_STEP_UPDATE.getMessage());
     }
 
     @Override
