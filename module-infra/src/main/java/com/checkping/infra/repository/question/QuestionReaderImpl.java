@@ -62,10 +62,16 @@ public class QuestionReaderImpl implements QuestionReader {
      * 프로젝트별 Question 개수 조회
      *
      * @param projectId project id
+     * @param isAdmin   관리자 여부
      * @return 프로젝트별 Question 개수
      */
     @Override
-    public Long countQuestionsByProject(Long projectId) {
+    public Long countQuestionsByProject(Long projectId, boolean isAdmin) {
+
+        if (isAdmin) {
+            return questionRepository.countByProjectId(projectId);
+        }
+
         return questionRepository.countByProjectIdAndDeletedYn(projectId, Question.DeleteStatus.N);
     }
 
@@ -74,10 +80,16 @@ public class QuestionReaderImpl implements QuestionReader {
      *
      * @param projectId      project id
      * @param progressStepId progress step id
+     * @param isAdmin     관리자 여부
      * @return 진행상태별 Question 개수
      */
     @Override
-    public Long countQuestionsByProgressStep(Long projectId, Long progressStepId) {
+    public Long countQuestionsByProgressStep(Long projectId, Long progressStepId, boolean isAdmin) {
+
+        if (isAdmin) {
+            return questionRepository.countByProjectIdAndProgressStepId(projectId, progressStepId);
+        }
+
         return questionRepository.countByProjectIdAndProgressStepIdAndDeletedYn(projectId,
             progressStepId, Question.DeleteStatus.N);
     }

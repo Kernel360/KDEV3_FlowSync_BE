@@ -134,8 +134,11 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Transactional(readOnly = true)
     public ApprovalSearch.Response search(Long projectId, ApprovalSearchCondition request) {
 
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
         // 어드민일 때 조회 권한 추가
-        boolean adminSearch = false;
+        boolean adminSearch = member.isAdmin();
 
         // ApprovalSearchCondition -> ApprovalSearchInfo.SearchCondition
         ApprovalSearchInfo.SearchCondition searchCondition = ApprovalSearchCondition.toInfo(request,
@@ -407,8 +410,12 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Override
     public List<ApprovalCount.Response> countByProgressStep(Long projectId) {
 
+        // Get Member From SecurityContext
+        Member member = currentMemberUtil.getCurrentMember();
+
         // Approval count by progress step
-        List<ApprovalCountProjection> queryResult = approvalReader.countByProgressStep(projectId);
+        List<ApprovalCountProjection> queryResult = approvalReader.countByProgressStep(projectId,
+            member.isAdmin());
 
         // Entity -> Response
         return ApprovalCount.Response.toDto(queryResult);
@@ -518,8 +525,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     /**
      * 결재 첨부 파일 목록에 preSignedUrl 추가
      *
-     * @param response  결재 응답 정보
-     * @return  결재 응답 정보
+     * @param response 결재 응답 정보
+     * @return 결재 응답 정보
      */
     private ApprovalGet.Response convertPresignedUrl(ApprovalGet.Response response) {
         if (CollectionUtils.isEmpty(response.getFileList())) {

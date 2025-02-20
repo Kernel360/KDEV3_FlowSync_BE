@@ -11,6 +11,7 @@ import com.checkping.info.approval.ApprovalCountProjection;
 import com.checkping.info.approval.ApprovalSearchInfo.SearchCondition;
 import com.checkping.info.approval.QApprovalCountProjection;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -31,7 +32,9 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
     }
 
     @Override
-    public List<ApprovalCountProjection> countByProgressStep(Long projectId) {
+    public List<ApprovalCountProjection> countByProgressStep(Long projectId, boolean isAdmin) {
+
+        BooleanExpression adminDeleteCondition = isAdmin ? null : approval.deleteYn.eq(Approval.DeleteStatus.N);
 
         JPAQuery<ApprovalCountProjection> query = queryFactory.select(
                 new QApprovalCountProjection(progressStep.id,                     // ✅ 진행 단계 ID
@@ -44,7 +47,7 @@ public class ApprovalCustomRepositoryImpl implements ApprovalCustomRepository {
                 )).from(progressStep) // ✅ 진행 단계 테이블을 기준으로 조회
             .leftJoin(approval).on(approval.progressStep.id.eq(progressStep.id)
                 .and(approval.project.id.eq(projectId)) // 특정 프로젝트 내에서만 조회
-                .and(approval.deleteYn.eq(Approval.DeleteStatus.N)) // 삭제되지 않은 데이터만 포함
+                .and(adminDeleteCondition) // admin 일때는 전부 조회
             ).where(progressStep.projectId.eq(projectId) // ✅ 프로젝트 ID 조건
             ).groupBy(progressStep.id); // ✅ 진행 단계 ID로 그룹화
 
