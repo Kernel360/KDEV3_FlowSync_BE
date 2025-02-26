@@ -14,6 +14,29 @@
 
 <br />
 
+# 🚀 서비스 소개
+
+## 서비스 개요
+
+![image](https://github.com/user-attachments/assets/31c49412-0be9-4594-8c3f-dd9888d7e31f)
+
+![image](https://github.com/user-attachments/assets/a7674137-5613-4d08-8278-1ba8ed0ba9b6)
+
+![image](https://github.com/user-attachments/assets/091540df-293e-4e99-a8db-fe0b24b3c76a)
+
+## 서비스 대상
+
+1️⃣ 고객사 – 프로젝트를 생성하고, 진행 상황을 확인하며 피드백 제공
+
+2️⃣ 관리자 – 프로젝트 요청을 승인하고 담당자를 배정
+
+3️⃣ 개발사 – 작업을 진행하며, 고객사와 소통
+
+## 서비스 흐름도
+1️⃣ 고객사 → 프로젝트 생성 요청 → 관리자 승인 → 개발사 배정 → 작업 진행  
+
+2️⃣ 개발사 → 파일 공유 및 피드백 → 고객사 검토 → 승인 및 결재 → 납품 완료  
+
 # 🚀 주요 기능
 
 ## 1. 관리자
